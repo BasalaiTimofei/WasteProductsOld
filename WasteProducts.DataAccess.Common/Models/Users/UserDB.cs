@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace WasteProducts.DataAccess.Common.Models.Users
 {
-    internal class UserDB
+    public class UserDB
     {
-
         public int UserId { get; }
 
         public string UserName { get; set; }
