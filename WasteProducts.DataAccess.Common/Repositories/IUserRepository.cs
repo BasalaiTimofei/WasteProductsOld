@@ -2,6 +2,5 @@
 {
     interface IUserRepository
     {
-        // TODO Привет Саня
     }
 }
