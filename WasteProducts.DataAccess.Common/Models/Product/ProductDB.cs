@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WasteProducts.Logic.Common.Models.Product;
 
 namespace WasteProducts.DataAccess.Common.Models.Product
 {
