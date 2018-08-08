@@ -40,8 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\ISearchQuery.cs" />
     <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\Search\SearchQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ITestService.cs" />
   </ItemGroup>
