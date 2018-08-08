@@ -41,9 +41,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Entity.cs" />
+    <Compile Include="Models\Groups\GroupDB.cs" />
+    <Compile Include="Models\Groups\GroupInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\Groups\IGroupsRepository.cs" />
     <Compile Include="Repositories\IEntityRepository.cs" />
     <Compile Include="UoW\IUnitOfWork.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

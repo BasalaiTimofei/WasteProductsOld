@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Models\Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Groups\IGropService.cs" />
     <Compile Include="Services\ITestService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
