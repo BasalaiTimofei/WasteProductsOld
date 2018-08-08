@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WasteProducts.DataAccess.Common.Enums;
 
 namespace WasteProducts.DataAccess.Common.Models.Users
 {
