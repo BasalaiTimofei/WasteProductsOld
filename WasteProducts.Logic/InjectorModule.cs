@@ -11,10 +11,7 @@ namespace WasteProducts.Logic
     {
         public override void Load()
         {
-
-
             throw new NotImplementedException();
-
         }
     }
 }
