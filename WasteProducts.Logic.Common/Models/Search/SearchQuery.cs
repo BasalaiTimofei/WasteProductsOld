@@ -3,17 +3,17 @@
     /// <summary>
     /// Model uses for search
     /// </summary>
-    class SearchQuery
+    public class SearchQuery
     {
         /// <summary>
         /// The query that contains text to search
         /// </summary>
-        string Query { get; set; }
+        public string Query { get; set; }
 
         /// <summary>
         /// The array of fields (model properties) of search
         /// </summary>
-        string[] SearchableFields { get; set; }
+        public string[] SearchableFields { get; set; }
 
         //Александр,
         //нормально ли будет заменить на такой вариант?
