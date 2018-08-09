@@ -11,10 +11,8 @@ namespace WasteProducts.Logic.Common.Models.Product
         public string Name { get; set; }
         public Category Category { get; set; }
         public Barcode Barcode { get; set; }
-        public double? AvgMark { get; set; }
+        public double? AvgRate { get; set; }
         public decimal Price { get; set; }
-
-        //для вычисления средней оценки нам понадобится количество оценивших данный продукт
-        public int RateCount { get; internal set; } 
+        public int RateCount { get; set; } 
     }
 }

@@ -14,7 +14,7 @@ namespace WasteProducts.DataAccess.Common.Models.Product
         public DateTime Updated { get; }
         public Category Category { get; set; }
         public Barcode Barcode { get; set; }
-        public double AvgMark { get; internal set; }
+        public double AvgRate { get; internal set; }
         public decimal Price { get; }
         public int RateCount { get; internal set; }
     }
