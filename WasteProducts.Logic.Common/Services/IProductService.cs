@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WasteProducts.Logic.Common.Models.Product;
+﻿using WasteProducts.Logic.Common.Models.Product;
 
 namespace WasteProducts.Logic.Common.Services
 {
