@@ -8,6 +8,10 @@ namespace WasteProducts.DataAccess.Contexts
     [DbConfigurationType(typeof(MsSqlConfiguration))]
     public class WasteContext : IdentityDbContext
     {
+        /// <summary>
+        /// Comment: Added for to use an entity set that is used to perform
+        ///  create, read, update, and delete operations in 'ProductRepository' class.
+        /// </summary>
         public DbSet<Product> Products { get; set; }
     }
 }

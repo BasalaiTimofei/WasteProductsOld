@@ -7,6 +7,9 @@ using WasteProducts.Logic.Common.Models.Product;
 
 namespace WasteProducts.DataAccess.Common.Repositories
 {
+    /// <summary>
+    /// Interface for the ProductRepository. Has an inheritance branch from IDisable.
+    /// </summary>
     public interface IProductRepository : IDisposable
     {
         IEnumerable<Product> GetProducts();
