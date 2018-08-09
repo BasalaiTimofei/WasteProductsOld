@@ -80,14 +80,14 @@ namespace WasteProducts.Logic.Common.Services.Search
         /// </summary>
 		/// <typeparam name="TEntity">Object model type</typeparam>
         /// <param name="model">Object model</param>
-		void RemoveSearchIndex<TEntity>(TEntity model);
+		void RemoveFromSearchIndex<TEntity>(TEntity model);
 		
 		/// <summary>
         /// This method provides ability to remove list of objects from search repository
         /// </summary>
 		/// <typeparam name="TEntity">Object model type</typeparam>
         /// <param name="model">List of object models</param>
-        void RemoveSearchIndex<TEntity>(IEnumerable<TEntity> model);
+        void RemoveFromSearchIndex<TEntity>(IEnumerable<TEntity> model);
 
         /// <summary>
         /// This method provides ability to update object in search repository
