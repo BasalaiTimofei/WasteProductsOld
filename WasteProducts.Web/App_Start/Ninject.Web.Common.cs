@@ -58,7 +58,8 @@ namespace WasteProducts.Web.App_Start
                 kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
                 
-                RegisterLoggers(kernel);                
+                RegisterLoggers(kernel);
+                RegisterFiltres(kernel);
                 RegisterServices(kernel);
 
                 return kernel;
@@ -74,8 +75,18 @@ namespace WasteProducts.Web.App_Start
             }
         }
 
+        /// <summary>
+        /// Register your filtres here
+        /// </summary>
+        /// <param name="kernel">The kernel.</param>
+        private static void RegisterFiltres(IKernel kernel)
+        {
+            kernel.BindFilter<MvcExceptionFilterAttribute>(System.Web.Mvc.FilterScope.First, 0);
+            kernel.BindHttpFilter<ApiExceptionFilterAttribute>(System.Web.Http.Filters.FilterScope.Global);
+        }
+
 		/// <summary>
-        /// Load your modules or register your loggers here!
+        /// Register your loggers here
         /// </summary>
         /// <param name="kernel">The kernel.</param>
         private static void RegisterLoggers(IKernel kernel)
