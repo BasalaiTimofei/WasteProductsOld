@@ -17,11 +17,6 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         TEntity Get<TEntity>(string Id);
         Task<TEntity> GetAsync<TEntity>(string Id);
 
-        void Insert<TEntity>(TEntity obj);
-        void Update<TEntity>(TEntity obj);
-        void Delete<TEntity>(TEntity obj);
-        //todo add async version of Insert, Update, Delete
-
         /// <summary>
         /// Returnes collection of all objects
         /// </summary>
@@ -29,5 +24,29 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         /// <returns>IEnumerable of objects</returns>        
         IEnumerable<TEntity> GetAll<TEntity>();
         Task<IEnumerable<TEntity>> GetAllAsync<TEntity>();
+
+        /// <summary>
+        /// Insert object to lucene object storage
+        /// </summary>
+        /// <typeparam name="TEntity">Object model</typeparam>
+        /// <param name="obj">Object</param>
+        void Insert<TEntity>(TEntity obj);
+        Task InsertAsync<TEntity>(TEntity obj);
+
+        /// <summary>
+        /// Update object in lucene object storage
+        /// </summary>
+        /// <typeparam name="TEntity">Object model</typeparam>
+        /// <param name="obj">Object</param>
+        void Update<TEntity>(TEntity obj);
+        Task UpdateAsync<TEntity>(TEntity obj);
+
+        /// <summary>
+        /// Delete object from lucene object storage
+        /// </summary>
+        /// <typeparam name="TEntity">Object model</typeparam>
+        /// <param name="obj">Object</param>
+        void Delete<TEntity>(TEntity obj);
+        Task DeleteAsync<TEntity>(TEntity obj);        
     }
 }
