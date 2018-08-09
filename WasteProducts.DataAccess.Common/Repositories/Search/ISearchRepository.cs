@@ -12,9 +12,10 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         /// Returns object by Id
         /// </summary>
         /// <typeparam name="TEntity">Object model type</typeparam>
-        /// <param name="Id">Id of model</param>
+        /// <param name="keyValue">Key value of model key field</param>
+        /// <param name="keyField">Key field of model</param>
         /// <returns>Object model</returns>
-        TEntity Get<TEntity>(string Id);
+        TEntity Get<TEntity>(string keyValue, string keyField = "Id");
         
         /// <summary>
         /// Async version of Get
