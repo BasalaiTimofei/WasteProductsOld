@@ -1,24 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WasteProducts.Logic.Common.Models.Product
+﻿namespace WasteProducts.Logic.Common.Models.Product
 {
-    public enum Category
-    {
-
-    }
+    /// <summary>
+    /// Model for entity Product.
+    /// </summary>
     public class Product
     {
+        /// <summary>
+        /// Unique name of concrete Product.
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Defines the Product category.
+        /// </summary>
         public Category Category { get; set; }
+
+        /// <summary>
+        /// Defines the Product barcode.
+        /// </summary>
         public Barcode Barcode { get; set; }
-        public double AvgMark { get; internal set; }
+
+        /// <summary>
+        /// Defines the average Product mark based on user ratings.
+        /// </summary>
+        public double? AvgMark { get; set; }
+
+        /// <summary>
+        /// Defines the price of the Product.
+        /// </summary>
         public decimal Price { get; set; }
 
-        //для вычисления средней оценки нам понадобится количество оценивших данный продукт
-        public int RateCount { get; internal set; } 
+        /// <summary>
+        /// Defines the number of users who have rated the Product. Is used to determine the property "AvgMark".
+        /// </summary>
+        public int RateCount { get; set; } 
     }
 }
