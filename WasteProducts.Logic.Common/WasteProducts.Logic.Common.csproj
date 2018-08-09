@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Search\SearchQuery.cs" />
+    <Compile Include="Models\Search\SearchResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ITestService.cs" />
     <Compile Include="Services\Search\ISearchService.cs" />
