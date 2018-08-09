@@ -17,6 +17,11 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         TEntity Get<TEntity>(string Id);
         Task<TEntity> GetAsync<TEntity>(string Id);
 
+        void Insert<TEntity>(TEntity obj);
+        void Update<TEntity>(TEntity obj);
+        void Delete<TEntity>(TEntity obj);
+        //todo add async version of Insert, Update, Delete
+
         /// <summary>
         /// Returnes collection of all objects
         /// </summary>
