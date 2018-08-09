@@ -14,8 +14,12 @@ namespace WasteProducts.DataAccess.Common.Models.Product
         public DateTime Updated { get; }
         public Category Category { get; set; }
         public Barcode Barcode { get; set; }
-        public double AvgRate { get; internal set; }
+        public double? AvgRate { get; set; }
         public decimal Price { get; }
-        public int RateCount { get; internal set; }
+        public int RateCount { get; set; }
+        /// <summary>
+        /// Defines the product description
+        /// </summary>
+        public string Description { get; set; }
     }
 }

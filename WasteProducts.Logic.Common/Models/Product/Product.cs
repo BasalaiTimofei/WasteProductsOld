@@ -13,6 +13,10 @@ namespace WasteProducts.Logic.Common.Models.Product
         public Barcode Barcode { get; set; }
         public double? AvgRate { get; set; }
         public decimal Price { get; set; }
-        public int RateCount { get; set; } 
+        public int RateCount { get; set; }
+        /// <summary>
+        /// Defines the product description
+        /// </summary>
+        public string Description { get; set; }
     }
 }

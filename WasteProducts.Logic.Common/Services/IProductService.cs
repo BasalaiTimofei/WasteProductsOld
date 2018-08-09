@@ -89,5 +89,12 @@ namespace WasteProducts.Logic.Common.Services
         /// <param name="product">Checked specific product</param>
         /// <returns></returns>
         bool IsHidden(Product product);
+
+        /// <summary>
+        /// Sets the description of the specific product
+        /// </summary>
+        /// <param name="product">The specific product to set description</param>
+        /// <param name="description">The description of the specific product</param>
+        void SetDescription(Product product, string description);
     }
 }
