@@ -23,7 +23,7 @@
         /// <summary>
         /// Defines the average Product mark based on user ratings.
         /// </summary>
-        public double? AvgMark { get; set; }
+        public double? AvgRate { get; set; }
 
         /// <summary>
         /// Defines the price of the Product.
@@ -34,5 +34,11 @@
         /// Defines the number of users who have rated the Product. Is used to determine the property "AvgMark".
         /// </summary>
         public int RateCount { get; set; } 
+
+        public int RateCount { get; set; }
+        /// <summary>
+        /// Defines the product description
+        /// </summary>
+        public string Description { get; set; }
     }
 }

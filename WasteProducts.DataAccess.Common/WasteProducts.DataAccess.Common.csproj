@@ -50,9 +50,11 @@
   <ItemGroup>
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\Product\ProductDB.cs" />
+    <Compile Include="Models\Users\UserDB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IEntityRepository.cs" />
     <Compile Include="Repositories\IProductRepository.cs" />
+    <Compile Include="Repositories\IUserRepository.cs" />
     <Compile Include="UoW\IUnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
