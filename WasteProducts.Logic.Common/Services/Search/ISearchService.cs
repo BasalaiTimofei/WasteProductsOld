@@ -15,47 +15,102 @@ namespace WasteProducts.Logic.Common.Services.Search
         /// </summary>
         /// <typeparam name="TEntity">Object model</typeparam>
         /// <param name="query">SearchQuery model</param>
-        /// <returns>IEnumerable of data</returns>
+        /// <returns>SearchResult model</returns>
         SearchResult Search<TEntity>(SearchQuery query);
+		
+		/// <summary>
+        /// Async version of Search
+        /// </summary>
         Task<SearchResult> SearchAsync<TEntity>(SearchQuery query);
 
-        SearchResult SearchAll(SearchQuery query);
-        SearchResult SearchAllAsync(SearchQuery query);
+        /// <summary>
+        /// This method provides ability to search without specifying type of model
+        /// </summary>
+        /// <param name="query">SearchQuery model</param>
+        /// <returns>SearchResult model</returns>
+		SearchResult SearchAll(SearchQuery query);
+		
+		/// <summary>
+        /// Async version of SearchAll
+        /// </summary>
+        Task<SearchResult> SearchAllAsync(SearchQuery query);
 
 
         /// <summary>
         /// This method provides ability to search without any formatting at search requests
         /// </summary>
-        /// <typeparam name="TEntity">Object model</typeparam>
+        /// <typeparam name="TEntity">Object model type</typeparam>
         /// <param name="query">SearchQuery model</param>
-        /// <returns>IEnumerable of data</returns>
+        /// <returns>SearchResult model</returns>
         SearchResult SearchDefault<TEntity>(SearchQuery query);
+		
+		/// <summary>
+        ///  Async version of SearchDefault
+        /// </summary>
         Task<SearchResult> SearchDefaultAsync<TEntity>(SearchQuery query);
 
-        SearchResult SearchAllDefault(SearchQuery query);
-        SearchResult SearchAllDefaultAsync(SearchQuery query);
+        /// <summary>
+        /// This method provides ability to perform full-text search
+        /// </summary>
+        /// <param name="query">SearchQuery model</param>
+        /// <returns>SearchResult model</returns>
+		SearchResult SearchAllDefault(SearchQuery query);
+		
+		/// <summary>
+        /// Async version of SearchAllDefault
+        /// </summary>
+        Task<SearchResult> SearchAllDefaultAsync(SearchQuery query);
 
-        void AddToSearchIndex<TEntity>(TEntity model);
+        /// <summary>
+        /// This method provides ability to add object to search repository
+        /// </summary>
+		/// <typeparam name="TEntity">Object model type</typeparam>
+        /// <param name="model">Object model</param>
+		void AddToSearchIndex<TEntity>(TEntity model);
+		
+        /// <summary>
+        /// This method provides ability to add list of objects to search repository
+        /// </summary>
+		/// <typeparam name="TEntity">Object model type</typeparam>
+        /// <param name="model">List of object models</param>
         void AddToSearchIndex<TEntity>(IEnumerable<TEntity> model);
 
-        void RemoveSearchIndex<TEntity>(TEntity model);
+        /// <summary>
+        /// This method provides ability to remove object from search repository
+        /// </summary>
+		/// <typeparam name="TEntity">Object model type</typeparam>
+        /// <param name="model">Object model</param>
+		void RemoveSearchIndex<TEntity>(TEntity model);
+		
+		/// <summary>
+        /// This method provides ability to remove list of objects from search repository
+        /// </summary>
+		/// <typeparam name="TEntity">Object model type</typeparam>
+        /// <param name="model">List of object models</param>
         void RemoveSearchIndex<TEntity>(IEnumerable<TEntity> model);
 
+        /// <summary>
+        /// This method provides ability to update object in search repository
+        /// </summary>
+		/// <typeparam name="TEntity">Object model type</typeparam>
+        /// <param name="model">Object model</param>		
         void UpdateInSearchIndex<TEntity>(TEntity model);
+		
+		/// <summary>
+        /// This method provides ability to update list of objects in search repository
+        /// </summary>
+		/// <typeparam name="TEntity">Object model type</typeparam>
+        /// <param name="model">List of object models</param>
         void UpdateInSearchIndex<TEntity>(IEnumerable<TEntity> model);
 
-        bool ClearSearchIndex();
+        /// <summary>
+        /// This method provides ability to clear search repository storage
+        /// </summary>
+		bool ClearSearchIndex();
+		
+		/// <summary>
+        /// This method provides ability to optimize search repository storage
+        /// </summary>
         bool OptimizeSearchIndex();
-
-        //Александр,
-        //Предполагалось, что данные методы будут создавать\обновлять\удалять индекс в Lucene.
-        //Правльно ли я понял, что здесь они не нужны и их можно будет создать когда начнем конфигурировать context?
-
-        //добвление\обновление индекса при первом запуске, а также при добавлении нового объкта в базу
-        //void AddUpdateIndex<TEntity>(IEnumerable<TEntity> model);
-        //void AddUpdateIndex<TEntity>(TEntity model);
-        //удаление индекса целиком и при удалении объекта
-        //void ClearIndexRecord<TEntity>(TEntity model);
-        //bool ClearIndex();
     }
 }

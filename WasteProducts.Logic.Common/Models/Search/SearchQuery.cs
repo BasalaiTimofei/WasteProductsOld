@@ -1,7 +1,7 @@
 ﻿namespace WasteProducts.Logic.Common.Models
 {
     /// <summary>
-    /// Model uses for search
+    /// Model of search query
     /// </summary>
     public class SearchQuery
     {
