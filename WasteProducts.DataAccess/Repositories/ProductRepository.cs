@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.DataAccess.Contexts;
@@ -39,7 +40,7 @@ namespace WasteProducts.DataAccess.Repositories
 
         public void Update(Product product)
         {
-            throw new NotImplementedException();
+            this._context.Entry(product).State = EntityState.Modified;
         }
 
         public void Add(Product product)
