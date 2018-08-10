@@ -21,9 +21,9 @@
         public Barcode Barcode { get; set; }
 
         /// <summary>
-        /// Defines the average Product mark based on user ratings.
+        /// Defines the average Product rate based on user ratings.
         /// </summary>
-        public double? AvgMark { get; set; }
+        public double? AvgRate { get; set; }
 
         /// <summary>
         /// Defines the price of the Product.
@@ -31,8 +31,13 @@
         public decimal Price { get; set; }
 
         /// <summary>
-        /// Defines the number of users who have rated the Product. Is used to determine the property "AvgMark".
+        /// Defines the number of users who have rated the Product. Is used to determine the property "AvgRate".
         /// </summary>
-        public int RateCount { get; set; } 
+        public int RateCount { get; set; }
+
+        /// <summary>
+        /// Defines the product description
+        /// </summary>
+        public string Description { get; set; }
     }
 }
