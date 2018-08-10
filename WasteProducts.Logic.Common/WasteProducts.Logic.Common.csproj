@@ -40,12 +40,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\UserCategory.cs" />
     <Compile Include="Models\Model.cs" />
-    <Compile Include="Models\Search\SearchQuery.cs" />
-    <Compile Include="Models\Search\SearchResult.cs" />
+    <Compile Include="Models\Users\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ITestService.cs" />
-    <Compile Include="Services\Search\ISearchService.cs" />
+    <Compile Include="Services\IUserService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">
+      <Project>{9ACBEC5D-CAA7-4E29-A19C-A247190F6DA8}</Project>
+      <Name>WasteProducts.DataAccess.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
