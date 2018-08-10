@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Product;
 using WasteProducts.Logic.Common.Models.Product;
 
 namespace WasteProducts.DataAccess.Common.Repositories
@@ -12,10 +13,10 @@ namespace WasteProducts.DataAccess.Common.Repositories
     /// </summary>
     public interface IProductRepository : IDisposable
     {
-        IEnumerable<Product> GetProducts();
-        Product GetById(string id);
-        void Add(Product product);
-        void Update(Product product);
+        IEnumerable<ProductDB> GetProducts();
+        ProductDB GetById(string id);
+        void Add(ProductDB product);
+        void Update(ProductDB product);
         void DeleteById(string id);
         void Save();
     }

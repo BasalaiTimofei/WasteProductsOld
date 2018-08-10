@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using WasteProducts.DataAccess.Common.Models.Product;
 using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.DataAccess.Contexts;
 using WasteProducts.Logic.Common.Models.Product;
 
 namespace WasteProducts.DataAccess.Repositories
 {/// <summary>
-///This class is a context class. A binder for the 'Product' class with a data access.
+///This class is a context class. A binder for the 'ProductDB' class with a data access.
 /// </summary>
     public class ProductRepository : IProductRepository
     {
@@ -24,14 +25,14 @@ namespace WasteProducts.DataAccess.Repositories
         /// A method that provides a list of all products.
         /// </summary>
         /// <returns>List of products.</returns>
-        public IEnumerable<Product> GetProducts() => _context.Products.ToList();
+        public IEnumerable<ProductDB> GetProducts() => _context.Products.ToList();
 
         /// <summary>
         /// A method that selectively provides a product by product's ID.
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Product by ID.</returns>
-        public Product GetById(string id) => _context.Products.Find(id);
+        public ProductDB GetById(string id) => _context.Products.Find(id);
 
         /// <summary>
         /// The method that delets the product by ID.
@@ -53,7 +54,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// This method allows you to modify some or all of the product values.
         /// </summary>
         /// <param name="product"></param>
-        public void Update(Product product)
+        public void Update(ProductDB product)
         {
             _context.Entry(product).State = EntityState.Modified;
         }
@@ -62,7 +63,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// Allows you to add new product to the products colletion.
         /// </summary>
         /// <param name="product"></param>
-        public void Add(Product product)
+        public void Add(ProductDB product)
         {
             _context.Products.Add(product);
         }

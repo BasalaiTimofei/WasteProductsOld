@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using WasteProducts.DataAccess.Common.Models.Product;
 using WasteProducts.DataAccess.Contexts.Config;
-using WasteProducts.Logic.Common.Models.Product;
 
 namespace WasteProducts.DataAccess.Contexts
 {
@@ -9,9 +9,9 @@ namespace WasteProducts.DataAccess.Contexts
     public class WasteContext : IdentityDbContext
     {
         /// <summary>
-        /// Comment: Added for to use an entity set that is used to perform
-        ///  create, read, update, and delete operations in 'ProductRepository' class.
+        /// property added for to use an entity set that is used to perform
+        ///  create, read, update, delete and to get product list operations in 'ProductRepository' class.
         /// </summary>
-        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductDB> Products { get; set; }
     }
 }
