@@ -8,7 +8,7 @@ using WasteProducts.Logic.Common.Models.Product;
 namespace WasteProducts.DataAccess.Common.Repositories
 {
     /// <summary>
-    /// Interface for the ProductRepository. Has an inheritance branch from IDisable.
+    /// Interface for the ProductRepository. Has an inheritance branch from IDisposable.
     /// </summary>
     public interface IProductRepository : IDisposable
     {

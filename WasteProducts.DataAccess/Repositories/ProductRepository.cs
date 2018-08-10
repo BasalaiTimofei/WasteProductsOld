@@ -18,29 +18,20 @@ namespace WasteProducts.DataAccess.Repositories
         /// Using the context of the WasteContext class through the private field.
         /// </summary>
         /// <param name="context"></param>
-        public ProductRepository(WasteContext context)
-        {
-            this._context = context;
-        }
+        public ProductRepository(WasteContext context) => _context = context;
 
         /// <summary>
         /// A method that provides a list of all products.
         /// </summary>
         /// <returns>List of products.</returns>
-        public IEnumerable<Product> GetProducts()
-        {
-            return this._context.Products.ToList();
-        }
+        public IEnumerable<Product> GetProducts() => _context.Products.ToList();
 
         /// <summary>
         /// A method that selectively provides a product by product's ID.
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Product by ID.</returns>
-        public Product GetById(string id)
-        {
-            return this._context.Products.Find(id);
-        }
+        public Product GetById(string id) => _context.Products.Find(id);
 
         /// <summary>
         /// The method that delets the product by ID.
@@ -48,18 +39,15 @@ namespace WasteProducts.DataAccess.Repositories
         /// <param name="id"></param>
         public void DeleteById(string id)
         {
-            var product = this._context.Products.Find(id);
-            if (product != null) this._context.Products.Remove(product);
+            var product = _context.Products.Find(id);
+            if (product != null) _context.Products.Remove(product);
         }
 
         /// <summary>
         /// Saves all changes made with the product.
         ///Recommend to call this method every time you make any manipulations with the product.
         /// </summary>
-        public void Save()
-        {
-            this._context.SaveChanges();
-        }
+        public void Save() => _context.SaveChanges();
 
         /// <summary>
         /// This method allows you to modify some or all of the product values.
@@ -67,7 +55,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// <param name="product"></param>
         public void Update(Product product)
         {
-            this._context.Entry(product).State = EntityState.Modified;
+            _context.Entry(product).State = EntityState.Modified;
         }
 
         /// <summary>
@@ -76,7 +64,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// <param name="product"></param>
         public void Add(Product product)
         {
-            this._context.Products.Add(product);
+            _context.Products.Add(product);
         }
 
         /// <summary>
@@ -92,14 +80,14 @@ namespace WasteProducts.DataAccess.Repositories
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this._disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
-                    this._context.Dispose();
+                    _context.Dispose();
                 }
 
-                this._disposed = true;
+                _disposed = true;
             }
         }
     }
