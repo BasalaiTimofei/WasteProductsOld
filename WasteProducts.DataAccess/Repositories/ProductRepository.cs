@@ -5,7 +5,6 @@ using System.Linq;
 using WasteProducts.DataAccess.Common.Models.Product;
 using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.DataAccess.Contexts;
-using WasteProducts.Logic.Common.Models.Product;
 
 namespace WasteProducts.DataAccess.Repositories
 {/// <summary>
