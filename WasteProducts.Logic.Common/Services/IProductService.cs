@@ -59,11 +59,11 @@ namespace WasteProducts.Logic.Common.Services
         void SetPrice(Product product, decimal price);
 
         /// <summary>
-        /// Adds average rate of the specific product
+        /// Allows the user to rate the specific product
         /// </summary>
-        /// <param name="product">The specific product to add average rate</param>
-        /// <param name="avgRate">The average rate of the specific product</param>
-        void AddAvgRate(Product product, int avgRate);
+        /// <param name="product">The product that the user wants to rate</param>
+        /// <param name="rating">Own user rating</param>
+        void Rate(Product product, int rating);
 
         /// <summary>
         /// Hides product for display in product lists
