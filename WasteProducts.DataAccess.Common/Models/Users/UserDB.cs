@@ -63,11 +63,11 @@ namespace WasteProducts.DataAccess.Common.Models.Users
         /// <summary>
         /// Specifies timestamp of creation of concrete User in Database.
         /// </summary>
-        public DateTime CreatedOn { get; set; }
+        public DateTime Created { get; set; }
 
         /// <summary>
         /// Specifies timestamp of modifying of any Property of User in Database.
         /// </summary>
-        public DateTime? LastEditedOn { get; set; }
+        public DateTime? Modified { get; set; }
     }
 }
