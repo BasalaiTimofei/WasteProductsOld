@@ -24,7 +24,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// A method that provides a list of all products.
         /// </summary>
         /// <returns>List of products.</returns>
-        public IEnumerable<ProductDB> GetProducts() => _context.Products.ToList();
+        public IQueryable<ProductDB> GetAll() => _context.Products;
 
         /// <summary>
         /// A method that selectively provides a product by product's ID.

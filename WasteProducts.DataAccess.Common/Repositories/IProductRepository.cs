@@ -16,7 +16,7 @@ namespace WasteProducts.DataAccess.Common.Repositories
         /// Provides a listing of all products.
         /// </summary>
         /// <returns>Returns list of products.</returns>
-        IEnumerable<ProductDB> GetProducts();
+        IQueryable<ProductDB> GetAll();
 
         /// <summary>
         /// Getinng students by ID.
