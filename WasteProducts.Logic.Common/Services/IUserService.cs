@@ -41,12 +41,11 @@ namespace WasteProducts.Logic.Common.Services
         bool PasswordRequest(string email);
 
         /// <summary>
-        /// Sets the name of the specific user.
+        /// Updates the specific user in the Database.
         /// </summary>
-        /// <param name="user">The specific user to set new name.</param>
-        /// <param name="userName">The name of the specific user.</param>
-        /// <returns></returns>
-        bool SetUserName(User user, string userName);
+        /// <param name="user">The specific user to update.</param>
+        /// <returns>Boolean representing whether updating the user was correct or not.</returns>
+        void UpdateUserInfo(User user);
 
         /// <summary>
         /// Adds a specific new friend to the specific user's friend list.

@@ -43,18 +43,11 @@ namespace WasteProducts.Logic.Services
 
         public void Send(string to, string subject, string body)
         {
-            MailMessage message = null;
-
-            try
+            using (MailMessage message = MailFactory.Create(OurEmail, to, subject, body))
             {
-                message = MailFactory.Create(OurEmail, to, subject, body);
                 _smtpClient.Send(message);
             }
             //TODO Add exceptions handling here
-            finally
-            {
-                message.Dispose();
-            }
         }
     }
 }

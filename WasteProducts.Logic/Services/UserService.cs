@@ -30,8 +30,7 @@ namespace WasteProducts.Logic.Services
         public void AddFriend(User user, User newFriend)
         {
             user.UserFriends.Add(newFriend);
-            var userDb = Mapper.Map<UserDB>(user);
-            _userRepo.Update(userDb);
+            UpdateUser(user);
         }
 
         public void DeleteFriend(User user, User deletingFriend)
@@ -39,8 +38,7 @@ namespace WasteProducts.Logic.Services
             if (user.UserFriends.Contains(deletingFriend))
             {
                 user.UserFriends.Remove(deletingFriend);
-                var userDb = Mapper.Map<UserDB>(user);
-                _userRepo.Update(userDb);
+                UpdateUser(user);
             }
         }
 
@@ -76,26 +74,32 @@ namespace WasteProducts.Logic.Services
             }
             user.Password = newPassword;
 
-            var userDb = Mapper.Map<UserDB>(user);
-            _userRepo.Update(userDb);
+            UpdateUser(user);
             return true;
         }
 
-        public void PasswordRequest(string email)
+        public bool PasswordRequest(string email)
         {
-            // TODO придумать чо писать в письме-восстановителе пароля и где хранить этот стринг
             var user = Mapper.Map<User>(_userRepo.Select(email));
             if (user == null)
             {
-                return;
+                return false;
             }
 
+            // TODO придумать что писать в письме-восстановителе пароля и где хранить этот стринг
             _mailService.Send(email, PASSWORD_RECOWERY_HEADER, $"На ваш аккаунт \"Фуфлопродуктов\" был отправлен запрос на смену пароля. Напоминаем ваш пароль на сайте :\n\n{user.Password}\n\nВы можете поменять пароль в своем личном кабинете.");
+            return true;
         }
 
-        public bool SetUserName(User user, string userName)
+        public void UpdateUserInfo(User user)
         {
-            throw new NotImplementedException();
+            UpdateUser(user);
+        }
+
+        private void UpdateUser(User user)
+        {
+            var userDb = Mapper.Map<UserDB>(user);
+            _userRepo.Update(userDb);
         }
     }
 }
