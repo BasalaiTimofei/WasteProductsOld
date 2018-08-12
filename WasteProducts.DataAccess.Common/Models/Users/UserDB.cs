@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace WasteProducts.DataAccess.Common.Models.Users
 {
@@ -8,21 +9,25 @@ namespace WasteProducts.DataAccess.Common.Models.Users
         /// <summary>
         /// Unique identifier of concrete User in Database.
         /// </summary>
+        [Key]
         public int Id { get; set; }
         
         /// <summary>
         /// Unique name of concrete User. It is used for authenfication.
         /// </summary>
+        [Required]
         public string Login { get; set; }
 
         /// <summary>
         /// Email of User is mandatory property and it is set during registration. It is used for password recovery.
         /// </summary>
+        [Required]
         public string Email { get; set; }
 
         /// <summary>
         /// Password is set by User during registration.
         /// </summary>
+        [Required]
         public string Password { get; set; }
 
         /// <summary>

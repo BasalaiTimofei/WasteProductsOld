@@ -15,8 +15,9 @@ namespace WasteProducts.DataAccess.Repositories
         public void Add(UserDB user)
         {
             if (user.Id != default(int))
-                throw new ArgumentException("Cannot Add User with id which is not 0."); 
+                throw new ArgumentException("Cannot Add User with Id different from 0.");
 
+            user.Created = DateTime.UtcNow;
             using (var db = new WasteContext())
             {
                 db.Users.Add(user);
@@ -30,13 +31,24 @@ namespace WasteProducts.DataAccess.Repositories
             {
                 using (var db = new WasteContext())
                 {
-                    db.Users.Remove(user);
-                    db.SaveChanges();
+                    var result = db.Users
+                        .Where(f => f.Id == user.Id)
+                        .FirstOrDefault();
+
+                    if (result != null)
+                    {
+                        db.Users.Remove(result);
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"The User cannot be deleted because User with Id = {user.Id} doesn't exist.");
+                    }
                 }
             }
             else
             {
-                throw new ArgumentException("Cannot delete User without ID.");
+                throw new ArgumentException("Cannot delete User with Id = 0.");
             }
         }
 
@@ -51,7 +63,7 @@ namespace WasteProducts.DataAccess.Repositories
                 }
                 else
                 {
-                    return null;
+                    throw new ArgumentException("User with specified Email and Password isn't found.");
                 }
             }
         }
@@ -79,11 +91,9 @@ namespace WasteProducts.DataAccess.Repositories
 
             using (var db = new WasteContext())
             {
-                db.Database.Log = (s => System.Diagnostics.Debug.WriteLine(s));
-
-                db.Entry<UserDB>(user).State = EntityState.Modified;
-
-                db.Users.Where(u => u.Id == user.Id).First().Modified = DateTime.UtcNow;
+                var userInDB = db.Users.Find(user.Id);
+                db.Entry(userInDB).CurrentValues.SetValues(user);
+                userInDB.Modified = DateTime.UtcNow;
                 db.SaveChanges();
         }
     }
