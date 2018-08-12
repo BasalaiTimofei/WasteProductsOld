@@ -8,12 +8,12 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
 {
     class GroupDB
     {
+        public int Id { get; set; }
         public string Name { get; set; }
-
-        public List<User> ListUsers;
-
-        public List<Product> ListProducts;
-
-        // Информация (может и не нужна) которую лучше вынести в другой класс(Для удобства)
-        public GroupInfo Info;
+        public string Information { get; set; }
+        public int Admin { get; set; }
+        public List<GroupUserDB> GroupUsers { get; set; }
+        public List<GroupBordDB> GroupBords { get; set; }
+        public DateTime Create { get; set; }
+        public DateTime Delete { get; set; }
     }
