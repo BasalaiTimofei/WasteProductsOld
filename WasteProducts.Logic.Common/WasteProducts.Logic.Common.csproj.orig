@@ -47,8 +47,11 @@
     <Compile Include="Models\Users\User.cs" />
     <Compile Include="Models\Product\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+<<<<<<< HEAD
     <Compile Include="Services\IProductService.cs" />
+=======
     <Compile Include="Services\ISearchService.cs" />
+>>>>>>> develop
     <Compile Include="Services\ITestService.cs" />
     <Compile Include="Services\IUserService.cs" />
   </ItemGroup>
