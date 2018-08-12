@@ -8,6 +8,10 @@ namespace WasteProducts.Logic.Common.Services
     {
         IMailFactory MailFactory { get; }
 
-        void Send(string from, string to, string subject, string body);
+        string OurEmail { get; set; }
+
+        void Send(string to, string subject, string body);
+
+        bool IsValidEmail(string email);
     }
 }

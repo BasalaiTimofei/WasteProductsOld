@@ -7,12 +7,11 @@ namespace WasteProducts.DataAccess.Common.Repositories
     public interface IUserRepository
     {
         /// <summary>
-        /// Returns a registered user by its ID.
+        /// Returns a registered user by its email.
         /// </summary>
-        /// <param name="userID">ID of the requested user.</param>
-        /// <returns>User with the specific ID.</returns>
-        UserDB Select(int userID);
-
+        /// <param name="email">Email of the requested user.</param>
+        /// <returns></returns>
+        UserDB Select(string email);
 
         /// <summary>
         /// Returns a registered user by its email and password.

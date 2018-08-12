@@ -11,26 +11,43 @@ namespace WasteProducts.Logic.Services
     {
         private readonly SmtpClient _smtpClient;
 
-        public MailService(SmtpClient smtpClient, IMailFactory mailFactory)
+        public MailService(SmtpClient smtpClient, string ourEmail, IMailFactory mailFactory)
         {
             _smtpClient = smtpClient;
+            OurEmail = ourEmail;
             MailFactory = mailFactory;
         }
 
         public IMailFactory MailFactory { get; }
+
+        public string OurEmail { get; set; }
 
         public void Dispose()
         {
             _smtpClient.Dispose();
         }
 
-        public void Send(string from, string to, string subject, string body)
+        public bool IsValidEmail(string email)
+        {
+            try
+            {
+                MailAddress m = new MailAddress(email);
+
+                return true;
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
+        }
+
+        public void Send(string to, string subject, string body)
         {
             MailMessage message = null;
 
             try
             {
-                message = MailFactory.Create(from, to, subject, body);
+                message = MailFactory.Create(OurEmail, to, subject, body);
                 _smtpClient.Send(message);
             }
             //TODO Add exceptions handling here
@@ -38,7 +55,6 @@ namespace WasteProducts.Logic.Services
             {
                 message.Dispose();
             }
-
         }
     }
 }
