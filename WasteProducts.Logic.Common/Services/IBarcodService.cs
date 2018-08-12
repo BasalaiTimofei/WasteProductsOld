@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BarcodServise
+namespace WasteProducts.Logic.Common.Services
 {
     public interface IBarcodService
     {
