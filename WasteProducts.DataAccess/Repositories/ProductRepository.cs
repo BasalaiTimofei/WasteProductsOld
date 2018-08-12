@@ -18,7 +18,10 @@ namespace WasteProducts.DataAccess.Repositories
         /// Using the context of the WasteContext class through the private field.
         /// </summary>
         /// <param name="context"></param>
-        public ProductRepository(WasteContext context) => _context = context;
+        public ProductRepository(WasteContext context)
+        {
+            _context = context;
+        }
 
         /// <summary>
         /// A method that provides a list of all products.
