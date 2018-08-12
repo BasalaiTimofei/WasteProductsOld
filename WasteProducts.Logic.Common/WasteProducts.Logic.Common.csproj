@@ -42,7 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\UserCategory.cs" />
-    <Compile Include="Models\Barcod\BarcodeInfo.cs" />
+    <Compile Include="Models\Barcods\Barcod.cs" />
+    <Compile Include="Models\Barcods\BarcodeInfo.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Search\SearchQuery.cs" />
     <Compile Include="Models\Search\SearchResult.cs" />
