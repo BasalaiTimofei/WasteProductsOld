@@ -5,7 +5,7 @@ using WasteProducts.Logic.Common.Models.Users;
 
 namespace WasteProducts.Logic.Mappings
 {
-    class UserProfile : Profile
+    public class UserProfile : Profile
     {
         public UserProfile()
         {
