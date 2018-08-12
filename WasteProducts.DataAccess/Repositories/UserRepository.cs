@@ -63,7 +63,23 @@ namespace WasteProducts.DataAccess.Repositories
                 }
                 else
                 {
-                    throw new ArgumentException("User with specified Email and Password isn't found.");
+                    return null;
+                }
+            }
+        }
+
+        public UserDB Select(string email)
+        {
+            using (var db = new WasteContext())
+            {
+                var result = db.Users.Where(user => user.Email == email);
+                if (result.Count() > 0)
+                {
+                    return result.First();
+                }
+                else
+                {
+                    return null;
                 }
             }
         }

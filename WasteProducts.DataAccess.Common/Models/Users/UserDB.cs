@@ -1,17 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Principal;
 
 namespace WasteProducts.DataAccess.Common.Models.Users
 {
-    public class UserDB
+    public class UserDB : IIdentity
     {
         /// <summary>
         /// Unique identifier of concrete User in Database.
         /// </summary>
         [Key]
         public int Id { get; set; }
-        
+
+        /// <summary>
+        /// Full name of User. Visible for other Users.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// The type of authentication used to identify the user.
+        /// </summary>
+        public string AuthenticationType { get; set; }
+
+        /// <summary>
+        /// Gets a value that indicates whether the user has been authenticated. True if the user was authenticated; otherwise, false.
+        /// </summary>
+        public bool IsAuthenticated { get; set; }
+
         /// <summary>
         /// Unique name of concrete User. It is used for authenfication.
         /// </summary>
@@ -74,5 +90,7 @@ namespace WasteProducts.DataAccess.Common.Models.Users
         /// Specifies timestamp of modifying of any Property of User in Database.
         /// </summary>
         public DateTime? Modified { get; set; }
+
+
     }
 }

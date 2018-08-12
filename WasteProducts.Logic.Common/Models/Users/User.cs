@@ -1,14 +1,30 @@
 ﻿using System.Collections.Generic;
+using System.Security.Principal;
 using WasteProducts.Logic.Common.Enums;
 
 namespace WasteProducts.Logic.Common.Models.Users
 {
-    public class User
+    public class User : IIdentity
     {
         /// <summary>
         /// Unique identifier of concrete User in Database.
         /// </summary>
         public int Id { get; set; }
+
+        /// <summary>
+        /// Full name of User. Visible for other Users.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// The type of authentication used to identify the user.
+        /// </summary>
+        public string AuthenticationType { get; set; }
+
+        /// <summary>
+        /// Gets a value that indicates whether the user has been authenticated. True if the user was authenticated; otherwise, false.
+        /// </summary>
+        public bool IsAuthenticated { get; set; }
 
         /// <summary>
         /// Unique name of concrete User. It is used for authenfication.
