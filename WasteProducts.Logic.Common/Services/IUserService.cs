@@ -11,7 +11,7 @@ namespace WasteProducts.Logic.Common.Services
         /// <param name="password">Password of the new user.</param>
         /// <param name="passwordConfirmation">Confirmation of the password, must be the same as the password.</param>
         /// <param name="registeredUser">New registered user.</param>
-        /// <returns>Boolean represents whether registration succeed or not.</returns>
+        /// <returns>Boolean representing whether registration succeed or not.</returns>
         bool Register(string email, string password, string passwordConfirmation, out User registeredUser);
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace WasteProducts.Logic.Common.Services
         /// <param name="email">Email of the logging in user.</param>
         /// <param name="password">Password of the logging in user.</param>
         /// <param name="loggedInUser">When this methods returns, this variable contains a User object if this method succeed, or null if method failed.</param>
-        /// <returns>Boolean represents whether logging in succeed or not.</returns>
+        /// <returns>Boolean representing whether logging in succeed or not.</returns>
         bool LogIn(string email, string password, out User loggedInUser);
 
         /// <summary>
@@ -30,22 +30,15 @@ namespace WasteProducts.Logic.Common.Services
         /// <param name="oldPassword">Old password of the specific user.</param>
         /// <param name="newPassword">New password of the specific user.</param>
         /// <param name="newPasswordConfirmation">Confirmation of the new password, must be the same as the newPassword.</param>
-        /// <returns></returns>
+        /// <returns>Boolean representing whether resetting password succeed or not.</returns>
         bool ResetPassword(User user, string oldPassword, string newPassword, string newPasswordConfirmation);
 
         /// <summary>
-        /// Requests an email with a specific algorithm of password restoration.
+        /// Requests an email with the password of the user registered to this email.
         /// </summary>
         /// <param name="email">Email of the user forgotten its password.</param>
-        void ResetPasswordRequest(string email);
-
-        /// <summary>
-        /// This method uses after ResetPasswordRequest() to set the new password.
-        /// </summary>
-        /// <param name="newPassword">New password of the user forgotten its previous password.</param>
-        /// <param name="newPasswordConfirmation">Confirmation of the new password, must be the same as the newPassword.</param>
-        /// <returns></returns>
-        bool ResetPasswordResponse(string newPassword, string newPasswordConfirmation);
+        /// <returns>Boolean representing whether email was correct or not.</returns>
+        bool PasswordRequest(string email);
 
         /// <summary>
         /// Sets the name of the specific user.

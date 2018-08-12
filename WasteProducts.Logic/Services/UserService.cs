@@ -1,20 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using System;
+using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Mappings;
 
 namespace WasteProducts.Logic.Services
 {
     public class UserService : IUserService
     {
+        private const string PASSWORD_RECOWERY_HEADER = "Запрос на восстановление пароля";
+
         private readonly IMailService _mailService;
 
         private readonly IUserRepository _userRepo;
+
+        static UserService()
+        {
+            Mapper.Initialize(cfg => cfg.AddProfile(new UserProfile()));
+        }
 
         public UserService(IMailService mailService, IUserRepository userRepo)
         {
@@ -25,8 +30,8 @@ namespace WasteProducts.Logic.Services
         public void AddFriend(User user, User newFriend)
         {
             user.UserFriends.Add(newFriend);
-            // TODO finish after mapping from User to UserDB is enabled _userRepo.Update(user);
-            throw new NotImplementedException();
+            var userDb = Mapper.Map<UserDB>(user);
+            _userRepo.Update(userDb);
         }
 
         public void DeleteFriend(User user, User deletingFriend)
@@ -34,20 +39,21 @@ namespace WasteProducts.Logic.Services
             if (user.UserFriends.Contains(deletingFriend))
             {
                 user.UserFriends.Remove(deletingFriend);
-                // TODO finish after mapping from User to UserDB is enabled _userRepo.Update(user);
+                var userDb = Mapper.Map<UserDB>(user);
+                _userRepo.Update(userDb);
             }
-            throw new NotImplementedException();
         }
 
         public bool LogIn(string email, string password, out User loggedInUser)
         {
-            // TODO finish after mapping from User to UserDB is enabled loggedInUser = _userRepo.Select(email, password);
-            throw new NotImplementedException();
+            loggedInUser = Mapper.Map<User>(_userRepo.Select(email, password));
+
+            return loggedInUser != null;
         }
 
         public bool Register(string email, string password, string passwordConfirmation, out User registeredUser)
         {
-            if(passwordConfirmation != password)
+            if(passwordConfirmation != password || !_mailService.IsValidEmail(email))
             {
                 registeredUser = null;
                 return false;
@@ -57,23 +63,34 @@ namespace WasteProducts.Logic.Services
                 Email = email,
                 Password = password,
             };
-            // TODO finish after mapping from User to UserDB is enabled _userRepo.Add(user);
-            throw new NotImplementedException();
+            var userDb = Mapper.Map<UserDB>(registeredUser);
+            _userRepo.Add(userDb);
+            return true;
         }
 
         public bool ResetPassword(User user, string oldPassword, string newPassword, string newPasswordConfirmation)
         {
-            throw new NotImplementedException();
+            if(newPassword != newPasswordConfirmation || oldPassword != user.Password)
+            {
+                return false;
+            }
+            user.Password = newPassword;
+
+            var userDb = Mapper.Map<UserDB>(user);
+            _userRepo.Update(userDb);
+            return true;
         }
 
-        public void ResetPasswordRequest(string email)
+        public void PasswordRequest(string email)
         {
-            throw new NotImplementedException();
-        }
+            // TODO придумать чо писать в письме-восстановителе пароля и где хранить этот стринг
+            var user = Mapper.Map<User>(_userRepo.Select(email));
+            if (user == null)
+            {
+                return;
+            }
 
-        public bool ResetPasswordResponse(string newPassword, string newPasswordConfirmation)
-        {
-            throw new NotImplementedException();
+            _mailService.Send(email, PASSWORD_RECOWERY_HEADER, $"На ваш аккаунт \"Фуфлопродуктов\" был отправлен запрос на смену пароля. Напоминаем ваш пароль на сайте :\n\n{user.Password}\n\nВы можете поменять пароль в своем личном кабинете.");
         }
 
         public bool SetUserName(User user, string userName)
