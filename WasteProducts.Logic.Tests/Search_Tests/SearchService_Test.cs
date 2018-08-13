@@ -149,8 +149,36 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         }
         #endregion
 
+        #region SearchResult SearchAll(SearchQuery query); 
+        [Test]
+        public void SearchAll_CheckContainsKey_ReturnTrue()
+        {
+            //нужный метод репозитория
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+
+            var query = new SearchQuery();
+
+            var result = sut.SearchAll(query);
+
+            Assert.AreEqual(true, result.Result.ContainsKey(typeof(User)));
+        }
+
+        [Test]
+        public void SearchAll_EmptyQuery_ReturnAllObjectsInRepository()
+        {
+            //нужный метод репозитория
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+
+            var query = new SearchQuery();
+
+            var result = sut.SearchAll(query);
+
+            Assert.AreEqual(1, result.Result.Count);
+        }
+        #endregion
+
         //SearchResult SearchAll(SearchQuery query);        
-        //Task<SearchResult> SearchAllAsync(SearchQuery query);        
+        //Task<SearchResult> SearchAllAsync(SearchQuery query);
         //SearchResult SearchDefault<TEntity>(SearchQuery query);        
         //Task<SearchResult> SearchDefaultAsync<TEntity>(SearchQuery query);        
         //SearchResult SearchAllDefault(SearchQuery query);
