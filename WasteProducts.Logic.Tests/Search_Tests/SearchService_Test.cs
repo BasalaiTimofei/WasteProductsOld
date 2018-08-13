@@ -14,7 +14,10 @@ namespace WasteProducts.Logic.Tests.Search_Tests
     [TestFixture]
     public class SearchService_Test
     {
-        public List<User> users = new List<User>
+        [SetUp]
+        public void Setup()
+        {
+            users = new List<User>
             {
                 new User { Id = 1, Login = "user1", Email = "user1@mail.net" },
                 new User { Id = 2, Login = "user2", Email = "user2@mail.net" },
@@ -23,19 +26,24 @@ namespace WasteProducts.Logic.Tests.Search_Tests
                 new User { Id = 5, Login = "user5", Email = "user5@mail.net" }
             };
 
+            mockRepo = new Mock<ISearchRepository>();
+            sut = new LuceneSearchService(mockRepo.Object);
+        }
+
+        private List<User> users;
+        private Mock<ISearchRepository> mockRepo;
+        private ISearchService sut;
+
         //SearchResult Search<TEntity>(SearchQuery query);
         [Test]
         public void Search_CheckContainsKey_ReturnTrue()
         {
-            var repo = new Mock<ISearchRepository>();
-
             //нужный метод репозитория
-            repo.Setup(x => x.GetAll<User>()).Returns(users);
-
-            var service = new LuceneSearchService(repo.Object);
+            mockRepo.Setup(x => x.GetAll<User>()).Returns(users);
+            
             var query = new SearchQuery();
 
-            var result = service.Search<User>(query);            
+            var result = sut.Search<User>(query);            
 
             Assert.AreEqual(true, result.Result.ContainsKey(typeof(User)));
         }
@@ -43,30 +51,24 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void Search_EmptyQuery_ReturnAllObjectsInRepository()
         {
-            var repo = new Mock<ISearchRepository>();
-
             //нужный метод репозитория
-            repo.Setup(x => x.GetAll<User>()).Returns(users);
-
-            var service = new LuceneSearchService(repo.Object);
+            mockRepo.Setup(x => x.GetAll<User>()).Returns(users);
+            
             var query = new SearchQuery();            
 
-            var result = service.Search<User>(query);
+            var result = sut.Search<User>(query);
             Assert.AreEqual(1, result.Result.Count);
         }
 
         [Test]
         public void Search_EmptyQuery_ReturnCount5()
         {
-            var repo = new Mock<ISearchRepository>();
-
             //нужный метод репозитория
-            repo.Setup(x => x.GetAll<User>()).Returns(users);
-
-            var service = new LuceneSearchService(repo.Object);
+            mockRepo.Setup(x => x.GetAll<User>()).Returns(users);
+            
             var query = new SearchQuery() { Query = "user1", SearchableFields = new string[] { "id" } };
 
-            var result = service.Search<User>(query);
+            var result = sut.Search<User>(query);
             List<object> list = result.Result[typeof(User)].ToList();
 
             Assert.AreEqual(5, list.Count);
@@ -74,16 +76,13 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
         [Test]
         public void SearchId_ByLogin_ReturnUser1()
-        {
-            var repo = new Mock<ISearchRepository>();
-
+        {    
             //нужный метод репозитория
-            repo.Setup(x => x.GetAll<User>()).Returns(users);
-
-            var service = new LuceneSearchService(repo.Object);
+            mockRepo.Setup(x => x.GetAll<User>()).Returns(users);
+            
             var query = new SearchQuery() { Query = "user1", SearchableFields = new string[] { "id" } };
 
-            var result = service.Search<User>(query);            
+            var result = sut.Search<User>(query);            
             List<object> list = result.Result[typeof(User)].ToList();
             var user = (User)list[0];
 
