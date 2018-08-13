@@ -42,9 +42,5 @@ namespace WasteProducts.DataAccess.Common.Repositories
         /// </summary>
         /// <param name="id">Produxt's ID that needs to delete.</param>
         void DeleteById(string id);
-
-        /// <summary>
-        /// Saves product that was modifyed.
-        /// </summary>
     }
 }
