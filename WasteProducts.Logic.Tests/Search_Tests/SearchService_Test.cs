@@ -388,9 +388,25 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             mockRepo.Verify(v => v.Insert<User>(mockUser.Object), Times.Once);
         }
-
         #endregion
-        //void AddToSearchIndex<TEntity>(IEnumerable<TEntity> model);
+
+        #region void AddToSearchIndex<TEntity>(IEnumerable<TEntity> model);
+        [Test]
+        public void AddSearchIndex_AddNewIEnumerable_ResultVerify()
+        {
+            var mockCollectionUser = new Mock<IEnumerable<User>>();            
+            var mockUser = new Mock<User>();
+                        
+            mockCollectionUser.SetupGet(c => c.Count<User>()).Returns(5);
+
+            //нужный метод репозитория
+            mockRepo.Setup(x => x.Insert<IEnumerable<User>>(mockCollectionUser.Object)).Verifiable();
+
+            sut.AddToSearchIndex<User>(mockCollectionUser.Object);
+
+            mockRepo.Verify(v => v.Insert<IEnumerable<User>>(mockCollectionUser.Object), Times.Exactly(5));
+        }
+        #endregion
 
         //void RemoveFromSearchIndex<TEntity>(TEntity model);
         //void RemoveFromSearchIndex<TEntity>(IEnumerable<TEntity> model);
