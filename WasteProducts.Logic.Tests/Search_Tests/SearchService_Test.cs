@@ -444,7 +444,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
         #region void UpdateInSearchIndex<TEntity>(TEntity model);
         [Test]
-        public void UpdateSearchIndex_DeleteEntity_ResultVerify()
+        public void UpdateSearchIndex_UpdateEntity_ResultVerify()
         {
             var mockUser = new Mock<User>();
 
@@ -456,7 +456,22 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             mockRepo.Verify(v => v.Update<User>(mockUser.Object), Times.Once);
         }
         #endregion
-        //void UpdateInSearchIndex<TEntity>(IEnumerable<TEntity> model);
+
+        #region void UpdateInSearchIndex<TEntity>(IEnumerable<TEntity> model);
+        [Test]
+        public void UpdateSearchIndex_UpdateIEnumerable_ResultVerify()
+        {
+            var mockCollectionUser = new Mock<IEnumerable<User>>();
+            var mockUser = new Mock<User>();
+
+            //нужный метод репозитория
+            mockRepo.Setup(x => x.Update<IEnumerable<User>>(mockCollectionUser.Object)).Verifiable();
+
+            sut.UpdateInSearchIndex<User>(mockUser.Object);
+
+            mockRepo.Verify(v => v.Update<IEnumerable<User>>(mockCollectionUser.Object), Times.Once);
+        }
+        #endregion
 
         //bool ClearSearchIndex();
 
