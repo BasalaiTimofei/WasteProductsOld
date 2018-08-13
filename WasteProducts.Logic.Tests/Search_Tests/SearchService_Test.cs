@@ -8,6 +8,7 @@ using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.Search;
 using WasteProducts.Logic.Services;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace WasteProducts.Logic.Tests.Search_Tests
 {
@@ -34,12 +35,12 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         private Mock<ISearchRepository> mockRepo;
         private ISearchService sut;
 
-        //SearchResult Search<TEntity>(SearchQuery query);
+        #region  SearchResult Search<TEntity>(SearchQuery query);
         [Test]
         public void Search_CheckContainsKey_ReturnTrue()
         {
             //нужный метод репозитория
-            mockRepo.Setup(x => x.GetAll<User>()).Returns(users);
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
             
             var query = new SearchQuery();
 
@@ -52,19 +53,20 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         public void Search_EmptyQuery_ReturnAllObjectsInRepository()
         {
             //нужный метод репозитория
-            mockRepo.Setup(x => x.GetAll<User>()).Returns(users);
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
             
-            var query = new SearchQuery();            
+            var query = new SearchQuery();
 
             var result = sut.Search<User>(query);
+
             Assert.AreEqual(1, result.Result.Count);
         }
 
         [Test]
-        public void Search_EmptyQuery_ReturnCount5()
+        public void Search_EmptyQuery_ReturnListCount()
         {
             //нужный метод репозитория
-            mockRepo.Setup(x => x.GetAll<User>()).Returns(users);
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
             
             var query = new SearchQuery() { Query = "user1", SearchableFields = new string[] { "id" } };
 
@@ -78,7 +80,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         public void SearchId_ByLogin_ReturnUser1()
         {    
             //нужный метод репозитория
-            mockRepo.Setup(x => x.GetAll<User>()).Returns(users);
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
             
             var query = new SearchQuery() { Query = "user1", SearchableFields = new string[] { "id" } };
 
@@ -88,10 +90,65 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             Assert.AreEqual(users[0].Id, user.Id);
         }
+        #endregion
 
+        #region Task<SearchResult> SearchAsync<TEntity>(SearchQuery query);
+        [Test]
+        public async Task Search_CheckContainsKey_ReturnTrue_Async()
+        {
+            //нужный метод репозитория
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
 
+            var query = new SearchQuery();
 
-        //Task<SearchResult> SearchAsync<TEntity>(SearchQuery query);        
+            var result = await sut.SearchAsync<User>(query);
+
+            Assert.AreEqual(true, result.Result.ContainsKey(typeof(User)));
+        }
+
+        [Test]
+        public async Task Search_EmptyQuery_ReturnAllObjectsInRepository_Async()
+        {
+            //нужный метод репозитория
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+
+            var query = new SearchQuery();
+
+            var result = await sut.SearchAsync<User>(query);
+
+            Assert.AreEqual(1, result.Result.Count);
+        }
+
+        [Test]
+        public async Task Search_EmptyQuery_ReturnListCount_Async()
+        {
+            //нужный метод репозитория
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+
+            var query = new SearchQuery() { Query = "user1", SearchableFields = new string[] { "id" } };
+
+            var result = await sut.SearchAsync<User>(query);
+            List<object> list = result.Result[typeof(User)].ToList();
+
+            Assert.AreEqual(5, list.Count);
+        }
+
+        [Test]
+        public async Task SearchId_ByLogin_ReturnUser1_Async()
+        {
+            //нужный метод репозитория
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+
+            var query = new SearchQuery() { Query = "user1", SearchableFields = new string[] { "id" } };
+
+            var result = await sut.SearchAsync<User>(query);
+            List<object> list = result.Result[typeof(User)].ToList();
+            var user = (User)list[0];
+
+            Assert.AreEqual(users[0].Id, user.Id);
+        }
+        #endregion
+
         //SearchResult SearchAll(SearchQuery query);        
         //Task<SearchResult> SearchAllAsync(SearchQuery query);        
         //SearchResult SearchDefault<TEntity>(SearchQuery query);        

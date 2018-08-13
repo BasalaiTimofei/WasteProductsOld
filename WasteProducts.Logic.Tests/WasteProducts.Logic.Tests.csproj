@@ -78,7 +78,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Search_Tests\SearchRepository_Test.cs" />
     <Compile Include="Search_Tests\SearchService_Test.cs" />
   </ItemGroup>
   <ItemGroup>
