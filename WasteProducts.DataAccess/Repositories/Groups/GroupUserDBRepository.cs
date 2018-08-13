@@ -10,45 +10,45 @@ using System.Data.Entity;
 
 namespace WasteProducts.DataAccess.Repositories.Groups
 {
-    class GroupBordRepository : IGroupRepository<GroupBordDB>
+    class GroupUserDBRepository : IGroupRepository<GroupUserDB>
     {
         WasteContext db;
 
-        public GroupBordRepository(WasteContext context)
+        public GroupUserDBRepository(WasteContext context)
         {
             db = context;
         }
 
-        public void Create(GroupBordDB item)
+        public void Create(GroupUserDB item)
         {
-            db.GroupBordDBs.Add(item);
+            db.GroupUserDBs.Add(item);
         }
 
-        public void Update(GroupBordDB item)
+        public void Update(GroupUserDB item)
         {
             db.Entry(item).State = EntityState.Modified;
         }
 
         public void Delete(int id)
         {
-            GroupBordDB group = db.GroupBordDBs.Find(id);
+            GroupUserDB group = db.GroupUserDBs.Find(id);
             if (group != null)
-                db.GroupBordDBs.Remove(group);
+                db.GroupUserDBs.Remove(group);
         }
 
-        public IEnumerable<GroupBordDB> Find(Func<GroupBordDB, bool> predicate)
+        public IEnumerable<GroupUserDB> Find(Func<GroupUserDB, bool> predicate)
         {
-            return db.GroupBordDBs.Where(predicate).ToList();
+            return db.GroupUserDBs.Where(predicate).ToList();
         }
 
-        public GroupBordDB Get(int id)
+        public GroupUserDB Get(int id)
         {
-            return db.GroupBordDBs.Find(id);
+            return db.GroupUserDBs.Find(id);
         }
 
-        public IEnumerable<GroupBordDB> GetAll()
+        public IEnumerable<GroupUserDB> GetAll()
         {
-            return db.GroupBordDBs;
+            return db.GroupUserDBs;
         }
 
     }
