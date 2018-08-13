@@ -15,8 +15,8 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         /// <param name="keyValue">Key value of model key field</param>
         /// <param name="keyField">Key field of model</param>
         /// <returns>Object model</returns>
-        TEntity Get<TEntity>(string keyValue, string keyField = "Id");
-        
+        TEntity Get<TEntity>(string keyValue, string keyField = "Id") where TEntity : class;
+
         /// <summary>
         /// Async version of Get
         /// </summary>
@@ -27,7 +27,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         /// </summary>
         /// <typeparam name="TEntity">Object model type</typeparam>
         /// <returns>IEnumerable of objects</returns>        
-        IEnumerable<TEntity> GetAll<TEntity>();
+        IEnumerable<TEntity> GetAll<TEntity>(int numResults) where TEntity : class;
 
         /// <summary>
         /// Async version of GetAll
@@ -39,7 +39,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         /// </summary>
         /// <typeparam name="TEntity">Object model type</typeparam>
         /// <param name="obj">Object</param>
-        void Insert<TEntity>(TEntity obj);
+        void Insert<TEntity>(TEntity obj) where TEntity : class;
 
         /// <summary>
         /// Async version of Insert
@@ -51,7 +51,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         /// </summary>
         /// <typeparam name="TEntity">Object model type</typeparam>
         /// <param name="obj">Object</param>
-        void Update<TEntity>(TEntity obj);
+        void Update<TEntity>(TEntity obj) where TEntity : class;
 
         /// <summary>
         /// Async version of Update
@@ -63,7 +63,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         /// </summary>
         /// <typeparam name="TEntity">Object model type</typeparam>
         /// <param name="obj">Object</param>
-        void Delete<TEntity>(TEntity obj);
+        void Delete<TEntity>(TEntity obj) where TEntity : class;
 
         /// <summary>
         /// Async version of Delete

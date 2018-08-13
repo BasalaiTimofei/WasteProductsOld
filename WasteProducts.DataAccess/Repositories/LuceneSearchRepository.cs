@@ -1,8 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 using System.Threading.Tasks;
+using Lucene.Net.Analysis;
+using Lucene.Net.Store;
+using Lucene.Net.Util;
+using Lucene.Net.Analysis.Core;
+using Lucene.Net.Documents;
+using Lucene.Net.Index;
+using Lucene.Net.Search;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 
 namespace WasteProducts.DataAccess.Repositories
@@ -12,32 +21,101 @@ namespace WasteProducts.DataAccess.Repositories
     /// </summary>
     public class LuceneSearchRepository : ISearchRepository
     {
-        public TEntity Get<TEntity>(string keyValue, string keyField = "Id")
+
+        public const LuceneVersion MATCH_LUCENE_VERSION = LuceneVersion.LUCENE_48;
+        public const int DEFAULT_MAX_LUCENE_RESULTS = 1000;
+        public string IndexPath { get; private set; }
+        private Lucene.Net.Store.Directory _directory;
+        private Analyzer _analyzer;
+        private IndexWriter _writer;
+
+        public LuceneSearchRepository()
         {
-            throw new NotImplementedException();
+
+            string assemblyFilename = Assembly.GetAssembly(typeof(LuceneSearchRepository)).Location;
+            string assemblyPath = Path.GetDirectoryName(assemblyFilename);
+            IndexPath = assemblyPath + ConfigurationManager.AppSettings["LuceneIndexStoragePath"];
+            _directory = FSDirectory.Open(IndexPath);
+            _analyzer = new WhitespaceAnalyzer(MATCH_LUCENE_VERSION);
+            _writer = new IndexWriter(_directory, new IndexWriterConfig(MATCH_LUCENE_VERSION, _analyzer));
         }
 
-        public IEnumerable<TEntity> GetAll<TEntity>()
+        public LuceneSearchRepository(bool clearIndex):this()
         {
-            throw new NotImplementedException();
+            if (clearIndex)
+            {
+                ClearIndex();
+            }
         }
 
-        public void Insert<TEntity>(TEntity obj)
+        public TEntity Get<TEntity>(string keyValue, string keyField = "Id") where TEntity : class 
         {
-            throw new NotImplementedException();
+            Query queryGet = new TermQuery(new Term(keyField, keyValue));
+            using (var reader = DirectoryReader.Open(_directory))
+            {
+                var searcher = new IndexSearcher(reader);
+                TopDocs docs = searcher.Search<TEntity>(queryGet, 1);
+                ScoreDoc firstScoreDoc = docs.ScoreDocs.FirstOrDefault();
+                if (firstScoreDoc != null)
+                {
+                    Document doc = searcher.Doc(docs.ScoreDocs[0].Doc);
+                    TEntity entity = doc.ToObject<TEntity>();
+                    return entity;
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
 
-        public void Update<TEntity>(TEntity obj)
+        public IEnumerable<TEntity> GetAll<TEntity>(int numResults = DEFAULT_MAX_LUCENE_RESULTS) where TEntity  :class 
         {
-            throw new NotImplementedException();
+            Query queryGet = new WildcardQuery(new Term("Id", "*"));
+            List<TEntity> entityList = new List<TEntity>();
+            using (var reader = DirectoryReader.Open(_directory))
+            {
+                var searcher = new IndexSearcher(reader);
+                TopDocs docs = searcher.Search<TEntity>(queryGet, numResults);
+                foreach (var scoreDoc in docs.ScoreDocs)
+                {
+                    Document doc = searcher.Doc(scoreDoc.Doc);
+                    TEntity entity = doc.ToObject<TEntity>();
+                    entityList.Add(entity);
+                }
+            }
+            return entityList;
         }
 
-        public void Delete<TEntity>(TEntity obj)
+        public void Insert<TEntity>(TEntity obj) where TEntity : class
         {
-            throw new NotImplementedException();
+            Document doc = obj.ToDocument();
+            _writer.AddDocument(doc);
+            _writer.Commit();
         }
 
-        //todo: delete async methods later
+        public void Update<TEntity>(TEntity obj) where TEntity : class 
+        {
+            Delete<TEntity>(obj);
+            Insert<TEntity>(obj);
+        }
+
+        public void Delete<TEntity>(TEntity obj) where TEntity : class
+        {
+
+            System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty("Id");
+            string id = keyFieldInfo.GetValue(obj).ToString();
+            _writer.DeleteDocuments<TEntity>(new TermQuery(new Term("Id", id)));
+            _writer.Commit();
+        }
+
+        public void ClearIndex()
+        {
+            _writer.DeleteAll();
+            _writer.Commit();
+        }
+
+        //TODO: add realisation of async methods later
   
         public Task<TEntity> GetAsync<TEntity>(string Id)
         {
@@ -63,5 +141,7 @@ namespace WasteProducts.DataAccess.Repositories
         {
             throw new NotImplementedException();
         }
+
+        //TODO Implement dispose pattern
     }
 }
