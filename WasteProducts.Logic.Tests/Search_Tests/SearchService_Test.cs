@@ -205,7 +205,63 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         }
         #endregion
 
-        //SearchResult SearchDefault<TEntity>(SearchQuery query);        
+        #region SearchResult SearchDefault<TEntity>(SearchQuery query);
+        [Test]
+        public void SearchDefault_CheckContainsKey_ReturnTrue()
+        {
+            //нужный метод репозитория
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+
+            var query = new SearchQuery();
+
+            var result = sut.SearchDefault<User>(query);
+
+            Assert.AreEqual(true, result.Result.ContainsKey(typeof(User)));
+        }
+
+        [Test]
+        public void SearchDefault_EmptyQuery_ReturnAllObjectsInRepository()
+        {
+            //нужный метод репозитория
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+
+            var query = new SearchQuery();
+
+            var result = sut.SearchDefault<User>(query);
+
+            Assert.AreEqual(1, result.Result.Count);
+        }
+
+        [Test]
+        public void SearchDefault_EmptyQuery_ReturnListCount()
+        {
+            //нужный метод репозитория
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+
+            var query = new SearchQuery() { Query = "user1", SearchableFields = new string[] { "id" } };
+
+            var result = sut.SearchDefault<User>(query);
+            List<object> list = result.Result[typeof(User)].ToList();
+
+            Assert.AreEqual(5, list.Count);
+        }
+
+        [Test]
+        public void SearchDefault_ByLogin_ReturnUser1()
+        {
+            //нужный метод репозитория
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+
+            var query = new SearchQuery() { Query = "user1", SearchableFields = new string[] { "id" } };
+
+            var result = sut.SearchDefault<User>(query);
+            List<object> list = result.Result[typeof(User)].ToList();
+            var user = (User)list[0];
+
+            Assert.AreEqual(users[0].Id, user.Id);
+        }
+        #endregion
+
         //Task<SearchResult> SearchDefaultAsync<TEntity>(SearchQuery query);        
         //SearchResult SearchAllDefault(SearchQuery query);
         //Task<SearchResult> SearchAllDefaultAsync(SearchQuery query);
