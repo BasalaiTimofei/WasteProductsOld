@@ -177,8 +177,34 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         }
         #endregion
 
-        //SearchResult SearchAll(SearchQuery query);        
-        //Task<SearchResult> SearchAllAsync(SearchQuery query);
+        #region Task<SearchResult> SearchAllAsync(SearchQuery query);
+        [Test]
+        public async Task SearchAll_CheckContainsKey_ReturnTrueAsync()
+        {
+            //нужный метод репозитория
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+
+            var query = new SearchQuery();
+
+            var result = await sut.SearchAllAsync(query);
+
+            Assert.AreEqual(true, result.Result.ContainsKey(typeof(User)));
+        }
+
+        [Test]
+        public async Task SearchAll_EmptyQuery_ReturnAllObjectsInRepositoryAsync()
+        {
+            //нужный метод репозитория
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+
+            var query = new SearchQuery();
+
+            var result = await sut.SearchAllAsync(query);
+
+            Assert.AreEqual(1, result.Result.Count);
+        }
+        #endregion
+
         //SearchResult SearchDefault<TEntity>(SearchQuery query);        
         //Task<SearchResult> SearchDefaultAsync<TEntity>(SearchQuery query);        
         //SearchResult SearchAllDefault(SearchQuery query);
