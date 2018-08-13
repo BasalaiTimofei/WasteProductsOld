@@ -10,45 +10,45 @@ using System.Data.Entity;
 
 namespace WasteProducts.DataAccess.Repositories.Groups
 {
-    class GroupRepository : IGroupRepository<GroupDB>
+    class ProductBordDBRepository : IGroupRepository<ProductBordDB>
     {
         WasteContext db;
 
-        public GroupRepository(WasteContext context)
+        public ProductBordDBRepository(WasteContext context)
         {
             db = context;
         }
 
-        public void Create(GroupDB item)
+        public void Create(ProductBordDB item)
         {
-            db.GroupDBs.Add(item);
+            db.ProductBordDBs.Add(item);
         }
 
-        public void Update(GroupDB item)
+        public void Update(ProductBordDB item)
         {
             db.Entry(item).State = EntityState.Modified;
         }
 
         public void Delete(int id)
         {
-            GroupDB group = db.GroupDBs.Find(id);
+            ProductBordDB group = db.ProductBordDBs.Find(id);
             if (group != null)
-                db.GroupDBs.Remove(group);
+                db.ProductBordDBs.Remove(group);
         }
 
-        public IEnumerable<GroupDB> Find(Func<GroupDB, bool> predicate)
+        public IEnumerable<ProductBordDB> Find(Func<ProductBordDB, bool> predicate)
         {
-            return db.GroupDBs.Where(predicate).ToList();
+            return db.ProductBordDBs.Where(predicate).ToList();
         }
 
-        public GroupDB Get(int id)
+        public ProductBordDB Get(int id)
         {
-            return db.GroupDBs.Find(id);
+            return db.ProductBordDBs.Find(id);
         }
 
-        public IEnumerable<GroupDB> GetAll()
+        public IEnumerable<ProductBordDB> GetAll()
         {
-            return db.GroupDBs;
+            return db.ProductBordDBs;
         }
 
     }
