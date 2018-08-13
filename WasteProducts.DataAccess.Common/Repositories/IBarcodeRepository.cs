@@ -7,6 +7,9 @@ using WasteProducts.DataAccess.Common.Models.Barcods;
 
 namespace WasteProducts.DataAccess.Common.Repositories
 {
+    /// <summary>
+    /// This interface provides CRUD methods for barcode repository
+    /// </summary>
     interface IBarcodeRepository
     {
         /// <summary>
@@ -38,7 +41,7 @@ namespace WasteProducts.DataAccess.Common.Repositories
         /// <summary>
         /// Delete record of the barcode in the repository.
         /// </summary>
-        /// <param name="barcode">ID of the barcode.</param>
-        void Delete(int id);
+        /// <param name="id">ID of the barcode.</param>
+        void Delete(Guid id);
     }
 }

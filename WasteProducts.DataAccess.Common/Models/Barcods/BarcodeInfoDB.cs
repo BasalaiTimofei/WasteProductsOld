@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WasteProducts.Logic.Common.Services
+namespace WasteProducts.DataAccess.Common.Models.Barcods
 {
-    public class BarcodeInfo
+    class BarcodeInfoDB
     {
         /// <summary>
         /// Id.
@@ -42,5 +42,15 @@ namespace WasteProducts.Logic.Common.Services
         /// User ID of the sending photo.
         /// </summary>
         public int UserID { get; set; }
+
+        /// <summary>
+        /// Date of record creation in DB.
+        /// </summary>
+        public DateTime Created { get; set; }
+
+        /// <summary>
+        /// Date of record modified in DB.
+        /// </summary>
+        public DateTime? Modified { get; set; }
     }
 }
