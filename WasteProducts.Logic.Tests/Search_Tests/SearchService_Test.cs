@@ -375,13 +375,31 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         }
         #endregion
 
-        //void AddToSearchIndex<TEntity>(TEntity model);
+        #region void AddToSearchIndex<TEntity>(TEntity model);        
+        [Test]
+        public void AddSearchIndex_AddNewEntity_ResultVerify()
+        {
+            var mockUser = new Mock<User>();
+
+            //нужный метод репозитория
+            mockRepo.Setup(x => x.Insert<User>(mockUser.Object)).Verifiable();            
+
+            sut.AddToSearchIndex<User>(mockUser.Object);
+
+            mockRepo.Verify(v => v.Insert<User>(mockUser.Object), Times.Once);
+        }
+
+        #endregion
         //void AddToSearchIndex<TEntity>(IEnumerable<TEntity> model);
+
         //void RemoveFromSearchIndex<TEntity>(TEntity model);
         //void RemoveFromSearchIndex<TEntity>(IEnumerable<TEntity> model);
+
         //void UpdateInSearchIndex<TEntity>(TEntity model);
         //void UpdateInSearchIndex<TEntity>(IEnumerable<TEntity> model);
+
         //bool ClearSearchIndex();
+
         //bool OptimizeSearchIndex();
     }
 }
