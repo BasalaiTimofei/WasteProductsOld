@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WasteProducts.DataAccess.Common.Models.Groups
 {
-    class GroupUserDB
+    public class GroupUserDB
     {
         public int Id { get; set; }
         public int GroupId { get; set; }

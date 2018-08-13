@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WasteProducts.DataAccess.Common.Models.Groups
 {
-    class GroupDB
+    public class GroupDB
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -17,3 +17,4 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         public DateTime Create { get; set; }
         public DateTime Delete { get; set; }
     }
+}

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WasteProducts.DataAccess.Common.Models.Groups
 {
-    class GroupBordDB
+    public class GroupBordDB
     {
         public int Id { get; set; }
         public string Name { get; set; }
