@@ -16,7 +16,7 @@ namespace WasteProducts.Logic.Common.Services.Search
         /// <typeparam name="TEntity">Object model</typeparam>
         /// <param name="query">SearchQuery model</param>
         /// <returns>SearchResult model</returns>
-        SearchResult Search<TEntity>(SearchQuery query);
+        SearchResult Search<TEntity>(SearchQuery query) where TEntity : class;
 		
 		/// <summary>
         /// Async version of Search

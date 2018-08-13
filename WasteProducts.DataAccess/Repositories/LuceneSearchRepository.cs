@@ -12,6 +12,7 @@ using Lucene.Net.Analysis.Core;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
+using Lucene.Net.QueryParsers.Classic;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 
 namespace WasteProducts.DataAccess.Repositories
@@ -23,7 +24,6 @@ namespace WasteProducts.DataAccess.Repositories
     {
 
         public const LuceneVersion MATCH_LUCENE_VERSION = LuceneVersion.LUCENE_48;
-        public const int DEFAULT_MAX_LUCENE_RESULTS = 1000;
         public string IndexPath { get; private set; }
         private Lucene.Net.Store.Directory _directory;
         private Analyzer _analyzer;
@@ -69,7 +69,7 @@ namespace WasteProducts.DataAccess.Repositories
             }
         }
 
-        public IEnumerable<TEntity> GetAll<TEntity>(int numResults = DEFAULT_MAX_LUCENE_RESULTS) where TEntity  :class 
+        public IEnumerable<TEntity> GetAll<TEntity>(int numResults) where TEntity  :class 
         {
             Query queryGet = new WildcardQuery(new Term("Id", "*"));
             List<TEntity> entityList = new List<TEntity>();
@@ -85,6 +85,32 @@ namespace WasteProducts.DataAccess.Repositories
                 }
             }
             return entityList;
+        }
+
+        public IEnumerable<TEnity> GetAll<TEnity>(string queryString, string[] searchableFileds, int numResults) where TEnity : class
+        {
+            using (var reader = DirectoryReader.Open(_directory))
+            {
+                var searcher = new IndexSearcher(reader);
+                BooleanQuery booleanQuery = new BooleanQuery();
+                List<Query> queryList = new List<Query>();
+                List<TEnity> entityList = new List<TEnity>();
+                foreach (var s in searchableFileds)
+                {
+
+                    MultiFieldQueryParser queryParser = new MultiFieldQueryParser(MATCH_LUCENE_VERSION, searchableFileds, _analyzer);
+                    queryParser.DefaultOperator = QueryParser.OR_OPERATOR;
+                    Query query = queryParser.Parse(queryString);
+                    var docs = searcher.Search<TEnity>(query, numResults);
+                    foreach (var scoreDoc in docs.ScoreDocs)
+                    {
+                        Document doc = searcher.Doc(scoreDoc.Doc);
+                        TEnity entity = doc.ToObject<TEnity>();
+                        entityList.Add(entity);
+                    }
+                }
+                return entityList;
+            }
         }
 
         public void Insert<TEntity>(TEntity obj) where TEntity : class
@@ -115,7 +141,7 @@ namespace WasteProducts.DataAccess.Repositories
             _writer.Commit();
         }
 
-        //TODO: add realisation of async methods later
+        //TODO: add realization of async methods later
   
         public Task<TEntity> GetAsync<TEntity>(string Id)
         {

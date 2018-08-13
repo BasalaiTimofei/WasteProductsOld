@@ -16,14 +16,21 @@ namespace WasteProducts.Logic.Services
     public class LuceneSearchService : ISearchService
     {
         private ISearchRepository _repository;
+        public const int DEFAULT_MAX_LUCENE_RESULTS = 1000;
+        public int MaxResultCount { get; set; } = DEFAULT_MAX_LUCENE_RESULTS;
+
         public LuceneSearchService(ISearchRepository repository)
         {
             _repository = repository;
         }
 
-        public SearchResult Search<TEntity>(SearchQuery query)
+        public SearchResult Search<TEntity>(SearchQuery query) where TEntity : class
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            //_repository.GetAll<TEntity>(query.Query, query.SearchableFields, );
+            SearchResult result = new SearchResult();
+            result.Result.Add(typeof(TEntity), _repository.GetAll<TEntity>(query.Query, query.SearchableFields, MaxResultCount));
+            return result; 
         }
 
         public SearchResult SearchAll(SearchQuery query)

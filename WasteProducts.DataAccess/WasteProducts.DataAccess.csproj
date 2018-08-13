@@ -59,6 +59,12 @@
     <Reference Include="Lucene.Net.Queries, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Lucene.Net.Queries.4.8.0-beta00005\lib\net45\Lucene.Net.Queries.dll</HintPath>
     </Reference>
+    <Reference Include="Lucene.Net.QueryParser, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lucene.Net.QueryParser.4.8.0-beta00005\lib\net45\Lucene.Net.QueryParser.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net.Sandbox, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Lucene.Net.Sandbox.4.8.0-beta00005\lib\net45\Lucene.Net.Sandbox.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>

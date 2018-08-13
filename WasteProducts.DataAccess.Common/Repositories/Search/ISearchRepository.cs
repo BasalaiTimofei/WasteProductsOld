@@ -23,11 +23,22 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         Task<TEntity> GetAsync<TEntity>(string Id);
 
         /// <summary>
-        /// Returnes collection of all objects
+        /// Returns collection of all objects
         /// </summary>
         /// <typeparam name="TEntity">Object model type</typeparam>
+        /// <param name="numResults">maximum number of resulte</param>
         /// <returns>IEnumerable of objects</returns>        
         IEnumerable<TEntity> GetAll<TEntity>(int numResults) where TEntity : class;
+
+        /// <summary>
+        /// Returns collection of all objects. Query string and array of fields are used for search.
+        /// </summary>
+        /// <typeparam name="TEntity">Object model type</typeparam>
+        /// <param name="queryString">Query string</param>
+        /// <param name="searchableFileds">Fileds to search.</param>
+        /// <param name="numResults">maximum number of results</param>
+        /// <returns>IEnumerable of objects</returns>  
+        IEnumerable<TEntity> GetAll<TEntity>(string queryString, string[] searchableFileds, int numResults) where TEntity : class;
 
         /// <summary>
         /// Async version of GetAll
