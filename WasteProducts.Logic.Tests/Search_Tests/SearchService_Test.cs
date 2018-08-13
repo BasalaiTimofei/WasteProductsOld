@@ -408,7 +408,20 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         }
         #endregion
 
-        //void RemoveFromSearchIndex<TEntity>(TEntity model);
+        #region void RemoveFromSearchIndex<TEntity>(TEntity model);
+        [Test]
+        public void RemoveSearchIndex_DeleteEntity_ResultVerify()
+        {
+            var mockUser = new Mock<User>();
+
+            //нужный метод репозитория
+            mockRepo.Setup(x => x.Delete<User>(mockUser.Object)).Verifiable();
+
+            sut.RemoveFromSearchIndex<User>(mockUser.Object);
+
+            mockRepo.Verify(v => v.Delete<User>(mockUser.Object), Times.Once);
+        }
+        #endregion
         //void RemoveFromSearchIndex<TEntity>(IEnumerable<TEntity> model);
 
         //void UpdateInSearchIndex<TEntity>(TEntity model);
