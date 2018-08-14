@@ -66,6 +66,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// <returns>List of products.</returns>
         public IEnumerable<ProductDB> SelectAll() => _context.Products.ToList();
 
+        /// <inheritdoc />
         /// <summary>
         /// Provides a listing of products that satisfy the condition.
         /// </summary>
@@ -73,7 +74,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// <returns>Returns list of products.</returns>
         public IEnumerable<ProductDB> SelectWhere(Predicate<ProductDB> predicate)
         {
-            Func<ProductDB, bool> condition = new Func<ProductDB, bool>(predicate);
+            var condition = new Func<ProductDB, bool>(predicate);
             return _context.Products.Where(condition).ToList();
         }
 
