@@ -35,7 +35,7 @@ namespace WasteProducts.DataAccess.Common.Repositories
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        IEnumerable<UserDB> SelectWhere(Predicate<UserDB> predicate); 
+        IEnumerable<UserDB> SelectWhere(Func<UserDB, bool> predicate); 
 
         /// <summary>
         /// Adds new registered user in the repository.

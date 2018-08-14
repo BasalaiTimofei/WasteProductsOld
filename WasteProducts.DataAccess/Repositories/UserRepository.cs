@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.DataAccess.Contexts;
@@ -14,8 +11,8 @@ namespace WasteProducts.DataAccess.Repositories
     {
         public void Add(UserDB user)
         {
-            if (user.Id != default(int))
-                throw new ArgumentException("Cannot Add User with Id different from 0.");
+            if (user.Id != null)
+                throw new ArgumentException("Cannot Add User with Id different from null.");
 
             user.Created = DateTime.UtcNow;
             using (var db = new WasteContext())
@@ -27,13 +24,11 @@ namespace WasteProducts.DataAccess.Repositories
 
         public void Delete(UserDB user)
         {
-            if (user.Id != default(int))
+            if (user.Id != null)
             {
                 using (var db = new WasteContext())
                 {
-                    var result = db.Users
-                        .Where(f => f.Id == user.Id)
-                        .FirstOrDefault();
+                    var result = db.Users.Where(f => f.Id == user.Id).FirstOrDefault();
 
                     if (result != null)
                     {
@@ -48,7 +43,7 @@ namespace WasteProducts.DataAccess.Repositories
             }
             else
             {
-                throw new ArgumentException("Cannot delete User with Id = 0.");
+                throw new ArgumentException("Cannot delete User with Id = null.");
             }
         }
 
@@ -56,15 +51,7 @@ namespace WasteProducts.DataAccess.Repositories
         {
             using (var db = new WasteContext())
             {
-                var result = db.Users.Where(user => user.Email == email && user.Password == password);
-                if (result.Count() > 0)
-                {
-                    return result.First();
-                }
-                else
-                {
-                    return null;
-                }
+                return db.Users.Where(user => user.Email == email && user.PasswordHash == password).FirstOrDefault();
             }
         }
 
@@ -72,15 +59,7 @@ namespace WasteProducts.DataAccess.Repositories
         {
             using (var db = new WasteContext())
             {
-                var result = db.Users.Where(user => user.Email == email);
-                if (result.Count() > 0)
-                {
-                    return result.First();
-                }
-                else
-                {
-                    return null;
-                }
+                return db.Users.Where(user => user.Email == email).FirstOrDefault();
             }
         }
 
@@ -92,25 +71,28 @@ namespace WasteProducts.DataAccess.Repositories
             }
         }
 
-        public IEnumerable<UserDB> SelectWhere(Predicate<UserDB> predicate)
+        public IEnumerable<UserDB> SelectWhere(Func<UserDB, bool> predicate)
         {
-            Func<UserDB, bool> condition = new Func<UserDB, bool>(predicate);
-
             using (var db = new WasteContext())
             {
-                return db.Users.Where(condition);
+                return db.Users.Where(predicate);
             }
         }
 
         public void Update(UserDB user)
         {
-
             using (var db = new WasteContext())
             {
                 var userInDB = db.Users.Find(user.Id);
+
+                user.Created = userInDB.Created;
+
                 db.Entry(userInDB).CurrentValues.SetValues(user);
+
                 userInDB.Modified = DateTime.UtcNow;
+
                 db.SaveChanges();
+            }
         }
     }
 }

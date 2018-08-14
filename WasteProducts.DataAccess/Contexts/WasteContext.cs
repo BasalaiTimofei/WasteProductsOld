@@ -7,7 +7,8 @@ using WasteProducts.DataAccess.Contexts.Config;
 namespace WasteProducts.DataAccess.Contexts
 {
     [DbConfigurationType(typeof(MsSqlConfiguration))]
-    // public class WasteContext : IdentityDbContext; IdentityUser
+    // todo delete this comment after the work with userDB is done
+    // public class WasteContext : IdentityDbContext; IdentityUser 
     public class WasteContext : IdentityDbContext<UserDB, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>
     {
         public WasteContext()

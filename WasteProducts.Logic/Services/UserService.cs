@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using System;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services;
-using WasteProducts.Logic.Mappings;
+using WasteProducts.Logic.Mappings.UserMappings;
 
 namespace WasteProducts.Logic.Services
 {

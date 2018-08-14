@@ -47,7 +47,6 @@ namespace WasteProducts.Logic.Services
             {
                 _smtpClient.Send(message);
             }
-            //TODO Add exceptions handling here
         }
     }
 }
