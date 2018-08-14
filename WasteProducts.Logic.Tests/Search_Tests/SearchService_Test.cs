@@ -63,7 +63,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         }
 
         [Test]
-        public void Search_EmptyQuery_ReturnListCount()
+        public void Search_login_by_id_Return_count_0()
         {
             //нужный метод репозитория
             mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
@@ -73,7 +73,21 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             var result = sut.Search<User>(query);
             List<object> list = result.Result[typeof(User)].ToList();
 
-            Assert.AreEqual(5, list.Count);
+            Assert.AreEqual(0, list.Count);
+        }
+
+        [Test]
+        public void Search_login_by_login_Return_count_1()
+        {
+            //нужный метод репозитория
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+
+            var query = new SearchQuery() { Query = "user1", SearchableFields = new string[] { "Login" } };
+
+            var result = sut.Search<User>(query);
+            List<object> list = result.Result[typeof(User)].ToList();
+
+            Assert.AreEqual(1, list.Count);
         }
 
         [Test]
