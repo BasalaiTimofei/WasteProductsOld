@@ -1,4 +1,4 @@
-﻿using WasteProducts.Logic.Common.Models.Product;
+﻿using WasteProducts.Logic.Common.Models.Products;
 
 namespace WasteProducts.Logic.Common.Services
 {

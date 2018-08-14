@@ -82,7 +82,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// </summary>
         /// <param name="category">Category for select products</param>
         /// <returns>Returns list of products.</returns>
-        IEnumerable<ProductDB> SelectByCategory(CategoryDB category)
+        public IEnumerable<ProductDB> SelectByCategory(CategoryDB category)
         {
             return _context.Products.Where(p => p.CategoryDB.Id == category.Id).ToList();
         }
