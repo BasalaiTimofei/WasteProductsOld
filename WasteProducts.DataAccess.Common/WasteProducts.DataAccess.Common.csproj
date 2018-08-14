@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\LuceneSearchRepositoryException.cs" />
+    <Compile Include="Exceptions\LuceneSearchServiceException.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\Users\UserDB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -48,5 +50,6 @@
     <Compile Include="Repositories\Search\ISearchRepository.cs" />
     <Compile Include="UoW\IUnitOfWork.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

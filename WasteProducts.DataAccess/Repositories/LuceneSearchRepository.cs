@@ -14,13 +14,16 @@ using Lucene.Net.Index;
 using Lucene.Net.Search;
 using Lucene.Net.QueryParsers.Classic;
 using WasteProducts.DataAccess.Common.Repositories.Search;
+using WasteProducts.DataAccess.Common.Exceptions;
+using Directory = Lucene.Net.Store.Directory;
+using System.Runtime.Serialization;
 
 namespace WasteProducts.DataAccess.Repositories
 {
     /// <summary>
     /// Implementation of ISearchRepository with Lucene
     /// </summary>
-    public class LuceneSearchRepository : ISearchRepository
+    public class LuceneSearchRepository : ISearchRepository, IDisposable
     {
 
         public const LuceneVersion MATCH_LUCENE_VERSION = LuceneVersion.LUCENE_48;
@@ -28,6 +31,7 @@ namespace WasteProducts.DataAccess.Repositories
         private Lucene.Net.Store.Directory _directory;
         private Analyzer _analyzer;
         private IndexWriter _writer;
+        private SearcherManager _searcherManager;
 
         public LuceneSearchRepository()
         {
@@ -35,9 +39,19 @@ namespace WasteProducts.DataAccess.Repositories
             string assemblyFilename = Assembly.GetAssembly(typeof(LuceneSearchRepository)).Location;
             string assemblyPath = Path.GetDirectoryName(assemblyFilename);
             IndexPath = assemblyPath + ConfigurationManager.AppSettings["LuceneIndexStoragePath"];
-            _directory = FSDirectory.Open(IndexPath);
             _analyzer = new WhitespaceAnalyzer(MATCH_LUCENE_VERSION);
-            _writer = new IndexWriter(_directory, new IndexWriterConfig(MATCH_LUCENE_VERSION, _analyzer));
+            try
+            {
+                _directory = FSDirectory.Open(IndexPath);
+                IndexWriterConfig config = new IndexWriterConfig(MATCH_LUCENE_VERSION, _analyzer);
+                config.OpenMode = OpenMode.CREATE_OR_APPEND;
+                _writer = new IndexWriter(_directory, config);
+                _searcherManager = new SearcherManager(_writer, true, null);
+            }
+            catch (Exception ex)
+            {
+                throw new LuceneSearchRepositoryException($"Can't open Lucene index. {ex.Message}",ex);
+            }
         }
 
         public LuceneSearchRepository(bool clearIndex):this()
@@ -48,12 +62,12 @@ namespace WasteProducts.DataAccess.Repositories
             }
         }
 
-        public TEntity Get<TEntity>(string keyValue, string keyField = "Id") where TEntity : class 
+        public TEntity Get<TEntity>(string keyValue, string keyField = "Id") where TEntity : class
         {
             Query queryGet = new TermQuery(new Term(keyField, keyValue));
-            using (var reader = DirectoryReader.Open(_directory))
+            var searcher = _searcherManager.Acquire();
+            try
             {
-                var searcher = new IndexSearcher(reader);
                 TopDocs docs = searcher.Search<TEntity>(queryGet, 1);
                 ScoreDoc firstScoreDoc = docs.ScoreDocs.FirstOrDefault();
                 if (firstScoreDoc != null)
@@ -67,15 +81,19 @@ namespace WasteProducts.DataAccess.Repositories
                     return null;
                 }
             }
+            finally
+            {
+                _searcherManager.Release(searcher);
+            }
         }
 
-        public IEnumerable<TEntity> GetAll<TEntity>(int numResults) where TEntity  :class 
+        public IEnumerable<TEntity> GetAll<TEntity>(int numResults) where TEntity  :class
         {
             Query queryGet = new WildcardQuery(new Term("Id", "*"));
             List<TEntity> entityList = new List<TEntity>();
-            using (var reader = DirectoryReader.Open(_directory))
+            var searcher = _searcherManager.Acquire();
+            try
             {
-                var searcher = new IndexSearcher(reader);
                 TopDocs docs = searcher.Search<TEntity>(queryGet, numResults);
                 foreach (var scoreDoc in docs.ScoreDocs)
                 {
@@ -83,22 +101,27 @@ namespace WasteProducts.DataAccess.Repositories
                     TEntity entity = doc.ToObject<TEntity>();
                     entityList.Add(entity);
                 }
+                return entityList;
             }
-            return entityList;
+            finally
+            {
+                _searcherManager.Release(searcher);
+            }
         }
 
         public IEnumerable<TEnity> GetAll<TEnity>(string queryString, string[] searchableFileds, int numResults) where TEnity : class
         {
-            using (var reader = DirectoryReader.Open(_directory))
+            var searcher = _searcherManager.Acquire();
+            try
             {
-                var searcher = new IndexSearcher(reader);
                 BooleanQuery booleanQuery = new BooleanQuery();
                 List<Query> queryList = new List<Query>();
                 List<TEnity> entityList = new List<TEnity>();
                 foreach (var s in searchableFileds)
                 {
 
-                    MultiFieldQueryParser queryParser = new MultiFieldQueryParser(MATCH_LUCENE_VERSION, searchableFileds, _analyzer);
+                    MultiFieldQueryParser queryParser =
+                        new MultiFieldQueryParser(MATCH_LUCENE_VERSION, searchableFileds, _analyzer);
                     queryParser.DefaultOperator = QueryParser.OR_OPERATOR;
                     Query query = queryParser.Parse(queryString);
                     var docs = searcher.Search<TEnity>(query, numResults);
@@ -109,7 +132,12 @@ namespace WasteProducts.DataAccess.Repositories
                         entityList.Add(entity);
                     }
                 }
+
                 return entityList;
+            }
+            finally
+            {
+                _searcherManager.Release(searcher);
             }
         }
 
@@ -142,7 +170,8 @@ namespace WasteProducts.DataAccess.Repositories
         }
 
         //TODO: add realization of async methods later
-  
+        #region Async methods
+
         public Task<TEntity> GetAsync<TEntity>(string Id)
         {
             throw new NotImplementedException();
@@ -167,7 +196,45 @@ namespace WasteProducts.DataAccess.Repositories
         {
             throw new NotImplementedException();
         }
+        #endregion
 
-        //TODO Implement dispose pattern
+        #region IDisposable Support
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                    _writer.Commit();
+                    _writer.Dispose();
+                    _directory.Dispose();
+                    _analyzer.Dispose();
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+                disposedValue = true;
+            }
+        }
+
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~LuceneSearchRepository() {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            // GC.SuppressFinalize(this);
+        }
+
+        #endregion
     }
 }

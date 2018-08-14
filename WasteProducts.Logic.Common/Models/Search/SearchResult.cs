@@ -16,5 +16,6 @@ namespace WasteProducts.Logic.Common.Models.Search
         /// Dictionary containing IEnumerable list of founded objects and their type
         /// </summary>
         public Dictionary<Type, IEnumerable<object>> Result { get; } = new Dictionary<Type, IEnumerable<object>>();
+
     }
 }
