@@ -31,7 +31,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             sut = new LuceneSearchService(mockRepo.Object);
         }
 
-        private List<User> users;
+        private IEnumerable<User> users;
         private Mock<ISearchRepository> mockRepo;
         private ISearchService sut;
 
@@ -71,6 +71,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             var query = new SearchQuery() { Query = "user1", SearchableFields = new string[] { "id" } };
 
             var result = sut.Search<User>(query);
+
             List<object> list = result.Result[typeof(User)].ToList();
 
             Assert.AreEqual(0, list.Count);
@@ -78,22 +79,32 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
         [Test]
         public void Search_login_by_login_Return_count_1()
-        {
-            //нужный метод репозитория
-            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+        {            
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<int>())).Returns(users);
 
-            var query = new SearchQuery() { Query = "user1", SearchableFields = new string[] { "Login" } };
+            var query = new SearchQuery();// { Query = "user1", SearchableFields = new string[] { "Login" } };
 
             var result = sut.Search<User>(query);
             List<object> list = result.Result[typeof(User)].ToList();
 
-            Assert.AreEqual(1, list.Count);
+            Assert.AreEqual(5, list.Count);
+        }
+
+        [Test]
+        public void Search_GetAll_ReturnVerify()
+        {            
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<int>())).Verifiable();
+
+            var query = new SearchQuery();
+
+            var result = sut.Search<User>(query);            
+
+            mockRepo.Verify(v => v.GetAll<User>(It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<int>()), Times.Once);
         }
 
         [Test]
         public void SearchId_ByLogin_ReturnUser1()
-        {    
-            //нужный метод репозитория
+        {   
             mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
             
             var query = new SearchQuery() { Query = "user1", SearchableFields = new string[] { "id" } };
@@ -102,7 +113,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             List<object> list = result.Result[typeof(User)].ToList();
             var user = (User)list[0];
 
-            Assert.AreEqual(users[0].Id, user.Id);
+            Assert.AreEqual(1, user.Id);
         }
         #endregion
 
@@ -159,7 +170,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             List<object> list = result.Result[typeof(User)].ToList();
             var user = (User)list[0];
 
-            Assert.AreEqual(users[0].Id, user.Id);
+            Assert.AreEqual(1, user.Id);
         }
         #endregion
 
@@ -272,7 +283,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             List<object> list = result.Result[typeof(User)].ToList();
             var user = (User)list[0];
 
-            Assert.AreEqual(users[0].Id, user.Id);
+            Assert.AreEqual(1, user.Id);
         }
         #endregion
 
@@ -329,7 +340,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             List<object> list = result.Result[typeof(User)].ToList();
             var user = (User)list[0];
 
-            Assert.AreEqual(users[0].Id, user.Id);
+            Assert.AreEqual(1, user.Id);
         }
         #endregion
 
@@ -441,10 +452,8 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void RemoveSearchIndex_DeleteIEnumerable_ResultVerify()
         {
-            var mockCollectionUser = new Mock<IEnumerable<User>>();
-            var mockUser = new Mock<User>();
-
-            mockCollectionUser.SetupGet(c => c.Count<User>()).Returns(5);
+            var mockCollectionUser = new Mock<List<User>>();
+            mockCollectionUser.Setup(p => p.Count).Returns(() => 5);
 
             //нужный метод репозитория
             mockRepo.Setup(x => x.Delete<IEnumerable<User>>(mockCollectionUser.Object)).Verifiable();
