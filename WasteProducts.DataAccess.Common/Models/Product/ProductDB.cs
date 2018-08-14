@@ -25,12 +25,12 @@ namespace WasteProducts.DataAccess.Common.Models.Product
         /// <summary>
         /// Specifies the timestamp of modifying of any property of the Product in database.
         /// </summary>
-        public DateTime? Updated { get; set; }
+        public DateTime? Modified { get; set; }
 
         /// <summary>
         /// Specifies the Product category.
         /// </summary>
-        public virtual Category Category { get; set; }
+        public virtual CategoryDB CategoryDB { get; set; }
 
         /// <summary>
         /// Defines the Product barcode.
