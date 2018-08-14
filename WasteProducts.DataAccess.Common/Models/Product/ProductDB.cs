@@ -1,4 +1,5 @@
 ﻿using System;
+using WasteProducts.DataAccess.Common.Models.Category;
 
 namespace WasteProducts.DataAccess.Common.Models.Product
 {
@@ -30,12 +31,12 @@ namespace WasteProducts.DataAccess.Common.Models.Product
         /// <summary>
         /// Specifies the Product category.
         /// </summary>
-        public Category Category { get; set; }
+        public virtual CategoryDB Category { get; set; }
 
         /// <summary>
         /// Defines the Product barcode.
         /// </summary>
-        public Barcode Barcode { get; set; }
+        public virtual Barcode Barcode { get; set; }
 
         /// <summary>
         /// Defines the average Product rating based on user ratings.

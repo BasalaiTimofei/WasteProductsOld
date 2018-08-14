@@ -1,4 +1,6 @@
-﻿namespace WasteProducts.Logic.Common.Models.Product
+﻿using WasteProducts.Logic.Common.Models.Caregory;
+
+namespace WasteProducts.Logic.Common.Models.Product
 {
     /// <summary>
     /// Model for entity Product.
