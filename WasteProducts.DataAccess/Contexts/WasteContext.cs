@@ -8,13 +8,11 @@ namespace WasteProducts.DataAccess.Contexts
 {
     [DbConfigurationType(typeof(MsSqlConfiguration))]
     // public class WasteContext : IdentityDbContext; IdentityUser
-    public class WasteContext : IdentityDbContext<IdentityUser, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>
+    public class WasteContext : IdentityDbContext<UserDB, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>
     {
         public WasteContext()
         {
             Database.Log = (s) => Debug.WriteLine(s);
         }
-
-        public DbSet<UserDB> Users { get; set; }
     }
 }

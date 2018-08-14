@@ -1,22 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Security.Principal;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace WasteProducts.DataAccess.Common.Models.Users
 {
-    public class UserDB : IIdentity
+    public class UserDB : IdentityUser
     {
-        /// <summary>
-        /// Unique identifier of concrete User in Database.
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// Full name of User. Visible for other Users.
-        /// </summary>
-        public string Name { get; set; }
-
         /// <summary>
         /// The type of authentication used to identify the user.
         /// </summary>
@@ -31,11 +20,6 @@ namespace WasteProducts.DataAccess.Common.Models.Users
         /// Unique name of concrete User. It is used for authenfication.
         /// </summary>
         public string Login { get; set; }
-
-        /// <summary>
-        /// Email of User is mandatory property and it is set during registration. It is used for password recovery.
-        /// </summary>
-        public string Email { get; set; }
 
         /// <summary>
         /// Password is set by User during registration.
@@ -86,7 +70,5 @@ namespace WasteProducts.DataAccess.Common.Models.Users
         /// Specifies timestamp of modifying of any Property of User in Database.
         /// </summary>
         public DateTime? Modified { get; set; }
-
-
     }
 }
