@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using WasteProducts.DataAccess.Common.Models.Product;
 
-namespace WasteProducts.DataAccess.Common.Models.Category
+namespace WasteProducts.DataAccess.Common.Models.Products
 {
     /// <summary>
     /// Model for entity Category used in database.

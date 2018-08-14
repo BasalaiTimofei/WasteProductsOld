@@ -42,7 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Category\CategoryDB.cs" />
+    <Compile Include="Models\Products\CategoryDB.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\Products\ProductDB.cs" />
     <Compile Include="Models\Users\UserDB.cs" />

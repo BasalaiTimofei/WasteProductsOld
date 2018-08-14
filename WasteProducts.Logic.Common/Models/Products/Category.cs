@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using WasteProducts.Logic.Common.Models.Product;
 
-namespace WasteProducts.Logic.Common.Models.Caregory
+namespace WasteProducts.Logic.Common.Models.Products
 {
     /// <summary>
     /// Model for entity Category.
