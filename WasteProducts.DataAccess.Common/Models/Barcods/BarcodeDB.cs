@@ -11,7 +11,7 @@ namespace WasteProducts.DataAccess.Common.Models.Barcods
         /// <summary>
         /// ID.
         /// </summary>
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Barcode number.

@@ -17,14 +17,14 @@ namespace WasteProducts.DataAccess.Common.Repositories
         /// </summary>
         /// <param name="id">Id of the barcode.</param>
         /// <returns>Barcode with the specific ID.</returns>
-        BarcodeDB Get(Guid id);
+        BarcodeDB GetById(string id);
 
         /// <summary>
         /// Return the barcode by its numerical barcode.
         /// </summary>
         /// <param name="code">Code of the barcode.</param>
         /// <returns>Barcode with the specific code.</returns>
-        BarcodeDB Get(string code);
+        BarcodeDB GetByCode(string code);
 
         /// <summary>
         /// Add new barcode in the repository.
@@ -42,6 +42,12 @@ namespace WasteProducts.DataAccess.Common.Repositories
         /// Delete record of the barcode in the repository.
         /// </summary>
         /// <param name="id">ID of the barcode.</param>
-        void Delete(Guid id);
+        void DeleteById(string id);
+
+        /// <summary>
+        /// Delete record of the barcode in the repository.
+        /// </summary>
+        /// <param name="code">ID of the barcode.</param>
+        void DeleteByCode(string code);
     }
 }

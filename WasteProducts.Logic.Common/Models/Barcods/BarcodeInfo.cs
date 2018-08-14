@@ -11,7 +11,7 @@ namespace WasteProducts.Logic.Common.Services
         /// <summary>
         /// Id.
         /// </summary>
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Barcode number.
