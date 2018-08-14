@@ -27,7 +27,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// A method that provides a list of all products.
         /// </summary>
         /// <returns>List of products.</returns>
-        public IQueryable<ProductDB> GetAll() => _context.Products;
+        public IEnumerable<ProductDB> GetAll() => _context.Products;
 
         /// <summary>
         /// A method that selectively provides a product by product's ID.
@@ -44,13 +44,8 @@ namespace WasteProducts.DataAccess.Repositories
         {
             var product = _context.Products.Find(id);
             if (product != null) _context.Products.Remove(product);
+            _context.SaveChanges();
         }
-
-        /// <summary>
-        /// Saves all changes made with the product.
-        ///Recommend to call this method every time you make any manipulations with the product.
-        /// </summary>
-        public void Save() => _context.SaveChanges();
 
         /// <summary>
         /// This method allows you to modify some or all of the product values.
@@ -59,6 +54,7 @@ namespace WasteProducts.DataAccess.Repositories
         public void Update(ProductDB product)
         {
             _context.Entry(product).State = EntityState.Modified;
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -68,6 +64,7 @@ namespace WasteProducts.DataAccess.Repositories
         public void Add(ProductDB product)
         {
             _context.Products.Add(product);
+            _context.SaveChanges();
         }
 
         /// <summary>

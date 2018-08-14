@@ -16,7 +16,7 @@ namespace WasteProducts.DataAccess.Common.Repositories
         /// Provides a listing of all products.
         /// </summary>
         /// <returns>Returns list of products.</returns>
-        IQueryable<ProductDB> GetAll();
+        IEnumerable<ProductDB> GetAll();
 
         /// <summary>
         /// Getinng students by ID.
@@ -42,10 +42,5 @@ namespace WasteProducts.DataAccess.Common.Repositories
         /// </summary>
         /// <param name="id">Produxt's ID that needs to delete.</param>
         void DeleteById(string id);
-
-        /// <summary>
-        /// Saves product that was modifyed.
-        /// </summary>
-        void Save();
     }
 }
