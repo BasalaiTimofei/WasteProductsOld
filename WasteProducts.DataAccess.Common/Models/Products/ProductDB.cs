@@ -1,5 +1,4 @@
 ﻿using System;
-using WasteProducts.DataAccess.Common.Models.Category;
 
 namespace WasteProducts.DataAccess.Common.Models.Products
 {
