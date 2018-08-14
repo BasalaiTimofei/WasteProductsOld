@@ -10,16 +10,16 @@ namespace WasteProducts.Web.Controllers.Mvc
     {
         public HomeController(ILogger logger) : base(logger)
         {
+
         }
 
         public async Task<ActionResult> Index()
         {
-            Logger.Trace($"Message");
 
-            return HttpNotFound();
+            return View();
         }
 
 
-        
+
     }
 }
