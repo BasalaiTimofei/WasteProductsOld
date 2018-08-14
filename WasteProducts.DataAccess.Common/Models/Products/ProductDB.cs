@@ -1,19 +1,36 @@
-﻿namespace WasteProducts.Logic.Common.Models.Product
+﻿using System;
+
+namespace WasteProducts.DataAccess.Common.Models.Products
 {
     /// <summary>
-    /// Model for entity Product.
+    /// Model for entity Product used in database.
     /// </summary>
-    public class Product
+    public class ProductDB
     {
         /// <summary>
-        /// Unique name of concrete Product.
+        /// Unique name of concrete Product in database.
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Defines the Product category.
+        /// Unique identifier of concrete Product in database.
         /// </summary>
-        public virtual Category Category { get; set; }
+        public int Id { get; set; }
+
+        /// <summary>
+        /// Specifies the timestamp of creation of concrete Product in database.
+        /// </summary>
+        public DateTime Created { get; set; }
+
+        /// <summary>
+        /// Specifies the timestamp of modifying of any property of the Product in database.
+        /// </summary>
+        public DateTime? Modified { get; set; }
+
+        /// <summary>
+        /// Specifies the Product category.
+        /// </summary>
+        public virtual CategoryDB CategoryDB { get; set; }
 
         /// <summary>
         /// Defines the Product barcode.

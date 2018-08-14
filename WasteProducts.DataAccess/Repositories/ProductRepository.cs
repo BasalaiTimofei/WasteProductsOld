@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using WasteProducts.DataAccess.Common.Models.Product;
+using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.DataAccess.Contexts;
 
@@ -101,7 +101,7 @@ namespace WasteProducts.DataAccess.Repositories
         public void Update(ProductDB product)
         {
             _context.Entry(product).State = EntityState.Modified;
-            _context.Products.Where(p => p.Id == product.Id).First().Modified = DateTime.UtcNow;
+            _context.Products.First(p => p.Id == product.Id).Modified = DateTime.UtcNow;
             _context.SaveChanges();
         }
 
