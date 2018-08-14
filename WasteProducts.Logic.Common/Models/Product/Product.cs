@@ -15,12 +15,12 @@ namespace WasteProducts.Logic.Common.Models.Product
         /// <summary>
         /// Defines the Product category.
         /// </summary>
-        public Category Category { get; set; }
+        public virtual Category Category { get; set; }
 
         /// <summary>
         /// Defines the Product barcode.
         /// </summary>
-        public Barcode Barcode { get; set; }
+        public virtual Barcode Barcode { get; set; }
 
         /// <summary>
         /// Defines the average Product rating based on user ratings.
