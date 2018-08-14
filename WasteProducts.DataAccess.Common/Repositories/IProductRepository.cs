@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Category;
 using WasteProducts.DataAccess.Common.Models.Product;
 
 namespace WasteProducts.DataAccess.Common.Repositories

@@ -1,4 +1,4 @@
-﻿using WasteProducts.Logic.Common.Models.Caregory;
+﻿using WasteProducts.Logic.Common.Models.Category;
 
 namespace WasteProducts.Logic.Common.Models.Product
 {

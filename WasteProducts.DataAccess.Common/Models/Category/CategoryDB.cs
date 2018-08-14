@@ -19,6 +19,11 @@ namespace WasteProducts.DataAccess.Common.Models.Category
         public string Name { get; set; }
 
         /// <summary>
+        /// Contains description of a specific category
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
         /// List of products that belong to a specific Сategory in database
         /// </summary>
         public List<ProductDB> Product { get; set; }

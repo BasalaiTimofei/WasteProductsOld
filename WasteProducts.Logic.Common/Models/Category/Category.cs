@@ -14,6 +14,11 @@ namespace WasteProducts.Logic.Common.Models.Caregory
         public string Name { get; set; }
 
         /// <summary>
+        /// Contains description of a specific Category
+        /// </summary>
+        public string Description { get; set; }
+
+        /// <summary>
         /// List of products that belong to a specific Сategory
         /// </summary>
         public List<Product> Products { get; set; }
