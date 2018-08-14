@@ -44,7 +44,7 @@
   <ItemGroup>
     <Compile Include="Models\Category\CategoryDB.cs" />
     <Compile Include="Models\Entity.cs" />
-    <Compile Include="Models\Product\ProductDB.cs" />
+    <Compile Include="Models\Products\ProductDB.cs" />
     <Compile Include="Models\Users\UserDB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\IEntityRepository.cs" />
