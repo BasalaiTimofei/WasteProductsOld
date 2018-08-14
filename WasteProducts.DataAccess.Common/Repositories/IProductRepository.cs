@@ -10,7 +10,7 @@ namespace WasteProducts.DataAccess.Common.Repositories
     /// <summary>
     /// Interface for the ProductRepository. Has an inheritance branch from IDisposable.
     /// </summary>
-    public interface IProductRepository : IDisposable
+    public interface IProductRepository
     {
         /// <summary>
         /// Provides a listing of all products.
