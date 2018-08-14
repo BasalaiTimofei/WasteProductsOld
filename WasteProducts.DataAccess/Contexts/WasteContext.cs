@@ -7,7 +7,8 @@ using WasteProducts.DataAccess.Contexts.Config;
 namespace WasteProducts.DataAccess.Contexts
 {
     [DbConfigurationType(typeof(MsSqlConfiguration))]
-    public class WasteContext : IdentityDbContext
+    // public class WasteContext : IdentityDbContext; IdentityUser
+    public class WasteContext : IdentityDbContext<IdentityUser, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>
     {
         public WasteContext()
         {
