@@ -80,8 +80,8 @@ namespace WasteProducts.Web.App_Start
         {
             kernel.Bind<ILogger>().ToMethod(ctx =>
             {
-                var name = ctx.Request.Target?.Member.DeclaringType.Name ?? "GlobalLogger";
-                return LogManager.GetLogger(name);
+                var targetName = ctx.Request.Target?.Member.DeclaringType.FullName ?? "GlobalLogger";
+                return LogManager.GetLogger(targetName);
             });
         }
 
