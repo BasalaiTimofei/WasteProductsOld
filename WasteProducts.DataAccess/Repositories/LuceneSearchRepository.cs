@@ -38,15 +38,17 @@ namespace WasteProducts.DataAccess.Repositories
 
             string assemblyFilename = Assembly.GetAssembly(typeof(LuceneSearchRepository)).Location;
             string assemblyPath = Path.GetDirectoryName(assemblyFilename);
-            IndexPath = assemblyPath + ConfigurationManager.AppSettings["LuceneIndexStoragePath"];
+            IndexPath = Path.Combine(assemblyPath, ConfigurationManager.AppSettings["LuceneIndexStoragePath"]);
             _analyzer = new WhitespaceAnalyzer(MATCH_LUCENE_VERSION);
             try
             {
                 _directory = FSDirectory.Open(IndexPath);
-                IndexWriterConfig config = new IndexWriterConfig(MATCH_LUCENE_VERSION, _analyzer);
-                config.OpenMode = OpenMode.CREATE_OR_APPEND;
-                _writer = new IndexWriter(_directory, config);
+                _writer = new IndexWriter(_directory, new IndexWriterConfig(MATCH_LUCENE_VERSION, _analyzer)
+                {
+                    OpenMode = OpenMode.CREATE_OR_APPEND
+                });
                 _searcherManager = new SearcherManager(_writer, true, null);
+                _writer.Commit();
             }
             catch (Exception ex)
             {
@@ -58,7 +60,7 @@ namespace WasteProducts.DataAccess.Repositories
         {
             if (clearIndex)
             {
-                ClearIndex();
+                Clear();
             }
         }
 
@@ -150,23 +152,66 @@ namespace WasteProducts.DataAccess.Repositories
 
         public void Update<TEntity>(TEntity obj) where TEntity : class 
         {
-            Delete<TEntity>(obj);
-            Insert<TEntity>(obj);
+            System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty("Id");
+            string id = keyFieldInfo.GetValue(obj).ToString();
+            if (!String.IsNullOrEmpty(id))
+            {
+                if (Get<TEntity>(id) != null)
+                {
+                    Delete<TEntity>(obj);
+                    Insert<TEntity>(obj);
+                }
+            }
+            else
+            {
+                throw new LuceneSearchRepositoryException("Сan't update entity with empty id.");
+            }
         }
 
         public void Delete<TEntity>(TEntity obj) where TEntity : class
         {
 
-            System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty("Id");
+            var keyFieldInfo = typeof(TEntity).GetProperty("Id");
             string id = keyFieldInfo.GetValue(obj).ToString();
-            _writer.DeleteDocuments<TEntity>(new TermQuery(new Term("Id", id)));
-            _writer.Commit();
+            if (!String.IsNullOrEmpty(id))
+            {
+                _writer.DeleteDocuments<TEntity>(new TermQuery(new Term("Id", id)));
+                _writer.Commit();
+            }
+            else
+            {
+                throw new LuceneSearchRepositoryException("Сan't delete entity with empty id.");
+            }
         }
 
-        public void ClearIndex()
+        public void Clear()
         {
-            _writer.DeleteAll();
-            _writer.Commit();
+            try
+            {
+                _writer.DeleteAll();
+                _writer.Commit();
+            }catch(Exception ex)
+            {
+                throw new LuceneSearchRepositoryException($"Can't clear index. {ex.Message}", ex);
+            }
+        }
+
+        public void Optimize()
+        {
+            try
+            {
+                _writer.ForceMerge(1);
+                _writer.Commit();
+            }
+            catch (Exception ex)
+            {
+                _writer.Dispose();
+                _writer = new IndexWriter(_directory, new IndexWriterConfig(MATCH_LUCENE_VERSION, _analyzer)
+                {
+                    OpenMode = OpenMode.CREATE_OR_APPEND
+                });
+                throw new LuceneSearchRepositoryException($"Can't optimize index. {ex.Message}", ex);
+            }
         }
 
         //TODO: add realization of async methods later

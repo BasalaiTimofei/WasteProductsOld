@@ -79,6 +79,17 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         /// <summary>
         /// Async version of Delete
         /// </summary>
-        Task DeleteAsync<TEntity>(TEntity obj);        
+        Task DeleteAsync<TEntity>(TEntity obj);
+
+        /// <summary>
+        /// Clears repository
+        /// </summary>
+        void Clear();
+
+        /// <summary>
+        /// Optimizes repository for faster search
+        /// </summary>
+        void Optimize();
+
     }
 }
