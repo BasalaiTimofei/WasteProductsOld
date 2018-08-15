@@ -28,6 +28,8 @@ namespace WasteProducts.DataAccess.Repositories
 
         public const LuceneVersion MATCH_LUCENE_VERSION = LuceneVersion.LUCENE_48;
         public string IndexPath { get; private set; }
+        public string IDField { get; private set; } = "Id";
+
         private Lucene.Net.Store.Directory _directory;
         private Analyzer _analyzer;
         private IndexWriter _writer;
@@ -70,7 +72,7 @@ namespace WasteProducts.DataAccess.Repositories
 
         public TEntity GetById<TEntity>(int id) where TEntity : class
         {
-            Query queryGet = NumericRangeQuery.NewInt64Range("Id", id, id, true, true);
+            Query queryGet = NumericRangeQuery.NewInt64Range(IDField, id, id, true, true);
             return ProceedQuery<TEntity>(queryGet, 1);
         }
 
@@ -82,7 +84,7 @@ namespace WasteProducts.DataAccess.Repositories
 
         public IEnumerable<TEntity> GetAll<TEntity>() where TEntity  :class
         {
-            Query queryGet = NumericRangeQuery.NewInt64Range("Id", Int64.MinValue, Int64.MaxValue, true, true);
+            Query queryGet = NumericRangeQuery.NewInt64Range(IDField, Int64.MinValue, Int64.MaxValue, true, true);
             List<TEntity> entityList = new List<TEntity>();
             var searcher = _searcherManager.Acquire();
             try
@@ -143,7 +145,7 @@ namespace WasteProducts.DataAccess.Repositories
 
         public void Update<TEntity>(TEntity obj) where TEntity : class 
         {
-            System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty("Id");
+            System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty(IDField);
             int id = (int)keyFieldInfo.GetValue(obj);
             if (id>0)
             {
@@ -162,11 +164,11 @@ namespace WasteProducts.DataAccess.Repositories
         public void Delete<TEntity>(TEntity obj) where TEntity : class
         {
 
-            System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty("Id");
+            System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty(IDField);
             int id = (int)keyFieldInfo.GetValue(obj);
             if (id>0)
             {
-                _writer.DeleteDocuments<TEntity>(NumericRangeQuery.NewInt64Range("Id", id, id, true, true));
+                _writer.DeleteDocuments<TEntity>(NumericRangeQuery.NewInt64Range(IDField, id, id, true, true));
                 _writer.Commit();
             }
             else
