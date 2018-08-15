@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\UserCategory.cs" />
+    <Compile Include="Models\Donation\Donation.cs" />
     <Compile Include="Models\Products\Category.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Search\SearchQuery.cs" />
