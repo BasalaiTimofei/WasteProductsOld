@@ -15,8 +15,6 @@ using Lucene.Net.Search;
 using Lucene.Net.QueryParsers.Classic;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Exceptions;
-using Directory = Lucene.Net.Store.Directory;
-using System.Runtime.Serialization;
 
 namespace WasteProducts.DataAccess.Repositories
 {
