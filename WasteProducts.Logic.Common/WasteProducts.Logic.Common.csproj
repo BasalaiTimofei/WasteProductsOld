@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Enums\UserCategory.cs" />
     <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\Search\BoostedSearchQuery.cs" />
     <Compile Include="Models\Search\SearchQuery.cs" />
     <Compile Include="Models\Users\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

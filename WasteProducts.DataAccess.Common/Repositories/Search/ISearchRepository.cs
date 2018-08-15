@@ -35,10 +35,10 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         /// </summary>
         /// <typeparam name="TEntity">Object model type</typeparam>
         /// <param name="queryString">Query string</param>
-        /// <param name="searchableFileds">Fileds to search.</param>
+        /// <param name="searchableFields">Fileds to search.</param>
         /// <param name="numResults">maximum number of results</param>
         /// <returns>IEnumerable of objects</returns>  
-        IEnumerable<TEntity> GetAll<TEntity>(string queryString, string[] searchableFileds, int numResults) where TEntity : class;
+        IEnumerable<TEntity> GetAll<TEntity>(string queryString, IEnumerable<string> searchableFields, int numResults) where TEntity : class;
 
         /// <summary>
         /// Async version of GetAll

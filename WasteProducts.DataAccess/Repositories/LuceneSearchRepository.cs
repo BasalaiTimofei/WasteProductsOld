@@ -84,56 +84,20 @@ namespace WasteProducts.DataAccess.Repositories
 
         public IEnumerable<TEntity> GetAll<TEntity>() where TEntity  :class
         {
-            Query queryGet = NumericRangeQuery.NewInt64Range(IDField, Int64.MinValue, Int64.MaxValue, true, true);
-            List<TEntity> entityList = new List<TEntity>();
-            var searcher = _searcherManager.Acquire();
-            try
-            {
-                TopDocs docs = searcher.Search<TEntity>(queryGet, Int32.MaxValue);
-                foreach (var scoreDoc in docs.ScoreDocs)
-                {
-                    Document doc = searcher.Doc(scoreDoc.Doc);
-                    TEntity entity = doc.ToObject<TEntity>();
-                    entityList.Add(entity);
-                }
-                return entityList;
-            }
-            finally
-            {
-                _searcherManager.Release(searcher);
-            }
+            
+            Query queryGet = NumericRangeQuery.NewInt64Range(IDField, 0, Int32.MaxValue, true, true);
+            return ProceedQueryList<TEntity>(queryGet, Int32.MaxValue);
         }
 
-        public IEnumerable<TEnity> GetAll<TEnity>(string queryString, string[] searchableFileds, int numResults) where TEnity : class
+        public IEnumerable<TEnity> GetAll<TEnity>(string queryString, IEnumerable<string> searchableFields, int numResults) where TEnity : class
         {
-            var searcher = _searcherManager.Acquire();
-            try
-            {
-                BooleanQuery booleanQuery = new BooleanQuery();
-                List<Query> queryList = new List<Query>();
-                List<TEnity> entityList = new List<TEnity>();
-                foreach (var s in searchableFileds)
-                {
-
-                    MultiFieldQueryParser queryParser =
-                        new MultiFieldQueryParser(MATCH_LUCENE_VERSION, searchableFileds, _analyzer);
-                    queryParser.DefaultOperator = QueryParser.OR_OPERATOR;
-                    Query query = queryParser.Parse(queryString);
-                    var docs = searcher.Search<TEnity>(query, numResults);
-                    foreach (var scoreDoc in docs.ScoreDocs)
-                    {
-                        Document doc = searcher.Doc(scoreDoc.Doc);
-                        TEnity entity = doc.ToObject<TEnity>();
-                        entityList.Add(entity);
-                    }
-                }
-
-                return entityList;
-            }
-            finally
-            {
-                _searcherManager.Release(searcher);
-            }
+            
+            BooleanQuery booleanQuery = new BooleanQuery();
+            List<Query> queryList = new List<Query>();
+            MultiFieldQueryParser queryParser = new MultiFieldQueryParser(MATCH_LUCENE_VERSION, searchableFields.ToArray(), _analyzer);
+            queryParser.DefaultOperator = QueryParser.OR_OPERATOR;
+            Query query = queryParser.Parse(queryString);
+            return ProceedQueryList<TEnity>(query, numResults);
         }
 
         public void Insert<TEntity>(TEntity obj) where TEntity : class
@@ -212,17 +176,48 @@ namespace WasteProducts.DataAccess.Repositories
             using (var reader = DirectoryReader.Open(_directory))
             {
                 var searcher = new IndexSearcher(reader);
-                TopDocs docs = searcher.Search<TEntity>(query, numResults);
-                ScoreDoc firstScoreDoc = docs.ScoreDocs.FirstOrDefault();
-                if (firstScoreDoc != null)
+                try
                 {
-                    Document doc = searcher.Doc(docs.ScoreDocs[0].Doc);
-                    TEntity entity = doc.ToObject<TEntity>();
-                    return entity;
+                    TopDocs docs = searcher.Search<TEntity>(query, numResults);
+                    ScoreDoc firstScoreDoc = docs.ScoreDocs.FirstOrDefault();
+                    if (firstScoreDoc != null)
+                    {
+                        Document doc = searcher.Doc(docs.ScoreDocs[0].Doc);
+                        TEntity entity = doc.ToObject<TEntity>();
+                        return entity;
+                    }
+                    else
+                    {
+                        return null;
+                    }
                 }
-                else
+                finally
                 {
-                    return null;
+                    _searcherManager.Release(searcher);
+                }
+            }
+        }
+
+        private IEnumerable<TEntity> ProceedQueryList<TEntity>(Query query, int numResults) where TEntity : class
+        {
+            using (var reader = DirectoryReader.Open(_directory))
+            {
+                var searcher = new IndexSearcher(reader);
+                List<TEntity> entityList = new List<TEntity>();
+                try
+                {
+                    var docs = searcher.Search<TEntity>(query, numResults);
+                    foreach (var scoreDoc in docs.ScoreDocs)
+                    {
+                        Document doc = searcher.Doc(scoreDoc.Doc);
+                        TEntity entity = doc.ToObject<TEntity>();
+                        entityList.Add(entity);
+                    }
+                    return entityList;
+                }
+                finally
+                {
+                    _searcherManager.Release(searcher);
                 }
             }
         }
