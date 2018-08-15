@@ -35,390 +35,203 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         private Mock<ISearchRepository> mockRepo;
         private ISearchService sut;
 
-        #region  SearchResult Search<TEntity>(SearchQuery query);
-        #endregion
-
-        #region Task<SearchResult> SearchAsync<TEntity>(SearchQuery query);
+        #region IEnumerable<TEntity> Search<TEntity>(SearchQuery query) where TEntity : class
         [Test]
-        public async Task Search_CheckContainsKey_ReturnTrue_Async()
+        public void Search_EmptyQuery_Return_NoException()
         {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<int>())).Returns(users);
 
-            //var query = new SearchQuery();
-
-            //var result = await sut.SearchAsync<User>(query);
-
-            //Assert.AreEqual(true, result.Result.ContainsKey(typeof(User)));
+            var query = new SearchQuery();
+            var result = sut.Search<User>(query);
         }
 
         [Test]
-        public async Task Search_EmptyQuery_ReturnAllObjectsInRepository_Async()
+        public void Search_GetAllVerify_Return_Once()
         {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<int>())).Verifiable();
 
-            //var query = new SearchQuery();
+            var query = new SearchQuery();
+            var result = sut.Search<User>(query);
 
-            //var result = await sut.SearchAsync<User>(query);
-
-            //Assert.AreEqual(1, result.Result.Count);
+            mockRepo.Verify(v => v.GetAll<User>(It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<int>()), Times.Once);
         }
 
         [Test]
-        public async Task Search_EmptyQuery_ReturnListCount_Async()
+        public void Search_GetAll_Return_AllObjectsCount()
         {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<int>())).Returns(users);
 
-            //var query = new SearchQuery() { Query = "user1", SearchableFields = new string[] { "id" } };
+            var query = new SearchQuery();
+            var result = sut.Search<User>(query);
 
-            //var result = await sut.SearchAsync<User>(query);
-            //List<object> list = result.Result[typeof(User)].ToList();
-
-            //Assert.AreEqual(5, list.Count);
-        }
-
-        [Test]
-        public async Task SearchId_ByLogin_ReturnUser1_Async()
-        {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
-
-            //var query = new SearchQuery() { Query = "user1", SearchableFields = new string[] { "id" } };
-
-            //var result = await sut.SearchAsync<User>(query);
-            //List<object> list = result.Result[typeof(User)].ToList();
-            //var user = (User)list[0];
-
-            //Assert.AreEqual(1, user.Id);
+            Assert.AreEqual(users.Count(), result.Count());
         }
         #endregion
 
-        #region SearchResult SearchAll(SearchQuery query); 
+        #region void AddToSearchIndex<TEntity>(TEntity model) where TEntity : class
         [Test]
-        public void SearchAll_CheckContainsKey_ReturnTrue()
+        public void AddIndex_InsertNewIndex_Return_NoException()
         {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+            User user = new User();
+            mockRepo.Setup(x => x.Insert<User>(user));
 
-            //var query = new SearchQuery();
-
-            //var result = sut.SearchAll(query);
-
-            //Assert.AreEqual(true, result.Result.ContainsKey(typeof(User)));
+            sut.AddToSearchIndex<User>(user);
         }
 
         [Test]
-        public void SearchAll_EmptyQuery_ReturnAllObjectsInRepository()
+        public void AddIndex_InsertNewIndexVerify_Return_Once()
         {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+            var user = new User();
+            mockRepo.Setup(x => x.Insert<User>(user)).Verifiable();
 
-            //var query = new SearchQuery();
+            sut.AddToSearchIndex<User>(user);
 
-            //var result = sut.SearchAll(query);
-
-            //Assert.AreEqual(1, result.Result.Count);
+            mockRepo.Verify(v => v.Insert<User>(user), Times.Once);
         }
         #endregion
 
-        #region Task<SearchResult> SearchAllAsync(SearchQuery query);
+        #region void AddToSearchIndex<TEntity>(IEnumerable<TEntity> models) where TEntity : class
         [Test]
-        public async Task SearchAll_CheckContainsKey_ReturnTrueAsync()
+        public void AddIndex_InsertNewIndexIEnumerable_Return_NoException()
         {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+            mockRepo.Setup(x => x.Insert<User>(It.IsAny<User>()));
 
-            //var query = new SearchQuery();
-
-            //var result = await sut.SearchAllAsync(query);
-
-            //Assert.AreEqual(true, result.Result.ContainsKey(typeof(User)));
+            sut.AddToSearchIndex<User>(users);
         }
 
         [Test]
-        public async Task SearchAll_EmptyQuery_ReturnAllObjectsInRepositoryAsync()
+        public void AddIndex_InsertNewIndexIEnumerableVerify_Return_UsersCount()
         {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+            mockRepo.Setup(x => x.Insert<User>(It.IsAny<User>())).Verifiable();
 
-            //var query = new SearchQuery();
+            sut.AddToSearchIndex<User>(users);
 
-            //var result = await sut.SearchAllAsync(query);
-
-            //Assert.AreEqual(1, result.Result.Count);
+            mockRepo.Verify(v => v.Insert<User>(It.IsAny<User>()), Times.Exactly(users.Count<User>()));
         }
         #endregion
 
-        #region SearchResult SearchDefault<TEntity>(SearchQuery query);
+        #region void RemoveFromSearchIndex<TEntity>(TEntity model) where TEntity : class
         [Test]
-        public void SearchDefault_CheckContainsKey_ReturnTrue()
+        public void RemoveIndex_DeleteIndex_Return_NoException()
         {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+            User user = new User();
+            mockRepo.Setup(x => x.Delete<User>(user));
 
-            //var query = new SearchQuery();
-
-            //var result = sut.SearchDefault<User>(query);
-
-            //Assert.AreEqual(true, result.Result.ContainsKey(typeof(User)));
+            sut.RemoveFromSearchIndex<User>(user);
         }
 
         [Test]
-        public void SearchDefault_EmptyQuery_ReturnAllObjectsInRepository()
+        public void RemoveIndex_DeleteIndexVerify_Return_Once()
         {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+            var user = new User();
+            mockRepo.Setup(x => x.Delete<User>(user)).Verifiable();
 
-            //var query = new SearchQuery();
+            sut.RemoveFromSearchIndex<User>(user);
 
-            //var result = sut.SearchDefault<User>(query);
-
-            //Assert.AreEqual(1, result.Result.Count);
-        }
-
-        [Test]
-        public void SearchDefault_EmptyQuery_ReturnListCount()
-        {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
-
-            //var query = new SearchQuery() { Query = "user1", SearchableFields = new string[] { "id" } };
-
-            //var result = sut.SearchDefault<User>(query);
-            //List<object> list = result.Result[typeof(User)].ToList();
-
-            //Assert.AreEqual(5, list.Count);
-        }
-
-        [Test]
-        public void SearchDefaultId_ByLogin_ReturnUser1()
-        {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
-
-            //var query = new SearchQuery() { Query = "user1", SearchableFields = new string[] { "id" } };
-
-            //var result = sut.SearchDefault<User>(query);
-            //List<object> list = result.Result[typeof(User)].ToList();
-            //var user = (User)list[0];
-
-            //Assert.AreEqual(1, user.Id);
+            mockRepo.Verify(v => v.Delete<User>(user), Times.Once);
         }
         #endregion
 
-        #region Task<SearchResult> SearchDefaultAsync<TEntity>(SearchQuery query);
+        #region void RemoveFromSearchIndex<TEntity>(IEnumerable<TEntity> models) where TEntity : class
         [Test]
-        public async Task SearchDefault_CheckContainsKey_ReturnTrue_Async()
+        public void RemoveIndex_DeleteIndexIEnumerable_Return_NoException()
         {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+            mockRepo.Setup(x => x.Delete<User>(It.IsAny<User>()));
 
-            //var query = new SearchQuery();
-
-            //var result = await sut.SearchDefaultAsync<User>(query);
-
-            //Assert.AreEqual(true, result.Result.ContainsKey(typeof(User)));
+            sut.RemoveFromSearchIndex<User>(users);
         }
 
         [Test]
-        public async Task SearchDefault_EmptyQuery_ReturnAllObjectsInRepository_Async()
+        public void RemoveIndex_DeleteIndexIEnumerableVerify_Return_UsersCount()
         {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+            mockRepo.Setup(x => x.Delete<User>(It.IsAny<User>())).Verifiable();
 
-            //var query = new SearchQuery();
+            sut.RemoveFromSearchIndex<User>(users);
 
-            //var result = await sut.SearchDefaultAsync<User>(query);
-
-            //Assert.AreEqual(1, result.Result.Count);
-        }
-
-        [Test]
-        public async Task SearchDefault_EmptyQuery_ReturnListCount_Async()
-        {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
-
-            //var query = new SearchQuery() { Query = "user1", SearchableFields = new string[] { "id" } };
-
-            //var result = await sut.SearchDefaultAsync<User>(query);
-            //List<object> list = result.Result[typeof(User)].ToList();
-
-            //Assert.AreEqual(5, list.Count);
-        }
-
-        [Test]
-        public async Task SearchDefaultId_ByLogin_ReturnUser1_Async()
-        {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
-
-            //var query = new SearchQuery() { Query = "user1", SearchableFields = new string[] { "id" } };
-
-            //var result = await sut.SearchDefaultAsync<User>(query);
-            //List<object> list = result.Result[typeof(User)].ToList();
-            //var user = (User)list[0];
-
-            //Assert.AreEqual(1, user.Id);
+            mockRepo.Verify(v => v.Delete<User>(It.IsAny<User>()), Times.Exactly(users.Count<User>()));
         }
         #endregion
 
-        #region SearchResult SearchAllDefault(SearchQuery query);
+        #region void UpdateInSearchIndex<TEntity>(TEntity model) where TEntity : class
         [Test]
-        public void SearchAllDefault_CheckContainsKey_ReturnTrue()
+        public void UpdateIndex_UpdateIndex_Return_NoException()
         {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+            User user = new User();
+            mockRepo.Setup(x => x.Update<User>(user));
 
-            //var query = new SearchQuery();
-
-            //var result = sut.SearchAllDefault(query);
-
-            //Assert.AreEqual(true, result.Result.ContainsKey(typeof(User)));
+            sut.UpdateInSearchIndex<User>(user);
         }
 
         [Test]
-        public void SearchAllDefault_EmptyQuery_ReturnAllObjectsInRepository()
+        public void UpdateIndex_UpdateIndexVerify_Return_Once()
         {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+            var user = new User();
+            mockRepo.Setup(x => x.Update<User>(user)).Verifiable();
 
-            //var query = new SearchQuery();
+            sut.UpdateInSearchIndex<User>(user);
 
-            //var result = sut.SearchAllDefault(query);
-
-            //Assert.AreEqual(1, result.Result.Count);
+            mockRepo.Verify(v => v.Update<User>(user), Times.Once);
         }
         #endregion
 
-        #region Task<SearchResult> SearchAllDefaultAsync(SearchQuery query);
+        #region void UpdateInSearchIndex<TEntity>(IEnumerable<TEntity> models) where TEntity : class
         [Test]
-        public async Task SearchAllDefault_CheckContainsKey_ReturnTrueAsync()
+        public void UpdateIndex_UpdateIndexIEnumerable_Return_NoException()
         {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+            mockRepo.Setup(x => x.Update<User>(It.IsAny<User>()));
 
-            //var query = new SearchQuery();
-
-            //var result = await sut.SearchAllDefaultAsync(query);
-
-            //Assert.AreEqual(true, result.Result.ContainsKey(typeof(User)));
+            sut.UpdateInSearchIndex<User>(users);
         }
 
         [Test]
-        public async Task SearchAllDefault_EmptyQuery_ReturnAllObjectsInRepositoryAsync()
+        public void UpdateIndex_UpdateIndexIEnumerableVerify_Return_UsersCount()
         {
-            ////нужный метод репозитория
-            //mockRepo.Setup(x => x.GetAll<User>(It.IsAny<int>())).Returns(users);
+            mockRepo.Setup(x => x.Update<User>(It.IsAny<User>())).Verifiable();
 
-            //var query = new SearchQuery();
+            sut.UpdateInSearchIndex<User>(users);
 
-            //var result = await sut.SearchAllDefaultAsync(query);
-
-            //Assert.AreEqual(1, result.Result.Count);
+            mockRepo.Verify(v => v.Update<User>(It.IsAny<User>()), Times.Exactly(users.Count<User>()));
         }
         #endregion
 
-        #region void AddToSearchIndex<TEntity>(TEntity model);        
+        #region void ClearSearchIndex()
         [Test]
-        public void AddSearchIndex_AddNewEntity_ResultVerify()
+        public void ClearIndex_ClearIndex_Return_NoException()
         {
-            var mockUser = new Mock<User>();
+            mockRepo.Setup(x => x.Clear());
 
-            //нужный метод репозитория
-            mockRepo.Setup(x => x.Insert<User>(mockUser.Object)).Verifiable();            
+            sut.ClearSearchIndex();
+        }
 
-            sut.AddToSearchIndex<User>(mockUser.Object);
+        [Test]
+        public void ClearIndex_ClearIndexVerify_Return_Once()
+        {
+            mockRepo.Setup(x => x.Clear()).Verifiable();
 
-            mockRepo.Verify(v => v.Insert<User>(mockUser.Object), Times.Once);
+            sut.ClearSearchIndex();
+
+            mockRepo.Verify(v => v.Clear(), Times.Once);
         }
         #endregion
 
-        #region void AddToSearchIndex<TEntity>(IEnumerable<TEntity> model);
+        #region void OptimizeSearchIndex()
         [Test]
-        public void AddSearchIndex_AddNewIEnumerable_ResultVerify()
+        public void OptimizeIndex_OptimizeIndex_Return_NoException()
         {
-            var mockCollectionUser = new Mock<IEnumerable<User>>();            
-            var mockUser = new Mock<User>();
-                        
-            mockCollectionUser.SetupGet(c => c.Count<User>()).Returns(5);
+            mockRepo.Setup(x => x.Optimize());
 
-            //нужный метод репозитория
-            mockRepo.Setup(x => x.Insert<IEnumerable<User>>(mockCollectionUser.Object)).Verifiable();
+            sut.OptimizeSearchIndex();
+        }
 
-            sut.AddToSearchIndex<User>(mockCollectionUser.Object);
+        [Test]
+        public void OptimizeIndex_OptimizeIndexVerify_Return_Once()
+        {
+            mockRepo.Setup(x => x.Optimize()).Verifiable();
 
-            mockRepo.Verify(v => v.Insert<IEnumerable<User>>(mockCollectionUser.Object), Times.Exactly(5));
+            sut.OptimizeSearchIndex();
+
+            mockRepo.Verify(v => v.Optimize(), Times.Once);
         }
         #endregion
-
-        #region void RemoveFromSearchIndex<TEntity>(TEntity model);
-        [Test]
-        public void RemoveSearchIndex_DeleteEntity_ResultVerify()
-        {
-            var mockUser = new Mock<User>();
-
-            //нужный метод репозитория
-            mockRepo.Setup(x => x.Delete<User>(mockUser.Object)).Verifiable();
-
-            sut.RemoveFromSearchIndex<User>(mockUser.Object);
-
-            mockRepo.Verify(v => v.Delete<User>(mockUser.Object), Times.Once);
-        }
-        #endregion
-
-        #region void RemoveFromSearchIndex<TEntity>(IEnumerable<TEntity> model);
-        [Test]
-        public void RemoveSearchIndex_DeleteIEnumerable_ResultVerify()
-        {
-            var mockCollectionUser = new Mock<List<User>>();
-            mockCollectionUser.Setup(p => p.Count).Returns(() => 5);
-
-            //нужный метод репозитория
-            mockRepo.Setup(x => x.Delete<IEnumerable<User>>(mockCollectionUser.Object)).Verifiable();
-
-            sut.RemoveFromSearchIndex<User>(mockCollectionUser.Object);
-
-            //mockRepo.Verify(v => v.Delete<User>(mockUser.Object), Times.Exactly(5));
-            mockRepo.Verify(v => v.Delete<IEnumerable<User>>(mockCollectionUser.Object), Times.Exactly(5));
-        }
-        #endregion
-
-        #region void UpdateInSearchIndex<TEntity>(TEntity model);
-        [Test]
-        public void UpdateSearchIndex_UpdateEntity_ResultVerify()
-        {
-            var mockUser = new Mock<User>();
-
-            //нужный метод репозитория
-            mockRepo.Setup(x => x.Update<User>(mockUser.Object)).Verifiable();
-
-            sut.UpdateInSearchIndex<User>(mockUser.Object);
-
-            mockRepo.Verify(v => v.Update<User>(mockUser.Object), Times.Once);
-        }
-        #endregion
-
-        #region void UpdateInSearchIndex<TEntity>(IEnumerable<TEntity> model);
-        [Test]
-        public void UpdateSearchIndex_UpdateIEnumerable_ResultVerify()
-        {
-            var mockCollectionUser = new Mock<IEnumerable<User>>();
-            var mockUser = new Mock<User>();
-
-            //нужный метод репозитория
-            mockRepo.Setup(x => x.Update<IEnumerable<User>>(mockCollectionUser.Object)).Verifiable();
-
-            sut.UpdateInSearchIndex<User>(mockUser.Object);
-
-            mockRepo.Verify(v => v.Update<IEnumerable<User>>(mockCollectionUser.Object), Times.Once);
-        }
-        #endregion
-
-        //bool ClearSearchIndex();
-
-        //bool OptimizeSearchIndex();
     }
 }
