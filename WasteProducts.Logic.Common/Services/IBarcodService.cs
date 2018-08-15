@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WasteProducts.Logic.Common.Models.Barcods;
 
 namespace WasteProducts.Logic.Common.Services
 {
@@ -13,14 +14,15 @@ namespace WasteProducts.Logic.Common.Services
         /// get a numerical barcode on the photo
         /// </summary>
         /// <param name="image">image - barcode photo</param>
+        /// <param name="UserId">User Id by User</param>
         /// <returns>a numerical barcode</returns>
-        string GetCode(Image image);
+        BarcodeInfo GetCode(Image image, int UserId);
 
         /// <summary>
         /// get product information
         /// </summary>
-        /// <param name="code">a numerical barcode</param>
-        /// <returns>product information in the format BarcodeInfo</returns>
-        BarcodeInfo GetInfo(string code);
+        /// <param name="barcodeInfo">a model jf BarcodeInfo</param>
+        /// <returns>product information in the format Barcode</returns>
+        Barcod GetBarcode(BarcodeInfo barcodeInfo);
     }
 }
