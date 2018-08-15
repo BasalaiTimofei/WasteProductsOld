@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums\UserCategory.cs" />
+    <Compile Include="Models\Donation\Donation.cs" />
     <Compile Include="Models\Barcods\Barcod.cs" />
     <Compile Include="Models\Barcods\BarcodeInfo.cs" />
     <Compile Include="Models\Model.cs" />
