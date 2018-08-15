@@ -12,7 +12,6 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         public int GroupId { get; set; }
         public GroupDB Group { get; set; }
         public int UserId { get; set; }
-        public DateTime Entry { get; set; }
-        public DateTime Exit { get; set; }
+        public List<GroupUserInviteTimeDB> GroupUserInviteTimeDBs { get; set; }
     }
 }

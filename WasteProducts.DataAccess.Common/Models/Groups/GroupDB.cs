@@ -12,8 +12,8 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         public string Name { get; set; }
         public string Information { get; set; }
         public int Admin { get; set; }
-        public List<GroupUserDB> GroupUsers { get; set; }
-        public List<GroupBordDB> GroupBords { get; set; }
+        public List<GroupUserDB> GroupUserDBs { get; set; }
+        public List<GroupBordDB> GroupBordDBs { get; set; }
         public DateTime Create { get; set; }
         public DateTime Delete { get; set; }
     }
