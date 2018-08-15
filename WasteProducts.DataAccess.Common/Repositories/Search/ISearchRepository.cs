@@ -28,7 +28,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         /// <typeparam name="TEntity">Object model type</typeparam>
         /// <param name="numResults">maximum number of resulte</param>
         /// <returns>IEnumerable of objects</returns>        
-        IEnumerable<TEntity> GetAll<TEntity>(int numResults) where TEntity : class;
+        IEnumerable<TEntity> GetAll<TEntity>() where TEntity : class;
 
         /// <summary>
         /// Returns collection of all objects. Query string and array of fields are used for search.

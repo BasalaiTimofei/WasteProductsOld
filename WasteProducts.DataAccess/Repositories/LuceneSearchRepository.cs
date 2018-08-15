@@ -47,6 +47,10 @@ namespace WasteProducts.DataAccess.Repositories
                 {
                     OpenMode = OpenMode.CREATE_OR_APPEND
                 });
+                if (IndexWriter.IsLocked(_directory))
+                {
+                    IndexWriter.Unlock(_directory);
+                }
                 _searcherManager = new SearcherManager(_writer, true, null);
                 _writer.Commit();
             }
@@ -64,39 +68,26 @@ namespace WasteProducts.DataAccess.Repositories
             }
         }
 
-        public TEntity Get<TEntity>(string keyValue, string keyField = "Id") where TEntity : class
+        public TEntity GetById<TEntity>(int id) where TEntity : class
         {
-            Query queryGet = new TermQuery(new Term(keyField, keyValue));
-            var searcher = _searcherManager.Acquire();
-            try
-            {
-                TopDocs docs = searcher.Search<TEntity>(queryGet, 1);
-                ScoreDoc firstScoreDoc = docs.ScoreDocs.FirstOrDefault();
-                if (firstScoreDoc != null)
-                {
-                    Document doc = searcher.Doc(docs.ScoreDocs[0].Doc);
-                    TEntity entity = doc.ToObject<TEntity>();
-                    return entity;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            finally
-            {
-                _searcherManager.Release(searcher);
-            }
+            Query queryGet = NumericRangeQuery.NewInt64Range("Id", id, id, true, true);
+            return ProceedQuery<TEntity>(queryGet, 1);
         }
 
-        public IEnumerable<TEntity> GetAll<TEntity>(int numResults) where TEntity  :class
+        public TEntity Get<TEntity>(string keyValue, string keyField) where TEntity : class
         {
-            Query queryGet = new WildcardQuery(new Term("Id", "*"));
+            Query queryGet = new TermQuery(new Term(keyField, keyValue));
+            return ProceedQuery<TEntity>(queryGet, 1);
+        }
+
+        public IEnumerable<TEntity> GetAll<TEntity>() where TEntity  :class
+        {
+            Query queryGet = NumericRangeQuery.NewInt64Range("Id", Int64.MinValue, Int64.MaxValue, true, true);
             List<TEntity> entityList = new List<TEntity>();
             var searcher = _searcherManager.Acquire();
             try
             {
-                TopDocs docs = searcher.Search<TEntity>(queryGet, numResults);
+                TopDocs docs = searcher.Search<TEntity>(queryGet, Int32.MaxValue);
                 foreach (var scoreDoc in docs.ScoreDocs)
                 {
                     Document doc = searcher.Doc(scoreDoc.Doc);
@@ -153,10 +144,10 @@ namespace WasteProducts.DataAccess.Repositories
         public void Update<TEntity>(TEntity obj) where TEntity : class 
         {
             System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty("Id");
-            string id = keyFieldInfo.GetValue(obj).ToString();
-            if (!String.IsNullOrEmpty(id))
+            int id = (int)keyFieldInfo.GetValue(obj);
+            if (id>0)
             {
-                if (Get<TEntity>(id) != null)
+                if (GetById<TEntity>(id) != null)
                 {
                     Delete<TEntity>(obj);
                     Insert<TEntity>(obj);
@@ -171,11 +162,11 @@ namespace WasteProducts.DataAccess.Repositories
         public void Delete<TEntity>(TEntity obj) where TEntity : class
         {
 
-            var keyFieldInfo = typeof(TEntity).GetProperty("Id");
-            string id = keyFieldInfo.GetValue(obj).ToString();
-            if (!String.IsNullOrEmpty(id))
+            System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty("Id");
+            int id = (int)keyFieldInfo.GetValue(obj);
+            if (id>0)
             {
-                _writer.DeleteDocuments<TEntity>(new TermQuery(new Term("Id", id)));
+                _writer.DeleteDocuments<TEntity>(NumericRangeQuery.NewInt64Range("Id", id, id, true, true));
                 _writer.Commit();
             }
             else
@@ -211,6 +202,26 @@ namespace WasteProducts.DataAccess.Repositories
                     OpenMode = OpenMode.CREATE_OR_APPEND
                 });
                 throw new LuceneSearchRepositoryException($"Can't optimize index. {ex.Message}", ex);
+            }
+        }
+
+        private TEntity ProceedQuery<TEntity>(Query query, int numResults) where TEntity : class
+        {
+            using (var reader = DirectoryReader.Open(_directory))
+            {
+                var searcher = new IndexSearcher(reader);
+                TopDocs docs = searcher.Search<TEntity>(query, numResults);
+                ScoreDoc firstScoreDoc = docs.ScoreDocs.FirstOrDefault();
+                if (firstScoreDoc != null)
+                {
+                    Document doc = searcher.Doc(docs.ScoreDocs[0].Doc);
+                    TEntity entity = doc.ToObject<TEntity>();
+                    return entity;
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 
