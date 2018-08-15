@@ -53,7 +53,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// The method that delets the product by ID.
         /// </summary>
         /// <param name="id">Product's ID that needs to be deleted.</param>
-        public void DeleteById(string id)
+        public void DeleteById(int id)
         {
             var product = _context.Products.Find(id);
             if (product != null) _context.Products.Remove(product);
@@ -66,6 +66,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// <returns>List of products.</returns>
         public IEnumerable<ProductDB> SelectAll() => _context.Products.ToList();
 
+        /// <inheritdoc />
         /// <summary>
         /// Provides a listing of products that satisfy the condition.
         /// </summary>
@@ -73,7 +74,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// <returns>Returns list of products.</returns>
         public IEnumerable<ProductDB> SelectWhere(Predicate<ProductDB> predicate)
         {
-            Func<ProductDB, bool> condition = new Func<ProductDB, bool>(predicate);
+            var condition = new Func<ProductDB, bool>(predicate);
             return _context.Products.Where(condition).ToList();
         }
 
@@ -92,7 +93,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// </summary>
         /// <param name="id">The specific id of product that was sorted.</param>
         /// <returns>Product by ID.</returns>
-        public ProductDB GetById(string id) => _context.Products.Find(id);
+        public ProductDB GetById(int id) => _context.Products.Find(id);
 
         /// <summary>
         /// This method allows you to modify some or all of the product values.
