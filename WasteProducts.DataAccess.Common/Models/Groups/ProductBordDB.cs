@@ -12,6 +12,6 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         public int ProductId { get; set; }
         public string Information { get; set; }
         public int GroupBordId { get; set; }
-        public GroupBordDB GroupBord { get; set; }
+        public GroupBordDB GroupBordDB { get; set; }
     }
 }

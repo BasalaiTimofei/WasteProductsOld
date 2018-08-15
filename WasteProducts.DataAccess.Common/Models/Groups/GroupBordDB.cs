@@ -12,9 +12,9 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         public string Name { get; set; }
         public string Information { get; set; }
         public int GroupId { get; set; }
-        public GroupDB Group { get; set; }
+        public GroupDB GroupDB { get; set; }
         public int UserId { get; set; }
-        public List<ProductBordDB> ProductBords { get; set; }
+        public List<ProductBordDB> ProductBordDBs { get; set; }
         public DateTime Create { get; set; }
         public DateTime Delete { get; set; }
     }
