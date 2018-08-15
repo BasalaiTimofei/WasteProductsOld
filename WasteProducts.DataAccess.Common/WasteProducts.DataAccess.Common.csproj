@@ -43,6 +43,7 @@
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\Groups\GroupBordDB.cs" />
     <Compile Include="Models\Groups\GroupDB.cs" />
+    <Compile Include="Models\Groups\GroupUserInviteTimeDB.cs" />
     <Compile Include="Models\Groups\GroupUserDB.cs" />
     <Compile Include="Models\Groups\ProductBordDB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
