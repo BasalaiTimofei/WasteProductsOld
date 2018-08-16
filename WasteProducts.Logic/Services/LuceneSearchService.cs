@@ -26,11 +26,13 @@ namespace WasteProducts.Logic.Services
 
         public IEnumerable<TEntity> Search<TEntity>(SearchQuery query) where TEntity : class
         {
+            CheckQuery(query);
             return _repository.GetAll<TEntity>(query.Query, query.SearchableFields, MaxResultCount);
         }
 
         public IEnumerable<TEntity> Search<TEntity>(BoostedSearchQuery query) where TEntity : class
         {
+            CheckQuery(query);
             return _repository.GetAll<TEntity>(query.Query, query.SearchableFields, query.BoostValues, MaxResultCount);
         }
 
@@ -98,6 +100,14 @@ namespace WasteProducts.Logic.Services
         public Task<IEnumerable<TEntity>> SearchDefaultAsync<TEntity>(SearchQuery query)
         {
             throw new NotImplementedException();
+        }
+
+        private void CheckQuery(SearchQuery query)
+        {
+            if (String.IsNullOrEmpty(query.Query) || query.SearchableFields.Count == 0)
+            {
+                throw new ArgumentException("Incorrect query.");
+            }
         }
 
     }

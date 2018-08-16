@@ -8,7 +8,6 @@ using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.Search;
 using WasteProducts.Logic.Services;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace WasteProducts.Logic.Tests.Search_Tests
 {
@@ -37,6 +36,15 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
         #region IEnumerable<TEntity> Search<TEntity>(SearchQuery query) where TEntity : class
         [Test]
+        public void Search_EmptyQuery_Return_Exception()
+        {
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<int>())).Returns(users);
+
+            var query = new SearchQuery();
+            Assert.Throws<ArgumentException>(()=>sut.Search<User>(query));
+        }
+
+        /*[Test]
         public void Search_EmptyQuery_Return_NoException()
         {
             mockRepo.Setup(x => x.GetAll<User>(It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<int>())).Returns(users);
@@ -65,7 +73,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             var result = sut.Search<User>(query);
 
             Assert.AreEqual(users.Count(), result.Count());
-        }
+        }*/
         #endregion
 
         #region void AddToSearchIndex<TEntity>(TEntity model) where TEntity : class
