@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace WasteProducts.DataAccess.Common.Repositories.Search
@@ -39,6 +40,17 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         /// <param name="numResults">maximum number of results</param>
         /// <returns>IEnumerable of objects</returns>  
         IEnumerable<TEntity> GetAll<TEntity>(string queryString, IEnumerable<string> searchableFields, int numResults) where TEntity : class;
+
+        /// <summary>
+        /// Returns collection of all objects. Query string and array of fields are used for search.
+        /// </summary>
+        /// <typeparam name="TEntity">Object model type</typeparam>
+        /// <param name="queryString">Query string</param>
+        /// <param name="searchableFields">Fileds to search</param>
+        /// <param name="boosts">Dictionary with boosts values for the fields</param>
+        /// <param name="numResults">maximum number of results</param>
+        /// <returns>IEnumerable of objects</returns>  
+        IEnumerable<TEntity> GetAll<TEntity>(string queryString, IEnumerable<string> searchableFields, ReadOnlyDictionary<string, float> boosts, int numResults) where TEntity : class;
 
         /// <summary>
         /// Async version of GetAll

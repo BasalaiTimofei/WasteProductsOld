@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models;
+using WasteProducts.Logic.Common.Models.Search;
 
 namespace WasteProducts.Logic.Common.Services.Search
 {
@@ -16,6 +17,14 @@ namespace WasteProducts.Logic.Common.Services.Search
         /// <param name="query">SearchQuery model</param>
         /// <returns>SearchResult model</returns>
         IEnumerable<TEntity> Search<TEntity>(SearchQuery query) where TEntity : class;
+
+        /// <summary>
+        /// This method provides ability to search by partial words. It replaces all dashes "-" in search requests, and adds "*" (star) after each word.
+        /// </summary>
+        /// <typeparam name="TEntity">Object model</typeparam>
+        /// <param name="query">BoostedSearchQuery model</param>
+        /// <returns>SearchResult model</returns>
+        IEnumerable<TEntity> Search<TEntity>(BoostedSearchQuery query) where TEntity : class;
 
         /// <summary>
         /// This method provides ability to search without any formatting at search requests

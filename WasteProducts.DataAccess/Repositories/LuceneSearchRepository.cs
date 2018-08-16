@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.IO;
 using System.Linq;
@@ -96,7 +97,7 @@ namespace WasteProducts.DataAccess.Repositories
             return ProceedQueryList<TEnity>(query, numResults);
         }
 
-        public IEnumerable<TEntity> GetAll<TEntity>(string queryString, IEnumerable<string> searchableFields, Dictionary<string, float> boosts, int numResults) where TEntity : class
+        public IEnumerable<TEntity> GetAll<TEntity>(string queryString, IEnumerable<string> searchableFields, ReadOnlyDictionary<string, float> boosts, int numResults) where TEntity : class
         {
 
             BooleanQuery booleanQuery = new BooleanQuery();

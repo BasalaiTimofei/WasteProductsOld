@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.Logic.Common.Models;
+using WasteProducts.Logic.Common.Models.Search;
 using WasteProducts.Logic.Common.Services.Search;
 
 namespace WasteProducts.Logic.Services
@@ -26,6 +27,11 @@ namespace WasteProducts.Logic.Services
         public IEnumerable<TEntity> Search<TEntity>(SearchQuery query) where TEntity : class
         {
             return _repository.GetAll<TEntity>(query.Query, query.SearchableFields, MaxResultCount);
+        }
+
+        public IEnumerable<TEntity> Search<TEntity>(BoostedSearchQuery query) where TEntity : class
+        {
+            return _repository.GetAll<TEntity>(query.Query, query.SearchableFields, query.BoostValues, MaxResultCount);
         }
 
         public IEnumerable<TEntity> SearchDefault<TEntity>(SearchQuery query)
