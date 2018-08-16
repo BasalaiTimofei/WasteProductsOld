@@ -1,11 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Users;
 
-namespace WasteProducts.DataAccess.Common.Repositories
+namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
 {
+    /// <summary>
+    /// Standart DAL level interface using to make CRUD operations with User models.
+    /// </summary>
     public interface IUserRepository
     {
+        /// <summary>
+        /// Adds new registered user in the repository.
+        /// </summary>
+        /// <param name="user">New registered user to add.</param>
+        Task AddAsync(UserDB user);
+
+        /// <summary>
+        /// Deletes the record of the specific user.
+        /// </summary>
+        /// <param name="user">Specific user to delete.</param>
+        Task DeleteAsync(UserDB user);
+
+        /// <summary>
+        /// Returns first registered user matches the predicate.
+        /// </summary>
+        /// <param name="email">Email of the requested user.</param>
+        /// <returns></returns>
+        UserDB Select(Func<UserDB, bool> predicate);
+
         /// <summary>
         /// Returns a registered user by its email.
         /// </summary>
@@ -25,34 +48,19 @@ namespace WasteProducts.DataAccess.Common.Repositories
         /// Returns all registered users in an enumerable.
         /// </summary>
         /// <returns>All the registered users.</returns>
-        IEnumerable<UserDB> SelectAll();
+        List<UserDB> SelectAll();
 
-        // не знаю пока, как надо, такое сработало бы на EF или ADO.NET если все запросить, и потом предикатом
-        // но это ведь глупость, лучше сразу в селект передать запрос
-        // скажем так, это заготовка на будущее, потом изменится на нормальный код
         /// <summary>
         /// Returns the users filtered by the predicate.
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        IEnumerable<UserDB> SelectWhere(Func<UserDB, bool> predicate); 
-
-        /// <summary>
-        /// Adds new registered user in the repository.
-        /// </summary>
-        /// <param name="user">New registered user to add.</param>
-        void Add(UserDB user);
+        List<UserDB> SelectRange(Func<UserDB, bool> predicate);
 
         /// <summary>
         /// Updates the record of the specific user.
         /// </summary>
         /// <param name="user">Specific user to update.</param>
-        void Update(UserDB user);
-
-        /// <summary>
-        /// Deletes the record of the specific user.
-        /// </summary>
-        /// <param name="user">Specific user to delete.</param>
-        void Delete(UserDB user);
+        Task UpdateAsync(UserDB user);
     }
 }

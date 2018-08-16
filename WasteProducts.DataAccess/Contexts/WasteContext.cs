@@ -7,11 +7,10 @@ using WasteProducts.DataAccess.Contexts.Config;
 namespace WasteProducts.DataAccess.Contexts
 {
     [DbConfigurationType(typeof(MsSqlConfiguration))]
-    // todo delete this comment after the work with userDB is done
-    // public class WasteContext : IdentityDbContext; IdentityUser 
     public class WasteContext : IdentityDbContext<UserDB, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>
     {
-        public WasteContext()
+        // TODO delete : base after testing and clean up the App.Config
+        public WasteContext() : base(@"name=ConStrByServer")
         {
             Database.Log = (s) => Debug.WriteLine(s);
         }

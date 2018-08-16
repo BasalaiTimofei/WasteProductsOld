@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using WasteProducts.DataAccess.Common.Models.Users;
-using WasteProducts.DataAccess.Common.Repositories;
+using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Mappings.UserMappings;
@@ -61,7 +61,7 @@ namespace WasteProducts.Logic.Services
                 Password = password,
             };
             var userDb = Mapper.Map<UserDB>(registeredUser);
-            _userRepo.Add(userDb);
+            _userRepo.AddAsync(userDb);
             return true;
         }
 
@@ -98,7 +98,7 @@ namespace WasteProducts.Logic.Services
         private void UpdateUser(User user)
         {
             var userDb = Mapper.Map<UserDB>(user);
-            _userRepo.Update(userDb);
+            _userRepo.UpdateAsync(userDb);
         }
     }
 }

@@ -4,6 +4,9 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace WasteProducts.DataAccess.Common.Models.Users
 {
+    /// <summary>
+    /// DAL level model of user.
+    /// </summary>
     public class UserDB : IdentityUser
     {
         /// <summary>

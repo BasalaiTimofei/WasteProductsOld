@@ -2,6 +2,9 @@
 
 namespace WasteProducts.Logic.Common.Services
 {
+    /// <summary>
+    /// Standart BL level interface provides standart methods of working with User model.
+    /// </summary>
     public interface IUserService
     {
         /// <summary>

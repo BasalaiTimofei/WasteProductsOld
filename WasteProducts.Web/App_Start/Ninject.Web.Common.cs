@@ -3,7 +3,7 @@ using System.Web.Http.ExceptionHandling;
 using Ninject.Web.Mvc.FilterBindingSyntax;
 using NLog.Web;
 using WasteProducts.Web.Controllers;
-using WasteProducts.Web.Utils;
+//using WasteProducts.Web.Utils;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(WasteProducts.Web.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(WasteProducts.Web.App_Start.NinjectWebCommon), "Stop")]
