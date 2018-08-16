@@ -10,13 +10,21 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
     public interface ISearchRepository
     {
         /// <summary>
-        /// Returns object by Id
+        /// Returns object by keyField
         /// </summary>
         /// <typeparam name="TEntity">Object model type</typeparam>
         /// <param name="keyValue">Key value of model key field</param>
         /// <param name="keyField">Key field of model</param>
         /// <returns>Object model</returns>
-        TEntity Get<TEntity>(string keyValue, string keyField = "Id") where TEntity : class;
+        TEntity Get<TEntity>(string keyValue, string keyField) where TEntity : class;
+
+        /// <summary>
+        /// Returns object by Id
+        /// </summary>
+        /// <typeparam name="TEntity">Object model type</typeparam>
+        /// <param name="id">Id of getting object</param>
+        /// <returns></returns>
+        TEntity GetById<TEntity>(int id) where TEntity : class;
 
         /// <summary>
         /// Async version of Get

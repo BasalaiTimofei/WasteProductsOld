@@ -55,5 +55,67 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             sut = new LuceneSearchRepository(false);
         }
         #endregion
+
+        #region public void Insert<TEntity>(TEntity obj) where TEntity : class
+        [Test]
+        public void Insert_InsertNewObject_Return_NoException()
+        {
+            sut = new LuceneSearchRepository();
+            var user = new User();
+
+            sut.Insert(user);
+        }
+        #endregion
+
+        #region public TEntity GetById<TEntity>(int id) where TEntity : class
+        [Test]
+        public void GetById_GetUser_Return_NoException()
+        {
+            var user = new User() { Id = 1, Login = "user1" };
+            sut = new LuceneSearchRepository(true);
+            sut.Insert(user);
+
+            var userFromRepo = sut.GetById<User>(1);           
+        }
+
+        [Test]
+        public void GetById_GetExistingId_Return_ObjectWithCorrectId()
+        {
+            var user = new User() { Id = 1, Login = "user1" };
+            sut = new LuceneSearchRepository(true);
+            sut.Insert(user);
+
+            var userFromRepo = sut.GetById<User>(1);
+
+            Assert.AreEqual(user.Login, userFromRepo.Login);            
+        }
+
+        [Test]
+        public void GetById_GetWrongId_Return_ObjectAreNotEqual()
+        {
+            var user = new User() { Id = 1, Login = "user1" };
+            var user2 = new User() { Id = 2, Login = "user2" };
+
+            sut = new LuceneSearchRepository(true);
+            sut.Insert(user);
+            sut.Insert(user2);
+
+            var userFromRepo = sut.GetById<User>(2);
+
+            Assert.AreNotEqual(user.Login, userFromRepo.Login);
+        }
+
+        [Test]
+        public void GetById_GetByNotExistingId_Return_NullObject()
+        {
+            var user = new User() { Id = 1, Login = "user1" };
+            sut = new LuceneSearchRepository(true);
+            sut.Insert(user);
+
+            var userFromRepo = sut.GetById<User>(2);
+
+            Assert.AreEqual(null, userFromRepo);            
+        }        
+        #endregion
     }
 }
