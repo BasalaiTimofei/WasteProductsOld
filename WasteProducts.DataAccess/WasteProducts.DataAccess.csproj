@@ -82,9 +82,6 @@
     <Compile Include="Models\Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\EntityRepository.cs" />
-    <Compile Include="Repositories\Groups\ProductBordDBRepository.cs" />
-    <Compile Include="Repositories\Groups\GroupUserDBRepository.cs" />
-    <Compile Include="Repositories\Groups\GroupBordRepository.cs" />
     <Compile Include="Repositories\Groups\GroupRepository.cs" />
     <Compile Include="UoW\UnitOfWork.cs" />
   </ItemGroup>
