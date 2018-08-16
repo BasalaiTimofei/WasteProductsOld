@@ -16,25 +16,34 @@ namespace WasteProducts.DataAccess.Repositories.Groups
     {
         DbSet<T> _dbSet;
         IdentityDbContext _context;
-
+        
         public GroupRepository(IdentityDbContext context)
         {
             _context = context;
             _dbSet = context.Set<T>();
         }
-
+        /// <summary>
+        /// Create - add a new line
+        /// </summary>
+        /// <param name="item"></param>
         public void Create(T item)
         {
             _dbSet.Add(item);
             _context.SaveChanges();
         }
-
+        /// <summary>
+        /// Update - correct or add new data to the created line
+        /// </summary>
+        /// <param name="item"></param>
         public void Update(T item)
         {
             _context.Entry(item).State = EntityState.Modified;
             _context.SaveChanges();
         }
-
+        /// <summary>
+        /// Delete - delete da
+        /// </summary>
+        /// <param name="id"></param>
         public void Delete(int id)
         {
             var group = _dbSet.Find(id);
@@ -42,27 +51,47 @@ namespace WasteProducts.DataAccess.Repositories.Groups
                 _dbSet.Remove(group);
             _context.SaveChanges();
         }
-
+        /// <summary>
+        /// Find - returns a data set with condition
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
         public IEnumerable<T> Find(Func<T, bool> predicate)
         {
             return _dbSet.Where(predicate).ToList();
         }
-
+        /// <summary>
+        /// Get - getting data on id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public T Get(int id)
         {
             return _dbSet.Find(id);
         }
-
+        /// <summary>
+        /// GetAll - returns all data
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<T> GetAll()
         {
             return _dbSet;
         }
-
+        /// <summary>
+        /// GetWithInclude - immediate loading of data with condition
+        /// </summary>
+        /// <param name="includeProperties"></param>
+        /// <returns></returns>
         public IEnumerable<T> GetWithInclude(params Expression<Func<T, object>>[] includeProperties)
         {
             return Include(includeProperties).ToList();
         }
-
+        /// <summary>
+        /// GetWithInclude - immediate loading of data with condition
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <param name="includeProperties"></param>
+        /// <returns></returns>
         public IEnumerable<T> GetWithInclude(Func<T, bool> predicate,
             params Expression<Func<T, object>>[] includeProperties)
         {
