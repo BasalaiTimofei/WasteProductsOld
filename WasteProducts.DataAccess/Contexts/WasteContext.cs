@@ -13,5 +13,7 @@ namespace WasteProducts.DataAccess.Contexts
         ///  create, read, update, delete and to get product list operations in 'ProductRepository' class.
         /// </summary>
         public IDbSet<ProductDB> Products { get; set; }
+
+        public IDbSet<CategoryDB> Categories { get; set; }
     }
 }
