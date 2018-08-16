@@ -10,7 +10,7 @@ using System.Data.Entity;
 
 namespace WasteProducts.DataAccess.Repositories.Groups
 {
-    class ProductBordDBRepository : IGroupRepository<ProductBordDB>
+    class ProductBordDBRepository : IGroupRepository<ProductBoardDB>
     {
         WasteContext db;
 
@@ -19,34 +19,34 @@ namespace WasteProducts.DataAccess.Repositories.Groups
             db = context;
         }
 
-        public void Create(ProductBordDB item)
+        public void Create(ProductBoardDB item)
         {
             db.ProductBordDBs.Add(item);
         }
 
-        public void Update(ProductBordDB item)
+        public void Update(ProductBoardDB item)
         {
             db.Entry(item).State = EntityState.Modified;
         }
 
         public void Delete(int id)
         {
-            ProductBordDB group = db.ProductBordDBs.Find(id);
+            ProductBoardDB group = db.ProductBordDBs.Find(id);
             if (group != null)
                 db.ProductBordDBs.Remove(group);
         }
 
-        public IEnumerable<ProductBordDB> Find(Func<ProductBordDB, bool> predicate)
+        public IEnumerable<ProductBoardDB> Find(Func<ProductBoardDB, bool> predicate)
         {
             return db.ProductBordDBs.Where(predicate).ToList();
         }
 
-        public ProductBordDB Get(int id)
+        public ProductBoardDB Get(int id)
         {
             return db.ProductBordDBs.Find(id);
         }
 
-        public IEnumerable<ProductBordDB> GetAll()
+        public IEnumerable<ProductBoardDB> GetAll()
         {
             return db.ProductBordDBs;
         }

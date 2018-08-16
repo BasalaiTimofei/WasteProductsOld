@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace WasteProducts.DataAccess.Common.Models.Groups
 {
-    public class ProductBordDB
+    public class ProductBoardDB
     {
         public int Id { get; set; }
+        public int GroupBordId { get; set; }
+        public GroupBoardDB GroupBoardDB { get; set; }
         public int ProductId { get; set; }
         public string Information { get; set; }
-        public int GroupBordId { get; set; }
-        public GroupBordDB GroupBordDB { get; set; }
     }
 }

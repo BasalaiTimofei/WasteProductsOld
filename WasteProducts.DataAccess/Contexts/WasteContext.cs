@@ -11,6 +11,6 @@ namespace WasteProducts.DataAccess.Contexts
         public DbSet<GroupBordDB> GroupBordDBs { get; set; }
         public DbSet<GroupDB> GroupDBs { get; set; }
         public DbSet<GroupUserDB> GroupUserDBs { get; set; }
-        public DbSet<ProductBordDB> ProductBordDBs { get; set; }
+        public DbSet<ProductBoardDB> ProductBordDBs { get; set; }
     }
 }

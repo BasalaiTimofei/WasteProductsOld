@@ -9,11 +9,11 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
     public class GroupUserInviteTimeDB
     {
         /// <summary>
-        /// Id
+        /// Id - primary key
         /// </summary>
         public int Id { get; set; }
         /// <summary>
-        /// GroupUserDB Id
+        /// GroupUserDBId secondary Id
         /// </summary>
         public int GroupUserDBId { get; set; }
         public GroupUserDB GroupUserDB { get; set; }
@@ -26,10 +26,10 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         /// </summary>
         public DateTime Exit { get; set; }
         /// <summary>
-        /// user action when inviting administrator
-        /// 0 -invite send;
-        /// 1- invite user confirmed;
-        /// 2- invite user rejected;
+        /// Invite - user action when administrator inviting
+        ///     0 -invite send;
+        ///     1- invite user confirmed;
+        ///     2- invite user rejected;
         /// </summary>
         public int Invite { get; set; }
     }
