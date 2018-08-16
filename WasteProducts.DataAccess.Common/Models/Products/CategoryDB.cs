@@ -25,6 +25,6 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         /// <summary>
         /// List of products that belong to a specific Сategory in database
         /// </summary>
-        public List<ProductDB> Product { get; set; }
+        public ICollection<ProductDB> Product { get; set; }
     }
 }

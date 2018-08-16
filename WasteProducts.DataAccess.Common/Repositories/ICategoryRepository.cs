@@ -27,7 +27,7 @@ namespace WasteProducts.DataAccess.Common.Repositories
         /// <summary>
         /// Deletes the specific category by id
         /// </summary>
-        /// <param name="id">Represents a specific category id to remove</param>
+        /// <param name="id">Represents a specific category id to delete</param>
         void DeleteById(int id);
 
         /// <summary>
