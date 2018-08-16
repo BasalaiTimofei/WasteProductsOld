@@ -3,7 +3,6 @@
 namespace WasteProducts.Logic.Common.Enums
 {
     [Flags]
-
     public enum UserCategory
     {
         /// <summary>

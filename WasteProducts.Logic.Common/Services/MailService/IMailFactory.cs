@@ -1,6 +1,6 @@
 ﻿using System.Net.Mail;
 
-namespace WasteProducts.Logic.Common.Services
+namespace WasteProducts.Logic.Common.Services.MailService
 {
     /// <summary>
     /// Provides support for creating MailMessage objects.

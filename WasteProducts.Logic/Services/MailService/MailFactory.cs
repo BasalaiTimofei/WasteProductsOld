@@ -1,7 +1,7 @@
 ﻿using System.Net.Mail;
-using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Common.Services.MailService;
 
-namespace WasteProducts.Logic.Services
+namespace WasteProducts.Logic.Services.MailService
 {
     public class MailFactory : IMailFactory
     {

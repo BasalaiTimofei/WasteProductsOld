@@ -3,6 +3,7 @@ using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Common.Services.MailService;
 using WasteProducts.Logic.Mappings.UserMappings;
 
 namespace WasteProducts.Logic.Services

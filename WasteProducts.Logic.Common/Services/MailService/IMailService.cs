@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Mail;
 
-namespace WasteProducts.Logic.Common.Services
+namespace WasteProducts.Logic.Common.Services.MailService
 {
     public interface IMailService : IDisposable
     {

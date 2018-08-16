@@ -11,14 +11,14 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
     /// <summary>
     /// Standart DAL level interface using to make CRUD operations with IdentityRole models.
     /// </summary>
-    public interface IRoleRepository : IRoleRepository<IdentityRole, string, IdentityUserRole>
+    public interface IUserRoleRepository : IUserRoleRepository<IdentityRole, string, IdentityUserRole>
     {
     }
 
     /// <summary>
     /// Standart DAL level interface using to make CRUD operations with TRole models.
     /// </summary>
-    public interface IRoleRepository<TRole, TKey, TUserRole>
+    public interface IUserRoleRepository<TRole, TKey, TUserRole>
         where TRole : IdentityRole<TKey, TUserRole>, new()
         where TUserRole : IdentityUserRole<TKey>, new()
     {
