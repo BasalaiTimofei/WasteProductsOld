@@ -48,18 +48,18 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void Search_GetAllVerify_Return_Once()
         {
-            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<int>())).Verifiable();
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<string>(), It.IsAny<IEnumerable<string>>(), It.IsAny<int>())).Verifiable();
 
-            var query = new SearchQuery();
+            var query = new SearchQuery();            
             var result = sut.Search<User>(query);
 
-            mockRepo.Verify(v => v.GetAll<User>(It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<int>()), Times.Once);
+            mockRepo.Verify(v => v.GetAll<User>(It.IsAny<string>(), It.IsAny<IEnumerable<string>> (), It.IsAny<int>()), Times.Once);
         }
 
         [Test]
         public void Search_GetAll_Return_AllObjectsCount()
         {
-            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<int>())).Returns(users);
+            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<string>(), It.IsAny<IEnumerable<string>>(), It.IsAny<int>())).Returns(users);
 
             var query = new SearchQuery();
             var result = sut.Search<User>(query);

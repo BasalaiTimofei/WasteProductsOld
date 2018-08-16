@@ -81,15 +81,13 @@ namespace WasteProducts.DataAccess.Repositories
         }
 
         public IEnumerable<TEntity> GetAll<TEntity>() where TEntity  :class
-        {
-            
+        {           
             Query queryGet = NumericRangeQuery.NewInt64Range(IDField, 0, Int32.MaxValue, true, true);
             return ProceedQueryList<TEntity>(queryGet, Int32.MaxValue);
         }
 
         public IEnumerable<TEnity> GetAll<TEnity>(string queryString, IEnumerable<string> searchableFields, int numResults) where TEnity : class
-        {
-            
+        {            
             BooleanQuery booleanQuery = new BooleanQuery();
             List<Query> queryList = new List<Query>();
             MultiFieldQueryParser queryParser = new MultiFieldQueryParser(MATCH_LUCENE_VERSION, searchableFields.ToArray(), _analyzer);
