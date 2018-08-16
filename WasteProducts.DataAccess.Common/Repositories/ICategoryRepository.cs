@@ -51,6 +51,13 @@ namespace WasteProducts.DataAccess.Common.Repositories
         CategoryDB GetById(int id);
 
         /// <summary>
+        /// Gets category by name of the specific category
+        /// </summary>
+        /// <param name="name">The name of the specific category</param>
+        /// <returns>Returns a category chosen by its name</returns>
+        CategoryDB GetByName(string name);
+
+        /// <summary>
         /// Updates the specific category
         /// </summary>
         /// <param name="category">The specific category for updating</param>

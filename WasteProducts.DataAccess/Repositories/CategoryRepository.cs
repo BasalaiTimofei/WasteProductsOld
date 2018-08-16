@@ -86,6 +86,12 @@ namespace WasteProducts.DataAccess.Repositories
         /// Updates the specific category
         /// </summary>
         /// <param name="category">The specific category for updating</param>
+        public CategoryDB GetByName(string name) => _context.Categories.Find(name);
+
+        /// <summary>
+        /// Updates the specific category
+        /// </summary>
+        /// <param name="category">The specific category for updating</param>
         public void Update(CategoryDB category)
         {
             _context.Entry(category).State = EntityState.Modified;
