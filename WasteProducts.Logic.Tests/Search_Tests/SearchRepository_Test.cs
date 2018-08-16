@@ -294,25 +294,55 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             Assert.AreEqual("user1_new", updUser.Login);
         }
 
-        //Тест не сделан. Суть в том, что бы не давать менять поля помеченые как PK. 
-        //Возможно нужна проверка либо генерация exception. 
-        //А, возможно, все будет контролироваться context. По идее, репа lucene и БД идентичны. EF точно не даст задублировать PK
-        //И в целом не разрешит задать PK (автоинкрементное) вручную
         [Test]
-        public void Update_UpdateObjectId_Return_Exception()
+        public void Update_NotExistingObject_Return_EqualKeyValue()
         {
             sut = new LuceneSearchRepository(true);
             foreach (var user in users)
                 sut.Insert(user);
-            var loginBefore = users.ToList()[4].Login;
-            var oldUser = users.ToList()[4];
-            oldUser.Login = "sssss";
-            oldUser.Id = 1;
 
-            sut.Update<User>(oldUser);
-            var updUser = sut.GetById<User>(5);
+            var oldUser = new User();
 
-            Assert.AreNotEqual(loginBefore, updUser.Login);
+            Assert.Throws<LuceneSearchRepositoryException>(() => sut.Update<User>(oldUser));
+        }
+
+        #endregion
+
+        #region Delete<TEntity>(TEntity obj) where TEntity : class;
+        [Test]
+        public void Delete_UpdateObject_Return_NoException()
+        {
+            sut = new LuceneSearchRepository(true);
+            foreach (var user in users)
+                sut.Insert(user);
+            var oldUser = users.ToList()[1];            
+
+            sut.Delete<User>(oldUser);
+        }
+
+        [Test]
+        public void Delete_UpdateObject_Return_EqualKeyValue()
+        {
+            sut = new LuceneSearchRepository(true);
+            foreach (var user in users)
+                sut.Insert(user);
+            var oldUser = users.ToList()[1];            
+
+            sut.Delete<User>(oldUser);
+            var updUser = sut.GetById<User>(oldUser.Id);
+
+            Assert.AreEqual(null, updUser);
+        }
+
+        [Test]
+        public void Delete_NotExistingObject_Return_EqualKeyValue()
+        {
+            sut = new LuceneSearchRepository(true);
+            foreach (var user in users)
+                sut.Insert(user);
+            var oldUser = new User();            
+
+            Assert.Throws<LuceneSearchRepositoryException>(() => sut.Delete<User>(oldUser));
         }
         #endregion
 
