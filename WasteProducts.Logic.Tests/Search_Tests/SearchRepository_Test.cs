@@ -263,5 +263,58 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             Assert.AreEqual(0, userCollectionFromRepo.Count());
         }
         #endregion
+
+        //TODO: IEnumerable<TEntity> GetAll<TEntity>(string queryString, IEnumerable<string> searchableFields, ReadOnlyDictionary<string, float> boosts, int numResults) where TEntity : class;
+
+        #region Update<TEntity>(TEntity obj) where TEntity : class
+        [Test]
+        public void Update_UpdateObject_Return_NoException()
+        {
+            sut = new LuceneSearchRepository(true);
+            foreach (var user in users)
+                sut.Insert(user);
+            var oldUser = users.ToList()[1];
+            oldUser.Login = "user1_new";
+
+            sut.Update<User>(oldUser);
+        }
+
+        [Test]
+        public void Update_UpdateObject_Return_EqualKeyValue()
+        {
+            sut = new LuceneSearchRepository(true);
+            foreach (var user in users)
+                sut.Insert(user);
+            var oldUser = users.ToList()[1];
+            oldUser.Login = "user1_new";
+
+            sut.Update<User>(oldUser);
+            var updUser = sut.GetById<User>(oldUser.Id);
+
+            Assert.AreEqual("user1_new", updUser.Login);
+        }
+
+        //Тест не сделан. Суть в том, что бы не давать менять поля помеченые как PK. 
+        //Возможно нужна проверка либо генерация exception. 
+        //А, возможно, все будет контролироваться context. По идее, репа lucene и БД идентичны. EF точно не даст задублировать PK
+        //И в целом не разрешит задать PK (автоинкрементное) вручную
+        [Test]
+        public void Update_UpdateObjectId_Return_Exception()
+        {
+            sut = new LuceneSearchRepository(true);
+            foreach (var user in users)
+                sut.Insert(user);
+            var loginBefore = users.ToList()[4].Login;
+            var oldUser = users.ToList()[4];
+            oldUser.Login = "sssss";
+            oldUser.Id = 1;
+
+            sut.Update<User>(oldUser);
+            var updUser = sut.GetById<User>(5);
+
+            Assert.AreNotEqual(loginBefore, updUser.Login);
+        }
+        #endregion
+
     }
 }
