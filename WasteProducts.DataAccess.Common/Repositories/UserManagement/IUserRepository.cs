@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Users;
 
@@ -17,10 +19,58 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         Task AddAsync(UserDB user);
 
         /// <summary>
+        /// Add a claim to a user.
+        /// </summary>
+        /// <param name="user">Specific claim will be added to the user.</param>
+        /// <param name="claim">Specific claim to add to the user.</param>
+        /// <returns></returns>
+        Task AddClaimAsync(UserDB user, Claim claim);
+
+        /// <summary>
+        ///  Add a login to the user.
+        /// </summary>
+        /// <param name="user">Specific login will be added to the user.</param>
+        /// <param name="login">Specific login to add to the user.</param>
+        /// <returns></returns>
+        Task AddLoginAsync(UserDB user, UserLoginInfo login);
+
+        /// <summary>
+        /// Add a user to a role.
+        /// </summary>
+        /// <param name="user">User will be removed from this specific role.</param>
+        /// <param name="roleName">Name of the specific role to add to the user.</param>
+        /// <returns></returns>
+        Task AddToRoleAsync(UserDB user, string roleName);
+
+        /// <summary>
         /// Deletes the record of the specific user.
         /// </summary>
         /// <param name="user">Specific user to delete.</param>
         Task DeleteAsync(UserDB user);
+
+        /// <summary>
+        /// Remove a claim from a user.
+        /// </summary>
+        /// <param name="user">Specific claim will be removed from the user.</param>
+        /// <param name="claim">Specific claim to remove from the user.</param>
+        /// <returns></returns>
+        Task RemoveClaimAsync(UserDB user, Claim claim);
+
+        /// <summary>
+        /// Remove a user from a role.
+        /// </summary>
+        /// <param name="user">User will be removed from this specific role.</param>
+        /// <param name="roleName">Name of the specific role to remove from the user.</param>
+        /// <returns></returns>
+        Task RemoveFromRoleAsync(UserDB user, string roleName);
+
+        /// <summary>
+        /// Remove a login from a user.
+        /// </summary>
+        /// <param name="user">Specific login will be removed from the user.</param>
+        /// <param name="login">Specific login to remove from the user.</param>
+        /// <returns></returns>
+        Task RemoveLoginAsync(UserDB user, UserLoginInfo login);
 
         /// <summary>
         /// Returns first registered user matches the predicate.

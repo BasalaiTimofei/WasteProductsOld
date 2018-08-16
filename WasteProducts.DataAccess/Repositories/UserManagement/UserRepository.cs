@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
@@ -23,6 +25,42 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             }
         }
 
+        public async Task AddClaimAsync(UserDB user, Claim claim)
+        {
+            using (var db = new WasteContext())
+            {
+                using (var userStore = new UserStore<UserDB>(db))
+                {
+                    await userStore.AddClaimAsync(user, claim);
+                    await db.SaveChangesAsync();
+                }
+            }
+        }
+
+        public async Task AddLoginAsync(UserDB user, UserLoginInfo login)
+        {
+            using (var db = new WasteContext())
+            {
+                using (var userStore = new UserStore<UserDB>(db))
+                {
+                    await userStore.AddLoginAsync(user, login);
+                    await db.SaveChangesAsync();
+                }
+            }
+        }
+
+        public async Task AddToRoleAsync(UserDB user, string roleName)
+        {
+            using (var db = new WasteContext())
+            {
+                using (var userStore = new UserStore<UserDB>(db))
+                {
+                    await userStore.AddToRoleAsync(user, roleName);
+                    await db.SaveChangesAsync();
+                }
+            }
+        }
+
         public async Task DeleteAsync(UserDB user)
         {
             using (var db = new WasteContext())
@@ -30,6 +68,42 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 using (var userStore = new UserStore<UserDB>(db))
                 {
                     await userStore.DeleteAsync(user);
+                    await db.SaveChangesAsync();
+                }
+            }
+        }
+
+        public async Task RemoveClaimAsync(UserDB user, Claim claim)
+        {
+            using (var db = new WasteContext())
+            {
+                using (var userStore = new UserStore<UserDB>(db))
+                {
+                    await userStore.RemoveClaimAsync(user, claim);
+                    await db.SaveChangesAsync();
+                }
+            }
+        }
+
+        public async Task RemoveFromRoleAsync(UserDB user, string roleName)
+        {
+            using (var db = new WasteContext())
+            {
+                using (var userStore = new UserStore<UserDB>(db))
+                {
+                    await userStore.RemoveFromRoleAsync(user, roleName);
+                    await db.SaveChangesAsync();
+                }
+            }
+        }
+
+        public async Task RemoveLoginAsync(UserDB user, UserLoginInfo login)
+        {
+            using (var db = new WasteContext())
+            {
+                using (var userStore = new UserStore<UserDB>(db))
+                {
+                    await userStore.RemoveLoginAsync(user, login);
                     await db.SaveChangesAsync();
                 }
             }
