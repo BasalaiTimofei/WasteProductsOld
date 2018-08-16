@@ -8,9 +8,10 @@ namespace WasteProducts.DataAccess.Contexts
     [DbConfigurationType(typeof(MsSqlConfiguration))]
     public class WasteContext : IdentityDbContext
     {
-        public DbSet<GroupBordDB> GroupBordDBs { get; set; }
+        public DbSet<GroupBoardDB> GroupBordDBs { get; set; }
         public DbSet<GroupDB> GroupDBs { get; set; }
         public DbSet<GroupUserDB> GroupUserDBs { get; set; }
-        public DbSet<ProductBoardDB> ProductBordDBs { get; set; }
+        public DbSet<GroupUserInviteTimeDB> GroupUserInviteTimeDBs { get; set; }
+        public DbSet<GroupProductBoardDB> GroupProductBoardDBs { get; set; }
     }
 }

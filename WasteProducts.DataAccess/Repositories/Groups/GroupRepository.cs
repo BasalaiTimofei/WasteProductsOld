@@ -7,48 +7,74 @@ using WasteProducts.DataAccess.Common.Repositories.Groups;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Contexts;
 using System.Data.Entity;
+using System.Linq.Expressions;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace WasteProducts.DataAccess.Repositories.Groups
 {
-    class GroupRepository : IGroupRepository<GroupDB>
+    public class GroupRepository<T> : IGroupRepository<T> where T : class
     {
-        WasteContext db;
+        DbSet<T> _dbSet;
+        IdentityDbContext _context;
 
-        public GroupRepository(WasteContext context)
+        public GroupRepository(IdentityDbContext context)
         {
-            db = context;
+            _context = context;
+            _dbSet = context.Set<T>();
         }
 
-        public void Create(GroupDB item)
+        public void Create(T item)
         {
-            db.GroupDBs.Add(item);
+            _dbSet.Add(item);
+            _context.SaveChanges();
         }
 
-        public void Update(GroupDB item)
+        public void Update(T item)
         {
-            db.Entry(item).State = EntityState.Modified;
+            _context.Entry(item).State = EntityState.Modified;
+            _context.SaveChanges();
         }
 
         public void Delete(int id)
         {
-            GroupDB group = db.GroupDBs.Find(id);
+            var group = _dbSet.Find(id);
             if (group != null)
-                db.GroupDBs.Remove(group);
+                _dbSet.Remove(group);
+            _context.SaveChanges();
         }
 
-        public IEnumerable<GroupDB> Find(Func<GroupDB, bool> predicate)
+        public IEnumerable<T> Find(Func<T, bool> predicate)
         {
-            return db.GroupDBs.Where(predicate).ToList();
+            return _dbSet.Where(predicate).ToList();
         }
 
-        public GroupDB Get(int id)
+        public T Get(int id)
         {
-            return db.GroupDBs.Find(id);
+            return _dbSet.Find(id);
         }
 
-        public IEnumerable<GroupDB> GetAll()
+        public IEnumerable<T> GetAll()
         {
-            return db.GroupDBs;
+            return _dbSet;
+        }
+
+        public IEnumerable<T> GetWithInclude(params Expression<Func<T, object>>[] includeProperties)
+        {
+            return Include(includeProperties).ToList();
+        }
+
+        public IEnumerable<T> GetWithInclude(Func<T, bool> predicate,
+            params Expression<Func<T, object>>[] includeProperties)
+        {
+            var query = Include(includeProperties);
+            return query.Where(predicate).ToList();
+        }
+
+        private IQueryable<T> Include(params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = _dbSet.AsNoTracking();
+            return includeProperties
+                .Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
         }
 
     }
