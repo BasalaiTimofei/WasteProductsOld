@@ -56,8 +56,7 @@ namespace WasteProducts.DataAccess.Repositories
         public void DeleteById(int id)
         {
             var product = _context.Products.Find(id);
-            if (product != null) _context.Products.Remove(product);
-            _context.SaveChanges();
+            Delete(product);
         }
 
         /// <summary>
