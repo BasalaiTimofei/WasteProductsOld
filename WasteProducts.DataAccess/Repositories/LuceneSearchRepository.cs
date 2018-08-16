@@ -88,7 +88,8 @@ namespace WasteProducts.DataAccess.Repositories
         }
 
         public IEnumerable<TEnity> GetAll<TEnity>(string queryString, IEnumerable<string> searchableFields, int numResults) where TEnity : class
-        {            
+        {
+            CheckQueryString(queryString);
             BooleanQuery booleanQuery = new BooleanQuery();
             List<Query> queryList = new List<Query>();
             MultiFieldQueryParser queryParser = new MultiFieldQueryParser(MATCH_LUCENE_VERSION, searchableFields.ToArray(), _analyzer);
@@ -99,7 +100,7 @@ namespace WasteProducts.DataAccess.Repositories
 
         public IEnumerable<TEntity> GetAll<TEntity>(string queryString, IEnumerable<string> searchableFields, ReadOnlyDictionary<string, float> boosts, int numResults) where TEntity : class
         {
-
+            CheckQueryString(queryString);
             BooleanQuery booleanQuery = new BooleanQuery();
             List<Query> queryList = new List<Query>();
             MultiFieldQueryParser queryParser = new MultiFieldQueryParser(MATCH_LUCENE_VERSION, searchableFields.ToArray(), _analyzer, boosts);
@@ -230,6 +231,13 @@ namespace WasteProducts.DataAccess.Repositories
                     throw new LuceneSearchRepositoryException($"Can't proceed query. {ex.Message}", ex);
                 }
             }
+        }
+
+        private void CheckQueryString(string queryString)
+        {
+
+            if (String.IsNullOrEmpty(queryString))
+                throw new LuceneSearchRepositoryException("Search string can't be empty or null.");
         }
 
         //TODO: add realization of async methods later

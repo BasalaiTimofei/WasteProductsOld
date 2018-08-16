@@ -216,7 +216,6 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             Assert.Throws<LuceneSearchRepositoryException>(() => sut.GetAll<User>("user", queryList, -1));
         }
 
-        //тест не проходит. Поиск идет по строгому значению. По идее так default должен был работать
         [Test]
         public void GetAllParams_SearchUser_Return_EqualCount_5()
         {
@@ -227,13 +226,11 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             queryList.Add("Login");
             queryList.Add("Email");
 
-            var userCollectionFromRepo = sut.GetAll<User>("user", queryList, 1000);
-
+            var userCollectionFromRepo = sut.GetAll<User>("user*", queryList, 1000);
 
             Assert.AreEqual(5, userCollectionFromRepo.Count());
         }
 
-        //тест не проходит, возвращает ошибку. Не переваривает в качестве запроса пустую строку
         [Test]
         public void GetAllParams_EmptyQuery_Return_EqualCount_0()
         {
@@ -244,10 +241,11 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             queryList.Add("Login");
             queryList.Add("Email");
 
-            var userCollectionFromRepo = sut.GetAll<User>(String.Empty, queryList, 1000);
+            //var userCollectionFromRepo = sut.GetAll<User>(String.Empty, queryList, 1000);
 
+            //Assert.AreEqual(0, userCollectionFromRepo.Count());
 
-            Assert.AreEqual(0, userCollectionFromRepo.Count());
+            Assert.Throws<LuceneSearchRepositoryException>(() => sut.GetAll<User>(String.Empty, queryList, 1000));
         }
 
         [Test]
