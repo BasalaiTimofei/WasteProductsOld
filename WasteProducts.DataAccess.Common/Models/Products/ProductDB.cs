@@ -35,7 +35,7 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         /// <summary>
         /// Defines the Product barcode.
         /// </summary>
-        public virtual Barcode Barcode { get; set; }
+        public virtual BarcodeDB BarcodeDB { get; set; }
 
         /// <summary>
         /// Defines the average Product rating based on user ratings.
