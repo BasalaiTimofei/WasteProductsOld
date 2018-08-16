@@ -31,7 +31,7 @@ namespace WasteProducts.DataAccess.Repositories
         private Lucene.Net.Store.Directory _directory;
         private Analyzer _analyzer;
         private IndexWriter _writer;
-        private SearcherManager _searcherManager;
+        //private SearcherManager _searcherManager;
 
         public LuceneSearchRepository()
         {
@@ -51,7 +51,7 @@ namespace WasteProducts.DataAccess.Repositories
                 {
                     IndexWriter.Unlock(_directory);
                 }
-                _searcherManager = new SearcherManager(_writer, true, null);
+                //_searcherManager = new SearcherManager(_writer, true, null);
                 _writer.Commit();
             }
             catch (Exception ex)
@@ -94,6 +94,17 @@ namespace WasteProducts.DataAccess.Repositories
             queryParser.DefaultOperator = QueryParser.OR_OPERATOR;
             Query query = queryParser.Parse(queryString);
             return ProceedQueryList<TEnity>(query, numResults);
+        }
+
+        public IEnumerable<TEntity> GetAll<TEntity>(string queryString, IEnumerable<string> searchableFields, Dictionary<string, float> boosts, int numResults) where TEntity : class
+        {
+
+            BooleanQuery booleanQuery = new BooleanQuery();
+            List<Query> queryList = new List<Query>();
+            MultiFieldQueryParser queryParser = new MultiFieldQueryParser(MATCH_LUCENE_VERSION, searchableFields.ToArray(), _analyzer, boosts);
+            queryParser.DefaultOperator = QueryParser.OR_OPERATOR;
+            Query query = queryParser.Parse(queryString);
+            return ProceedQueryList<TEntity>(query, numResults);
         }
 
         public void Insert<TEntity>(TEntity obj) where TEntity : class
@@ -187,9 +198,10 @@ namespace WasteProducts.DataAccess.Repositories
                         return null;
                     }
                 }
-                finally
+                catch(Exception ex)
                 {
-                    _searcherManager.Release(searcher);
+                    //_searcherManager.Release(searcher);
+                    throw new LuceneSearchRepositoryException($"Can't proceed query. {ex.Message}", ex);
                 }
             }
         }
@@ -211,9 +223,10 @@ namespace WasteProducts.DataAccess.Repositories
                     }
                     return entityList;
                 }
-                finally
+                catch(Exception ex)
                 {
-                    _searcherManager.Release(searcher);
+                    //_searcherManager.Release(searcher);
+                    throw new LuceneSearchRepositoryException($"Can't proceed query. {ex.Message}", ex);
                 }
             }
         }
