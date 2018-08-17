@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InjectorModule.cs" />
+    <Compile Include="Mappings\CategoryProfile.cs" />
     <Compile Include="Mappings\TestProfile.cs" />
     <Compile Include="Mappings\ProductProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
