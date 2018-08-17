@@ -8,5 +8,17 @@ namespace WasteProducts.Logic.Common.Models
 {
     class GroupUser
     {
+        /// <summary>
+        /// Id - primary key
+        /// </summary>
+        public int Id { get; set; }
+        /// <summary>
+        /// Id - secondary key
+        /// </summary>
+        public int GroupId { get; set; }
+        /// <summary>
+        /// UserId - user which entered in group
+        /// </summary>
+        public int UserId { get; set; }
     }
 }
