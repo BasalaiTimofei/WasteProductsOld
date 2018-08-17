@@ -30,12 +30,12 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         /// <summary>
         /// Specifies the Product category.
         /// </summary>
-        public virtual CategoryDB CategoryDB { get; set; }
+        public virtual CategoryDB Category { get; set; }
 
         /// <summary>
         /// Defines the Product barcode.
         /// </summary>
-        public virtual Barcode Barcode { get; set; }
+        public virtual BarcodeDB Barcode { get; set; }
 
         /// <summary>
         /// Defines the average Product rating based on user ratings.
