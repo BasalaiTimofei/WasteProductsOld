@@ -91,22 +91,33 @@ namespace WasteProducts.DataAccess.Repositories
         {
             CheckQueryString(queryString);
             BooleanQuery booleanQuery = new BooleanQuery();
-            List<Query> queryList = new List<Query>();
-            MultiFieldQueryParser queryParser = new MultiFieldQueryParser(MATCH_LUCENE_VERSION, searchableFields.ToArray(), _analyzer);
-            queryParser.DefaultOperator = QueryParser.OR_OPERATOR;
-            Query query = queryParser.Parse(queryString);
-            return ProceedQueryList<TEnity>(query, numResults);
+            var searchTerms = queryString.Split(' ');
+            foreach (var term in searchTerms)
+            {
+                foreach (var field in searchableFields)
+                {
+                    WildcardQuery wildcardQuery = new WildcardQuery(new Term(field, $"{term}*"));
+                    booleanQuery.Add(wildcardQuery, Occur.SHOULD);
+                }
+            }
+            return ProceedQueryList<TEnity>(booleanQuery, numResults);
         }
 
         public IEnumerable<TEntity> GetAll<TEntity>(string queryString, IEnumerable<string> searchableFields, ReadOnlyDictionary<string, float> boosts, int numResults) where TEntity : class
         {
             CheckQueryString(queryString);
             BooleanQuery booleanQuery = new BooleanQuery();
-            List<Query> queryList = new List<Query>();
-            MultiFieldQueryParser queryParser = new MultiFieldQueryParser(MATCH_LUCENE_VERSION, searchableFields.ToArray(), _analyzer, boosts);
-            queryParser.DefaultOperator = QueryParser.OR_OPERATOR;
-            Query query = queryParser.Parse(queryString);
-            return ProceedQueryList<TEntity>(query, numResults);
+            var searchTerms = queryString.Split(' ');
+            foreach (var term in searchTerms)
+            {
+                foreach (var field in searchableFields)
+                {
+                    WildcardQuery wildcardQuery = new WildcardQuery(new Term(field, $"{term}*"));
+                    wildcardQuery.Boost = boosts[field];
+                    booleanQuery.Add(wildcardQuery, Occur.SHOULD);
+                }
+            }
+            return ProceedQueryList<TEntity>(booleanQuery, numResults);
         }
 
         public void Insert<TEntity>(TEntity obj) where TEntity : class
