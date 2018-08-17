@@ -38,8 +38,8 @@
         public double Weight { get; set; }
 
         /// <summary>
-        /// User ID of the sending photo.
+        /// User Id of the sending photo.
         /// </summary>
-        public int UserID { get; set; }
+        public int UserId { get; set; }
     }
 }

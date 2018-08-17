@@ -2,15 +2,15 @@
 
 namespace WasteProducts.Logic.Common.Services
 {
-    public interface IBarcodService
+    public interface IBarcodeService
     {
         /// <summary>
         /// get a numerical barcode on the photo
         /// </summary>
-        /// <param name="path"> path to barcode photo</param>
-        /// <param name="UserId"> User Id by User</param>
+        /// <param name="filePath"> path to barcode photo</param>
+        /// <param name="userId"> User Id by User</param>
         /// <returns>a numerical barcode</returns>
-        BarcodeInfo GetCode(string path, int UserId);
+        BarcodeInfo GetCode(string filePath, int userId);
 
         /// <summary>
         /// get product information
