@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using WasteProducts.DataAccess.Common.Repositories.Groups;
-using WasteProducts.DataAccess.Common.Models.Groups;
+using WasteProducts.DataAccess.Common.Repositories;
+using WasteProducts.DataAccess.Common.Models;
 using WasteProducts.DataAccess.Contexts;
 using System.Data.Entity;
 using System.Linq.Expressions;
 using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace WasteProducts.DataAccess.Repositories.Groups
+namespace WasteProducts.DataAccess.Repositories
 {
     public class GroupRepository<T> : IGroupRepository<T> where T : class
     {

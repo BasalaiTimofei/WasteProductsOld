@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WasteProducts.DataAccess.Common.Models.Products;
-using WasteProducts.DataAccess.Common.Models.Groups;
+using WasteProducts.DataAccess.Common.Models;
 using WasteProducts.DataAccess.Contexts.Config;
 
 namespace WasteProducts.DataAccess.Contexts

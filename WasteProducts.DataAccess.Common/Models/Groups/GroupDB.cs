@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WasteProducts.DataAccess.Common.Models.Groups
+namespace WasteProducts.DataAccess.Common.Models
 {
     public class GroupDB
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WasteProducts.Logic.Common.Models.Groups
+namespace WasteProducts.Logic.Common.Models
 {
     class Group
     {
