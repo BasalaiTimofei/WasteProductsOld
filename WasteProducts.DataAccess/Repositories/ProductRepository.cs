@@ -41,12 +41,11 @@ namespace WasteProducts.DataAccess.Repositories
         /// <param name="product">The specific product for deleting.</param>
         public void Delete(ProductDB product)
         {
-            if (product != null)
-                if (_context.Products.Contains(product))
-                {
-                    _context.Products.Remove(product);
-                    _context.SaveChanges();
-                }
+            if (product != null && _context.Products.Contains(product))
+            {
+                _context.Products.Remove(product);
+                _context.SaveChanges();
+            }
         }
 
         /// <summary>
