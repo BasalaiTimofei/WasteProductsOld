@@ -1,4 +1,5 @@
 ﻿using System;
+using WasteProducts.DataAccess.Common.Models.Barcods;
 
 namespace WasteProducts.DataAccess.Common.Models.Products
 {

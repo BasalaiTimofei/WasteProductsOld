@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace WasteProducts.Logic.Common.Models.Products
 {
@@ -18,7 +18,7 @@ namespace WasteProducts.Logic.Common.Models.Products
         public string Description { get; set; }
 
         /// <summary>
-        /// List of products that belong to a specific Сategory
+        /// List of products that belong to a specific �ategory
         /// </summary>
         public ICollection<Product> Products { get; set; }
     }
