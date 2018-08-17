@@ -260,6 +260,26 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             Assert.AreEqual(0, userCollectionFromRepo.Count());
         }
+
+        //не проходит
+        [Test]
+        public void GetAllParams_GetAllQuery_Return_EqualCount_5()
+        {
+            sut = new LuceneSearchRepository(true);
+            foreach (var user in users)
+                sut.Insert(user);
+            var queryList = new List<string>();
+            queryList.Add("Email");
+
+            //такой вариант не проходит по причине как в тесте выше
+            var userCollectionFromRepo = sut.GetAll<User>("@mail*", queryList, 1000);
+
+            //такой вариант не проходи, т.к. выбивает ошибку "нельзя что бы поиск начинался с * или ?". Поэтому вопрос как искать
+            //слова в середине предложений и тд
+            //var userCollectionFromRepo = sut.GetAll<User>("mail*", queryList, 1000);
+
+            Assert.AreEqual(5, userCollectionFromRepo.Count());
+        }
         #endregion
 
         //TODO: IEnumerable<TEntity> GetAll<TEntity>(string queryString, IEnumerable<string> searchableFields, ReadOnlyDictionary<string, float> boosts, int numResults) where TEntity : class;
