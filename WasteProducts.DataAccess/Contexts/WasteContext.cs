@@ -15,10 +15,10 @@ namespace WasteProducts.DataAccess.Contexts
         /// </summary>
         public IDbSet<ProductDB> Products { get; set; }
 
-        public DbSet<GroupBoardDB> GroupBordDBs { get; set; }
-        public DbSet<GroupDB> GroupDBs { get; set; }
-        public DbSet<GroupUserDB> GroupUserDBs { get; set; }
-        public DbSet<GroupUserInviteTimeDB> GroupUserInviteTimeDBs { get; set; }
-        public DbSet<GroupProductBoardDB> GroupProductBoardDBs { get; set; }
+        public IDbSet<GroupBoardDB> GroupBordDBs { get; set; }
+        public IDbSet<GroupDB> GroupDBs { get; set; }
+        public IDbSet<GroupUserDB> GroupUserDBs { get; set; }
+        public IDbSet<GroupUserInviteTimeDB> GroupUserInviteTimeDBs { get; set; }
+        public IDbSet<GroupProductBoardDB> GroupProductBoardDBs { get; set; }
     }
 }
