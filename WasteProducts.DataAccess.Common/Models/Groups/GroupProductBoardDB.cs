@@ -6,24 +6,24 @@ using System.Threading.Tasks;
 
 namespace WasteProducts.DataAccess.Common.Models.Groups
 {
-    public class GroupUserDB
+    public class GroupProductBoardDB
     {
         /// <summary>
         /// Id - primary key
         /// </summary>
         public int Id { get; set; }
         /// <summary>
-        /// Id - secondary key
+        /// GroupBordId - secondary key
         /// </summary>
-        public int GroupId { get; set; }
-        public GroupDB GroupDB { get; set; }
+        public int GroupBordId { get; set; }
+        public GroupBoardDB GroupBoardDB { get; set; }
         /// <summary>
-        /// UserId - user which entered in group
+        /// ProductId - product which add at board
         /// </summary>
-        public int UserId { get; set; }
+        public int ProductId { get; set; }
         /// <summary>
-        /// UserId - user which entered in group
+        /// Information - additional information
         /// </summary>
-        public List<GroupUserInviteTimeDB> GroupUserInviteTimeDBs { get; set; }
+        public string Information { get; set; }
     }
 }
