@@ -27,7 +27,7 @@ namespace WasteProducts.DataAccess.Common.Repositories
         /// <summary>
         /// Deletes the specific category by id
         /// </summary>
-        /// <param name="id">Represents a specific category id to remove</param>
+        /// <param name="id">Represents a specific category id to delete</param>
         void DeleteById(int id);
 
         /// <summary>
@@ -49,6 +49,13 @@ namespace WasteProducts.DataAccess.Common.Repositories
         /// <param name="id">The specific id of category that was sorted</param>
         /// <returns>Returns a category chosen by ID</returns>
         CategoryDB GetById(int id);
+
+        /// <summary>
+        /// Gets category by name of the specific category
+        /// </summary>
+        /// <param name="name">The name of the specific category</param>
+        /// <returns>Returns a category chosen by its name</returns>
+        CategoryDB GetByName(string name);
 
         /// <summary>
         /// Updates the specific category
