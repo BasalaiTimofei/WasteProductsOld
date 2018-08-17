@@ -25,8 +25,8 @@ namespace WasteProducts.Logic.Tests.Search_Tests
                 new User { Id = 1, Login = "user1", Email = "user1@mail.net" },
                 new User { Id = 2, Login = "user2", Email = "user2@mail.net" },
                 new User { Id = 3, Login = "user3", Email = "user3@mail.net" },
-                new User { Id = 4, Login = "user4", Email = "user4@mail.net" },
-                new User { Id = 5, Login = "user5", Email = "user5@mail.net" }
+                new User { Id = 4, Login = "user4 user", Email = "user4@mail.net" },
+                new User { Id = 5, Login = "User5 user", Email = "user5@mail.net" }
             };
 
             mockRepo = new Mock<ISearchRepository>();            
@@ -279,6 +279,21 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             //var userCollectionFromRepo = sut.GetAll<User>("mail*", queryList, 1000);
 
             Assert.AreEqual(5, userCollectionFromRepo.Count());
+        }
+
+        //не проходит. нужно убрать зависимость от регистра
+        [Test]
+        public void GetAllParams_SearchUpperCase_Return_EqualCount_1()
+        {
+            sut = new LuceneSearchRepository(true);
+            foreach (var user in users)
+                sut.Insert(user);
+            var queryList = new List<string>();
+            queryList.Add("Login");
+                        
+            var userCollectionFromRepo = sut.GetAll<User>("user5", queryList, 1000);            
+
+            Assert.AreEqual(1, userCollectionFromRepo.Count());
         }
         #endregion
 
