@@ -1,4 +1,5 @@
 ﻿using System;
+using WasteProducts.DataAccess.Common.Models.Barcods;
 
 namespace WasteProducts.DataAccess.Common.Models.Products
 {
@@ -35,7 +36,7 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         /// <summary>
         /// Defines the Product barcode.
         /// </summary>
-        public virtual Barcode Barcode { get; set; }
+        public virtual BarcodeDB Barcode { get; set; }
 
         /// <summary>
         /// Defines the average Product rating based on user ratings.

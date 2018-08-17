@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models;
 using WasteProducts.Logic.Common.Models.Search;
 
-namespace WasteProducts.Logic.Common.Services.Search
+namespace WasteProducts.Logic.Common.Services
 {
     /// <summary>
     /// This interface provides search methods

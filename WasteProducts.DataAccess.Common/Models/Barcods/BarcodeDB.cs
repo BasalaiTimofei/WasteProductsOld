@@ -2,7 +2,7 @@
 
 namespace WasteProducts.DataAccess.Common.Models.Barcods
 {
-    class BarcodeDB
+    public class BarcodeDB
     {
         /// <summary>
         /// Id.
