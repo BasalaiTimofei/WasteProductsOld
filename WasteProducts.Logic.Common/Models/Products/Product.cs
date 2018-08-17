@@ -1,4 +1,6 @@
-﻿namespace WasteProducts.Logic.Common.Models.Products
+﻿using WasteProducts.Logic.Common.Models.Barcods;
+
+namespace WasteProducts.Logic.Common.Models.Products
 {
     /// <summary>
     /// Model for entity Product.
