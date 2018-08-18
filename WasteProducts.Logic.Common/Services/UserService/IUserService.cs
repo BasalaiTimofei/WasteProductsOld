@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models.Users;
 
@@ -50,7 +51,7 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// </summary>
         /// <param name="user">The specific user to update.</param>
         /// <returns>Boolean representing whether updating the user was correct or not.</returns>
-        void UpdateUserInfo(User user);
+        Task UpdateAsync(User user);
 
         /// <summary>
         /// Adds a specific new friend to the specific user's friend list.
@@ -67,6 +68,13 @@ namespace WasteProducts.Logic.Common.Services.UserService
         void DeleteFriend(User user, User deletingFriend);
 
         /// <summary>
+        /// Get the names of the roles a user is a member of.
+        /// </summary>
+        /// <param name="user">Method will return roles of this user.</param>
+        /// <returns></returns>
+        Task<IList<string>> GetRolesAsync(User user);
+
+        /// <summary>
         /// Add a user to a role.
         /// </summary>
         /// <param name="user">User will be added to this specific role.</param>
@@ -75,11 +83,20 @@ namespace WasteProducts.Logic.Common.Services.UserService
         Task AddToRoleAsync(User user, string roleName);
 
         /// <summary>
-        /// Get the names of the roles a user is a member of.
+        /// Add a claim to a user.
         /// </summary>
-        /// <param name="user">Method will return roles of this user.</param>
+        /// <param name="user">Specific claim will be added to the user.</param>
+        /// <param name="claim">Specific claim to add to the user.</param>
         /// <returns></returns>
-        Task<IList<string>> GetRolesAsync(User user);
+        Task AddClaimAsync(User user, Claim claim);
+
+        /// <summary>
+        /// Remove a user from a role.
+        /// </summary>
+        /// <param name="user">User will be removed from this specific role.</param>
+        /// <param name="roleName">Name of the specific role to remove from the user.</param>
+        /// <returns></returns>
+        Task RemoveFromRoleAsync(User user, string roleName);
 
         // TODO USER MANAGEMENT PENDING FUNCTIONAL TO ADD:
         // sharing my products with my friends after model "Product" is created

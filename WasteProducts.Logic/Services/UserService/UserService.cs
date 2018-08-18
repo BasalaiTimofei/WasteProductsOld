@@ -7,6 +7,7 @@ using WasteProducts.Logic.Common.Services.MailService;
 using WasteProducts.Logic.Mappings.UserMappings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace WasteProducts.Logic.Services.UserService
 {
@@ -32,7 +33,7 @@ namespace WasteProducts.Logic.Services.UserService
         public void AddFriend(User user, User newFriend)
         {
             user.UserFriends.Add(newFriend);
-            UpdateUser(user);
+            UpdateAsync(user);
         }
 
         public void DeleteFriend(User user, User deletingFriend)
@@ -40,7 +41,7 @@ namespace WasteProducts.Logic.Services.UserService
             if (user.UserFriends.Contains(deletingFriend))
             {
                 user.UserFriends.Remove(deletingFriend);
-                UpdateUser(user);
+                UpdateAsync(user);
             }
         }
 
@@ -96,7 +97,7 @@ namespace WasteProducts.Logic.Services.UserService
             }
             user.Password = newPassword;
 
-            UpdateUser(user);
+            UpdateAsync(user);
             return true;
         }
 
@@ -113,26 +114,36 @@ namespace WasteProducts.Logic.Services.UserService
             return true;
         }
 
-        public void UpdateUserInfo(User user)
+        public async Task UpdateAsync(User user)
         {
-            UpdateUser(user);
-        }
-
-        private void UpdateUser(User user)
-        {
-            var userDb = Mapper.Map<UserDB>(user);
-            _userRepo.UpdateAsync(userDb);
-        }
-
-        public async Task AddToRoleAsync(User user, string roleName)
-        {
-            await _userRepo.AddToRoleAsync(Mapper.Map<UserDB>(user), roleName);
-            user.Roles.Add(roleName);
+            await _userRepo.UpdateAsync(MapTo<UserDB>(user));
         }
 
         public async Task<IList<string>> GetRolesAsync(User user)
         {
-            return await _userRepo.GetRolesAsync(Mapper.Map<UserDB>(user));
+            return await _userRepo.GetRolesAsync(MapTo<UserDB>(user));
         }
+
+        public async Task AddToRoleAsync(User user, string roleName)
+        {
+            await _userRepo.AddToRoleAsync(MapTo<UserDB>(user), roleName);
+            user.Roles.Add(roleName);
+        }
+
+        public async Task AddClaimAsync(User user, Claim claim)
+        {
+            await _userRepo.AddClaimAsync(MapTo<UserDB>(user), claim);
+        }
+        
+        public async Task RemoveFromRoleAsync(User user, string roleName)
+        {
+            await _userRepo.RemoveFromRoleAsync(MapTo<UserDB>(user), roleName);
+            user.Roles?.Remove(roleName);
+        }
+
+        private UserDB MapTo<T>(User user)
+            where T : UserDB
+            =>
+            Mapper.Map<UserDB>(user);
     }
 }

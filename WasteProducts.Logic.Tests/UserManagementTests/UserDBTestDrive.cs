@@ -79,13 +79,15 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         public void _01TestOfQueryingByEmail()
         {
             IUserRepository userRepo = new UserRepository();
+            IUserService userService = new UserService(null, userRepo);
+
             IUserRoleRepository roleRepo = new UserRoleRepository();
 
-            UserDB userDB = userRepo.Select("umanetto@mail.ru");
+            userService.LogIn("umanetto@mail.ru", "qwerty", out User user);
             IdentityRole role = roleRepo.FindByNameAsync("Simple user").GetAwaiter().GetResult();
 
-            Assert.IsNotNull(userDB);
-            Assert.IsNotNull(role);
+            Assert.AreEqual(user.Email, "umanetto@mail.ru");
+            Assert.AreEqual(role.Name, "Simple user");
         }
 
         // тестим, правильно ли работает функционал добавления роли и добавления юзера в роль
@@ -93,7 +95,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         public void _02TestOfAddingToTheUserDBNewRole()
         {
             IUserRepository userRepo = new UserRepository();
-            IUserRoleRepository roleRepo = new UserRoleRepository();
             IUserService userService = new UserService(null, userRepo);
 
             userService.LogIn("umanetto@mail.ru", "qwerty", out User user);
@@ -109,10 +110,9 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем, как работает метот GetRolesAsynс IUserService
         [Test]
-        public void _03TestOfMappingFromUserLoginTo()
+        public void _03TestOfGettingRolesOfTheUser()
         {
             IUserRepository userRepo = new UserRepository();
-            IUserRoleRepository roleRepo = new UserRoleRepository();
             IUserService userService = new UserService(null, userRepo);
 
             User user = Mapper.Map<User>(userRepo.Select(u => u.Email == "umanetto@mail.ru", false));
@@ -121,9 +121,26 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             Assert.AreEqual("Simple user", user.Roles.FirstOrDefault());
         }
 
-        // тестируем добавление логина юзеру
+        // тестируем изъятие из роли
         [Test]
-        public void _04TestOfAddingLoginToTheUser()
+        public void _04TestOfRemovingUserFromRole()
+        {
+            IUserRepository userRepo = new UserRepository();
+            IUserService userService = new UserService(null, userRepo);
+
+            userService.LogIn("umanetto@mail.ru", "qwerty", out User user);
+            Assert.AreEqual(user.Roles.FirstOrDefault(), "Simple user");
+
+            userService.RemoveFromRoleAsync(user, "Simple user").GetAwaiter().GetResult();
+            Assert.IsNull(user.Roles.FirstOrDefault());
+
+            userService.LogIn("umanetto@mail.ru", "qwerty", out user);
+            Assert.IsNull(user.Roles.FirstOrDefault());
+        }
+
+        // Тестируем добавление утверждения (Claim) в юзера
+        [Test]
+        public void _05TestOfAddingClaimToUser()
         {
 
         }
