@@ -14,10 +14,5 @@
         /// Key representing the login for the provider.
         /// </summary>
         public virtual string ProviderKey { get; set; }
-
-        /// <summary>
-        /// User Id for the user who owns this login.
-        /// </summary>
-        public virtual string UserId { get; set; }
     }
 }

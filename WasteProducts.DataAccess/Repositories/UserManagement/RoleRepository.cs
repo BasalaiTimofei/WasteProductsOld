@@ -7,7 +7,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 {
     public class UserRoleRepository : IUserRoleRepository
     {
-        public async Task CreateAsync(IdentityRole role)
+        public async Task AddAsync(IdentityRole role)
         {
             using (var db = new WasteContext())
             {

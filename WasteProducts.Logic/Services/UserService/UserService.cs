@@ -2,11 +2,13 @@
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.Logic.Common.Models.Users;
-using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.Logic.Common.Services.MailService;
 using WasteProducts.Logic.Mappings.UserMappings;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace WasteProducts.Logic.Services
+namespace WasteProducts.Logic.Services.UserService
 {
     public class UserService : IUserService
     {
@@ -42,9 +44,29 @@ namespace WasteProducts.Logic.Services
             }
         }
 
-        public bool LogIn(string email, string password, out User loggedInUser)
+        public bool LogIn(string email, string password, out User loggedInUser, bool getRoles = true)
         {
-            loggedInUser = Mapper.Map<User>(_userRepo.Select(email, password));
+            if (getRoles)
+            {
+                var (userDB, roles) = _userRepo.SelectWithRoles(u => u.Email == email && u.PasswordHash == password, false);
+                if(userDB == null)
+                {
+                    loggedInUser = null;
+                    return false;
+                }
+                loggedInUser = Mapper.Map<User>(userDB);
+                loggedInUser.Roles = roles;
+            }
+            else
+            {
+                UserDB userDB = _userRepo.Select(email, password, false);
+                if (userDB == null)
+                {
+                    loggedInUser = null;
+                    return false;
+                }
+                loggedInUser = Mapper.Map<User>(_userRepo.Select(email, password, false));
+            }
 
             return loggedInUser != null;
         }
@@ -100,6 +122,17 @@ namespace WasteProducts.Logic.Services
         {
             var userDb = Mapper.Map<UserDB>(user);
             _userRepo.UpdateAsync(userDb);
+        }
+
+        public async Task AddToRoleAsync(User user, string roleName)
+        {
+            await _userRepo.AddToRoleAsync(Mapper.Map<UserDB>(user), roleName);
+            user.Roles.Add(roleName);
+        }
+
+        public async Task<IList<string>> GetRolesAsync(User user)
+        {
+            return await _userRepo.GetRolesAsync(Mapper.Map<UserDB>(user));
         }
     }
 }

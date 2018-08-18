@@ -63,17 +63,17 @@ namespace WasteProducts.Logic.Common.Models.Users
         /// <summary>
         /// All user roles.
         /// </summary>
-        public virtual ICollection<UserRole> Roles { get; }
+        public virtual ICollection<string> Roles { get; set; }
 
         /// <summary>
         /// All user claims.
         /// </summary>
-        public virtual ICollection<UserClaim> Claims { get; }
+        public virtual ICollection<UserClaim> Claims { get; set; }
 
         /// <summary>
         /// All user logins.
         /// </summary>
-        public virtual ICollection<UserLogin> Logins { get; }
+        public virtual ICollection<UserLogin> Logins { get; set; }
 
         /// <summary>
         /// Unique key for the user.

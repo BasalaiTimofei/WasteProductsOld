@@ -60,7 +60,8 @@
     <Compile Include="Services\MailService\IMailFactory.cs" />
     <Compile Include="Services\MailService\IMailService.cs" />
     <Compile Include="Services\ITestService.cs" />
-    <Compile Include="Services\IUserService.cs" />
+    <Compile Include="Services\UserService\IUserRoleService.cs" />
+    <Compile Include="Services\UserService\IUserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">
