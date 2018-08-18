@@ -23,9 +23,9 @@
         public string ProductName { get; set; }
 
         /// <summary>
-        /// Product brend.
+        /// Product brand.
         /// </summary>
-        public string Brend { get; set; }
+        public string Brand { get; set; }
 
         /// <summary>
         /// Product country.

@@ -46,7 +46,6 @@
     <Compile Include="Models\Products\CategoryDB.cs" />
     <Compile Include="Models\Barcods\BarcodeDB.cs" />
     <Compile Include="Models\Entity.cs" />
-    <Compile Include="Models\Products\CategoryDB.cs" />
     <Compile Include="Models\Products\ProductDB.cs" />
     <Compile Include="Models\Users\UserDB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

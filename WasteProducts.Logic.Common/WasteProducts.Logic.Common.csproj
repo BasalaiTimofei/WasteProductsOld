@@ -46,7 +46,6 @@
     <Compile Include="Models\Barcods\BarcodeInfo.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Products\Category.cs" />
-    <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Search\SearchQuery.cs" />
     <Compile Include="Models\Search\SearchResult.cs" />
     <Compile Include="Models\Users\User.cs" />
