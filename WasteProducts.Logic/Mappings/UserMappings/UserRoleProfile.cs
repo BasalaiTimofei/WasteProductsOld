@@ -4,13 +4,11 @@ using WasteProducts.Logic.Common.Models.Users;
 
 namespace WasteProducts.Logic.Mappings.UserMappings
 {
-    public class UserRoleProfile : Profile
+    public class RoleProfile : Profile
     {
-        public UserRoleProfile()
+        public RoleProfile()
         {
-            CreateMap<UserRole, IdentityUserRole>()
-                .ForMember(r => r.UserId, opt => opt.Ignore())
-                .ReverseMap();
+            //CreateMap<IdentityUserRole, string>().ConstructUsing(());
         }
     }
 }

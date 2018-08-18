@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -109,22 +110,24 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             }
         }
 
-        public UserDB Select(string email, string password)
+        public UserDB Select(string email, string password, bool lazyInitiation = true)
         {
-            return Select(user => user.Email == email && user.PasswordHash == password);
+            return (Select(user => user.Email == email && user.PasswordHash == password, lazyInitiation, getRoles: false)).user;
         }
 
-        public UserDB Select(string email)
+        public UserDB Select(string email, bool lazyInitiation = true)
         {
-            return Select(user => user.Email == email);
+            return (Select(user => user.Email == email, lazyInitiation, getRoles: false)).user;
         }
 
-        public UserDB Select(Func<UserDB, bool> predicate)
+        public UserDB Select(Func<UserDB, bool> predicate, bool lazyInitiation = true)
         {
-            using (var db = new WasteContext())
-            {
-                return db.Users.Where(predicate).FirstOrDefault();
-            }
+            return (Select(predicate, lazyInitiation, getRoles: false)).user;
+        }
+
+        public (UserDB user, IList<string> roles) SelectWithRoles(Func<UserDB, bool> predicate, bool lazyInitiation = true)
+        {
+            return Select(predicate, lazyInitiation, getRoles: true);
         }
 
         public List<UserDB> SelectAll()
@@ -143,6 +146,17 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             }
         }
 
+        public async Task<IList<string>> GetRolesAsync(UserDB user)
+        {
+            using (var db = new WasteContext())
+            {
+                using (var userStore = new UserStore<UserDB>(db))
+                {
+                    return await userStore.GetRolesAsync(user);
+                }
+            }
+        }
+
         public async Task UpdateAsync(UserDB user)
         {
             user.Modified = DateTime.UtcNow;
@@ -154,6 +168,39 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                     await userStore.UpdateAsync(user);
                     await db.SaveChangesAsync();
                 }
+            }
+        }
+
+        private (UserDB user, IList<string> roles) Select(Func<UserDB, bool> predicate, bool lazyInitiation, bool getRoles)
+        {
+            using (var db = new WasteContext())
+            {
+                (UserDB user, IList<string> roles) result = (null, null);
+                if (lazyInitiation)
+                {
+                    result.user = db.Users.Where(predicate).FirstOrDefault();
+                }
+                else
+                {
+                    // TODO expand with groups and products when it available
+                    db.Configuration.LazyLoadingEnabled = lazyInitiation;
+
+                    result.user = db.Users.Include(u => u.Roles).
+                        Include(u => u.Claims).
+                        Include(u => u.Logins).
+                        Include(u => u.UserFriends).
+                        Where(predicate).FirstOrDefault();
+                }
+
+                if (getRoles)
+                {
+                    using (var userStore = new UserStore<UserDB>(db))
+                    {
+                         result.roles = userStore.GetRolesAsync(result.user).GetAwaiter().GetResult();
+                    }
+                }
+
+                return result;
             }
         }
     }

@@ -37,7 +37,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <summary>
         /// Add a user to a role.
         /// </summary>
-        /// <param name="user">User will be removed from this specific role.</param>
+        /// <param name="user">User will be added to this specific role.</param>
         /// <param name="roleName">Name of the specific role to add to the user.</param>
         /// <returns></returns>
         Task AddToRoleAsync(UserDB user, string roleName);
@@ -73,18 +73,19 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         Task RemoveLoginAsync(UserDB user, UserLoginInfo login);
 
         /// <summary>
-        /// Returns first registered user matches the predicate.
+        /// Returns first registered user matches the predicate or null if there is no matches.
         /// </summary>
-        /// <param name="email">Email of the requested user.</param>
-        /// <returns></returns>
-        UserDB Select(Func<UserDB, bool> predicate);
+        /// <param name="predicate">Filter for the users.</param>
+        /// <param name="lazyInitiation">True if you don't want to initiate navigation properties, otherwise, false.</param>
+        /// <returns>The first registered user matches the predicate or null if there is no matches.</returns>
+        UserDB Select(Func<UserDB, bool> predicate, bool lazyInitiation = true);
 
         /// <summary>
         /// Returns a registered user by its email.
         /// </summary>
         /// <param name="email">Email of the requested user.</param>
         /// <returns></returns>
-        UserDB Select(string email);
+        UserDB Select(string email, bool lazyInitiation = true);
 
         /// <summary>
         /// Returns a registered user by its email and password.
@@ -92,7 +93,15 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="email">Email of the requested user.</param>
         /// <param name="password">Password of the requested user.</param>
         /// <returns>User with the specific email and password.</returns>
-        UserDB Select(string email, string password);
+        UserDB Select(string email, string password, bool lazyInitiation = true);
+
+        /// <summary>
+        /// Returns first registered user matches the predicate with user's roles (or two nulls if there is no matches).
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <param name="lazyInitiation"></param>
+        /// <returns></returns>
+        (UserDB user, IList<string> roles) SelectWithRoles(Func<UserDB, bool> predicate, bool lazyInitiation = true);
 
         /// <summary>
         /// Returns all registered users in an enumerable.
@@ -106,6 +115,13 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="predicate"></param>
         /// <returns></returns>
         List<UserDB> SelectRange(Func<UserDB, bool> predicate);
+
+        /// <summary>
+        /// Get the names of the roles a user is a member of.
+        /// </summary>
+        /// <param name="user">Method will return roles of this user.</param>
+        /// <returns></returns>
+        Task<IList<string>> GetRolesAsync(UserDB user);
 
         /// <summary>
         /// Updates the record of the specific user.

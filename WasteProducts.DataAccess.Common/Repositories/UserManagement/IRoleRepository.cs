@@ -27,7 +27,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// </summary>
         /// <param name="role">A new role.</param>
         /// <returns></returns>
-        Task CreateAsync(TRole role);
+        Task AddAsync(TRole role);
 
         /// <summary>
         /// Delete a role.

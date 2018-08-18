@@ -1,6 +1,8 @@
-﻿using WasteProducts.Logic.Common.Models.Users;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using WasteProducts.Logic.Common.Models.Users;
 
-namespace WasteProducts.Logic.Common.Services
+namespace WasteProducts.Logic.Common.Services.UserService
 {
     /// <summary>
     /// Standart BL level interface provides standart methods of working with User model.
@@ -24,7 +26,7 @@ namespace WasteProducts.Logic.Common.Services
         /// <param name="password">Password of the logging in user.</param>
         /// <param name="loggedInUser">When this methods returns, this variable contains a User object if this method succeed, or null if method failed.</param>
         /// <returns>Boolean representing whether logging in succeed or not.</returns>
-        bool LogIn(string email, string password, out User loggedInUser);
+        bool LogIn(string email, string password, out User loggedInUser, bool getRoles = true);
 
         /// <summary>
         /// Tries to reset a password of the specific user to the new password and returns whether resetting succeed or not.
@@ -64,12 +66,26 @@ namespace WasteProducts.Logic.Common.Services
         /// <param name="deletingFriend">Specific friend to delete from the user' sfriend list.</param>
         void DeleteFriend(User user, User deletingFriend);
 
+        /// <summary>
+        /// Add a user to a role.
+        /// </summary>
+        /// <param name="user">User will be added to this specific role.</param>
+        /// <param name="roleName">Name of the specific role to add to the user.</param>
+        /// <returns></returns>
+        Task AddToRoleAsync(User user, string roleName);
+
+        /// <summary>
+        /// Get the names of the roles a user is a member of.
+        /// </summary>
+        /// <param name="user">Method will return roles of this user.</param>
+        /// <returns></returns>
+        Task<IList<string>> GetRolesAsync(User user);
+
         // TODO USER MANAGEMENT PENDING FUNCTIONAL TO ADD:
         // sharing my products with my friends after model "Product" is created
         // subscribing special users to watch their news (if this functional will be approved)
         // chatting between users
         // registering by Facebook and VK profiles
         // getting "Approved Representative of The Company" status and its unique functional like special tools for speed feedback
-
     }
 }
