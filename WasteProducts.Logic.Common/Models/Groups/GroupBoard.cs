@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WasteProducts.Logic.Common.Models
 {
-    class GroupBoard
+    public class GroupBoard
     {
         /// <summary>
         /// Id - primary key

@@ -2,11 +2,11 @@
 
 namespace WasteProducts.Logic.Common.Services
 {
-    public interface IGropService
+    public interface IGropProductBoardService
     {
         void Create<T>(T item);
         void Update<T>(T item);
-        void Delete<T>(T item);
+        void Delete<T>(int? id);
         void Dispose();
     }
 }

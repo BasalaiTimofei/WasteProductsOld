@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WasteProducts.Logic.Common.Models
 {
-    class GroupUser
+    public class GroupUser
     {
         /// <summary>
         /// Id - primary key
@@ -20,5 +20,9 @@ namespace WasteProducts.Logic.Common.Models
         /// UserId - user which entered in group
         /// </summary>
         public int UserId { get; set; }
+        /// <summary>
+        /// UserId - user which entered in group
+        /// </summary>
+        public List<GroupUserInviteTime> GroupUserInviteTimes { get; set; }
     }
 }

@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace WasteProducts.Logic.Common.Models
 {
-    class GroupUserInviteTime
+    public class GroupUserInviteTime
     {
         /// <summary>
         /// Id - primary key
         /// </summary>
         public int Id { get; set; }
         /// <summary>
-        /// GroupUserDBId secondary Id
+        /// GroupUserId secondary Id
         /// </summary>
         public int GroupUserId { get; set; }
         /// <summary>
