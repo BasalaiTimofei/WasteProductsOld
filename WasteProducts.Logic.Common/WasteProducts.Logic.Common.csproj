@@ -45,7 +45,7 @@
     <Compile Include="Models\Groups\GroupUserInviteTime.cs" />
     <Compile Include="Models\Groups\GroupBoard.cs" />
     <Compile Include="Models\Groups\Group.cs" />
-    <Compile Include="Models\Groups\GroupProductBoard.cs" />
+    <Compile Include="Models\Groups\GroupProduct.cs" />
     <Compile Include="Models\Groups\GroupUser.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Search\SearchQuery.cs" />
@@ -53,6 +53,10 @@
     <Compile Include="Models\Users\User.cs" />
     <Compile Include="Models\Products\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Groups\IGropDataService.cs" />
+    <Compile Include="Services\Groups\IGropUserManagerService.cs" />
+    <Compile Include="Services\Groups\IGropProductService.cs" />
+    <Compile Include="Services\Groups\IGropBoardService.cs" />
     <Compile Include="Services\Groups\IGropService.cs" />
     <Compile Include="Services\IProductService.cs" />
     <Compile Include="Services\ISearchService.cs" />
