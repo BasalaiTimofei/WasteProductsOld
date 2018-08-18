@@ -11,9 +11,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Repositories;
 using WasteProducts.DataAccess.Common.Exceptions;
+using System.Collections.ObjectModel;
 
 namespace WasteProducts.Logic.Tests.Search_Tests
 {
+    public class TestProduct
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
     [TestFixture]
     class SearchRepository_Test
     {
@@ -29,10 +37,20 @@ namespace WasteProducts.Logic.Tests.Search_Tests
                 new User { Id = 5, Login = "User5 user", Email = "user5@mail.net" }
             };
 
-            mockRepo = new Mock<ISearchRepository>();            
+            products = new List<TestProduct>
+            {
+                new TestProduct { Id=1, Name = "Product1 Name1", Description = "Product1 Description1"},
+                new TestProduct { Id=2, Name = "Product2 Name2", Description = "Product2 Description2"},
+                new TestProduct { Id=3, Name = "Product3 Name3", Description = "Product3 Description3"},
+                new TestProduct { Id=4, Name = "Product4 Name4", Description = "Product4 Description4"},
+                new TestProduct { Id=5, Name = "Product5 Name5", Description = "Product5 Description5"}
+            };
+
+            mockRepo = new Mock<ISearchRepository>();
         }
 
         private IEnumerable<User> users;
+        private IEnumerable<TestProduct> products;
         private Mock<ISearchRepository> mockRepo;
         private ISearchRepository sut;
 
@@ -75,7 +93,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
 
-            var userFromRepo = sut.GetById<User>(1);           
+            var userFromRepo = sut.GetById<User>(1);
         }
 
         [Test]
@@ -87,7 +105,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             var userFromRepo = sut.GetById<User>(1);
 
-            Assert.AreEqual(user.Login, userFromRepo.Login);            
+            Assert.AreEqual(user.Login, userFromRepo.Login);
         }
 
         [Test]
@@ -114,7 +132,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             var userFromRepo = sut.GetById<User>(2);
 
-            Assert.AreEqual(null, userFromRepo);            
+            Assert.AreEqual(null, userFromRepo);
         }
         #endregion
 
@@ -172,7 +190,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         #region public IEnumerable<TEntity> GetAll<TEntity>() where TEntity  :class
         [Test]
         public void GetAll_GetAll_Return_NoException()
-        {            
+        {
             sut = new LuceneSearchRepository(true);
             foreach (var user in users)
                 sut.Insert(user);
@@ -185,7 +203,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         {
             sut = new LuceneSearchRepository(true);
             foreach (var user in users)
-                sut.Insert(user);            
+                sut.Insert(user);
 
             var userCollectionFromRepo = sut.GetAll<User>();
 
@@ -211,7 +229,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             sut = new LuceneSearchRepository(true);
             foreach (var user in users)
                 sut.Insert(user);
-            var queryList = new List<string>();           
+            var queryList = new List<string>();
 
             Assert.Throws<LuceneSearchRepositoryException>(() => sut.GetAll<User>("user", queryList, -1));
         }
@@ -254,7 +272,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             sut = new LuceneSearchRepository(true);
             foreach (var user in users)
                 sut.Insert(user);
-            var queryList = new List<string>();            
+            var queryList = new List<string>();
 
             var userCollectionFromRepo = sut.GetAll<User>("user", queryList, 1000);
 
@@ -290,8 +308,8 @@ namespace WasteProducts.Logic.Tests.Search_Tests
                 sut.Insert(user);
             var queryList = new List<string>();
             queryList.Add("Login");
-                        
-            var userCollectionFromRepo = sut.GetAll<User>("user5", queryList, 1000);            
+
+            var userCollectionFromRepo = sut.GetAll<User>("user5", queryList, 1000);
 
             Assert.AreEqual(1, userCollectionFromRepo.Count());
         }
@@ -348,7 +366,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             sut = new LuceneSearchRepository(true);
             foreach (var user in users)
                 sut.Insert(user);
-            var oldUser = users.ToList()[1];            
+            var oldUser = users.ToList()[1];
 
             sut.Delete<User>(oldUser);
         }
@@ -359,7 +377,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             sut = new LuceneSearchRepository(true);
             foreach (var user in users)
                 sut.Insert(user);
-            var oldUser = users.ToList()[1];            
+            var oldUser = users.ToList()[1];
 
             sut.Delete<User>(oldUser);
             var updUser = sut.GetById<User>(oldUser.Id);
@@ -373,11 +391,59 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             sut = new LuceneSearchRepository(true);
             foreach (var user in users)
                 sut.Insert(user);
-            var oldUser = new User();            
+            var oldUser = new User();
 
             Assert.Throws<LuceneSearchRepositoryException>(() => sut.Delete<User>(oldUser));
         }
         #endregion
 
+        [Test]
+
+        public void TestMultiplyWordQuery()
+        {
+            sut = new LuceneSearchRepository(true);
+            foreach (var product in products)
+            {
+                sut.Insert<TestProduct>(product);
+            }
+
+            var result = sut.GetAll<TestProduct>("product", new string[] { "Name", "Description" }, 1000);
+            Assert.AreEqual(expected: 5, actual: result.Count());
+            
+            result = sut.GetAll<TestProduct>("product1", new string[] { "Name", "Description" }, 1000);
+            Assert.AreEqual(expected: 1, actual: result.Count());
+
+            result = sut.GetAll<TestProduct>("word1", new string[] { "Name", "Decription"}, 1000);
+            Assert.AreEqual(expected: 0, actual: result.Count());
+
+            result = sut.GetAll<TestProduct>("name1", new string[] { "Decription" }, 1000);
+            Assert.AreEqual(expected: 0, actual: result.Count());
+
+            result = sut.GetAll<TestProduct>("name1 word1 word2 word3", new string[] { "Name", "Decription" }, 1000);
+            Assert.AreEqual(expected: 1, actual: result.Count());
+
+            result = sut.GetAll<TestProduct>("word1 word2 NamE1 word3", new string[] { "Name", "Decription" }, 1000);
+            Assert.AreEqual(expected: 1, actual: result.Count());
+
+            result = sut.GetAll<TestProduct>("word1 description1", new string[] { "Name", "Description" }, 1000);
+            Assert.AreEqual(expected: 1, actual: result.Count());
+
+            result = sut.GetAll<TestProduct>("name1 description2", new string[] { "Name", "Description" }, 1000);
+            Assert.AreEqual(expected: 2, actual: result.Count());
+
+            result = sut.GetAll<TestProduct>("Word1 Word2 NamE1 DescriptioN1 NamE2 ProducT2 Word3 Word4", new string[] { "Description" }, 1000);
+            Assert.AreEqual(expected: 2, actual: result.Count());
+
+            result = sut.GetAll<TestProduct>("product", new string[] { "NonExistantField" }, 1000);
+            Assert.AreEqual(expected: 0, actual: result.Count());
+
+            var boostValues = new Dictionary<string, float>();
+            boostValues.Add("Name", 1.0f);
+            boostValues.Add("Description", 1.0f);
+            result = sut.GetAll<TestProduct>("product", new string[] { "Name", "Description" }, new ReadOnlyDictionary<string, float>(boostValues), 1000);
+            Assert.AreEqual(expected: 5, actual: result.Count());
+        }
+
     }
+
 }

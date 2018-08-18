@@ -16,6 +16,7 @@ using Lucene.Net.Search;
 using Lucene.Net.QueryParsers.Classic;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Exceptions;
+using Lucene.Net.Analysis.Standard;
 
 namespace WasteProducts.DataAccess.Repositories
 {
@@ -40,7 +41,8 @@ namespace WasteProducts.DataAccess.Repositories
             string assemblyFilename = Assembly.GetAssembly(typeof(LuceneSearchRepository)).Location;
             string assemblyPath = Path.GetDirectoryName(assemblyFilename);
             IndexPath = Path.Combine(assemblyPath, ConfigurationManager.AppSettings["LuceneIndexStoragePath"]);
-            _analyzer = new WhitespaceAnalyzer(MATCH_LUCENE_VERSION);
+            //_analyzer = new WhitespaceAnalyzer(MATCH_LUCENE_VERSION);
+            _analyzer = new StandardAnalyzer(MATCH_LUCENE_VERSION);
             try
             {
                 _directory = FSDirectory.Open(IndexPath);
@@ -90,6 +92,7 @@ namespace WasteProducts.DataAccess.Repositories
         public IEnumerable<TEnity> GetAll<TEnity>(string queryString, IEnumerable<string> searchableFields, int numResults) where TEnity : class
         {
             CheckQueryString(queryString);
+            queryString = queryString.ToLower();
             BooleanQuery booleanQuery = new BooleanQuery();
             var searchTerms = queryString.Split(' ');
             foreach (var term in searchTerms)
@@ -106,6 +109,7 @@ namespace WasteProducts.DataAccess.Repositories
         public IEnumerable<TEntity> GetAll<TEntity>(string queryString, IEnumerable<string> searchableFields, ReadOnlyDictionary<string, float> boosts, int numResults) where TEntity : class
         {
             CheckQueryString(queryString);
+            queryString = queryString.ToLower();
             BooleanQuery booleanQuery = new BooleanQuery();
             var searchTerms = queryString.Split(' ');
             foreach (var term in searchTerms)
