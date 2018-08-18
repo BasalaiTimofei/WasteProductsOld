@@ -6,6 +6,5 @@ namespace WasteProducts.Logic.Common.Services
     {
         void AddUser<T>(T item);
         void DeleteUser<T>(T item);
-        void Dispose();
     }
 }
