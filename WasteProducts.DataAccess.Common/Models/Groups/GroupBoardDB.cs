@@ -32,7 +32,7 @@ namespace WasteProducts.DataAccess.Common.Models
         /// <summary>
         /// GroupProductBoardDBs - products which add at board
         /// </summary>
-        public List<GroupProductBoardDB> GroupProductBoardDBs { get; set; }
+        public List<GroupProductDB> GroupProductDBs { get; set; }
         /// <summary>
         /// Create - datatime when board created
         /// </summary>

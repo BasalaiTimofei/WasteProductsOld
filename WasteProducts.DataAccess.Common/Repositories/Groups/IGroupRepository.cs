@@ -46,13 +46,13 @@ namespace WasteProducts.DataAccess.Common.Repositories
         /// <returns>IEnumerable objects</returns>
         IEnumerable<T> Find(Func<T, Boolean> predicate);
         /// <summary>
-        /// GetWithInclude - immediate loading of data with condition
+        /// GetWithInclude - immediate loading objects with condition
         /// </summary>
         /// <param name="includeProperties">expression trees</param>
         /// <returns>IEnumerable objects</returns>
         IEnumerable<T> GetWithInclude(params Expression<Func<T, object>>[] includeProperties);
         /// <summary>
-        /// GetWithInclude - immediate loading of data with condition
+        /// GetWithInclude - immediate loading objects with condition
         /// </summary>
         /// <param name="predicate">lambda function</param>
         /// <param name="includeProperties">expression trees</param>

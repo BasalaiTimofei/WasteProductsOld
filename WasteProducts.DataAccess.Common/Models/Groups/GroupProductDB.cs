@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WasteProducts.DataAccess.Common.Models
 {
-    public class GroupProductBoardDB
+    public class GroupProductDB
     {
         /// <summary>
         /// Id - primary key

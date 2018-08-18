@@ -3,7 +3,7 @@
 namespace WasteProducts.Logic.Common.Services
 {
     /// <summary>
-    /// group administration service
+    /// Group administration service
     /// </summary>
     public interface IGropService
     {
