@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using WasteProducts.Logic.Common.Enums;
 
 namespace WasteProducts.Logic.Common.Models.Users
@@ -68,7 +69,7 @@ namespace WasteProducts.Logic.Common.Models.Users
         /// <summary>
         /// All user claims.
         /// </summary>
-        public virtual ICollection<UserClaim> Claims { get; set; }
+        public virtual ICollection<Claim> Claims { get; set; }
 
         /// <summary>
         /// All user logins.

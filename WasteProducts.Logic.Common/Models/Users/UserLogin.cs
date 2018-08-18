@@ -5,6 +5,7 @@
     /// </summary>
     public class UserLogin
     {
+        // TODO Delete from code before merge request if wouldn't required
         /// <summary>
         /// The login provider for the login (i.e. facebook, google).
         /// </summary>

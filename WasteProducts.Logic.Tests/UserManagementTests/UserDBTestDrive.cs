@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
@@ -141,6 +142,27 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         // Тестируем добавление утверждения (Claim) в юзера
         [Test]
         public void _05TestOfAddingClaimToUser()
+        {
+            IUserRepository userRepo = new UserRepository();
+            IUserService userService = new UserService(null, userRepo);
+
+            userService.LogIn("umanetto@mail.ru", "qwerty", out User user);
+            var claim = new Claim("SomeType", "SomeValue");
+
+            userService.AddClaimAsync(user, claim).GetAwaiter().GetResult();
+            var userClaim = user.Claims.FirstOrDefault();
+            Assert.AreEqual(userClaim.Type, claim.Type);
+            Assert.AreEqual(userClaim.Value, claim.Value);
+
+            userService.LogIn("umanetto@mail.ru", "qwerty", out user);
+            userClaim = user.Claims.FirstOrDefault();
+            Assert.AreEqual(userClaim.Type, claim.Type);
+            Assert.AreEqual(userClaim.Value, claim.Value);
+        }
+
+        // тестируем удаление утверждения из юзера
+        [Test]
+        public void _06TestOfDeletingClaimFromUser()
         {
 
         }

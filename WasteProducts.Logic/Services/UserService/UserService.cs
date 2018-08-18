@@ -21,7 +21,11 @@ namespace WasteProducts.Logic.Services.UserService
 
         static UserService()
         {
-            Mapper.Initialize(cfg => cfg.AddProfile(new UserProfile()));
+            Mapper.Initialize(cfg =>
+            {
+                cfg.AddProfile(new UserProfile());
+                cfg.AddProfile(new UserClaimProfile());
+            });
         }
 
         public UserService(IMailService mailService, IUserRepository userRepo)
@@ -133,6 +137,7 @@ namespace WasteProducts.Logic.Services.UserService
         public async Task AddClaimAsync(User user, Claim claim)
         {
             await _userRepo.AddClaimAsync(MapTo<UserDB>(user), claim);
+            user.Claims.Add(claim);
         }
         
         public async Task RemoveFromRoleAsync(User user, string roleName)
