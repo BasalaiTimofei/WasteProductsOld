@@ -91,36 +91,13 @@ namespace WasteProducts.DataAccess.Repositories
 
         public IEnumerable<TEnity> GetAll<TEnity>(string queryString, IEnumerable<string> searchableFields, int numResults) where TEnity : class
         {
-            CheckQueryString(queryString);
-            queryString = queryString.ToLower();
-            BooleanQuery booleanQuery = new BooleanQuery();
-            var searchTerms = queryString.Split(' ');
-            foreach (var term in searchTerms)
-            {
-                foreach (var field in searchableFields)
-                {
-                    WildcardQuery wildcardQuery = new WildcardQuery(new Term(field, $"{term}*"));
-                    booleanQuery.Add(wildcardQuery, Occur.SHOULD);
-                }
-            }
+            BooleanQuery booleanQuery = PrepareLuceneQuery(queryString, searchableFields, null);
             return ProceedQueryList<TEnity>(booleanQuery, numResults);
         }
 
         public IEnumerable<TEntity> GetAll<TEntity>(string queryString, IEnumerable<string> searchableFields, ReadOnlyDictionary<string, float> boosts, int numResults) where TEntity : class
         {
-            CheckQueryString(queryString);
-            queryString = queryString.ToLower();
-            BooleanQuery booleanQuery = new BooleanQuery();
-            var searchTerms = queryString.Split(' ');
-            foreach (var term in searchTerms)
-            {
-                foreach (var field in searchableFields)
-                {
-                    WildcardQuery wildcardQuery = new WildcardQuery(new Term(field, $"{term}*"));
-                    wildcardQuery.Boost = boosts[field];
-                    booleanQuery.Add(wildcardQuery, Occur.SHOULD);
-                }
-            }
+            BooleanQuery booleanQuery = PrepareLuceneQuery(queryString, searchableFields, boosts);
             return ProceedQueryList<TEntity>(booleanQuery, numResults);
         }
 
@@ -253,6 +230,27 @@ namespace WasteProducts.DataAccess.Repositories
 
             if (String.IsNullOrEmpty(queryString))
                 throw new LuceneSearchRepositoryException("Search string can't be empty or null.");
+        }
+
+        private BooleanQuery PrepareLuceneQuery(string queryString, IEnumerable<string> searchableFields, ReadOnlyDictionary<string, float> boosts)
+        {
+            CheckQueryString(queryString);
+            queryString = queryString.ToLower();
+            BooleanQuery booleanQuery = new BooleanQuery();
+            var searchTerms = queryString.Split(' ');
+            foreach (var term in searchTerms)
+            {
+                foreach (var field in searchableFields)
+                {
+                    WildcardQuery wildcardQuery = new WildcardQuery(new Term(field, $"{term}*"));
+                    if (boosts!=null)
+                    {
+                        wildcardQuery.Boost = boosts[field];
+                    }
+                    booleanQuery.Add(wildcardQuery, Occur.SHOULD);
+                }
+            }
+            return booleanQuery;
         }
 
         //TODO: add realization of async methods later
