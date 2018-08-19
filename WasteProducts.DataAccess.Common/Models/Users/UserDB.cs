@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.AspNet.Identity.EntityFramework;
+using WasteProducts.DataAccess.Common.Models.Products;
 
 namespace WasteProducts.DataAccess.Common.Models.Users
 {
@@ -12,13 +13,12 @@ namespace WasteProducts.DataAccess.Common.Models.Users
         /// <summary>
         /// List of Users which belong to group of friends related to current User.
         /// </summary>
-        public List<UserDB> UserFriends { get; set; }
+        public List<UserDB> Friends { get; set; }
 
-        // TODO decomment after the "Product" model is enabled
         /// <summary>
         /// List of Products which User have ever captured.
         /// </summary>
-        //public List<Product> UserProducts { get; set; }
+        public List<ProductDB> Products { get; set; }
 
         // TODO decomment after the "Groups" model is enabled
         /// <summary>

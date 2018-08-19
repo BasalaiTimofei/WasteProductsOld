@@ -10,8 +10,7 @@ namespace WasteProducts.DataAccess.Contexts
     [DbConfigurationType(typeof(MsSqlConfiguration))]
     public class WasteContext : IdentityDbContext<UserDB, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>
     {
-        // TODO delete : base after testing and clean up the App.Config
-        public WasteContext() : base()
+        public WasteContext()
         {
             Database.Log = (s) => Debug.WriteLine(s);
         }

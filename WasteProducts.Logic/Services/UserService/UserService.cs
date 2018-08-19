@@ -152,15 +152,15 @@ namespace WasteProducts.Logic.Services.UserService
 
         public void AddFriend(User user, User newFriend)
         {
-            user.UserFriends.Add(newFriend);
+            user.Friends.Add(newFriend);
             UpdateAsync(user).GetAwaiter().GetResult();
         }
 
         public void DeleteFriend(User user, User deletingFriend)
         {
-            if (user.UserFriends.Contains(deletingFriend))
+            if (user.Friends.Contains(deletingFriend))
             {
-                user.UserFriends.Remove(deletingFriend);
+                user.Friends.Remove(deletingFriend);
                 UpdateAsync(user).GetAwaiter().GetResult();
             }
         }

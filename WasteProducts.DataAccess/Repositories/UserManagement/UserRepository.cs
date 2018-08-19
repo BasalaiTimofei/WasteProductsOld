@@ -215,13 +215,14 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 }
                 else
                 {
-                    // TODO expand with groups and products when it available
+                    // TODO expand with groups when it available
                     db.Configuration.LazyLoadingEnabled = lazyInitiation;
 
                     result.user = db.Users.Include(u => u.Roles).
                         Include(u => u.Claims).
                         Include(u => u.Logins).
-                        Include(u => u.UserFriends).
+                        Include(u => u.Friends).
+                        Include(u => u.Products).
                         Where(predicate).FirstOrDefault();
                 }
 
