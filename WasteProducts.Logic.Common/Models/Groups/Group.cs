@@ -25,12 +25,12 @@ namespace WasteProducts.Logic.Common.Models
         /// </summary>
         public int Admin { get; set; }
         /// <summary>
-        /// Create - datatime when group created
+        /// GroupUsers - users which as part of group
         /// </summary>
-        public DateTime Create { get; set; }
+        public List<GroupUser> GroupUsers { get; set; }
         /// <summary>
-        /// Delete - datatime when group deleted
+        /// GroupBoards - boards with products
         /// </summary>
-        public DateTime Delete { get; set; }
+        public List<GroupBoard> GroupBoards { get; set; }
     }
 }

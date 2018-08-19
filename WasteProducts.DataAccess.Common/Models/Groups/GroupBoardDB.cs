@@ -30,7 +30,7 @@ namespace WasteProducts.DataAccess.Common.Models
         /// </summary>
         public int UserId { get; set; }
         /// <summary>
-        /// GroupProductBoardDBs - products which add at board
+        /// GroupProductDBs - products which add at board
         /// </summary>
         public List<GroupProductDB> GroupProductDBs { get; set; }
         /// <summary>

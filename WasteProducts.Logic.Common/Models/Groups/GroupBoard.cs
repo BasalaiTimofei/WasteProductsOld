@@ -29,12 +29,8 @@ namespace WasteProducts.Logic.Common.Models
         /// </summary>
         public int UserId { get; set; }
         /// <summary>
-        /// Create - datatime when board created
+        /// GroupProducts - products which add at board
         /// </summary>
-        public DateTime Create { get; set; }
-        /// <summary>
-        /// Delete - datatime when board deleted
-        /// </summary>
-        public DateTime Delete { get; set; }
+        public List<GroupProduct> GroupProducts { get; set; }
     }
 }

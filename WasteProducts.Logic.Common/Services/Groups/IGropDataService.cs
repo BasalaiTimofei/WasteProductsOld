@@ -15,7 +15,7 @@ namespace WasteProducts.Logic.Common.Services
         /// <typeparam name="T">Object</typeparam>
         /// <param name="id">Primary key</param>
         /// <returns>Object</returns>
-        T Get<T>(int? id);
+        T Get<T>(int id);
         /// <summary>
         /// GetAll - return all objects
         /// </summary>
