@@ -24,12 +24,24 @@ namespace WasteProducts.Logic.Services
             _repository = repository;
         }
 
+        /// <summary>
+        /// Performs search in repository
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="query">SearchQuery object containing query information</param>
+        /// <returns></returns>
         public IEnumerable<TEntity> Search<TEntity>(SearchQuery query) where TEntity : class
         {
             CheckQuery(query);
             return _repository.GetAll<TEntity>(query.Query, query.SearchableFields, MaxResultCount);
         }
 
+        /// <summary>
+        /// Performs search in repository
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="query">BoostedSearchQuery object containing query information</param>
+        /// <returns></returns>
         public IEnumerable<TEntity> Search<TEntity>(BoostedSearchQuery query) where TEntity : class
         {
             CheckQuery(query);
@@ -41,11 +53,21 @@ namespace WasteProducts.Logic.Services
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Adds object to repository
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="model"></param>
         public void AddToSearchIndex<TEntity>(TEntity model) where TEntity : class
         {
             _repository.Insert(model);
         }
 
+        /// <summary>
+        /// Adds list of objects to repository
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="models"></param>
         public void AddToSearchIndex<TEntity>(IEnumerable<TEntity> models) where TEntity : class
         {
             foreach (var model in models)
@@ -54,11 +76,21 @@ namespace WasteProducts.Logic.Services
             }
         }
 
+        /// <summary>
+        /// Removes object from repository
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="model"></param>
         public void RemoveFromSearchIndex<TEntity>(TEntity model) where TEntity : class
         {
             _repository.Delete(model);
         }
 
+        /// <summary>
+        /// Removes list of objects from repository
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="models"></param>
         public void RemoveFromSearchIndex<TEntity>(IEnumerable<TEntity> models) where TEntity : class
         {
             foreach (var model in models)
@@ -67,11 +99,21 @@ namespace WasteProducts.Logic.Services
             }
         }
 
+        /// <summary>
+        /// Updates object in repository
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="model"></param>
         public void UpdateInSearchIndex<TEntity>(TEntity model) where TEntity : class
         {
             _repository.Update(model);
         }
 
+        /// <summary>
+        /// Updates list of objects in repository
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="models"></param>
         public void UpdateInSearchIndex<TEntity>(IEnumerable<TEntity> models) where TEntity : class
         {
             foreach (var model in models)
@@ -80,11 +122,17 @@ namespace WasteProducts.Logic.Services
             }
         }
 
+        /// <summary>
+        /// Clears repository
+        /// </summary>
         public void ClearSearchIndex()
         {
             _repository.Clear();
         }
 
+        /// <summary>
+        /// Optimizes repository for faster search
+        /// </summary>
         public void OptimizeSearchIndex()
         {
             _repository.Optimize();

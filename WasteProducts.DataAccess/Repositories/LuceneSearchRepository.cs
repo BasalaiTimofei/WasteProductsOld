@@ -35,6 +35,9 @@ namespace WasteProducts.DataAccess.Repositories
         private IndexWriter _writer;
         //private SearcherManager _searcherManager;
 
+        /// <summary>
+        /// Creates Lucene repository
+        /// </summary>
         public LuceneSearchRepository()
         {
 
@@ -63,6 +66,10 @@ namespace WasteProducts.DataAccess.Repositories
             }
         }
 
+        /// <summary>
+        /// Creates Lucene repository 
+        /// </summary>
+        /// <param name="clearIndex">If true existing index will be cleared</param>
         public LuceneSearchRepository(bool clearIndex):this()
         {
             if (clearIndex)
@@ -71,36 +78,78 @@ namespace WasteProducts.DataAccess.Repositories
             }
         }
 
+        /// <summary>
+        /// Returns entity from repository by numeric Id
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="id">Id</param>
+        /// <returns></returns>
         public TEntity GetById<TEntity>(int id) where TEntity : class
         {
             Query queryGet = NumericRangeQuery.NewInt64Range(IDField, id, id, true, true);
-            return ProceedQuery<TEntity>(queryGet, 1);
+            return ProceedQuery<TEntity>(queryGet);
         }
 
+        /// <summary>
+        /// Returns entity from repository by field value
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="keyValue">Field value</param>
+        /// <param name="keyField">Name of field</param>
+        /// <returns></returns>
         public TEntity Get<TEntity>(string keyValue, string keyField) where TEntity : class
         {
             Query queryGet = new TermQuery(new Term(keyField, keyValue));
-            return ProceedQuery<TEntity>(queryGet, 1);
+            return ProceedQuery<TEntity>(queryGet);
         }
-
+        
+        /// <summary>
+        /// Returns list of objects of TEntity type from repository
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns></returns>
         public IEnumerable<TEntity> GetAll<TEntity>() where TEntity  :class
         {           
             Query queryGet = NumericRangeQuery.NewInt64Range(IDField, 0, Int32.MaxValue, true, true);
             return ProceedQueryList<TEntity>(queryGet, Int32.MaxValue);
         }
 
+        /// <summary>
+        /// Returns list of objects of TEntity type from repository which contain any word
+        /// from query string in searchable fields
+        /// </summary>
+        /// <typeparam name="TEnity"></typeparam>
+        /// <param name="queryString">String containing words to search</param>
+        /// <param name="searchableFields">Searchable fields</param>
+        /// <param name="numResults">Maximal number of results</param>
+        /// <returns></returns>
         public IEnumerable<TEnity> GetAll<TEnity>(string queryString, IEnumerable<string> searchableFields, int numResults) where TEnity : class
         {
             BooleanQuery booleanQuery = PrepareLuceneQuery(queryString, searchableFields, null);
             return ProceedQueryList<TEnity>(booleanQuery, numResults);
         }
 
+        /// <summary>
+        /// Returns list of objects of TEntity type from repository which contain any word
+        /// from query string in searchable fields with boost values for the fields
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="queryString">String containing words to search</param>
+        /// <param name="searchableFields">Searchable fields</param>
+        /// <param name="boosts">Boost values for searchable fields</param>
+        /// <param name="numResults"></param>
+        /// <returns></returns>
         public IEnumerable<TEntity> GetAll<TEntity>(string queryString, IEnumerable<string> searchableFields, ReadOnlyDictionary<string, float> boosts, int numResults) where TEntity : class
         {
             BooleanQuery booleanQuery = PrepareLuceneQuery(queryString, searchableFields, boosts);
             return ProceedQueryList<TEntity>(booleanQuery, numResults);
         }
 
+        /// <summary>
+        /// Inserts object into repository
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="obj"></param>
         public void Insert<TEntity>(TEntity obj) where TEntity : class
         {
             Document doc = obj.ToDocument();
@@ -108,6 +157,11 @@ namespace WasteProducts.DataAccess.Repositories
             _writer.Commit();
         }
 
+        /// <summary>
+        /// Updates object in repository
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="obj"></param>
         public void Update<TEntity>(TEntity obj) where TEntity : class 
         {
             System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty(IDField);
@@ -126,6 +180,11 @@ namespace WasteProducts.DataAccess.Repositories
             }
         }
 
+        /// <summary>
+        /// Deletes object from reposytory
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="obj"></param>
         public void Delete<TEntity>(TEntity obj) where TEntity : class
         {
 
@@ -142,6 +201,9 @@ namespace WasteProducts.DataAccess.Repositories
             }
         }
 
+        /// <summary>
+        /// Clears repository
+        /// </summary>
         public void Clear()
         {
             try
@@ -154,6 +216,9 @@ namespace WasteProducts.DataAccess.Repositories
             }
         }
 
+        /// <summary>
+        /// Optimizes repository by merging index files
+        /// </summary>
         public void Optimize()
         {
             try
@@ -172,14 +237,20 @@ namespace WasteProducts.DataAccess.Repositories
             }
         }
 
-        private TEntity ProceedQuery<TEntity>(Query query, int numResults) where TEntity : class
+        /// <summary>
+        /// Proceeds Lucene's query and returns single object
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="query">Lucene's query</param>
+        /// <returns></returns>
+        private TEntity ProceedQuery<TEntity>(Query query) where TEntity : class
         {
             using (var reader = DirectoryReader.Open(_directory))
             {
                 var searcher = new IndexSearcher(reader);
                 try
                 {
-                    TopDocs docs = searcher.Search<TEntity>(query, numResults);
+                    TopDocs docs = searcher.Search<TEntity>(query, 1000);
                     ScoreDoc firstScoreDoc = docs.ScoreDocs.FirstOrDefault();
                     if (firstScoreDoc != null)
                     {
@@ -200,6 +271,13 @@ namespace WasteProducts.DataAccess.Repositories
             }
         }
 
+        /// <summary>
+        /// Proceeds Lucene's query and returns list of objects
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="query">Lucene's query</param>
+        /// <param name="numResults">Maximal number of results</param>
+        /// <returns></returns>
         private IEnumerable<TEntity> ProceedQueryList<TEntity>(Query query, int numResults) where TEntity : class
         {
             using (var reader = DirectoryReader.Open(_directory))
@@ -225,6 +303,10 @@ namespace WasteProducts.DataAccess.Repositories
             }
         }
 
+        /// <summary>
+        /// Checks whether query string is null or empty
+        /// </summary>
+        /// <param name="queryString"></param>
         private void CheckQueryString(string queryString)
         {
 
@@ -232,6 +314,13 @@ namespace WasteProducts.DataAccess.Repositories
                 throw new ArgumentException("Search string can't be empty or null.");
         }
 
+        /// <summary>
+        /// Prepares correct Lucene's query
+        /// </summary>
+        /// <param name="queryString">String with words to search</param>
+        /// <param name="searchableFields">Searchable fields</param>
+        /// <param name="boosts">Boost values fo searchable fields</param>
+        /// <returns></returns>
         private BooleanQuery PrepareLuceneQuery(string queryString, IEnumerable<string> searchableFields, ReadOnlyDictionary<string, float> boosts)
         {
             CheckQueryString(queryString);
