@@ -311,7 +311,7 @@ namespace WasteProducts.DataAccess.Repositories
         {
 
             if (String.IsNullOrEmpty(queryString))
-                throw new ArgumentException("Search string can't be empty or null.");
+                throw new ArgumentException("Search string can't be empty or null or consist only from whitespaces");
         }
 
         /// <summary>
@@ -323,12 +323,13 @@ namespace WasteProducts.DataAccess.Repositories
         /// <returns></returns>
         private BooleanQuery PrepareLuceneQuery(string queryString, IEnumerable<string> searchableFields, ReadOnlyDictionary<string, float> boosts)
         {
+            char[] charsToTrim = { '*', ' ' };
+            queryString = queryString.ToLower().Trim(charsToTrim);
             CheckQueryString(queryString);
-            if (searchableFields.Count() == 0)
+            if (!searchableFields.Any())
             {
                 throw new ArgumentException("Can't search with empty filelds.");
             }
-            queryString = queryString.ToLower();
             BooleanQuery booleanQuery = new BooleanQuery();
             var searchTerms = queryString.Split(' ');
             foreach (var term in searchTerms)
