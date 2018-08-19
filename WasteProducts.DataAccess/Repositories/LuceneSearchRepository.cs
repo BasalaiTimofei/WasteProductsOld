@@ -229,12 +229,16 @@ namespace WasteProducts.DataAccess.Repositories
         {
 
             if (String.IsNullOrEmpty(queryString))
-                throw new LuceneSearchRepositoryException("Search string can't be empty or null.");
+                throw new ArgumentException("Search string can't be empty or null.");
         }
 
         private BooleanQuery PrepareLuceneQuery(string queryString, IEnumerable<string> searchableFields, ReadOnlyDictionary<string, float> boosts)
         {
             CheckQueryString(queryString);
+            if (searchableFields.Count() == 0)
+            {
+                throw new ArgumentException("Can't search with empty filelds.");
+            }
             queryString = queryString.ToLower();
             BooleanQuery booleanQuery = new BooleanQuery();
             var searchTerms = queryString.Split(' ');
