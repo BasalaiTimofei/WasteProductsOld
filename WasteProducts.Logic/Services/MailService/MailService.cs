@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Services.MailService;
 
 namespace WasteProducts.Logic.Services.MailService
@@ -41,12 +42,15 @@ namespace WasteProducts.Logic.Services.MailService
             }
         }
 
-        public void Send(string to, string subject, string body)
+        public async Task SendAsync(string to, string subject, string body)
         {
-            using (MailMessage message = MailFactory.Create(OurEmail, to, subject, body))
+            await Task.Run(() =>
             {
-                _smtpClient.Send(message);
-            }
+                using (MailMessage message = MailFactory.Create(OurEmail, to, subject, body))
+                {
+                    _smtpClient.SendAsync(message, null);
+                }
+            });
         }
     }
 }

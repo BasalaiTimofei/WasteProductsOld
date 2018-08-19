@@ -35,14 +35,14 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// <param name="newPassword">New password of the specific user.</param>
         /// <param name="newPasswordConfirmation">Confirmation of the new password, must be the same as the newPassword.</param>
         /// <returns>Boolean representing whether resetting password succeed or not.</returns>
-        bool ResetPassword(User user, string oldPassword, string newPassword, string newPasswordConfirmation);
+        Task<bool> ResetPasswordAsync(User user, string oldPassword, string newPassword, string newPasswordConfirmation);
 
         /// <summary>
         /// Requests an email with the password of the user registered to this email.
         /// </summary>
         /// <param name="email">Email of the user forgotten its password.</param>
         /// <returns>Boolean representing whether email was correct or not.</returns>
-        bool PasswordRequest(string email);
+        Task PasswordRequestAsync(string email);
 
         /// <summary>
         /// Updates the specific user in the Database.

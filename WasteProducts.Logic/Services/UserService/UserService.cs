@@ -4,11 +4,11 @@ using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.Logic.Common.Services.MailService;
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNet.Identity;
-using System;
 
 namespace WasteProducts.Logic.Services.UserService
 {
@@ -77,31 +77,31 @@ namespace WasteProducts.Logic.Services.UserService
             });
         }
 
-        
-
-        public bool ResetPassword(User user, string oldPassword, string newPassword, string newPasswordConfirmation)
+        public async Task<bool> ResetPasswordAsync(User user, string oldPassword, string newPassword, string newPasswordConfirmation)
         {
-            if(newPassword != newPasswordConfirmation || oldPassword != user.Password)
+            return await Task.Run(() =>
             {
-                return false;
-            }
-            user.Password = newPassword;
+                if (newPassword != newPasswordConfirmation || oldPassword != user.Password)
+                {
+                    return false;
+                }
+                user.Password = newPassword;
 
-            UpdateAsync(user).GetAwaiter().GetResult();
-            return true;
+                UpdateAsync(user).GetAwaiter().GetResult();
+                return true;
+            });
         }
 
-        public bool PasswordRequest(string email)
+        public async Task PasswordRequestAsync(string email)
         {
-            var user = MapTo<User>(_userRepo.Select(email));
-            if (user == null)
+            try
             {
-                return false;
-            }
+                User user = MapTo<User>(_userRepo.Select(email));
 
-            // TODO придумать что писать в письме-восстановителе пароля и где хранить этот стринг
-            _mailService.Send(email, PASSWORD_RECOWERY_HEADER, $"На ваш аккаунт \"Фуфлопродуктов\" был отправлен запрос на смену пароля. Напоминаем ваш пароль на сайте :\n\n{user.Password}\n\nВы можете поменять пароль в своем личном кабинете.");
-            return true;
+                // TODO придумать что писать в письме-восстановителе пароля и где хранить этот стринг
+                await _mailService.SendAsync(email, PASSWORD_RECOWERY_HEADER, $"На ваш аккаунт \"Фуфлопродуктов\" был отправлен запрос на смену пароля. Напоминаем ваш пароль на сайте :\n\n{user.Password}\n\nВы можете поменять пароль в своем личном кабинете.");
+            }
+            catch { }
         }
 
         public async Task UpdateAsync(User user)

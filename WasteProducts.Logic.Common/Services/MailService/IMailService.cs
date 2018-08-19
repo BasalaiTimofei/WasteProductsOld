@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 
 namespace WasteProducts.Logic.Common.Services.MailService
 {
@@ -10,7 +11,7 @@ namespace WasteProducts.Logic.Common.Services.MailService
 
         string OurEmail { get; set; }
 
-        void Send(string to, string subject, string body);
+        Task SendAsync(string to, string subject, string body);
 
         bool IsValidEmail(string email);
     }
