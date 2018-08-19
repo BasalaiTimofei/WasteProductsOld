@@ -35,6 +35,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             {
                 using (var userStore = new UserStore<UserDB>(db))
                 {
+                    user.Created = DateTime.UtcNow;
                     await userStore.CreateAsync(user);
                     await db.SaveChangesAsync();
                 }
@@ -190,15 +191,16 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task UpdateAsync(UserDB user)
         {
-            user.Modified = DateTime.UtcNow;
-
             using (var db = GetWasteContext())
             {
-                using (var userStore = new UserStore<UserDB>(db))
-                {
-                    await userStore.UpdateAsync(user);
-                    await db.SaveChangesAsync();
-                }
+                db.Users.Attach(user);
+                var entry = db.Entry(user);
+                entry.State = EntityState.Modified;
+                entry.Property(u => u.Created).IsModified = false;
+                entry.Property(u => u.PasswordHash).IsModified = false;
+                user.Modified = DateTime.UtcNow;
+
+                await db.SaveChangesAsync();
             }
         }
 

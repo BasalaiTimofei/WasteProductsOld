@@ -4,11 +4,11 @@ using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.Logic.Common.Services.MailService;
-using WasteProducts.Logic.Mappings.UserMappings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.AspNet.Identity;
+using System;
 
 namespace WasteProducts.Logic.Services.UserService
 {
@@ -26,68 +26,58 @@ namespace WasteProducts.Logic.Services.UserService
             _userRepo = userRepo;
         }
 
-        public UserService()
+        public async Task<User> RegisterAsync(string email, string password, string userName, string passwordConfirmation)
         {
-        }
-
-        public void AddFriend(User user, User newFriend)
-        {
-            user.UserFriends.Add(newFriend);
-            UpdateAsync(user).GetAwaiter().GetResult();
-        }
-
-        public void DeleteFriend(User user, User deletingFriend)
-        {
-            if (user.UserFriends.Contains(deletingFriend))
+            return await Task.Run(() =>
             {
-                user.UserFriends.Remove(deletingFriend);
-                UpdateAsync(user).GetAwaiter().GetResult();
-            }
-        }
-
-        public bool LogIn(string email, string password, out User loggedInUser, bool getRoles = true)
-        {
-            if (getRoles)
-            {
-                var (userDB, roles) = _userRepo.SelectWithRoles(u => u.Email == email && u.PasswordHash == password, false);
-                if(userDB == null)
+                User registeringUser = null;
+                if (passwordConfirmation != password || !_mailService.IsValidEmail(email))
                 {
-                    loggedInUser = null;
-                    return false;
+                    return registeringUser;
                 }
-                loggedInUser = Mapper.Map<User>(userDB);
-                loggedInUser.Roles = roles;
-            }
-            else
-            {
-                UserDB userDB = _userRepo.Select(email, password, false);
-                if (userDB == null)
+                registeringUser = new User()
                 {
-                    loggedInUser = null;
-                    return false;
-                }
-                loggedInUser = Mapper.Map<User>(_userRepo.Select(email, password, false));
-            }
+                    Id = Guid.NewGuid().ToString(),
+                    Email = email,
+                    Password = password,
+                    UserName = userName
+                };
 
-            return loggedInUser != null;
+                _userRepo.AddAsync(MapTo<UserDB>(registeringUser)).GetAwaiter().GetResult();
+                return MapTo<User>(_userRepo.Select(email, false));
+            });
         }
 
-        public bool Register(string email, string password, string passwordConfirmation, out User registeredUser)
+        public async Task<User> LogInAsync(string email, string password, bool getRoles = true)
         {
-            if(passwordConfirmation != password || !_mailService.IsValidEmail(email))
+            return await Task.Run(() =>
             {
-                registeredUser = null;
-                return false;
-            }
-            registeredUser = new User()
-            {
-                Email = email,
-                Password = password,
-            };
-            var userDb = Mapper.Map<UserDB>(registeredUser);
-            _userRepo.AddAsync(userDb);
-            return true;
+                User loggedInUser = null;
+                if (getRoles)
+                {
+                    var (userDB, roles) = _userRepo.SelectWithRoles(u => u.Email == email && u.PasswordHash == password, false);
+                    if (userDB == null)
+                    {
+                        return loggedInUser;
+                    }
+                    loggedInUser = MapTo<User>(userDB);
+                    loggedInUser.Roles = roles;
+                }
+                else
+                {
+                    UserDB userDB = _userRepo.Select(email, password, false);
+                    if (userDB == null)
+                    {
+                        return loggedInUser;
+                    }
+                    loggedInUser = MapTo<User>(userDB);
+                }
+
+                return loggedInUser;
+            });
         }
+
+        
 
         public bool ResetPassword(User user, string oldPassword, string newPassword, string newPasswordConfirmation)
         {
@@ -103,7 +93,7 @@ namespace WasteProducts.Logic.Services.UserService
 
         public bool PasswordRequest(string email)
         {
-            var user = Mapper.Map<User>(_userRepo.Select(email));
+            var user = MapTo<User>(_userRepo.Select(email));
             if (user == null)
             {
                 return false;
@@ -160,9 +150,29 @@ namespace WasteProducts.Logic.Services.UserService
             user.Logins?.Remove(login);
         }
 
+        public void AddFriend(User user, User newFriend)
+        {
+            user.UserFriends.Add(newFriend);
+            UpdateAsync(user).GetAwaiter().GetResult();
+        }
+
+        public void DeleteFriend(User user, User deletingFriend)
+        {
+            if (user.UserFriends.Contains(deletingFriend))
+            {
+                user.UserFriends.Remove(deletingFriend);
+                UpdateAsync(user).GetAwaiter().GetResult();
+            }
+        }
+
         private UserDB MapTo<T>(User user)
             where T : UserDB
             =>
             Mapper.Map<UserDB>(user);
+
+        private User MapTo<T>(UserDB user)
+            where T : User
+            =>
+            Mapper.Map<User>(user);
     }
 }

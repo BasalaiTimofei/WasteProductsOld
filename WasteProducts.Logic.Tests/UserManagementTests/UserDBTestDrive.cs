@@ -1,235 +1,253 @@
-﻿//using AutoMapper;
-//using Microsoft.AspNet.Identity.EntityFramework;
-//using NUnit.Framework;
-//using System;
-//using System.Linq;
-//using System.Security.Claims;
-//using WasteProducts.DataAccess.Common.Models.Users;
-//using WasteProducts.DataAccess.Common.Repositories.UserManagement;
-//using WasteProducts.DataAccess.Contexts;
-//using WasteProducts.DataAccess.Repositories.UserManagement;
-//using WasteProducts.Logic.Common.Models.Users;
-//using WasteProducts.Logic.Common.Services.UserService;
-//using WasteProducts.Logic.Mappings.UserMappings;
-//using WasteProducts.Logic.Services.UserService;
+﻿using AutoMapper;
+using Microsoft.AspNet.Identity.EntityFramework;
+using NUnit.Framework;
+using System;
+using System.Linq;
+using System.Security.Claims;
+using WasteProducts.DataAccess.Common.Models.Users;
+using WasteProducts.DataAccess.Common.Repositories.UserManagement;
+using WasteProducts.DataAccess.Contexts;
+using WasteProducts.DataAccess.Repositories.UserManagement;
+using WasteProducts.Logic.Common.Models.Users;
+using WasteProducts.Logic.Common.Services.MailService;
+using WasteProducts.Logic.Common.Services.UserService;
+using WasteProducts.Logic.Mappings.UserMappings;
+using WasteProducts.Logic.Services.MailService;
+using WasteProducts.Logic.Services.UserService;
 
 
 
 
 
-//// FUNCTIONAL TESTS OF UserService AND UserRepository WITH REAL CONNECTION TO DATABASE 
-//// PLEASE DON'T DELETE THIS FILE 
+// FUNCTIONAL TESTS OF UserService AND UserRepository WITH REAL CONNECTION TO DATABASE 
+// PLEASE DON'T DELETE THIS FILE 
 
-//// ФУНКЦИОНАЛЬНЫЕ ТЕСТЫ UserService И UserRepository С РЕАЛЬНЫМ ПОДКЛЮЧЕНИЕМ К БАЗЕ ДАНЫХ
-//// ПОЖАЛУЙСТА, НЕ УДАЛЯЙТЕ ЭТОТ ФАЙЛ
-
-
+// ФУНКЦИОНАЛЬНЫЕ ТЕСТЫ UserService И UserRepository С РЕАЛЬНЫМ ПОДКЛЮЧЕНИЕМ К БАЗЕ ДАНЫХ
+// ПОЖАЛУЙСТА, НЕ УДАЛЯЙТЕ ЭТОТ ФАЙЛ
 
 
 
-//namespace WasteProducts.Logic.Tests.UserManagementTests
-//{
-//    public class UserDBTestDrive
-//    {
-//        public const string NAME_OR_CONNECTION_STRING = "name=ConStrByServer";
-//        // Просто загружаем то, что нам надо будет для работы
-//        [OneTimeSetUp]
-//        public void Setup()
-//        {
-//            // если в прошлый раз дебажил и не почистил таблицу
-//            TearDown();
 
-//            Mapper.Initialize(cfg =>
-//            {
-//                cfg.AddProfile(new UserProfile());
-//                cfg.AddProfile(new UserClaimProfile());
-//                cfg.AddProfile(new UserLoginProfile());
-//            });
 
-//            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
+namespace WasteProducts.Logic.Tests.UserManagementTests
+{
+    public class UserDBTestDrive
+    {
+        public const string NAME_OR_CONNECTION_STRING = "name=ConStrByServer";
+        // Просто загружаем то, что нам надо будет для работы
+        [OneTimeSetUp]
+        public void Setup()
+        {
+            // если в прошлый раз дебажил и не почистил таблицу
+            TearDown();
 
-//            if (userRepo.Select("umanetto@mail.ru") == null)
-//            {
-//                UserDB userDB = new UserDB()
-//                {
-//                    UserName = "Sergei",
-//                    Email = "umanetto@mail.ru",
-//                    EmailConfirmed = true,
-//                    PasswordHash = "qwerty",
-//                    Created = DateTime.UtcNow,
-//                };
+            Mapper.Initialize(cfg =>
+            {
+                cfg.AddProfile(new UserProfile());
+                cfg.AddProfile(new UserClaimProfile());
+                cfg.AddProfile(new UserLoginProfile());
+            });
 
-//                userRepo.AddAsync(userDB);
-//            }
+            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
+            IMailService mailService = new MailService(null, null, null);
+            IUserService userService = new UserService(mailService, userRepo);
 
-//            IUserRoleRepository roleRepo = new UserRoleRepository(NAME_OR_CONNECTION_STRING);
+            if (userRepo.Select("umanetto@mail.ru") == null)
+            {
+                User user = userService.RegisterAsync("umanetto@mail.ru", "qwerty", "Sergei", "qwerty").GetAwaiter().GetResult();
+                user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
+                user.EmailConfirmed = true;
+                userService.UpdateAsync(user).GetAwaiter().GetResult();
+            }
 
-//            if (roleRepo.FindByNameAsync("Simple user").GetAwaiter().GetResult() == null)
-//            {
-//                roleRepo.AddAsync(new IdentityRole("Simple user")).GetAwaiter().GetResult();
-//            }
-//        }
+            IUserRoleRepository roleRepo = new UserRoleRepository(NAME_OR_CONNECTION_STRING);
 
-//        // чистим таблицу после работы, чтобы таблица была всегда одинаковая
-//        [OneTimeTearDown]
-//        public void TearDown()
-//        {
-//            using (WasteContext wc = new WasteContext(NAME_OR_CONNECTION_STRING))
-//            {
-//                foreach (var user in wc.Users)
-//                {
-//                    var entry = wc.Entry(user);
-//                    entry.State = System.Data.Entity.EntityState.Deleted;
-//                }
+            if (roleRepo.FindByNameAsync("Simple user").GetAwaiter().GetResult() == null)
+            {
+                roleRepo.AddAsync(new IdentityRole("Simple user")).GetAwaiter().GetResult();
+            }
+        }
 
-//                foreach (var role in wc.Roles)
-//                {
-//                    var entry = wc.Entry(role);
-//                    entry.State = System.Data.Entity.EntityState.Deleted;
-//                }
+        // чистим таблицу после работы, чтобы таблица была всегда одинаковая
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            using (WasteContext wc = new WasteContext(NAME_OR_CONNECTION_STRING))
+            {
+                foreach (var user in wc.Users)
+                {
+                    var entry = wc.Entry(user);
+                    entry.State = System.Data.Entity.EntityState.Deleted;
+                }
 
-//                wc.SaveChanges();
-//            }
-//        }
+                foreach (var role in wc.Roles)
+                {
+                    var entry = wc.Entry(role);
+                    entry.State = System.Data.Entity.EntityState.Deleted;
+                }
 
-//        // проверяем, правильно ли выполнен Setup + проверяем запрос юзера по емейлу
-//        // и запрос роли по названию
-//        [Test]
-//        public void _01TestOfQueryingByEmail()
-//        {
-//            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
-//            IUserService userService = new UserService(null, userRepo);
+                wc.SaveChanges();
+            }
+        }
 
-//            IUserRoleRepository roleRepo = new UserRoleRepository(NAME_OR_CONNECTION_STRING);
+        // проверяем, правильно ли выполнен Setup + проверяем запрос юзера по емейлу
+        // и запрос роли по названию
+        [Test]
+        public void _01TestOfQueryingByEmail()
+        {
+            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
+            IUserService userService = new UserService(null, userRepo);
 
-//            userService.LogIn("umanetto@mail.ru", "qwerty", out User user);
-//            IdentityRole role = roleRepo.FindByNameAsync("Simple user").GetAwaiter().GetResult();
+            IUserRoleRepository roleRepo = new UserRoleRepository(NAME_OR_CONNECTION_STRING);
 
-//            Assert.AreEqual(user.Email, "umanetto@mail.ru");
-//            Assert.AreEqual(role.Name, "Simple user");
-//        }
+            User user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
+            IdentityRole role = roleRepo.FindByNameAsync("Simple user").GetAwaiter().GetResult();
 
-//        // тестим, правильно ли работает функционал добавления роли и добавления юзера в роль
-//        [Test]
-//        public void _02TestOfAddingToTheUserDBNewRole()
-//        {
-//            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
-//            IUserService userService = new UserService(null, userRepo);
+            Assert.AreEqual(user.Email, "umanetto@mail.ru");
+            Assert.AreEqual(role.Name, "Simple user");
+        }
 
-//            userService.LogIn("umanetto@mail.ru", "qwerty", out User user);
+        // тестим, правильно ли работает функционал добавления роли и добавления юзера в роль
+        [Test]
+        public void _02TestOfAddingToTheUserDBNewRole()
+        {
+            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
+            IUserService userService = new UserService(null, userRepo);
 
-//            userService.AddToRoleAsync(user, "Simple user").GetAwaiter().GetResult();
+            User user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
 
-//            Assert.AreEqual("Simple user", user.Roles.FirstOrDefault());
+            userService.AddToRoleAsync(user, "Simple user").GetAwaiter().GetResult();
 
-//            userService.LogIn("umanetto@mail.ru", "qwerty", out user);
+            Assert.AreEqual("Simple user", user.Roles.FirstOrDefault());
 
-//            Assert.AreEqual("Simple user", user.Roles.FirstOrDefault());
-//        }
+            user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
 
-//        // тестируем, как работает метот GetRolesAsynс IUserService
-//        [Test]
-//        public void _03TestOfGettingRolesOfTheUser()
-//        {
-//            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
-//            IUserService userService = new UserService(null, userRepo);
+            Assert.AreEqual("Simple user", user.Roles.FirstOrDefault());
+        }
 
-//            User user = Mapper.Map<User>(userRepo.Select(u => u.Email == "umanetto@mail.ru", false));
-//            user.Roles = userService.GetRolesAsync(user).GetAwaiter().GetResult();
+        // тестируем, как работает метот GetRolesAsynс IUserService
+        [Test]
+        public void _03TestOfGettingRolesOfTheUser()
+        {
+            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
+            IUserService userService = new UserService(null, userRepo);
 
-//            Assert.AreEqual("Simple user", user.Roles.FirstOrDefault());
-//        }
+            User user = Mapper.Map<User>(userRepo.Select(u => u.Email == "umanetto@mail.ru", false));
+            user.Roles = userService.GetRolesAsync(user).GetAwaiter().GetResult();
 
-//        // тестируем изъятие из роли
-//        [Test]
-//        public void _04TestOfRemovingUserFromRole()
-//        {
-//            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
-//            IUserService userService = new UserService(null, userRepo);
+            Assert.AreEqual("Simple user", user.Roles.FirstOrDefault());
+        }
 
-//            userService.LogIn("umanetto@mail.ru", "qwerty", out User user);
-//            Assert.AreEqual(user.Roles.FirstOrDefault(), "Simple user");
+        // тестируем изъятие из роли
+        [Test]
+        public void _04TestOfRemovingUserFromRole()
+        {
+            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
+            IUserService userService = new UserService(null, userRepo);
 
-//            userService.RemoveFromRoleAsync(user, "Simple user").GetAwaiter().GetResult();
-//            Assert.IsNull(user.Roles.FirstOrDefault());
+            User user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
+            Assert.AreEqual(user.Roles.FirstOrDefault(), "Simple user");
 
-//            userService.LogIn("umanetto@mail.ru", "qwerty", out user);
-//            Assert.IsNull(user.Roles.FirstOrDefault());
-//        }
+            userService.RemoveFromRoleAsync(user, "Simple user").GetAwaiter().GetResult();
+            Assert.IsNull(user.Roles.FirstOrDefault());
 
-//        // Тестируем добавление утверждения (Claim) в юзера
-//        [Test]
-//        public void _05TestOfAddingClaimToUser()
-//        {
-//            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
-//            IUserService userService = new UserService(null, userRepo);
+            user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
+            Assert.IsNull(user.Roles.FirstOrDefault());
+        }
 
-//            userService.LogIn("umanetto@mail.ru", "qwerty", out User user);
-//            var claim = new Claim("SomeType", "SomeValue");
+        // Тестируем добавление утверждения (Claim) в юзера
+        [Test]
+        public void _05TestOfAddingClaimToUser()
+        {
+            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
+            IUserService userService = new UserService(null, userRepo);
 
-//            userService.AddClaimAsync(user, claim).GetAwaiter().GetResult();
-//            var userClaim = user.Claims.FirstOrDefault();
-//            Assert.AreEqual(userClaim.Type, claim.Type);
-//            Assert.AreEqual(userClaim.Value, claim.Value);
+            User user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
+            var claim = new Claim("SomeType", "SomeValue");
 
-//            userService.LogIn("umanetto@mail.ru", "qwerty", out user);
-//            userClaim = user.Claims.FirstOrDefault();
-//            Assert.AreEqual(userClaim.Type, claim.Type);
-//            Assert.AreEqual(userClaim.Value, claim.Value);
-//        }
+            userService.AddClaimAsync(user, claim).GetAwaiter().GetResult();
+            var userClaim = user.Claims.FirstOrDefault();
+            Assert.AreEqual(userClaim.Type, claim.Type);
+            Assert.AreEqual(userClaim.Value, claim.Value);
 
-//        // тестируем удаление утверждения из юзера
-//        [Test]
-//        public void _06TestOfDeletingClaimFromUser()
-//        {
-//            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
-//            IUserService userService = new UserService(null, userRepo);
+            user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
+            userClaim = user.Claims.FirstOrDefault();
+            Assert.AreEqual(userClaim.Type, claim.Type);
+            Assert.AreEqual(userClaim.Value, claim.Value);
+        }
 
-//            userService.LogIn("umanetto@mail.ru", "qwerty", out User user);
-//            Assert.AreEqual(user.Claims.Count, 1);
+        // тестируем удаление утверждения из юзера
+        [Test]
+        public void _06TestOfDeletingClaimFromUser()
+        {
+            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
+            IUserService userService = new UserService(null, userRepo);
 
-//            userService.RemoveClaimAsync(user, user.Claims.FirstOrDefault()).GetAwaiter().GetResult();
-//            Assert.AreEqual(user.Claims.Count, 0);
+            User user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
+            Assert.AreEqual(user.Claims.Count, 1);
 
-//            userService.LogIn("umanetto@mail.ru", "qwerty", out user);
-//            Assert.AreEqual(user.Claims.Count, 0);
-//        }
+            userService.RemoveClaimAsync(user, user.Claims.FirstOrDefault()).GetAwaiter().GetResult();
+            Assert.AreEqual(user.Claims.Count, 0);
 
-//        // тестируем добавление логина в юзера
-//        [Test]
-//        public void _07TestOfAddingLoginToUser()
-//        {
-//            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
-//            IUserService userService = new UserService(null, userRepo);
+            user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
+            Assert.AreEqual(user.Claims.Count, 0);
+        }
 
-//            userService.LogIn("umanetto@mail.ru", "qwerty", out User user);
-//            var login = new UserLogin { LoginProvider = "SomeLoginProvider", ProviderKey = "SomeProviderKey" };
+        // тестируем добавление логина в юзера
+        [Test]
+        public void _07TestOfAddingLoginToUser()
+        {
+            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
+            IUserService userService = new UserService(null, userRepo);
 
-//            userService.AddLoginAsync(user, login).GetAwaiter().GetResult();
-//            var userLogin = user.Logins.FirstOrDefault();
-//            Assert.AreEqual(login, userLogin);
+            User user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
+            var login = new UserLogin { LoginProvider = "SomeLoginProvider", ProviderKey = "SomeProviderKey" };
 
-//            userService.LogIn("umanetto@mail.ru", "qwerty", out user);
-//            userLogin = user.Logins.FirstOrDefault();
-//            Assert.AreEqual(login, userLogin);
-//        }
+            userService.AddLoginAsync(user, login).GetAwaiter().GetResult();
+            var userLogin = user.Logins.FirstOrDefault();
+            Assert.AreEqual(login, userLogin);
 
-//        // тестируем удаление логина из юзера
-//        [Test]
-//        public void _08TestOfDeletingLoginFromUser()
-//        {
-//            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
-//            IUserService userService = new UserService(null, userRepo);
+            user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
+            userLogin = user.Logins.FirstOrDefault();
+            Assert.AreEqual(login, userLogin);
+        }
 
-//            userService.LogIn("umanetto@mail.ru", "qwerty", out User user);
-//            var login = new UserLogin { LoginProvider = "SomeLoginProvider", ProviderKey = "SomeProviderKey" };
+        // тестируем удаление логина из юзера
+        [Test]
+        public void _08TestOfDeletingLoginFromUser()
+        {
+            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
+            IUserService userService = new UserService(null, userRepo);
 
-//            Assert.AreEqual(user.Logins.Count, 1);
-//            userService.RemoveLoginAsync(user, login).GetAwaiter().GetResult();
-//            Assert.AreEqual(user.Logins.Count, 0);
+            User user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
+            var login = new UserLogin { LoginProvider = "SomeLoginProvider", ProviderKey = "SomeProviderKey" };
 
-//            userService.LogIn("umanetto@mail.ru", "qwerty", out user);
-//            Assert.AreEqual(user.Logins.Count, 0);
-//        }
-//    }
-//}
+            Assert.AreEqual(user.Logins.Count, 1);
+            userService.RemoveLoginAsync(user, login).GetAwaiter().GetResult();
+            Assert.AreEqual(user.Logins.Count, 0);
+
+            user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
+            Assert.AreEqual(user.Logins.Count, 0);
+        }
+
+        // тестируем апдейт юзера
+
+        [Test]
+        public void _09TestOfUserUpdating()
+        {
+            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
+            IUserService userService = new UserService(null, userRepo);
+
+            User user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
+
+            string userPhoneNumber = user.PhoneNumber;
+            Assert.AreEqual(userPhoneNumber, null);
+
+            user.PhoneNumber = "+375172020327";
+            userService.UpdateAsync(user).GetAwaiter().GetResult();
+
+            user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
+            Assert.AreEqual(user.PhoneNumber, "+375172020327");
+        }
+    }
+}

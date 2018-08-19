@@ -11,23 +11,21 @@ namespace WasteProducts.Logic.Common.Services.UserService
     public interface IUserService
     {
         /// <summary>
-        /// Tries to register a new user with a specific parameters and returns whether registration succeed or not.
+        /// Tries to register a new user with a specific parameters.
         /// </summary>
         /// <param name="email">Email of the new user.</param>
         /// <param name="password">Password of the new user.</param>
         /// <param name="passwordConfirmation">Confirmation of the password, must be the same as the password.</param>
-        /// <param name="registeredUser">New registered user.</param>
-        /// <returns>Boolean representing whether registration succeed or not.</returns>
-        bool Register(string email, string password, string passwordConfirmation, out User registeredUser);
+        /// <returns>Registered User (null if registration failed).</returns>
+        Task<User> RegisterAsync(string email, string password, string userName, string passwordConfirmation);
 
         /// <summary>
-        /// Tries to login as a user with the specific email and password and returns whether logging in succeed or not.
+        /// Tries to login as a user with the specific email and password.
         /// </summary>
         /// <param name="email">Email of the logging in user.</param>
         /// <param name="password">Password of the logging in user.</param>
-        /// <param name="loggedInUser">When this methods returns, this variable contains a User object if this method succeed, or null if method failed.</param>
-        /// <returns>Boolean representing whether logging in succeed or not.</returns>
-        bool LogIn(string email, string password, out User loggedInUser, bool getRoles = true);
+        /// <returns>Logged in user.</returns>
+        Task<User> LogInAsync(string email, string password, bool getRoles = true);
 
         /// <summary>
         /// Tries to reset a password of the specific user to the new password and returns whether resetting succeed or not.
