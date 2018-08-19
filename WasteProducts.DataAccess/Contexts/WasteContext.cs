@@ -11,7 +11,14 @@ namespace WasteProducts.DataAccess.Contexts
     public class WasteContext : IdentityDbContext<UserDB, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>
     {
         // TODO delete : base after testing and clean up the App.Config
-        public WasteContext() : base(@"name=ConStrByServer")
+        public WasteContext() : base()
+        {
+            Database.Log = (s) => Debug.WriteLine(s);
+        }
+
+        // @"name=ConStrByServer" - такой по этому имени в конфиге тестового проекта лежит ссыль на connectionString
+        // к базе данных, которой я (Тишков Сергей, User Management) пользовался для функционального тестирования UserService
+        public WasteContext(string nameOrConnectionString) : base(nameOrConnectionString)
         {
             Database.Log = (s) => Debug.WriteLine(s);
         }
