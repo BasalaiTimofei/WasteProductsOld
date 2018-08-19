@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Users;
 
 namespace WasteProducts.Logic.Common.Services.UserService
@@ -54,16 +55,32 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// <summary>
         /// Adds a specific new friend to the specific user's friend list.
         /// </summary>
-        /// <param name="user">Friend list of this user will be expanded by the newFriend user.</param>
+        /// <param name="user">List of friends of this user will be expanded by the newFriend user.</param>
         /// <param name="newFriend">New friend to add to the user's friend list.</param>
-        void AddFriend(User user, User newFriend);
+        Task AddFriendAsync(User user, User newFriend);
 
         /// <summary>
         /// Deletes a specific friend from the specific user's friend list.
         /// </summary>
-        /// <param name="user">From the friend list of this user will be deleted the deletingFriend user.</param>
+        /// <param name="user">From the list of friends of this user the deletingFriend user will be deleted.</param>
         /// <param name="deletingFriend">Specific friend to delete from the user' sfriend list.</param>
-        void DeleteFriend(User user, User deletingFriend);
+        Task DeleteFriendAsync(User user, User deletingFriend);
+
+        /// <summary>
+        /// Adds specific new product to the specific user's list of products.
+        /// </summary>
+        /// <param name="user">To this user's list of products the specific product will be added.</param>
+        /// <param name="product">Specific product to add to the user's list of products.</param>
+        /// <returns></returns>
+        Task AddProductAsync(User user, Product product);
+
+        /// <summary>
+        /// Deletes specific product from the specific user's list of products.
+        /// </summary>
+        /// <param name="user">From this user's list of products the specific product will be deleted.</param>
+        /// <param name="product">Specific product to delete from the user's list of products.</param>
+        /// <returns></returns>
+        Task DeleteProductAsync(User user, Product product);
 
         /// <summary>
         /// Get the names of the roles a user is a member of.

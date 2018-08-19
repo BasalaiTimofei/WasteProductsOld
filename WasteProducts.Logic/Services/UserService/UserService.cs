@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNet.Identity;
+using WasteProducts.Logic.Common.Models.Products;
 
 namespace WasteProducts.Logic.Services.UserService
 {
@@ -109,6 +110,36 @@ namespace WasteProducts.Logic.Services.UserService
             await _userRepo.UpdateAsync(MapTo<UserDB>(user));
         }
 
+        public async Task AddFriendAsync(User user, User newFriend)
+        {
+            user.Friends.Add(newFriend);
+            await UpdateAsync(user);
+        }
+
+        public async Task DeleteFriendAsync(User user, User deletingFriend)
+        {
+            if (user.Friends.Contains(deletingFriend))
+            {
+                user.Friends.Remove(deletingFriend);
+                await UpdateAsync(user);
+            }
+        }
+
+        public async Task AddProductAsync(User user, Product product)
+        {
+            user.Products.Add(product);
+            await UpdateAsync(user);
+        }
+
+        public async Task DeleteProductAsync(User user, Product product)
+        {
+            if (user.Products.Contains(product))
+            {
+                user.Products.Remove(product);
+                await UpdateAsync(user);
+            }
+        }
+
         public async Task<IList<string>> GetRolesAsync(User user)
         {
             return await _userRepo.GetRolesAsync(MapTo<UserDB>(user));
@@ -150,21 +181,6 @@ namespace WasteProducts.Logic.Services.UserService
             user.Logins?.Remove(login);
         }
 
-        public void AddFriend(User user, User newFriend)
-        {
-            user.Friends.Add(newFriend);
-            UpdateAsync(user).GetAwaiter().GetResult();
-        }
-
-        public void DeleteFriend(User user, User deletingFriend)
-        {
-            if (user.Friends.Contains(deletingFriend))
-            {
-                user.Friends.Remove(deletingFriend);
-                UpdateAsync(user).GetAwaiter().GetResult();
-            }
-        }
-
         private UserDB MapTo<T>(User user)
             where T : UserDB
             =>
@@ -174,5 +190,7 @@ namespace WasteProducts.Logic.Services.UserService
             where T : User
             =>
             Mapper.Map<User>(user);
+
+        
     }
 }
