@@ -9,16 +9,6 @@ namespace WasteProducts.Logic.Mappings.UserMappings
     {
         public UserClaimProfile()
         {
-            CreateMap<UserClaim, IdentityUserClaim>()
-                .ForMember(m => m.Id, opt => opt.Ignore())
-                .ForMember(m => m.UserId, opt => opt.Ignore());
-
-            CreateMap<IdentityUserClaim, UserClaim>();
-
-            CreateMap<Claim, UserClaim>()
-                .ForMember(m => m.ClaimType, opt => opt.MapFrom(m => m.Type))
-                .ForMember(m => m.ClaimValue, opt => opt.MapFrom(m => m.Value));
-
             CreateMap<Claim, IdentityUserClaim>()
                 .ForMember(m => m.Id, opt => opt.Ignore())
                 .ForMember(m => m.UserId, opt => opt.Ignore())

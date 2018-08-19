@@ -8,6 +8,7 @@ using WasteProducts.Logic.Mappings.UserMappings;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using Microsoft.AspNet.Identity;
 
 namespace WasteProducts.Logic.Services.UserService
 {
@@ -19,25 +20,20 @@ namespace WasteProducts.Logic.Services.UserService
 
         private readonly IUserRepository _userRepo;
 
-        static UserService()
-        {
-            Mapper.Initialize(cfg =>
-            {
-                cfg.AddProfile(new UserProfile());
-                cfg.AddProfile(new UserClaimProfile());
-            });
-        }
-
         public UserService(IMailService mailService, IUserRepository userRepo)
         {
             _mailService = mailService;
             _userRepo = userRepo;
         }
 
+        public UserService()
+        {
+        }
+
         public void AddFriend(User user, User newFriend)
         {
             user.UserFriends.Add(newFriend);
-            UpdateAsync(user);
+            UpdateAsync(user).GetAwaiter().GetResult();
         }
 
         public void DeleteFriend(User user, User deletingFriend)
@@ -45,7 +41,7 @@ namespace WasteProducts.Logic.Services.UserService
             if (user.UserFriends.Contains(deletingFriend))
             {
                 user.UserFriends.Remove(deletingFriend);
-                UpdateAsync(user);
+                UpdateAsync(user).GetAwaiter().GetResult();
             }
         }
 
@@ -101,7 +97,7 @@ namespace WasteProducts.Logic.Services.UserService
             }
             user.Password = newPassword;
 
-            UpdateAsync(user);
+            UpdateAsync(user).GetAwaiter().GetResult();
             return true;
         }
 
@@ -139,11 +135,29 @@ namespace WasteProducts.Logic.Services.UserService
             await _userRepo.AddClaimAsync(MapTo<UserDB>(user), claim);
             user.Claims.Add(claim);
         }
-        
+
+        public async Task AddLoginAsync(User user, UserLogin login)
+        {
+            await _userRepo.AddLoginAsync(MapTo<UserDB>(user), Mapper.Map<UserLoginInfo>(login));
+            user.Logins?.Add(login);
+        }
+
         public async Task RemoveFromRoleAsync(User user, string roleName)
         {
             await _userRepo.RemoveFromRoleAsync(MapTo<UserDB>(user), roleName);
             user.Roles?.Remove(roleName);
+        }
+
+        public async Task RemoveClaimAsync(User user, Claim claim)
+        {
+            await _userRepo.RemoveClaimAsync(MapTo<UserDB>(user), claim);
+            user.Claims?.Remove(claim);
+        }
+
+        public async Task RemoveLoginAsync(User user, UserLogin login)
+        {
+            await _userRepo.RemoveLoginAsync(MapTo<UserDB>(user), Mapper.Map<UserLoginInfo>(login));
+            user.Logins?.Remove(login);
         }
 
         private UserDB MapTo<T>(User user)

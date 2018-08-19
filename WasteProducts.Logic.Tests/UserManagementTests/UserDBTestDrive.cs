@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using NUnit.Framework;
 using System;
@@ -27,6 +28,13 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         {
             // если в прошлый раз дебажил и не почистил таблицу
             TearDown();
+
+            Mapper.Initialize(cfg =>
+            {
+                cfg.AddProfile(new UserProfile());
+                cfg.AddProfile(new UserClaimProfile());
+                cfg.AddProfile(new UserLoginProfile());
+            });
 
             IUserRepository userRepo = new UserRepository();
 
@@ -164,7 +172,54 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public void _06TestOfDeletingClaimFromUser()
         {
+            IUserRepository userRepo = new UserRepository();
+            IUserService userService = new UserService(null, userRepo);
 
+            userService.LogIn("umanetto@mail.ru", "qwerty", out User user);
+            Assert.AreEqual(user.Claims.Count, 1);
+
+            userService.RemoveClaimAsync(user, user.Claims.FirstOrDefault()).GetAwaiter().GetResult();
+            Assert.AreEqual(user.Claims.Count, 0);
+
+            userService.LogIn("umanetto@mail.ru", "qwerty", out user);
+            Assert.AreEqual(user.Claims.Count, 0);
+        }
+
+        // тестируем добавление логина в юзера
+        [Test]
+        public void _07TestOfAddingLoginToUser()
+        {
+            IUserRepository userRepo = new UserRepository();
+            IUserService userService = new UserService(null, userRepo);
+
+            userService.LogIn("umanetto@mail.ru", "qwerty", out User user);
+            var login = new UserLogin { LoginProvider = "SomeLoginProvider", ProviderKey = "SomeProviderKey" };
+
+            userService.AddLoginAsync(user, login).GetAwaiter().GetResult();
+            var userLogin = user.Logins.FirstOrDefault();
+            Assert.AreEqual(login, userLogin);
+
+            userService.LogIn("umanetto@mail.ru", "qwerty", out user);
+            userLogin = user.Logins.FirstOrDefault();
+            Assert.AreEqual(login, userLogin);
+        }
+
+        // тестируем удаление логина из юзера
+        [Test]
+        public void _08TestOfDeletingLoginFromUser()
+        {
+            IUserRepository userRepo = new UserRepository();
+            IUserService userService = new UserService(null, userRepo);
+
+            userService.LogIn("umanetto@mail.ru", "qwerty", out User user);
+            var login = new UserLogin { LoginProvider = "SomeLoginProvider", ProviderKey = "SomeProviderKey" };
+
+            Assert.AreEqual(user.Logins.Count, 1);
+            userService.RemoveLoginAsync(user, login).GetAwaiter().GetResult();
+            Assert.AreEqual(user.Logins.Count, 0);
+
+            userService.LogIn("umanetto@mail.ru", "qwerty", out user);
+            Assert.AreEqual(user.Logins.Count, 0);
         }
     }
 }

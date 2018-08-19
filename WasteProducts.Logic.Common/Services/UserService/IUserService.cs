@@ -91,12 +91,36 @@ namespace WasteProducts.Logic.Common.Services.UserService
         Task AddClaimAsync(User user, Claim claim);
 
         /// <summary>
+        ///  Add a login to the user.
+        /// </summary>
+        /// <param name="user">Specific login will be added to the user.</param>
+        /// <param name="login">Specific login to add to the user.</param>
+        /// <returns></returns>
+        Task AddLoginAsync(User user, UserLogin login);
+
+        /// <summary>
         /// Remove a user from a role.
         /// </summary>
         /// <param name="user">User will be removed from this specific role.</param>
         /// <param name="roleName">Name of the specific role to remove from the user.</param>
         /// <returns></returns>
         Task RemoveFromRoleAsync(User user, string roleName);
+
+        /// <summary>
+        /// Remove a claim from a user.
+        /// </summary>
+        /// <param name="user">Specific claim will be removed from the user.</param>
+        /// <param name="claim">Specific claim to remove from the user.</param>
+        /// <returns></returns>
+        Task RemoveClaimAsync(User user, Claim claim);
+
+        /// <summary>
+        /// Remove a login from a user.
+        /// </summary>
+        /// <param name="user">Specific login will be removed from the user.</param>
+        /// <param name="login">Specific login to remove from the user.</param>
+        /// <returns></returns>
+        Task RemoveLoginAsync(User user, UserLogin login);
 
         // TODO USER MANAGEMENT PENDING FUNCTIONAL TO ADD:
         // sharing my products with my friends after model "Product" is created

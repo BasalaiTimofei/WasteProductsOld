@@ -78,11 +78,19 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         {
             using (var db = new WasteContext())
             {
-                using (var userStore = new UserStore<UserDB>(db))
+                var userInDB = db.Users.Include(u => u.Claims).Where(u => u.Email == user.Email).FirstOrDefault();
+
+                var claimToDelete = userInDB.Claims.Where(c => c.UserId == userInDB.Id &&
+                                                               c.ClaimType == claim.Type &&
+                                                               c.ClaimValue == claim.Value)
+                                                               .FirstOrDefault();
+
+                if (claimToDelete != null)
                 {
-                    await userStore.RemoveClaimAsync(user, claim);
-                    await db.SaveChangesAsync();
+                    db.Entry(claimToDelete).State = EntityState.Deleted;
                 }
+
+                await db.SaveChangesAsync();
             }
         }
 
@@ -102,11 +110,19 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         {
             using (var db = new WasteContext())
             {
-                using (var userStore = new UserStore<UserDB>(db))
+                var userInDB = db.Users.Include(u => u.Logins).Where(u => u.Email == user.Email).FirstOrDefault();
+
+                var loginToDelete = userInDB.Logins.Where(c => c.UserId == userInDB.Id &&
+                                                               c.LoginProvider == login.LoginProvider &&
+                                                               c.ProviderKey == login.ProviderKey)
+                                                               .FirstOrDefault();
+
+                if (loginToDelete != null)
                 {
-                    await userStore.RemoveLoginAsync(user, login);
-                    await db.SaveChangesAsync();
+                    db.Entry(loginToDelete).State = EntityState.Deleted;
                 }
+
+                await db.SaveChangesAsync();
             }
         }
 

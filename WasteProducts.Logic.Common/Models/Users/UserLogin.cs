@@ -5,7 +5,6 @@
     /// </summary>
     public class UserLogin
     {
-        // TODO Delete from code before merge request if wouldn't required
         /// <summary>
         /// The login provider for the login (i.e. facebook, google).
         /// </summary>
@@ -15,5 +14,11 @@
         /// Key representing the login for the provider.
         /// </summary>
         public virtual string ProviderKey { get; set; }
+
+        public override bool Equals(object obj)
+            =>
+            obj is UserLogin other &&
+            this.LoginProvider == other.LoginProvider &&
+            this.ProviderKey == other.ProviderKey;
     }
 }
