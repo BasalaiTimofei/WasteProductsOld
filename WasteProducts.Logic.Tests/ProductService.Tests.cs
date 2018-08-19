@@ -4,6 +4,7 @@ using Moq;
 using NUnit.Framework;
 using NSubstitute;
 using FluentAssertions;
+using NSubstitute.Extensions;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Services;
@@ -34,19 +35,18 @@ namespace WasteProducts.Logic.Tests
         private IProductService _productSrvc;
         private Barcode _barcode;
         private bool _added;
-        private bool _notAdded;
+        private bool _deleted;
 
         [SetUp]
         public void Init()
         {
             _barcode = new Barcode { Code = "125478569", Brand = "Mars", Country = "Russia", Id = "51515" };
             _productSrvc = Substitute.For<IProductService>();
-            _added = true;
-            _notAdded = false;
+            _added = _deleted = true;
         }
 
         [Test]
-        public void AddingProductByBarcore_Added()
+        public void AddingProductByBarcore_SuccessfullyAdded()
         {
             var isSuccess = _productSrvc.AddByBarcode(_barcode);
             
@@ -60,7 +60,7 @@ namespace WasteProducts.Logic.Tests
             var barcode2 = new Barcode();
             
             var isSuccess = _productSrvc.AddByBarcode(barcode1);
-
+                                 
             barcode1.Should().BeSameAs(barcode2);
             isSuccess.Should().BeFalse();
         }
@@ -81,7 +81,9 @@ namespace WasteProducts.Logic.Tests
 
             var result = _productSrvc.AddByName(name);
 
-            name.Should().NotBe(null);
+            name.Should().BeEquivalentTo("CHOCO")
+                .And.NotBeNullOrWhiteSpace()
+                .And.NotBeEmpty();
             result.Should().Be(_added);
         }
 
@@ -100,6 +102,59 @@ namespace WasteProducts.Logic.Tests
             var goal = _productSrvc.AddByName(null);
 
             Assert.IsTrue(goal);
+        }
+        [Test]
+        public void DeletingProductByName_SuccessfullyDeletedProduct()
+        {
+            var prodGummy  = "My favorite gummy";
+
+            var result = _productSrvc.DeleteByName(prodGummy);
+
+            prodGummy.Should().BeEquivalentTo("MY FAVORITE GUMMY")
+                .And.NotBeNullOrWhiteSpace()
+                .And.NotBeEmpty();
+            result.Should().Be(_deleted);
+        }
+
+        [Test]
+        public void DeletingProductByBarcore_BarcodeIsNotNull_AndProductSuccessfullyDeleted()
+        {
+            var result = _productSrvc.DeleteByBarcode(_barcode);
+
+            _barcode.Should().NotBe(null);
+            result.Should().BeTrue();
+        }
+        [Test]
+        public void DeletingProductByName_IfProductsNamesAreSame()
+        {
+            var barc1 = new Barcode
+            {
+                Code = "45376896782",
+                Id = Guid.NewGuid().ToString(),
+                ProductName = "Red Cherry"
+            };
+            var barc2 = new Barcode
+            {
+                Code = "863863896745",
+                Id = Guid.NewGuid().ToString(),
+                ProductName = "Red Cherry"
+            };
+            var prod1 = new Product();
+            var prod2 = new Product();
+
+            barc1.ProductName.Should().BeEquivalentTo(barc2.ProductName);
+            prod1.Name.Should().BeSameAs(barc1.ProductName);
+            prod2.Name.Should().BeSameAs(barc2.ProductName);
+            barc1.Code.Should().NotBeSameAs(barc2.Code);
+            barc1.Id.Should().NotBeSameAs(barc2.Id);
+
+            var result = _productSrvc.DeleteByName(prod1.Name);
+            prod1.Name.Should().BeSameAs(prod2.Name);
+            prod1.Should().NotBe(null);
+            prod2.Should().NotBe(null);
+
+
+            result.Should().BeTrue();
         }
     }
 }
