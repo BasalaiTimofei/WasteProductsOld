@@ -8,9 +8,11 @@ namespace WasteProducts.Web.App_Start
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 
     using Ninject;
+    using Ninject.Activation.Strategies;
     using Ninject.Web.Common;
     using Ninject.Web.Common.WebHost;
     using NLog;
+    using WasteProducts.Web.Utils.Interception;
 
     public static class NinjectWebCommon
     {
@@ -44,6 +46,8 @@ namespace WasteProducts.Web.App_Start
             var kernel = new StandardKernel();
             try
             {
+                kernel.Components.Add<IActivationStrategy, AsyncInterceptionStrategy>();
+
                 kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
                 
@@ -83,6 +87,7 @@ namespace WasteProducts.Web.App_Start
                 var targetName = ctx.Request.Target?.Member.DeclaringType.FullName ?? "GlobalLogger";
                 return LogManager.GetLogger(targetName);
             });
+            kernel.Bind<TraceInterceptor>().ToSelf();
         }
 
         /// <summary>
