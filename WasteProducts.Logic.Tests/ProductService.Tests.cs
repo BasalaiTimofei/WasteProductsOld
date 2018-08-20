@@ -26,7 +26,7 @@ namespace WasteProducts.Logic.Tests
 //assertion framework in the.NET realm, but to also demonstrate high-quality code. We heavily 
 //practice Test Driven Development and one of the promises TDD makes is that unit tests can be
 //treated as your API’s documentation. So although you are free to go through the many examples
-//here, please consider to analyze the many unit tests.
+//here, please consider to analyze the many unit tests. (developer's comment)
     #endregion
 
     [TestFixture]
