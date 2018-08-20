@@ -1,4 +1,5 @@
-﻿using WasteProducts.Logic.Common.Models.Products;
+﻿using WasteProducts.Logic.Common.Models.Barcods;
+using WasteProducts.Logic.Common.Models.Products;
 
 namespace WasteProducts.Logic.Common.Services
 {
