@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace WasteProducts.DataAccess.Common.Models.Products
 {
@@ -23,7 +23,7 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         public string Description { get; set; }
 
         /// <summary>
-        /// List of products that belong to a specific �ategory in database
+        /// List of products that belong to a specific Ñategory in database
         /// </summary>
         public virtual ICollection<ProductDB> Products { get; set; }
     }
