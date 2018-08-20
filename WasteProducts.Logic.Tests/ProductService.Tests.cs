@@ -21,21 +21,21 @@ namespace WasteProducts.Logic.Tests
     #endregion
 
     #region FluentAssertions descreiption
-//https://fluentassertions.com/documentation/
-//As you may have noticed, the purpose of this open-source project is to not only be the best 
-//assertion framework in the.NET realm, but to also demonstrate high-quality code. We heavily 
-//practice Test Driven Development and one of the promises TDD makes is that unit tests can be
-//treated as your API’s documentation. So although you are free to go through the many examples
-//here, please consider to analyze the many unit tests.
+    //https://fluentassertions.com/documentation/
+    //As you may have noticed, the purpose of this open-source project is to not only be the best 
+    //assertion framework in the.NET realm, but to also demonstrate high-quality code. We heavily 
+    //practice Test Driven Development and one of the promises TDD makes is that unit tests can be
+    //treated as your API’s documentation. So although you are free to go through the many examples
+    //here, please consider to analyze the many unit tests.
     #endregion
 
     [TestFixture]
     public class ProductServiceTests
     {
-        private IProductService _productSrvc;
-        private Barcode _barcode;
         private bool _added;
+        private Barcode _barcode;
         private bool _deleted;
+        private IProductService _productSrvc;
 
         [SetUp]
         public void Init()
@@ -46,11 +46,12 @@ namespace WasteProducts.Logic.Tests
         }
 
         [Test]
-        public void AddingProductByBarcore_SuccessfullyAdded()
+        public void AddingProductByBarcore_BarcodeIsNotNull()
         {
+            _barcode.Should().NotBe(null);
             var isSuccess = _productSrvc.AddByBarcode(_barcode);
-            
-            Assert.That(isSuccess);
+
+            isSuccess.Should().BeTrue();
         }
 
         [Test]
@@ -58,20 +59,28 @@ namespace WasteProducts.Logic.Tests
         {
             var barcode1 = new Barcode();
             var barcode2 = new Barcode();
-            
-            var isSuccess = _productSrvc.AddByBarcode(barcode1);
-                                 
-            barcode1.Should().BeSameAs(barcode2);
-            isSuccess.Should().BeFalse();
+
+            barcode1.Should().NotBeSameAs(barcode2);
+
+            var result = _productSrvc.AddByBarcode(barcode1);
+            barcode1.Should().NotBeSameAs(barcode2);
+            result.Should().BeTrue();
         }
 
         [Test]
-        public void AddingProductByBarcore_BarcodeIsNotNull()
+        public void AddingProductByBarcore_SuccessfullyAdded()
         {
-            _barcode.Should().NotBe(null);
             var isSuccess = _productSrvc.AddByBarcode(_barcode);
 
-            isSuccess.Should().BeTrue();
+            Assert.That(isSuccess);
+        }
+
+        [Test]
+        public void AddingProductByName_NameIsNull()
+        {
+            var goal = _productSrvc.AddByName(null);
+
+            goal.Should().BeTrue();
         }
 
         [Test]
@@ -97,23 +106,28 @@ namespace WasteProducts.Logic.Tests
         }
 
         [Test]
-        public void AddingProductByName_NameIsNull()
+        public void AddingProductByName_IfProductsNameMeetSameNameInAnotherBarcode()
         {
-            var goal = _productSrvc.AddByName(null);
+            var barc1 = new Barcode();
+            var barc2 = new Barcode();
 
-            Assert.IsTrue(goal);
-        }
-        [Test]
-        public void DeletingProductByName_SuccessfullyDeletedProduct()
-        {
-            var prodGummy  = "My favorite gummy";
+            var prod1 = new Product
+            {
+                Name = "ice cream"
+            };
+            var prod2 = new Product
+            {
+                Name = "ice cream with vanilla flavour"
+            };
 
-            var result = _productSrvc.DeleteByName(prodGummy);
+            barc1.Code.Should().BeSameAs(barc2.Code);
+            barc1.Id.Should().BeSameAs(barc2.Id);
+            prod2.Name.Should().Contain("ice")
+                .And.NotBeSameAs(prod1.Name);
 
-            prodGummy.Should().BeEquivalentTo("MY FAVORITE GUMMY")
-                .And.NotBeNullOrWhiteSpace()
-                .And.NotBeEmpty();
-            result.Should().Be(_deleted);
+            var result = _productSrvc.AddByName(prod2.Name);
+
+            result.Should().BeTrue();
         }
 
         [Test]
@@ -139,8 +153,8 @@ namespace WasteProducts.Logic.Tests
                 Id = Guid.NewGuid().ToString(),
                 ProductName = "Red Cherry"
             };
-            var prod1 = new Product();
-            var prod2 = new Product();
+            var prod1 = new Product { Name = "Red Cherry", Barcode = barc1 };
+            var prod2 = new Product { Name = "Red Cherry", Barcode = barc2 };
 
             barc1.ProductName.Should().BeEquivalentTo(barc2.ProductName);
             prod1.Name.Should().BeSameAs(barc1.ProductName);
@@ -153,8 +167,19 @@ namespace WasteProducts.Logic.Tests
             prod1.Should().NotBe(null);
             prod2.Should().NotBe(null);
 
-
             result.Should().BeTrue();
+        }
+        [Test]
+        public void DeletingProductByName_SuccessfullyDeletedProduct()
+        {
+            var prodGummy = "My favorite gummy";
+
+            var result = _productSrvc.DeleteByName(prodGummy);
+
+            prodGummy.Should().BeEquivalentTo("MY FAVORITE GUMMY")
+                .And.NotBeNullOrWhiteSpace()
+                .And.NotBeEmpty();
+            result.Should().Be(_deleted);
         }
     }
 }
