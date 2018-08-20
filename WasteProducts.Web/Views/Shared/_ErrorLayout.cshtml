@@ -17,13 +17,14 @@
                 @RenderSection("ActionButtons")
             }
         </div>
-        <div class="btn-group m-3" role="group">
-            @if (!string.IsNullOrWhiteSpace(Model))
-            {
+
+        @if (!string.IsNullOrWhiteSpace(Model))
+        {
+            <div class="btn-group m-3" role="group">
                 <a href="@Url.Action("Detail", "ErrorManagement", new {Area = "Administration", id = Model})" class="btn btn-outline-danger text-center">
                     <span class="far fa-bug" style="color: green" aria-hidden="true"></span> See Error Details
                 </a>
-            }
-        </div>
+            </div>
+        }
     </div>
 </section>
