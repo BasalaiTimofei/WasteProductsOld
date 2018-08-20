@@ -53,6 +53,7 @@ namespace WasteProducts.Logic.Tests
         public void AddingProductByBarcore_BarcodeIsNotNull()
         {
             _barcode.Should().NotBe(null);
+            _repo.Should().Be(_added);
             var isSuccess = _productSrvc.AddByBarcode(_barcode);
 
             isSuccess.Should().BeTrue();
