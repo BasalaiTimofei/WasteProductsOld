@@ -20,6 +20,6 @@ namespace WasteProducts.Logic.Common.Models.Products
         /// <summary>
         /// List of products that belong to a specific Ñategory
         /// </summary>
-        public ICollection<Product> Products { get; set; }
+        public virtual ICollection<Product> Products { get; set; }
     }
 }

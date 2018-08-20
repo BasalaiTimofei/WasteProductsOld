@@ -31,7 +31,7 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         /// <summary>
         /// Specifies the Product category.
         /// </summary>
-        public virtual CategoryDB CategoryDB { get; set; }
+        public virtual CategoryDB Category { get; set; }
 
         /// <summary>
         /// Defines the Product barcode.

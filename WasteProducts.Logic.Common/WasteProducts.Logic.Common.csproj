@@ -58,11 +58,6 @@
     <Compile Include="Services\ITestService.cs" />
     <Compile Include="Services\IUserService.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">
-      <Project>{9acbec5d-caa7-4e29-a19c-a247190f6da8}</Project>
-      <Name>WasteProducts.DataAccess.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
+  
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
