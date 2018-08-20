@@ -1,6 +1,6 @@
-﻿using WasteProducts.DataAccess.Common.Models.Security.Infrastructure;
+﻿using WasteProducts.Logic.Common.Models.Security.Infrastructure;
 
-namespace WasteProducts.DataAccess.Common.Models.Security.Models
+namespace WasteProducts.Logic.Common.Models.Security.Models
 {
    public class AppRole : IAppRole
     {

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Security.Infrastructure;
 
-namespace WasteProducts.DataAccess.Common.Models.Security.Infrastructure
+namespace WasteProducts.Logic.Common.Models.Security.Infrastructure
 {
     /// <summary>
     /// Interface for the IUserLogin.

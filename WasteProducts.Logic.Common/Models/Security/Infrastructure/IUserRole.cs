@@ -1,5 +1,5 @@
 ﻿
-namespace WasteProducts.DataAccess.Common.Models.Security.Infrastructure
+namespace WasteProducts.Logic.Common.Models.Security.Infrastructure
 {
     /// <summary>
     /// Interface for the IUserRole.

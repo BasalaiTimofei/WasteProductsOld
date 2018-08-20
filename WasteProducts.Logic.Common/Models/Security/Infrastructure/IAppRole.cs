@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 
-namespace WasteProducts.DataAccess.Common.Models.Security.Infrastructure
+namespace WasteProducts.Logic.Common.Models.Security.Infrastructure
 {
     /// <summary>
     /// Interface for the Role. Has an inheritance from Microsoft.AspNet.Identity.IRole.

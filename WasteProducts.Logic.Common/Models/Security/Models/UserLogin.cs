@@ -1,6 +1,8 @@
-﻿using WasteProducts.DataAccess.Common.Models.Security.Infrastructure;
+﻿
 
-namespace WasteProducts.DataAccess.Common.Models.Security.Models
+using WasteProducts.Logic.Common.Models.Security.Infrastructure;
+
+namespace WasteProducts.Logic.Common.Models.Security.Models
 {
     public class UserLogin
     {

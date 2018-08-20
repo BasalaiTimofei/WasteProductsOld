@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -48,6 +51,18 @@
     <Compile Include="Models\Products\Category.cs" />
     <Compile Include="Models\Search\SearchQuery.cs" />
     <Compile Include="Models\Search\SearchResult.cs" />
+    <Compile Include="Models\Security\Infrastructure\IAppRole.cs" />
+    <Compile Include="Models\Security\Infrastructure\IAppUser.cs" />
+    <Compile Include="Models\Security\Infrastructure\IUserClaim.cs" />
+    <Compile Include="Models\Security\Infrastructure\IUserLogin.cs" />
+    <Compile Include="Models\Security\Infrastructure\IUserRole.cs" />
+    <Compile Include="Models\Security\Models\AppRole.cs" />
+    <Compile Include="Models\Security\Models\AppUser.cs" />
+    <Compile Include="Models\Security\Models\UserClaim.cs" />
+    <Compile Include="Models\Security\Models\UserLogin.cs" />
+    <Compile Include="Models\Security\Models\UserRole.cs" />
+    <Compile Include="Models\Security\Stores\IAppRoleStore.cs" />
+    <Compile Include="Models\Security\Stores\IAppUserStore.cs" />
     <Compile Include="Models\Users\User.cs" />
     <Compile Include="Models\Products\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -62,6 +77,9 @@
       <Project>{9acbec5d-caa7-4e29-a19c-a247190f6da8}</Project>
       <Name>WasteProducts.DataAccess.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

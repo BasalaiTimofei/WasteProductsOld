@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using System;
 
-namespace WasteProducts.DataAccess.Common.Models.Security.Infrastructure
+namespace WasteProducts.Logic.Common.Models.Security.Infrastructure
 {
     /// <summary>
     /// Interface for the User. Has an inheritance from Microsoft.AspNet.Identity.IUser.
