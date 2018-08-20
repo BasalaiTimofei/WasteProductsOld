@@ -5,9 +5,11 @@ using NUnit.Framework;
 using NSubstitute;
 using FluentAssertions;
 using NSubstitute.Extensions;
+using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Services.ProductService;
 
 namespace WasteProducts.Logic.Tests
 {
@@ -21,21 +23,12 @@ namespace WasteProducts.Logic.Tests
     #endregion
 
     #region FluentAssertions descreiption
-<<<<<<< HEAD
-//https://fluentassertions.com/documentation/
-//As you may have noticed, the purpose of this open-source project is to not only be the best 
-//assertion framework in the.NET realm, but to also demonstrate high-quality code. We heavily 
-//practice Test Driven Development and one of the promises TDD makes is that unit tests can be
-//treated as your API’s documentation. So although you are free to go through the many examples
-//here, please consider to analyze the many unit tests. (developer's comment)
-=======
     //https://fluentassertions.com/documentation/
     //As you may have noticed, the purpose of this open-source project is to not only be the best 
     //assertion framework in the.NET realm, but to also demonstrate high-quality code. We heavily 
     //practice Test Driven Development and one of the promises TDD makes is that unit tests can be
     //treated as your API’s documentation. So although you are free to go through the many examples
-    //here, please consider to analyze the many unit tests.
->>>>>>> 6eba3cfa24e232abc6fec5da4bb051eb213721d3
+    //here, please consider to analyze the many unit tests. (developer's comment)
     #endregion
 
     [TestFixture]
@@ -45,13 +38,15 @@ namespace WasteProducts.Logic.Tests
         private Barcode _barcode;
         private bool _deleted;
         private IProductService _productSrvc;
+        private IProductRepository _repo;
 
         [SetUp]
         public void Init()
         {
             _barcode = new Barcode { Code = "125478569", Brand = "Mars", Country = "Russia", Id = "51515" };
-            _productSrvc = Substitute.For<IProductService>();
+            _repo = Substitute.For<IProductRepository>();
             _added = _deleted = true;
+            _productSrvc = new ProductService(_repo);
         }
 
         [Test]

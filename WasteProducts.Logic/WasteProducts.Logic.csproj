@@ -76,6 +76,7 @@
     <Compile Include="Mappings\CategoryProfile.cs" />
     <Compile Include="Mappings\TestProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ProductService\ProductService.cs" />
     <Compile Include="Services\TestService.cs" />
     <Compile Include="Validators\TestValidator.cs" />
   </ItemGroup>
