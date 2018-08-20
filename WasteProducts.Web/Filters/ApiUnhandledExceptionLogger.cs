@@ -1,7 +1,7 @@
 ﻿using System.Web.Http.ExceptionHandling;
 using Elmah.Contrib.WebApi;
 using NLog;
-using WasteProducts.Web.Utils;
+using WasteProducts.Web.Utils.Logging;
 
 namespace WasteProducts.Web.Filters
 {

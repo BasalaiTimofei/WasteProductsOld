@@ -11,21 +11,21 @@ namespace WasteProducts.Web.Areas.Administration
             #region ErrorControllerRoute
 
             context.MapRoute(
-                name: "Administration.Error",
-                url: "Administration/ErrorManagement/{resource}",
-                defaults: new { controller = "ErrorManagement", action = "Index", resource = UrlParameter.Optional });
+                "Administration.Error",
+                "Administration/ErrorManagement/{resource}",
+                new {controller = "ErrorManagement", action = "Index", resource = UrlParameter.Optional});
 
             context.MapRoute(
-                name: "Administration.Error.Detail",
-                url: "Administration/ErrorManagement/detail/{resource}",
-                defaults: new { controller = "ErrorManagement", action = "Detail", resource = UrlParameter.Optional });
+                "Administration.Error.Detail",
+                "Administration/ErrorManagement/detail/{resource}",
+                new {controller = "ErrorManagement", action = "Detail", resource = UrlParameter.Optional});
 
             #endregion
 
             context.MapRoute(
-                name: "Administration_default",
-                url: "Administration/{controller}/{action}/{id}",
-                defaults: new { action = "Index", id = UrlParameter.Optional }
+                "Administration_default",
+                "Administration/{controller}/{action}/{id}",
+                new {action = "Index", id = UrlParameter.Optional}
             );
         }
     }

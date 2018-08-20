@@ -1,12 +1,8 @@
-﻿using System.Net;
-using System.Web.Mvc;
-using NLog;
-using WasteProducts.Web.Controllers;
+﻿using System.Web.Mvc;
 using WasteProducts.Web.Utils.ActionResults;
 
 namespace WasteProducts.Web.Areas.Administration.Controllers
 {
-
     public class ErrorManagementController : Controller
     {
         public ActionResult Index(string resource)

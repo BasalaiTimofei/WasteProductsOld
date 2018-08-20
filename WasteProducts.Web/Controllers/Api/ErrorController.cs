@@ -11,7 +11,12 @@ namespace WasteProducts.Web.Controllers.Api
         {
         }
 
-        [HttpGet, HttpPost, HttpPut, HttpDelete, HttpHead, HttpOptions]
+        [HttpGet]
+        [HttpPost]
+        [HttpPut]
+        [HttpDelete]
+        [HttpHead]
+        [HttpOptions]
         public IHttpActionResult NotFound(string path)
         {
             var exception = new HttpException(404, "404 Not Found: /" + path);
@@ -25,7 +30,5 @@ namespace WasteProducts.Web.Controllers.Api
             // return 404
             return NotFound();
         }
-
-        
     }
 }

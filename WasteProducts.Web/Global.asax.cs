@@ -23,9 +23,9 @@ namespace WasteProducts.Web
             if (!Context.IsCustomErrorEnabled)
                 return;
 
-            int statusCode = args.Entry.Error.StatusCode;
-            string errorId = args.Entry.Id;
-            string redirectUrl = GetRedirectUrl(statusCode);
+            var statusCode = args.Entry.Error.StatusCode;
+            var errorId = args.Entry.Id;
+            var redirectUrl = GetRedirectUrl(statusCode);
 
             if (string.IsNullOrWhiteSpace(redirectUrl))
                 return;
@@ -55,6 +55,7 @@ namespace WasteProducts.Web
                         redirectUrl = item.Redirect;
                 }
             }
+
             return redirectUrl;
         }
     }

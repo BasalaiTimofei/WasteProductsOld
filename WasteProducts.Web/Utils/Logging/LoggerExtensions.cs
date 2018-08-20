@@ -1,7 +1,7 @@
 ﻿using System;
 using NLog;
 
-namespace WasteProducts.Web.Utils
+namespace WasteProducts.Web.Utils.Logging
 {
     public static class LoggerExtensions
     {

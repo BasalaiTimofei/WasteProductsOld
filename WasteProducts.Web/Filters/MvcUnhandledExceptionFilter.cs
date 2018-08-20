@@ -1,7 +1,7 @@
-﻿using Elmah.Contrib.Mvc;
+﻿using System.Web.Mvc;
+using Elmah.Contrib.Mvc;
 using NLog;
-using WasteProducts.Web.Utils;
-using ExceptionContext = System.Web.Mvc.ExceptionContext;
+using WasteProducts.Web.Utils.Logging;
 
 namespace WasteProducts.Web.Filters
 {

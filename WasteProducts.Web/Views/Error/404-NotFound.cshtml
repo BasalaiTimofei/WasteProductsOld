@@ -1,9 +1,14 @@
 ﻿@{
     Layout = "~/Views/Shared/_ErrorLayout.cshtml";
 }
+
 @section ErrorTitle {
     <span class="far fa-frown-open" style="color: red" aria-hidden="true"></span> Not Found
 }
+
 @section ErrorMessage {
-    We couldn't find what you're looking for on <em><span>@Request.Url.Host</span></em>.
+    We couldn't find what you're looking for on
+    <em>
+        <span>@Request.Url.Host</span>
+    </em>.
 }

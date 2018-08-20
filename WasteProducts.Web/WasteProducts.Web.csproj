@@ -378,6 +378,7 @@
     <Content Include="Views\Error\503-ServiceUnavailable.cshtml" />
     <Content Include="Views\Error\504-GatewayTimeout.cshtml" />
     <Content Include="Views\Shared\_ErrorLayout.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -1,7 +1,13 @@
 ﻿@model dynamic
-
 @{
     ViewBag.Title = "title";
 }
+
+<section class="py-4">
+    <h1 class="display-4 mb-3">Welcome to Waste Products homepage.</h1>
+    <p class="lead">This is some strange service... bla-bla-bla.</p>
+    <hr class="m-3" />
+    <a href="@Url.Action("Index","ErrorManagement", new { Area = "Administration"})" class="btn btn-outline-primary text-center">Error Management page</a>
+</section>
 
 <h2>title</h2>

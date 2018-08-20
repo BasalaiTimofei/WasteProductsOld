@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 using System.Web.Mvc;
 using Elmah;
 
@@ -11,10 +10,7 @@ namespace WasteProducts.Web.Utils.ActionResults
 
         public override void ExecuteResult(ControllerContext context)
         {
-            if (context == null)
-            {
-                return;
-            }
+            if (context == null) return;
 
             // try and get the resource from the {resource} part of the route
             var routeDataValues = context.RequestContext.RouteData.Values;
@@ -25,17 +21,12 @@ namespace WasteProducts.Web.Utils.ActionResults
                 var action = routeDataValues["action"];
                 // but only if it is elmah/Detail/{resource}
                 if (action != null && DetailAction.Equals(action.ToString(), StringComparison.OrdinalIgnoreCase))
-                {
                     resource = action;
-                }
             }
 
             var httpContext = context.HttpContext;
 
-            if (httpContext == null)
-            {
-                return;
-            }
+            if (httpContext == null) return;
 
             var request = httpContext.Request;
             var currentPath = request.Path;
