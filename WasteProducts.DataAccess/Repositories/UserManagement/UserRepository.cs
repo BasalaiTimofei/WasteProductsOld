@@ -14,12 +14,28 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 {
     public class UserRepository : IUserRepository
     {
+        private readonly bool _initiateWithCS;
+
+        public string NameOrConnectionString { get; }
+
+        public UserRepository()
+        {
+            _initiateWithCS = false;
+        }
+
+        public UserRepository(string nameOrConnectionString)
+        {
+            _initiateWithCS = true;
+            NameOrConnectionString = nameOrConnectionString;
+        }
+
         public async Task AddAsync(UserDB user)
         {
-            using (var db = new WasteContext())
+            using (var db = GetWasteContext())
             {
                 using (var userStore = new UserStore<UserDB>(db))
                 {
+                    user.Created = DateTime.UtcNow;
                     await userStore.CreateAsync(user);
                     await db.SaveChangesAsync();
                 }
@@ -28,7 +44,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task AddClaimAsync(UserDB user, Claim claim)
         {
-            using (var db = new WasteContext())
+            using (var db = GetWasteContext())
             {
                 using (var userStore = new UserStore<UserDB>(db))
                 {
@@ -40,7 +56,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task AddLoginAsync(UserDB user, UserLoginInfo login)
         {
-            using (var db = new WasteContext())
+            using (var db = GetWasteContext())
             {
                 using (var userStore = new UserStore<UserDB>(db))
                 {
@@ -52,7 +68,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task AddToRoleAsync(UserDB user, string roleName)
         {
-            using (var db = new WasteContext())
+            using (var db = GetWasteContext())
             {
                 using (var userStore = new UserStore<UserDB>(db))
                 {
@@ -64,7 +80,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task DeleteAsync(UserDB user)
         {
-            using (var db = new WasteContext())
+            using (var db = GetWasteContext())
             {
                 using (var userStore = new UserStore<UserDB>(db))
                 {
@@ -76,19 +92,27 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task RemoveClaimAsync(UserDB user, Claim claim)
         {
-            using (var db = new WasteContext())
+            using (var db = GetWasteContext())
             {
-                using (var userStore = new UserStore<UserDB>(db))
+                var userInDB = db.Users.Include(u => u.Claims).Where(u => u.Email == user.Email).FirstOrDefault();
+
+                var claimToDelete = userInDB.Claims.Where(c => c.UserId == userInDB.Id &&
+                                                               c.ClaimType == claim.Type &&
+                                                               c.ClaimValue == claim.Value)
+                                                               .FirstOrDefault();
+
+                if (claimToDelete != null)
                 {
-                    await userStore.RemoveClaimAsync(user, claim);
-                    await db.SaveChangesAsync();
+                    db.Entry(claimToDelete).State = EntityState.Deleted;
                 }
+
+                await db.SaveChangesAsync();
             }
         }
 
         public async Task RemoveFromRoleAsync(UserDB user, string roleName)
         {
-            using (var db = new WasteContext())
+            using (var db = GetWasteContext())
             {
                 using (var userStore = new UserStore<UserDB>(db))
                 {
@@ -100,13 +124,21 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task RemoveLoginAsync(UserDB user, UserLoginInfo login)
         {
-            using (var db = new WasteContext())
+            using (var db = GetWasteContext())
             {
-                using (var userStore = new UserStore<UserDB>(db))
+                var userInDB = db.Users.Include(u => u.Logins).Where(u => u.Email == user.Email).FirstOrDefault();
+
+                var loginToDelete = userInDB.Logins.Where(c => c.UserId == userInDB.Id &&
+                                                               c.LoginProvider == login.LoginProvider &&
+                                                               c.ProviderKey == login.ProviderKey)
+                                                               .FirstOrDefault();
+
+                if (loginToDelete != null)
                 {
-                    await userStore.RemoveLoginAsync(user, login);
-                    await db.SaveChangesAsync();
+                    db.Entry(loginToDelete).State = EntityState.Deleted;
                 }
+
+                await db.SaveChangesAsync();
             }
         }
 
@@ -132,7 +164,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public List<UserDB> SelectAll()
         {
-            using (var db = new WasteContext())
+            using (var db = GetWasteContext())
             {
                 return db.Users.ToList();
             }
@@ -140,7 +172,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public List<UserDB> SelectRange(Func<UserDB, bool> predicate)
         {
-            using (var db = new WasteContext())
+            using (var db = GetWasteContext())
             {
                 return db.Users.Where(predicate).ToList();
             }
@@ -148,7 +180,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task<IList<string>> GetRolesAsync(UserDB user)
         {
-            using (var db = new WasteContext())
+            using (var db = GetWasteContext())
             {
                 using (var userStore = new UserStore<UserDB>(db))
                 {
@@ -159,21 +191,22 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task UpdateAsync(UserDB user)
         {
-            user.Modified = DateTime.UtcNow;
-
-            using (var db = new WasteContext())
+            using (var db = GetWasteContext())
             {
-                using (var userStore = new UserStore<UserDB>(db))
-                {
-                    await userStore.UpdateAsync(user);
-                    await db.SaveChangesAsync();
-                }
+                db.Users.Attach(user);
+                var entry = db.Entry(user);
+                entry.State = EntityState.Modified;
+                entry.Property(u => u.Created).IsModified = false;
+                entry.Property(u => u.PasswordHash).IsModified = false;
+                user.Modified = DateTime.UtcNow;
+
+                await db.SaveChangesAsync();
             }
         }
 
         private (UserDB user, IList<string> roles) Select(Func<UserDB, bool> predicate, bool lazyInitiation, bool getRoles)
         {
-            using (var db = new WasteContext())
+            using (var db = GetWasteContext())
             {
                 (UserDB user, IList<string> roles) result = (null, null);
                 if (lazyInitiation)
@@ -182,13 +215,14 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 }
                 else
                 {
-                    // TODO expand with groups and products when it available
+                    // TODO expand with groups when it available
                     db.Configuration.LazyLoadingEnabled = lazyInitiation;
 
                     result.user = db.Users.Include(u => u.Roles).
                         Include(u => u.Claims).
                         Include(u => u.Logins).
-                        Include(u => u.UserFriends).
+                        Include(u => u.Friends).
+                        Include(u => u.Products).
                         Where(predicate).FirstOrDefault();
                 }
 
@@ -201,6 +235,18 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 }
 
                 return result;
+            }
+        }
+
+        private WasteContext GetWasteContext()
+        {
+            if (_initiateWithCS)
+            {
+                return new WasteContext(NameOrConnectionString);
+            }
+            else
+            {
+                return new WasteContext();
             }
         }
     }

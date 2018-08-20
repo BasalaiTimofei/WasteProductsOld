@@ -1,12 +1,5 @@
-using System.Linq;
-using System.Web.Http.ExceptionHandling;
-using Ninject.Web.Mvc.FilterBindingSyntax;
-using NLog.Web;
-using WasteProducts.Web.Controllers;
-//using WasteProducts.Web.Utils;
-
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(WasteProducts.Web.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(WasteProducts.Web.App_Start.NinjectWebCommon), "Stop")]
+[assembly: WebActivatorEx.ApplicationShutdownMethod(typeof(WasteProducts.Web.App_Start.NinjectWebCommon), "Stop")]
 
 namespace WasteProducts.Web.App_Start
 {
@@ -15,13 +8,9 @@ namespace WasteProducts.Web.App_Start
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 
     using Ninject;
-    using Ninject.Extensions.Interception.Infrastructure.Language;
     using Ninject.Web.Common;
     using Ninject.Web.Common.WebHost;
-    using Ninject.Web.WebApi.FilterBindingSyntax;
     using NLog;
-    using WasteProducts.Web.Filters;
-    using WasteProducts.Web.Interceptors;
 
     public static class NinjectWebCommon
     {
@@ -67,7 +56,6 @@ namespace WasteProducts.Web.App_Start
             catch (Exception e)
             {
                 kernel.TryGet<ILogger>()?.Fatal(e, "Kernel throw exception during the creation process.");
-
                 LogManager.Flush();
 
                 kernel.Dispose();
@@ -81,8 +69,7 @@ namespace WasteProducts.Web.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterFiltres(IKernel kernel)
         {
-            kernel.BindFilter<MvcExceptionFilterAttribute>(System.Web.Mvc.FilterScope.First, 0);
-            kernel.BindHttpFilter<ApiExceptionFilterAttribute>(System.Web.Http.Filters.FilterScope.Global);
+            
         }
 
 		/// <summary>
@@ -93,8 +80,8 @@ namespace WasteProducts.Web.App_Start
         {
             kernel.Bind<ILogger>().ToMethod(ctx =>
             {
-                var name = ctx.Request.Target?.Member.DeclaringType.Name ?? "GlobalLogger";
-                return LogManager.GetLogger(name);
+                var targetName = ctx.Request.Target?.Member.DeclaringType.FullName ?? "GlobalLogger";
+                return LogManager.GetLogger(targetName);
             });
         }
 
@@ -104,10 +91,7 @@ namespace WasteProducts.Web.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            //test interception
-            //var b = kernel.Bind<ITestObj>().To<TestObj>();
-            //b.Intercept().With<LogInterceptor>(); 
-            //b.Intercept().With<TimerInterceptor>();
+
         }
     }
 }

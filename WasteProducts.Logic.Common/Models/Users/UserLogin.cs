@@ -14,5 +14,11 @@
         /// Key representing the login for the provider.
         /// </summary>
         public virtual string ProviderKey { get; set; }
+
+        public override bool Equals(object obj)
+            =>
+            obj is UserLogin other &&
+            this.LoginProvider == other.LoginProvider &&
+            this.ProviderKey == other.ProviderKey;
     }
 }

@@ -7,9 +7,24 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 {
     public class UserRoleRepository : IUserRoleRepository
     {
+        private readonly bool _initiateWithCS;
+
+        public string NameOrConnectionString { get; }
+
+        public UserRoleRepository()
+        {
+            _initiateWithCS = false;
+        }
+
+        public UserRoleRepository(string nameOrConnectionString)
+        {
+            _initiateWithCS = true;
+            NameOrConnectionString = nameOrConnectionString;
+        }
+
         public async Task AddAsync(IdentityRole role)
         {
-            using (var db = new WasteContext())
+            using (var db = GetWasteContext())
             {
                 using (var roleStore = new RoleStore<IdentityRole>(db))
                 {
@@ -21,7 +36,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task DeleteAsync(IdentityRole role)
         {
-            using (var db = new WasteContext())
+            using (var db = GetWasteContext())
             {
                 using (var roleStore = new RoleStore<IdentityRole>(db))
                 {
@@ -33,7 +48,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task<IdentityRole> FindByIdAsync(string roleId)
         {
-            using (var db = new WasteContext())
+            using (var db = GetWasteContext())
             {
                 using (var roleStore = new RoleStore<IdentityRole>(db))
                 {
@@ -44,7 +59,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task<IdentityRole> FindByNameAsync(string roleName)
         {
-            using (var db = new WasteContext())
+            using (var db = GetWasteContext())
             {
                 using (var roleStore = new RoleStore<IdentityRole>(db))
                 {
@@ -55,13 +70,25 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task UpdateAsync(IdentityRole role)
         {
-            using (var db = new WasteContext())
+            using (var db = GetWasteContext())
             {
                 using (var roleStore = new RoleStore<IdentityRole>(db))
                 {
                     await roleStore.UpdateAsync(role);
                     await db.SaveChangesAsync();
                 }
+            }
+        }
+
+        private WasteContext GetWasteContext()
+        {
+            if (_initiateWithCS)
+            {
+                return new WasteContext(NameOrConnectionString);
+            }
+            else
+            {
+                return new WasteContext();
             }
         }
     }

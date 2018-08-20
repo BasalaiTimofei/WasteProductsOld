@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using WasteProducts.Logic.Common.Enums;
+using WasteProducts.Logic.Common.Models.Products;
 
 namespace WasteProducts.Logic.Common.Models.Users
 {
@@ -68,7 +70,7 @@ namespace WasteProducts.Logic.Common.Models.Users
         /// <summary>
         /// All user claims.
         /// </summary>
-        public virtual ICollection<UserClaim> Claims { get; set; }
+        public virtual ICollection<Claim> Claims { get; set; }
 
         /// <summary>
         /// All user logins.
@@ -88,13 +90,12 @@ namespace WasteProducts.Logic.Common.Models.Users
         /// <summary>
         /// List of Users which belong to group of friends related to current User.
         /// </summary>
-        public List<User> UserFriends { get; set; }
+        public List<User> Friends { get; set; }
 
-        // TODO decomment after the "Product" model is enabled
         /// <summary>
         /// List of Products which User have ever captured.
         /// </summary>
-        //public List<Product> UserProducts { get; set; }
+        public List<Product> Products { get; set; }
 
         // TODO decomment after the "Groups" model is enabled
         /// <summary>
