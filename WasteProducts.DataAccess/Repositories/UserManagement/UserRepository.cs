@@ -94,12 +94,11 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         {
             using (var db = GetWasteContext())
             {
-                var userInDB = db.Users.Include(u => u.Claims).Where(u => u.Email == user.Email).FirstOrDefault();
+                var userInDB = db.Users.Include(u => u.Claims).FirstOrDefault(u => u.Email == user.Email);
 
-                var claimToDelete = userInDB.Claims.Where(c => c.UserId == userInDB.Id &&
-                                                               c.ClaimType == claim.Type &&
-                                                               c.ClaimValue == claim.Value)
-                                                               .FirstOrDefault();
+                var claimToDelete = userInDB.Claims.FirstOrDefault(c => c.UserId == userInDB.Id &&
+                                                                        c.ClaimType == claim.Type &&
+                                                                        c.ClaimValue == claim.Value);
 
                 if (claimToDelete != null)
                 {
@@ -126,12 +125,11 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         {
             using (var db = GetWasteContext())
             {
-                var userInDB = db.Users.Include(u => u.Logins).Where(u => u.Email == user.Email).FirstOrDefault();
+                var userInDB = db.Users.Include(u => u.Logins).FirstOrDefault(u => u.Email == user.Email);
 
-                var loginToDelete = userInDB.Logins.Where(c => c.UserId == userInDB.Id &&
-                                                               c.LoginProvider == login.LoginProvider &&
-                                                               c.ProviderKey == login.ProviderKey)
-                                                               .FirstOrDefault();
+                var loginToDelete = userInDB.Logins.FirstOrDefault(c => c.UserId == userInDB.Id &&
+                                                                        c.LoginProvider == login.LoginProvider &&
+                                                                        c.ProviderKey == login.ProviderKey);
 
                 if (loginToDelete != null)
                 {
@@ -215,7 +213,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 }
                 else
                 {
-                    // TODO expand with groups when it available
+                    // TODO expand with groups when it will be available
                     db.Configuration.LazyLoadingEnabled = lazyInitiation;
 
                     result.user = db.Users.Include(u => u.Roles).

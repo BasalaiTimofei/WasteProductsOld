@@ -90,17 +90,17 @@ namespace WasteProducts.Logic.Common.Models.Users
         /// <summary>
         /// List of Users which belong to group of friends related to current User.
         /// </summary>
-        public List<User> Friends { get; set; }
+        public virtual IList<User> Friends { get; set; }
 
         /// <summary>
         /// List of Products which User have ever captured.
         /// </summary>
-        public List<Product> Products { get; set; }
+        public virtual IList<Product> Products { get; set; }
 
         // TODO decomment after the "Groups" model is enabled
         /// <summary>
         /// List of all Groups to which current User is assigned.
         /// </summary>
-        //public List<Group> GroupMembership { get; set; }
+        //public virtual List<Group> GroupMembership { get; set; }
     }
 }

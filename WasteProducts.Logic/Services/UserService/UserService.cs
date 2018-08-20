@@ -27,7 +27,7 @@ namespace WasteProducts.Logic.Services.UserService
             _userRepo = userRepo;
         }
 
-        public async Task<User> RegisterAsync(string email, string password, string userName, string passwordConfirmation)
+        public async Task<User> RegisterAsync(string email, string userName, string password, string passwordConfirmation)
         {
             return await Task.Run(() =>
             {
@@ -112,8 +112,11 @@ namespace WasteProducts.Logic.Services.UserService
 
         public async Task AddFriendAsync(User user, User newFriend)
         {
-            user.Friends.Add(newFriend);
-            await UpdateAsync(user);
+            if (!user.Friends.Contains(newFriend))
+            {
+                user.Friends.Add(newFriend);
+                await UpdateAsync(user);
+            }
         }
 
         public async Task DeleteFriendAsync(User user, User deletingFriend)
@@ -127,8 +130,11 @@ namespace WasteProducts.Logic.Services.UserService
 
         public async Task AddProductAsync(User user, Product product)
         {
-            user.Products.Add(product);
-            await UpdateAsync(user);
+            if (!user.Products.Contains(product))
+            {
+                user.Products.Add(product);
+                await UpdateAsync(user);
+            }
         }
 
         public async Task DeleteProductAsync(User user, Product product)

@@ -2,8 +2,10 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using NUnit.Framework;
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
+using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Contexts;
@@ -34,11 +36,12 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
     public class UserDBTestDrive
     {
         public const string NAME_OR_CONNECTION_STRING = "name=ConStrByServer";
+
         // Просто загружаем то, что нам надо будет для работы
         [OneTimeSetUp]
         public void Setup()
         {
-            // если в прошлый раз дебажил и не почистил таблицу
+            // если в прошлый раз дебажил и прервал дебаг, не почистив таблицу, вызываем метод-чистильщик "вручную"
             TearDown();
 
             Mapper.Initialize(cfg =>
@@ -48,24 +51,30 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
                 cfg.AddProfile(new UserLoginProfile());
             });
 
+            //Database.Delete("name=ConStrByServer");
+
+            // декомментить, когда надо обновить структуру базы данных
+            using (var db = new WasteContext(NAME_OR_CONNECTION_STRING))
+            {
+                //db.Database.Delete();
+                db.Database.CreateIfNotExists();
+            }
+
             IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
             IMailService mailService = new MailService(null, null, null);
             IUserService userService = new UserService(mailService, userRepo);
 
-            if (userRepo.Select("umanetto@mail.ru") == null)
-            {
-                User user = userService.RegisterAsync("umanetto@mail.ru", "qwerty", "Sergei", "qwerty").GetAwaiter().GetResult();
-                user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
-                user.EmailConfirmed = true;
-                userService.UpdateAsync(user).GetAwaiter().GetResult();
-            }
+            User user = userService.RegisterAsync("umanetto@mail.ru", "Sergei", "qwerty",  "qwerty").GetAwaiter().GetResult();
+            user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
+            user.EmailConfirmed = true;
+            userService.UpdateAsync(user).GetAwaiter().GetResult();
+
+            userService.RegisterAsync("test50someemail@gmail.com", "Anton", "qwerty2", "qwerty2").GetAwaiter().GetResult();
+            userService.RegisterAsync("test51someemail@gmail.com", "Alexander", "qwerty3", "qwerty3").GetAwaiter().GetResult();
 
             IUserRoleRepository roleRepo = new UserRoleRepository(NAME_OR_CONNECTION_STRING);
 
-            if (roleRepo.FindByNameAsync("Simple user").GetAwaiter().GetResult() == null)
-            {
-                roleRepo.AddAsync(new IdentityRole("Simple user")).GetAwaiter().GetResult();
-            }
+            roleRepo.AddAsync(new IdentityRole("Simple user")).GetAwaiter().GetResult();
         }
 
         // чистим таблицу после работы, чтобы таблица была всегда одинаковая
@@ -77,13 +86,19 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
                 foreach (var user in wc.Users)
                 {
                     var entry = wc.Entry(user);
-                    entry.State = System.Data.Entity.EntityState.Deleted;
+                    entry.State = EntityState.Deleted;
                 }
 
                 foreach (var role in wc.Roles)
                 {
                     var entry = wc.Entry(role);
-                    entry.State = System.Data.Entity.EntityState.Deleted;
+                    entry.State = EntityState.Deleted;
+                }
+
+                foreach (var product in wc.Products)
+                {
+                    var entry = wc.Entry(product);
+                    entry.State = EntityState.Deleted;
                 }
 
                 wc.SaveChanges();
@@ -231,7 +246,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         }
 
         // тестируем апдейт юзера
-
         [Test]
         public void _09TestOfUserUpdating()
         {
@@ -248,6 +262,105 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
             user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
             Assert.AreEqual(user.PhoneNumber, "+375172020327");
+        }
+
+        // TODO настроить Fluent API, иначе не реализую многие ко многим связь друзей
+        // тестируем добавление друзей
+        [Test]
+        public void _10TestOfAddingNewFriendsToUser()
+        {
+            //using (var db = new WasteContext(NAME_OR_CONNECTION_STRING))
+            //{
+            //    var sergei = db.Users.FirstOrDefault(u => u.UserName == "Sergei");
+            //    var anton = db.Users.FirstOrDefault(u => u.UserName == "Anton");
+
+            //    db.Friends.Add(new Friend(sergei.Id, anton.Id));
+
+            //    db.SaveChanges();
+            //}
+
+            //using (var db = new WasteContext(NAME_OR_CONNECTION_STRING))
+            //{
+            //    var sergei = db.Users.FirstOrDefault(u => u.UserName == "Sergei");
+            //    var listOfFriendsId = from user in db.Users
+            //                          join friend in db.Friends on user.Id equals friend.UserId
+            //                          select friend.FriendOfUserId;
+
+
+            //}
+
+
+            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
+            IUserService userService = new UserService(null, userRepo);
+
+            User user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
+            Assert.AreEqual(0, user.Friends.Count);
+
+            User user2 = userService.LogInAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
+            User user3 = userService.LogInAsync("test51someemail@gmail.com", "qwerty3").GetAwaiter().GetResult();
+
+            userService.AddFriendAsync(user, user2).GetAwaiter().GetResult();
+            userService.AddFriendAsync(user, user3).GetAwaiter().GetResult();
+            Assert.AreEqual(2, user.Friends.Count);
+
+            UserDB u = Mapper.Map<UserDB>(user);
+
+            user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
+            Assert.AreEqual(2, user.Friends.Count);
+        }
+
+        // тестируем удаление друзей
+        [Test]
+        public void _11TestOfDeletingFriendsFromUser()
+        {
+            IUserRepository userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
+            IUserService userService = new UserService(null, userRepo);
+
+            User user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
+            Assert.AreEqual(2, user.Friends.Count);
+
+            User user2 = userService.LogInAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
+            User user3 = userService.LogInAsync("test51someemail@gmail.com", "qwerty3").GetAwaiter().GetResult();
+
+            userService.DeleteFriendAsync(user, user2).GetAwaiter().GetResult();
+            userService.DeleteFriendAsync(user, user3).GetAwaiter().GetResult();
+            Assert.AreEqual(user.Friends.Count, 0);
+
+            user = userService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
+            Assert.AreEqual(0, user.Friends.Count);
+        }
+
+        // тестируем добавление продуктов
+        [Test]
+        public void _12TestOfAddingNewProductsToUser()
+        {
+            using (var db = new WasteContext(NAME_OR_CONNECTION_STRING))
+            {
+                var user = db.Users.FirstOrDefault();
+
+                var prod = new ProductDB
+                {
+                    Created = DateTime.UtcNow,
+                    Name = "WasteProduct",
+                };
+
+                user.Products.Add(prod);
+                db.SaveChanges();
+                Assert.AreEqual(user.Products.FirstOrDefault().Name, "WasteProduct");
+            }
+
+            using (var db = new WasteContext(NAME_OR_CONNECTION_STRING))
+            {
+                var user = db.Users.FirstOrDefault();
+                Assert.AreEqual(user.Products.FirstOrDefault().Name, "WasteProduct");
+            }
+        }
+
+        // тестируем удаление продуктов
+        [Test]
+        public void _13TestOfDeletingProductsFromUser()
+        {
+
         }
     }
 }
