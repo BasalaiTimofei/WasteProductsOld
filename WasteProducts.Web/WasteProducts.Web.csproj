@@ -343,9 +343,10 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Administration\AdministrationAreaRegistration.cs" />
     <Compile Include="Areas\Administration\Controllers\ErrorManagementController.cs" />
-    <Compile Include="Controllers\Base\BaseApiController.cs" />
-    <Compile Include="Controllers\Base\BaseMvcController.cs" />
-    <Compile Include="Controllers\Base\ErrorController.cs" />
+    <Compile Include="Controllers\Api\BaseApiController.cs" />
+    <Compile Include="Controllers\Api\ErrorController.cs" />
+    <Compile Include="Controllers\Mvc\BaseMvcController.cs" />
+    <Compile Include="Controllers\Mvc\ErrorController.cs" />
     <Compile Include="Controllers\Mvc\HomeController.cs" />
     <Compile Include="Filters\ApiUnhandledExceptionLogger.cs" />
     <Compile Include="Filters\MvcUnhandledExceptionFilter.cs" />
@@ -388,7 +389,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Administration\Models\" />
     <Folder Include="Areas\Administration\Views\Shared\" />
-    <Folder Include="Controllers\Api\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
