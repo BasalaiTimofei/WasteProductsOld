@@ -27,11 +27,11 @@ namespace WasteProducts.DataAccess.Common.Models
         /// <summary>
         /// GroupUserDBs - users which as part of group
         /// </summary>
-        public List<GroupUserDB> GroupUserDBs { get; set; }
+        public IList<GroupUserDB> GroupUserDBs { get; set; }
         /// <summary>
         /// GroupBordDBs - boards with products
         /// </summary>
-        public List<GroupBoardDB> GroupBoardDBs { get; set; }
+        public IList<GroupBoardDB> GroupBoardDBs { get; set; }
         /// <summary>
         /// Create - datatime when group created
         /// </summary>

@@ -31,6 +31,6 @@ namespace WasteProducts.Logic.Common.Models
         /// <summary>
         /// GroupProducts - products which add at board
         /// </summary>
-        public List<GroupProduct> GroupProducts { get; set; }
+        public IList<GroupProduct> GroupProducts { get; set; }
     }
 }

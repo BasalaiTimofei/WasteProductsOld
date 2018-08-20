@@ -24,6 +24,6 @@ namespace WasteProducts.DataAccess.Common.Models
         /// <summary>
         /// UserId - user which entered in group
         /// </summary>
-        public List<GroupUserInviteTimeDB> GroupUserInviteTimeDBs { get; set; }
+        public IList<GroupUserInviteTimeDB> GroupUserInviteTimeDBs { get; set; }
     }
 }

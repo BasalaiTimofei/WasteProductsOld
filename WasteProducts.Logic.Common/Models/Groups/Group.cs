@@ -27,10 +27,10 @@ namespace WasteProducts.Logic.Common.Models
         /// <summary>
         /// GroupUsers - users which as part of group
         /// </summary>
-        public List<GroupUser> GroupUsers { get; set; }
+        public IList<GroupUser> GroupUsers { get; set; }
         /// <summary>
         /// GroupBoards - boards with products
         /// </summary>
-        public List<GroupBoard> GroupBoards { get; set; }
+        public IList<GroupBoard> GroupBoards { get; set; }
     }
 }
