@@ -1,8 +1,7 @@
 ﻿using System.Web.Mvc;
-using Ninject;
 using NLog;
 
-namespace WasteProducts.Web.Controllers.Mvc
+namespace WasteProducts.Web.Controllers
 {
     public abstract class BaseMvcController : Controller
     {

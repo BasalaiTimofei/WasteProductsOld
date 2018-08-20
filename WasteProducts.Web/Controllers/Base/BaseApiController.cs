@@ -1,8 +1,7 @@
 ﻿using System.Web.Http;
-using Ninject;
 using NLog;
 
-namespace WasteProducts.Web.Controllers.Api
+namespace WasteProducts.Web.Controllers
 {
     public abstract class BaseApiController : ApiController
     {

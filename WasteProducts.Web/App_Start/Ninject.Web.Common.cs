@@ -55,7 +55,7 @@ namespace WasteProducts.Web.App_Start
             }
             catch (Exception e)
             {
-                kernel.TryGet<ILogger>()?.Fatal(e, "Kernel throw exception during the creation process.");
+                LogManager.GetCurrentClassLogger().Fatal(e, "Kernel throw exception during the creation process.");
                 LogManager.Flush();
 
                 kernel.Dispose();

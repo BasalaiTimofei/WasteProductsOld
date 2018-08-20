@@ -1,0 +1,14 @@
+﻿@{
+    Layout = "~/Views/Shared/_ErrorLayout.cshtml";
+}
+@section ErrorTitle {
+    <span class="far fa-exclamation-triangle" style="color: orange" aria-hidden="true"></span> Service Unavailable
+}
+@section ErrorMessage {
+    The web server is returning an internal error for <em><span>@Request.Url.Host</span></em>.
+}
+@section ActionButtons {
+    <a href="javascript:document.location.reload(true);" class="btn btn-outline-secondary text-center">
+        <span class="far fa-undo" aria-hidden="true"></span> Try This Page Again
+    </a>
+}

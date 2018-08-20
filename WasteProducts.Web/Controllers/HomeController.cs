@@ -2,9 +2,8 @@
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using NLog;
-using LogLevel = NLog.LogLevel;
 
-namespace WasteProducts.Web.Controllers.Mvc
+namespace WasteProducts.Web.Controllers
 {
     public class HomeController : BaseMvcController
     {
@@ -15,6 +14,12 @@ namespace WasteProducts.Web.Controllers.Mvc
 
         public async Task<ActionResult> Index()
         {
+            Logger.Trace("Trace");
+            Logger.Debug("Debug");
+            Logger.Info("Trace");
+            Logger.Warn("Trace");
+            Logger.Error(new Exception("Exc"), "Error message");
+            Logger.Fatal(new Exception("Fatal"), "Fatal message");
 
             return View();
         }
