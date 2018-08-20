@@ -13,27 +13,27 @@ namespace WasteProducts.DataAccess.Common.Models.Users
         /// <summary>
         /// List of Users which belong to group of friends related to current User.
         /// </summary>
-        public List<UserDB> Friends { get; set; }
+        public virtual IList<UserDB> Friends { get; set; }
 
         /// <summary>
         /// List of Products which User have ever captured.
         /// </summary>
-        public List<ProductDB> Products { get; set; }
+        public virtual IList<ProductDB> Products { get; set; }
 
         // TODO decomment after the "Groups" model is enabled
         /// <summary>
         /// List of all Groups to which current User is assigned.
         /// </summary>
-        //public List<Group> GroupMembership { get; set; }
+        //public virtual List<Group> GroupMembership { get; set; }
 
         /// <summary>
         /// Specifies timestamp of creation of concrete User in Database.
         /// </summary>
-        public DateTime Created { get; set; }
+        public virtual DateTime Created { get; set; }
 
         /// <summary>
         /// Specifies timestamp of modifying of any Property of User in Database.
         /// </summary>
-        public DateTime? Modified { get; set; }
+        public virtual DateTime? Modified { get; set; }
     }
 }
