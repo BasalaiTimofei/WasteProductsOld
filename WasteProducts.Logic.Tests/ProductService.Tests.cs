@@ -5,6 +5,7 @@ using NUnit.Framework;
 using NSubstitute;
 using FluentAssertions;
 using NSubstitute.Extensions;
+using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
@@ -39,6 +40,7 @@ namespace WasteProducts.Logic.Tests
         private bool _deleted;
         private IProductService _productSrvc;
         private IProductRepository _repo;
+        private ProductDB _db;
 
         [SetUp]
         public void Init()
@@ -47,13 +49,14 @@ namespace WasteProducts.Logic.Tests
             _repo = Substitute.For<IProductRepository>();
             _added = _deleted = true;
             _productSrvc = new ProductService(_repo);
+            _db = Substitute.For<ProductDB>();
         }
 
         [Test]
         public void AddingProductByBarcore_BarcodeIsNotNull()
         {
             _barcode.Should().NotBe(null);
-            _repo.Should().Be(_added);
+            _repo.Add(_db);
             var isSuccess = _productSrvc.AddByBarcode(_barcode);
 
             isSuccess.Should().BeTrue();
