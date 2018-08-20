@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Castle.Components.DictionaryAdapter.Xml;
 using Castle.DynamicProxy;
 using Microsoft.CSharp.RuntimeBinder;
 using Ninject;
@@ -66,28 +65,38 @@ namespace WasteProducts.Web.Utils.Interception
             {
                 return;
             }
-
             Type targetType = context.Request.Service;
-
-            var interceptorTypes = targetType
-                .GetCustomAttributes(typeof(AsyncInterceptionAttribute), true)
-                .Cast<AsyncInterceptionAttribute>()
-                .Select(attribute => attribute.Type)
-                .Distinct();
-
-            List<IAsyncInterceptor> interceptors = interceptorTypes
-                .Select(type => (IAsyncInterceptor)context.Kernel.Get(type))
-                .ToList();
-
-            if (targetType.GetCustomAttribute<TraceAttribute>() != null && context.Kernel.CanResolve<TraceInterceptor>())
-                interceptors.Add(context.Kernel.Get<TraceInterceptor>());
-
-            if (!interceptors.Any())
+            if (!targetType.IsInterface)
                 return;
 
-            if (targetType.IsInterface)
-                reference.Instance = _generator.CreateInterfaceProxyWithTargetInterface(targetType, reference.Instance, ProxyOptions, interceptors.ToArray());
+            IAsyncInterceptor[] interceptors = GetInterceptors(targetType, context.Kernel);
+
+            if (interceptors.Any())
+            {
+                reference.Instance = _generator.CreateInterfaceProxyWithTargetInterface(targetType, reference.Instance, ProxyOptions, interceptors);
+            }
         }
+
+        /// <summary>
+        /// Looks for interceptor attributes, and gets interceptors from ninject kernel
+        /// </summary>
+        /// <param name="targetType"></param>
+        /// <param name="kernel"></param>
+        /// <returns></returns>
+        private IAsyncInterceptor[] GetInterceptors(Type targetType, IKernel kernel)
+        {
+            var interceptors = new List<IAsyncInterceptor>();
+
+            if (targetType.GetCustomAttribute<TraceAttribute>(true) != null && kernel.CanResolve<TraceInterceptor>())
+            {
+                interceptors.Add(kernel.Get<TraceInterceptor>());
+            }
+
+            return interceptors.ToArray();
+        }
+
+         
+
 
         /// <summary>
         /// Unwrap object from proxy

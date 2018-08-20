@@ -14,6 +14,7 @@ namespace WasteProducts.Web.App_Start
     using NLog;
     using WasteProducts.Web.Utils.Interception;
 
+
     public static class NinjectWebCommon
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
@@ -96,7 +97,7 @@ namespace WasteProducts.Web.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-
+            
         }
     }
 }

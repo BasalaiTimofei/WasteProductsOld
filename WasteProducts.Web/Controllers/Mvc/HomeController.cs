@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using NLog;
+using WasteProducts.Web.App_Start;
 using LogLevel = NLog.LogLevel;
 
 namespace WasteProducts.Web.Controllers.Mvc
@@ -15,7 +16,6 @@ namespace WasteProducts.Web.Controllers.Mvc
 
         public async Task<ActionResult> Index()
         {
-
             return View();
         }
 
