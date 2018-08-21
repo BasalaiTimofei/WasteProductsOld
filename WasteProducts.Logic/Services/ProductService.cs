@@ -26,12 +26,11 @@ namespace WasteProducts.Logic.Services
         {
             throw new NotImplementedException();
         }
-
-        //походу полезно будет довабить в репозиторий поиск по имени
+        
         public bool AddByName(string name)
         {
-            var product = _productRepository.SelectAll()
-                .First(p => string.Equals(p.Name.ToLower(), name.ToLower(), StringComparison.CurrentCultureIgnoreCase));
+            var product = _productRepository.SelectWhere(p =>
+                string.Equals(p.Name.ToLower(), name.ToLower(), StringComparison.CurrentCultureIgnoreCase));
 
             if (product != null) return false;
 
@@ -41,9 +40,10 @@ namespace WasteProducts.Logic.Services
             return true;
         }
 
+        //поиск по продукту
         public bool AddCategory(Product product, Category category)
         {
-            throw new NotImplementedException();
+            var productInDB = _productRepository.SelectAll();
         }
 
         public bool DeleteByBarcode(Barcode barcode)
