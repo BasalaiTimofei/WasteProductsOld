@@ -63,14 +63,31 @@ namespace WasteProducts.Logic.Services
 
         public bool DeleteByBarcode(Barcode barcode)
         {
-            
+            if (!IsProductsInDB(
+                p => string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
+                out var products)) return false;
+
+            var productFormDB = products.ToList().First();
+            //Не уверен, но походу тут косяк в репозитории
+            _productRepository.Delete(productFormDB);
+
+            return false;
         }
 
         public bool DeleteByName(string name)
         {
-            throw new NotImplementedException();
+            if (!IsProductsInDB(p =>
+                    string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
+                out var products)) return false;
+
+            var productFormDB = products.ToList().First();
+            //Не уверен, но походу тут косяк в репозитории
+            _productRepository.Delete(productFormDB);
+
+            return false;
         }
 
+        //Дальше тоже косяк, не реализовали свойство hidden у Product и ProductDB
         public void Hide(Product product)
         {
             throw new NotImplementedException();
