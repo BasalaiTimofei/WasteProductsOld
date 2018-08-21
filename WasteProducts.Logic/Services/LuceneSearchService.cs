@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.Logic.Common.Models;
 using WasteProducts.Logic.Common.Models.Search;
-using WasteProducts.Logic.Common.Services.Search;
+using WasteProducts.Logic.Common.Services;
 
 namespace WasteProducts.Logic.Services
 {

@@ -80,6 +80,10 @@
     <Compile Include="Validators\TestValidator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">
       <Project>{9acbec5d-caa7-4e29-a19c-a247190f6da8}</Project>
       <Name>WasteProducts.DataAccess.Common</Name>
@@ -88,10 +92,6 @@
       <Project>{643aab59-4858-4e23-9a18-4bbec3ee5f56}</Project>
       <Name>WasteProducts.Logic.Common</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

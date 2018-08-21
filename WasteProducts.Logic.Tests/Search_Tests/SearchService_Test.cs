@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.Logic.Common.Models;
 using WasteProducts.Logic.Common.Models.Users;
-using WasteProducts.Logic.Common.Services.Search;
 using WasteProducts.Logic.Services;
 using System.Linq;
+using WasteProducts.Logic.Common.Services;
 
 namespace WasteProducts.Logic.Tests.Search_Tests
 {
