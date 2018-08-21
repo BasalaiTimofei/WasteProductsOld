@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Security.Infrastructure;
+using WasteProducts.DataAccess.Common.Repositories.Security;
 
 namespace WasteProducts.DataAccess.Repositories.Security
 {
-    public class UserClaimRepository : RepositoryBase<IClaimDb>
+    internal class UserClaimRepository : RepositoryBase<IClaimDb>, IUserClaimRepository
     {
         public UserClaimRepository(DbFactory dbFactory) : base(dbFactory)
         {

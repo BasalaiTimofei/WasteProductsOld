@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using WasteProducts.DataAccess.Common.Models.Security;
 using WasteProducts.DataAccess.Common.Models.Security.Infrastructure;
+using WasteProducts.DataAccess.Common.Repositories.Security;
 
 namespace WasteProducts.DataAccess.Repositories.Security
 {
-    public class UserRepository : RepositoryBase<IUserDb>
+    internal class UserRepository : RepositoryBase<IUserDb>, IUserRepository
     {
         public UserRepository(DbFactory dbFactory) : base(dbFactory)
         {
@@ -25,6 +23,6 @@ namespace WasteProducts.DataAccess.Repositories.Security
             return await dbSet.FirstOrDefaultAsync(u => u.Email.ToUpper() == email.ToUpper());
         }
 
-
+       
     }
 }

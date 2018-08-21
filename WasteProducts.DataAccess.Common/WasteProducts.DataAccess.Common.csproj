@@ -70,13 +70,18 @@
     <Compile Include="Repositories\IProductRepository.cs" />
     <Compile Include="Repositories\IUserRepository.cs" />
     <Compile Include="Repositories\Search\ISearchRepository.cs" />
+    <Compile Include="Repositories\Security\IRepositoryBase.cs" />
+    <Compile Include="Repositories\Security\IRoleRepository.cs" />
+    <Compile Include="Repositories\Security\IUserClaimRepository.cs" />
+    <Compile Include="Repositories\Security\IUserLoginRepository.cs" />
+    <Compile Include="Repositories\Security\IUserRepository.cs" />
+    <Compile Include="Repositories\Security\IUserRoleRepository.cs" />
     <Compile Include="UoW\IUnitOfWork.cs" />
+    <Compile Include="UoW\Security\IUnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Repositories\Security\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

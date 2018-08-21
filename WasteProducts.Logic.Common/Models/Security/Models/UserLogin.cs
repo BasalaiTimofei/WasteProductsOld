@@ -4,7 +4,7 @@ using WasteProducts.Logic.Common.Models.Security.Infrastructure;
 
 namespace WasteProducts.Logic.Common.Models.Security.Models
 {
-    public class UserLogin
+    public class UserLogin : IUserLogin
     {
         /// <summary>
         /// User Id

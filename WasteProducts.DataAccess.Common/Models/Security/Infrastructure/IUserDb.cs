@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 
 namespace WasteProducts.DataAccess.Common.Models.Security.Infrastructure
 {
-    public interface IUserDb
+    public interface IUserDb : IUser<int>
     {
         int AccessFailedCount { get; set; }
         ICollection<IClaimDb> Claims { get; set; }
@@ -19,7 +20,5 @@ namespace WasteProducts.DataAccess.Common.Models.Security.Infrastructure
         ICollection<IRoleDb> Roles { get; set; }
         string SecurityStamp { get; set; }
         bool TwoFactorEnabled { get; set; }
-        int UserId { get; set; }
-        string UserName { get; set; }
     }
 }

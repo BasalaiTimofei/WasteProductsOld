@@ -33,7 +33,7 @@ namespace WasteProducts.Logic.Common.Models.Security.Models
         /// <summary>
         /// DateTime when user was be blocked
         /// </summary>
-        public DateTime? LockoutEnabledUtc { get; set; }
+        public DateTime? LockoutEndDateUtc { get; set; }
 
         /// <summary>
         /// Count of failde access

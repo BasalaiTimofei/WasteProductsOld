@@ -17,8 +17,8 @@ namespace WasteProducts.DataAccess.Contexts.Security.Configurations
         {
             ToTable("Roles");
            
-            HasKey(c => c.RoleId)
-              .Property(c => c.RoleId)
+            HasKey(c => c.Id)
+              .Property(c => c.Id)
               .HasColumnName("RoleId")
               .HasColumnType("int")
               .IsRequired();

@@ -24,7 +24,7 @@ namespace WasteProducts.DataAccess.Common.Models.Security.Models
             set
             {
                 _role = value;
-                RoleId = value.RoleId;
+                RoleId = value.Id;
             }
         }
 
@@ -34,7 +34,7 @@ namespace WasteProducts.DataAccess.Common.Models.Security.Models
             set
             {
                 _user = value;
-                UserId = value.UserId;
+                UserId = value.Id;
             }
         }
         #endregion

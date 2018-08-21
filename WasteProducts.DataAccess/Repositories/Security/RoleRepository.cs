@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using WasteProducts.DataAccess.Common.Models.Security;
 using WasteProducts.DataAccess.Common.Models.Security.Infrastructure;
+using WasteProducts.DataAccess.Common.Repositories.Security;
 
 namespace WasteProducts.DataAccess.Repositories.Security
 {
-    internal class RoleRepository : RepositoryBase<IRoleDb>
+    internal class RoleRepository : RepositoryBase<IRoleDb>, IRoleRepository
     {
         public RoleRepository(DbFactory dbFactory) : base(dbFactory)
         {
@@ -34,7 +32,7 @@ namespace WasteProducts.DataAccess.Repositories.Security
         {
             var userRoles = db.Set<IUserRoleDb>();
             return await  (from role in dbSet
-                           join user in userRoles on role.RoleId equals user.RoleId
+                           join user in userRoles on role.Id equals user.RoleId
                            where user.UserId == userId
                            select role.Name).ToListAsync();
 

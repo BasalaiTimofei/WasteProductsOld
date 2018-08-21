@@ -12,7 +12,7 @@ using WasteProducts.DataAccess.Contexts.Security;
 
 namespace WasteProducts.DataAccess.Repositories.Security
 {
-    public abstract class RepositoryBase<TEntity> : IRepository<TEntity>  where TEntity : class
+    internal abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : class
 
     {
         #region Properties

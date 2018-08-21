@@ -28,7 +28,7 @@ namespace WasteProducts.DataAccess.Common.Models.Security.Models
                 if (value == null)
                     throw new ArgumentNullException("value");
                 _user = value;
-                UserId = value.UserId;
+                UserId = value.Id;
             }
         }
         #endregion

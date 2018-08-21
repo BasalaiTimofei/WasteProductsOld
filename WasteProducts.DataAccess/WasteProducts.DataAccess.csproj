@@ -94,6 +94,7 @@
     <Compile Include="Repositories\Security\UserClaimRepository.cs" />
     <Compile Include="Repositories\Security\UserLoginRepository.cs" />
     <Compile Include="Repositories\Security\UserRepository.cs" />
+    <Compile Include="Repositories\Security\UserRoleRepository.cs" />
     <Compile Include="UoW\Security\UnitOfWork.cs" />
     <Compile Include="UoW\UnitOfWork.cs" />
   </ItemGroup>

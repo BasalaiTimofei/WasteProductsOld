@@ -5,10 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Security.Infrastructure;
+using WasteProducts.DataAccess.Common.Repositories.Security;
 
 namespace WasteProducts.DataAccess.Repositories.Security
 {
-    class UserLoginRepository : RepositoryBase<IUserLoginDb>
+    internal class UserLoginRepository : RepositoryBase<IUserLoginDb>, IUserLoginRepository
     {
         public UserLoginRepository(DbFactory dbFactory) : base(dbFactory)
         {

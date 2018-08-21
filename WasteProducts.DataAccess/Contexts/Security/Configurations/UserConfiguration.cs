@@ -17,8 +17,8 @@ namespace WasteProducts.DataAccess.Contexts.Security.Configurations
         {
             ToTable("Users");
 
-            HasKey(c => c.UserId)
-              .Property(x => x.UserId)
+            HasKey(c => c.Id)
+              .Property(x => x.Id)
               .HasColumnName("UserId")
               .HasColumnType("int")
               .IsRequired();

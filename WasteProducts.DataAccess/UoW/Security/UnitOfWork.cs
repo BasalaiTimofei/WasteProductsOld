@@ -9,7 +9,7 @@ using WasteProducts.DataAccess.Repositories.Security;
 
 namespace WasteProducts.DataAccess.UoW.Security
 {
-    class UnitOfWork : IUnitOfWork
+    internal class UnitOfWork : IUnitOfWork
     {
         private readonly DbFactory _dbFactory;
         private DbContext _dbContext;

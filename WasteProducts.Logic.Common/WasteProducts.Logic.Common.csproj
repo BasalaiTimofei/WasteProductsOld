@@ -61,8 +61,10 @@
     <Compile Include="Models\Security\Models\UserClaim.cs" />
     <Compile Include="Models\Security\Models\UserLogin.cs" />
     <Compile Include="Models\Security\Models\UserRole.cs" />
-    <Compile Include="Models\Security\Stores\IAppRoleStore.cs" />
-    <Compile Include="Models\Security\Stores\IAppUserStore.cs" />
+    <Compile Include="Models\Security\Stores\AppRoleStore.cs" />
+    <Compile Include="Models\Security\Stores\AppUserStore.cs" />
+    <Compile Include="Models\Security\Infrastructure\IAppRoleStore.cs" />
+    <Compile Include="Models\Security\Infrastructure\IAppUserStore.cs" />
     <Compile Include="Models\Users\User.cs" />
     <Compile Include="Models\Products\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

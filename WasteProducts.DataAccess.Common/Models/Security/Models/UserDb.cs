@@ -17,7 +17,7 @@ namespace WasteProducts.DataAccess.Common.Models.Security.Models
         #endregion
 
         #region Scalar Properties
-        public int UserId { get; set; }
+        public int Id { get; set; }
         public string UserName { get; set; }
         public virtual string PasswordHash { get; set; }
         public virtual string SecurityStamp { get; set; }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Security;
+using WasteProducts.DataAccess.Common.Models.Security.Infrastructure;
 
 namespace WasteProducts.DataAccess.Contexts.Security.Configurations
 {

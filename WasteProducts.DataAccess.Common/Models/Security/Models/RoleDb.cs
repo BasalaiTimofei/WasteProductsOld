@@ -14,7 +14,7 @@ namespace WasteProducts.DataAccess.Common.Models.Security.Models
         #endregion
 
         #region Scalar Properties
-        public int RoleId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         #endregion
 

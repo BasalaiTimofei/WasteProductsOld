@@ -1,9 +1,9 @@
-﻿namespace WasteProducts.DataAccess.Common.Models.Security.Infrastructure
+﻿using Microsoft.AspNet.Identity;
+
+namespace WasteProducts.DataAccess.Common.Models.Security.Infrastructure
 {
-    public interface IRoleDb
+    public interface IRoleDb : IRole<int>
     {
-        string Name { get; set; }
-        int RoleId { get; set; }
         System.Collections.Generic.ICollection<IUserDb> Users { get; set; }
     }
 }
