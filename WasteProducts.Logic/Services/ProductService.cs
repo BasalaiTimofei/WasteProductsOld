@@ -26,10 +26,9 @@ namespace WasteProducts.Logic.Services
 
         public bool AddByBarcode(Barcode barcode)
         {
-            var products = _productRepository.SelectWhere(p =>
-                string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase));
-
-            if (!products.Any()) return false;
+            if (IsProductsInDB(
+                p => string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
+                out var products)) return false;
 
             var newProduct = new Product {Barcode = barcode, Name = barcode.ProductName};
             _productRepository.Add(_mapper.Map<ProductDB>(newProduct));
@@ -39,10 +38,9 @@ namespace WasteProducts.Logic.Services
         
         public bool AddByName(string name)
         {
-            var products = _productRepository.SelectWhere(p =>
-                string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase));
-
-            if (!products.Any()) return false;
+            if (IsProductsInDB(p =>
+                string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
+                out var products)) return false;
 
             var newProduct = new Product {Name = name};
             _productRepository.Add(_mapper.Map<ProductDB>(newProduct));
@@ -52,20 +50,20 @@ namespace WasteProducts.Logic.Services
         
         public bool AddCategory(Product product, Category category)
         {
-            var productsInDB = _productRepository.SelectWhere(p =>
-                string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase)).ToList();
-            
-            if (!productsInDB.Any()) return false;
+            if (!IsProductsInDB(p =>
+                string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
+                out var products)) return false;
 
-            var a = productsInDB.First();
-            a.Category = Mapper.Map<CategoryDB>(category);
-            _productRepository.Update(a);
+            var productFormDB = products.ToList().First();
+            productFormDB.Category = Mapper.Map<CategoryDB>(category);
+            _productRepository.Update(productFormDB);
+
             return true;
         }
 
         public bool DeleteByBarcode(Barcode barcode)
         {
-            throw new NotImplementedException();
+            
         }
 
         public bool DeleteByName(string name)
@@ -106,6 +104,12 @@ namespace WasteProducts.Logic.Services
         public void SetPrice(Product product, decimal price)
         {
             throw new NotImplementedException();
+        }
+
+        private bool IsProductsInDB(Predicate<ProductDB> conditionPredicate, out IEnumerable<ProductDB> products)
+        {
+            products = _productRepository.SelectWhere(conditionPredicate);
+            return products.Any();
         }
     }
 }
