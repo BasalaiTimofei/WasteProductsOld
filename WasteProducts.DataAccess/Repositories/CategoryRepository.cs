@@ -85,7 +85,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// <summary>
         /// Updates the specific category
         /// </summary>
-        /// <param name="category">The specific category for updating</param>
+        /// <param name="name">The specific category for updating</param>
         public CategoryDB GetByName(string name) => _context.Categories.Find(name);
 
         /// <summary>

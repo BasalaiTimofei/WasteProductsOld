@@ -6,6 +6,7 @@ using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.DataAccess.Contexts;
 
+
 namespace WasteProducts.DataAccess.Repositories
 {   /// <summary>
     ///This class is a context class. A binder for the 'ProductDB' class with a data access.
@@ -85,7 +86,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// <returns>Returns list of products.</returns>
         public IEnumerable<ProductDB> SelectByCategory(CategoryDB category)
         {
-            return _context.Products.Where(p => p.CategoryDB.Id == category.Id).ToList();
+            return _context.Products.Where(p => p.Category.Id == category.Id).ToList();
         }
 
         /// <summary>
