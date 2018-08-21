@@ -74,6 +74,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
                 cfg.AddProfile(new UserLoginProfile());
             });
 
+
             User user = UserService.RegisterAsync("umanetto@mail.ru", "Sergei", "qwerty", "qwerty").GetAwaiter().GetResult();
             user = UserService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
             user.EmailConfirmed = true;

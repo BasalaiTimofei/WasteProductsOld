@@ -16,7 +16,10 @@ namespace WasteProducts.Logic.Services.MailService
 
         public MailService(SmtpClient smtpClient, string ourEmail, IMailFactory mailFactory)
         {
-            _smtpClientGetter = new SmtpClientGetter(smtpClient);
+            if(smtpClient != null)
+            {
+                _smtpClientGetter = new SmtpClientGetter(smtpClient);
+            }
             OurEmail = ourEmail;
             MailFactory = mailFactory;
         }
