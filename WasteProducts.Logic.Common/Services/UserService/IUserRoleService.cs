@@ -17,7 +17,7 @@
 //    /// Standart BL level interface that exposes basic role management.
 //    /// </summary>
 //    public interface IUserRoleService<TRole, TKey>
-//        where TRole : IdentityRole<TKey>, new()
+//        where TRole : new()
 //    {
 //        /// <summary>
 //        /// Create a new role.
