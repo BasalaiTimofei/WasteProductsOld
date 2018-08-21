@@ -5,6 +5,7 @@ using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.Logic.Common.Services.MailService;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -115,16 +116,7 @@ namespace WasteProducts.Logic.Services.UserService
             if (!user.Friends.Contains(newFriend))
             {
                 user.Friends.Add(newFriend);
-                await UpdateAsync(user);
-            }
-        }
-
-        public async Task DeleteFriendAsync(User user, User deletingFriend)
-        {
-            if (user.Friends.Contains(deletingFriend))
-            {
-                user.Friends.Remove(deletingFriend);
-                await UpdateAsync(user);
+                await _userRepo.AddFriendAsync(user.Id, newFriend.Id);
             }
         }
 
@@ -133,15 +125,6 @@ namespace WasteProducts.Logic.Services.UserService
             if (!user.Products.Contains(product))
             {
                 user.Products.Add(product);
-                await UpdateAsync(user);
-            }
-        }
-
-        public async Task DeleteProductAsync(User user, Product product)
-        {
-            if (user.Products.Contains(product))
-            {
-                user.Products.Remove(product);
                 await UpdateAsync(user);
             }
         }
@@ -169,8 +152,29 @@ namespace WasteProducts.Logic.Services.UserService
             user.Logins?.Add(login);
         }
 
+        public async Task DeleteFriendAsync(User user, User deletingFriend)
+        {
+            User delFriend = user.Friends.FirstOrDefault(u => u.Id == deletingFriend.Id);
+
+            if (delFriend != null)
+            {
+                user.Friends.Remove(delFriend);
+                await _userRepo.DeleteFriendAsync(user.Id, deletingFriend.Id);
+            }
+        }
+
+        public async Task DeleteProductAsync(User user, Product product)
+        {
+            if (user.Products.Contains(product))
+            {
+                user.Products.Remove(product);
+                await UpdateAsync(user);
+            }
+        }
+
         public async Task RemoveFromRoleAsync(User user, string roleName)
         {
+            await _userRepo.RemoveFromRoleAsync(MapTo<UserDB>(user), roleName);
             await _userRepo.RemoveFromRoleAsync(MapTo<UserDB>(user), roleName);
             user.Roles?.Remove(roleName);
         }
@@ -196,7 +200,5 @@ namespace WasteProducts.Logic.Services.UserService
             where T : User
             =>
             Mapper.Map<User>(user);
-
-        
     }
 }

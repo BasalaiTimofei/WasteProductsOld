@@ -56,7 +56,7 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         public virtual int RateCount { get; set; }
 
         /// <summary>
-        /// Users having this product in their lists
+        /// Users having this product in their lists.
         /// </summary>
         public virtual ICollection<UserDB> Users { get; set; }
 

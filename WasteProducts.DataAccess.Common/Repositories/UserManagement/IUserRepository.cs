@@ -43,6 +43,14 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         Task AddToRoleAsync(UserDB user, string roleName);
 
         /// <summary>
+        /// Adds user with id = friendId to the list of friends of user with Id = userId.
+        /// </summary>
+        /// <param name="userId">Id of user which friend list will be expanded.</param>
+        /// <param name="friendId">Id of a new friend of the user with Id = userId</param>
+        /// <returns></returns>
+        Task AddFriendAsync(string userId, string friendId);
+
+        /// <summary>
         /// Deletes the record of the specific user.
         /// </summary>
         /// <param name="user">Specific user to delete.</param>
@@ -71,6 +79,13 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="login">Specific login to remove from the user.</param>
         /// <returns></returns>
         Task RemoveLoginAsync(UserDB user, UserLoginInfo login);
+
+        /// <summary>
+        /// Deletes a specific friend from the specific user's friend list.
+        /// </summary>
+        /// <param name="userId">From the list of friends of UserDB with Id = userID the UserDB with Id = deletingFriendId will be deleted.</param>
+        /// <param name="deletingFriendId">Specific friend's Id to delete from the user's friend list.</param>
+        Task DeleteFriendAsync(string userID, string deletingFriendId);
 
         /// <summary>
         /// Returns first registered user matches the predicate or null if there is no matches.
