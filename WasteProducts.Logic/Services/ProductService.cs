@@ -29,21 +29,28 @@ namespace WasteProducts.Logic.Services
         
         public bool AddByName(string name)
         {
-            var product = _productRepository.SelectWhere(p =>
-                string.Equals(p.Name.ToLower(), name.ToLower(), StringComparison.CurrentCultureIgnoreCase));
+            var products = _productRepository.SelectWhere(p =>
+                string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase));
 
-            if (product != null) return false;
+            if (!products.Any()) return false;
 
             var newProduct = new Product {Name = name};
             _productRepository.Add(Mapper.Map<ProductDB>(newProduct));
 
             return true;
         }
-
-        //поиск по продукту
+        
         public bool AddCategory(Product product, Category category)
         {
-            var productInDB = _productRepository.SelectAll();
+            var productsInDB = _productRepository.SelectWhere(p =>
+                string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase)).ToList();
+            
+            if (!productsInDB.Any()) return false;
+
+            var a = productsInDB.First();
+            a.Category = Mapper.Map<CategoryDB>(category);
+            _productRepository.Update(a);
+            return true;
         }
 
         public bool DeleteByBarcode(Barcode barcode)
