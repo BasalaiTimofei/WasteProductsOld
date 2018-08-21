@@ -6,8 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using WasteProducts.DataAccess.Common.Models.Security;
-using WasteProducts.DataAccess.Common.Models.Security.Infrastructure;
+using WasteProducts.DataAccess.Common.Repositories.Security;
 using WasteProducts.DataAccess.Contexts.Security;
 
 namespace WasteProducts.DataAccess.Repositories.Security
