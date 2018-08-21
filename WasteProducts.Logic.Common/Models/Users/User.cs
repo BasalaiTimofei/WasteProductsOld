@@ -102,5 +102,27 @@ namespace WasteProducts.Logic.Common.Models.Users
         /// List of all Groups to which current User is assigned.
         /// </summary>
         //public virtual List<Group> GroupMembership { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return obj is User other &&
+                this.Id == other.Id &&
+                this.AccessFailedCount == other.AccessFailedCount &&
+                this.Claims == other.Claims &&
+                this.Email == other.Email &&
+                this.EmailConfirmed == other.EmailConfirmed &&
+                this.Friends == other.Friends &&
+                this.LockoutEnabled == other.LockoutEnabled &&
+                this.LockoutEndDateUtc == other.LockoutEndDateUtc &&
+                this.Logins == other.Logins &&
+                this.Password == other.Password &&
+                this.PhoneNumber == other.PhoneNumber &&
+                this.PhoneNumberConfirmed == other.PhoneNumberConfirmed &&
+                this.Products == other.Products &&
+                this.Roles == other.Roles &&
+                this.SecurityStamp == other.SecurityStamp &&
+                this.TwoFactorEnabled == other.TwoFactorEnabled &&
+                this.UserName == other.UserName;
+        }
     }
 }

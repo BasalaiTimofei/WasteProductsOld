@@ -19,6 +19,7 @@ using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.Logic.Services.UserService;
 using System.Net.Mail;
+using WasteProducts.Logic.Mappings.UserMappings;
 
 namespace WasteProducts.Logic.Tests.UserManagementTests
 {
@@ -75,9 +76,10 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             mailServiceMock = new Mock<IMailService>();
             userRepoMock = new Mock<IUserRepository>();
             userService = new UserService(mailServiceMock.Object, userRepoMock.Object);
-            //mapper = new Mapper<UserDB>(User);
-            Mapper.Initialize(cfg => {
-                cfg.CreateMap<UserDB, User>().ReverseMap();
+
+            Mapper.Initialize(cfg => 
+            {
+                cfg.AddProfile(new UserProfile()); ;
             });
         }
 
@@ -151,10 +153,17 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             var password = "password";
             var passwordConfirmationMatch = "password";
             var userNameValid = "validUserName";
-            User expectedUser = new User();
             var expectedEmail = validEmail;
             var expectedPassword = password;
             var expectedUserName = userNameValid;
+
+            User expectedUser = new User()
+            {
+                Email = expectedEmail,
+                Password = expectedPassword,
+                UserName = expectedUserName
+            };
+
             userRepoMock.Setup(a => a.AddAsync(It.IsAny<UserDB>())).Returns((Task)null);
             userRepoMock.Setup(b => b.Select(It.Is<string>(c => c == validEmail),
                 It.IsAny<bool>())).Returns(Mapper.Map<UserDB>(expectedUser));
@@ -165,7 +174,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
                 .GetAwaiter().GetResult();
 
             // assert
-            Assert.AreSame(expectedUser, actualUser);
+            Assert.AreEqual(expectedUser.Id, actualUser.Id);
             Assert.AreEqual(expectedEmail, actualUser.Email);
             Assert.AreEqual(expectedPassword, actualUser.Password);
             Assert.AreEqual(expectedUserName, actualUser.UserName);
