@@ -51,6 +51,9 @@ namespace WasteProducts.Logic.Services.MailService
                     smtpClient = _smtpClientGetter.Get();
                     await smtpClient.SendMailAsync(message);
                 }
+                catch
+                {
+                }
                 finally
                 {
                     message?.Dispose();
