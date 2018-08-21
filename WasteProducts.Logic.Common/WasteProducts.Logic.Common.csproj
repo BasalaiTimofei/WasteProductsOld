@@ -51,7 +51,6 @@
     <Compile Include="Models\Donation\Donation.cs" />
     <Compile Include="Models\Barcods\Barcode.cs" />
     <Compile Include="Models\Barcods\BarcodeInfo.cs" />
-    <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Products\Category.cs" />
     <Compile Include="Models\Search\SearchQuery.cs" />
     <Compile Include="Models\Search\SearchResult.cs" />
@@ -66,7 +65,7 @@
     <Compile Include="Services\IBarcodeService.cs" />
     <Compile Include="Services\MailService\IMailFactory.cs" />
     <Compile Include="Services\MailService\IMailService.cs" />
-    <Compile Include="Services\ITestService.cs" />
+    <Compile Include="Services\Search\ISearchService.cs" />
     <Compile Include="Services\UserService\IUserRoleService.cs" />
     <Compile Include="Services\UserService\IUserService.cs" />
   </ItemGroup>

@@ -80,7 +80,6 @@
     <Compile Include="InjectorModule.cs" />
     <Compile Include="ModelConfigurations\EntityConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\EntityRepository.cs" />
     <Compile Include="Repositories\UserManagement\RoleRepository.cs" />
     <Compile Include="Repositories\UserManagement\UserRepository.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />

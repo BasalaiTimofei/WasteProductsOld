@@ -22,10 +22,10 @@ using WasteProducts.Logic.Services.UserService;
 
 
 
-// FUNCTIONAL TESTS OF UserService AND UserRepository WITH REAL CONNECTION TO DATABASE 
+// INTEGRATIONAL TESTS OF UserService AND UserRepository WITH REAL CONNECTION TO DATABASE 
 // PLEASE DON'T DELETE THIS FILE 
 
-// ФУНКЦИОНАЛЬНЫЕ ТЕСТЫ UserService И UserRepository С РЕАЛЬНЫМ ПОДКЛЮЧЕНИЕМ К БАЗЕ ДАНЫХ
+// иНТЕГРАЦИОННЫЕ ТЕСТЫ UserService И UserRepository С РЕАЛЬНЫМ ПОДКЛЮЧЕНИЕМ К БАЗЕ ДАНЫХ
 // ПОЖАЛУЙСТА, НЕ УДАЛЯЙТЕ ЭТОТ ФАЙЛ
 
 
@@ -88,7 +88,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         // проверяем, правильно ли выполнен Setup + проверяем запрос юзера по емейлу
         // и запрос роли по названию
         [Test]
-        public void _01TestOfQueryingByEmail()
+        public void UserIntegrTest_01QueryingByEmail()
         {
             User user = UserService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
             IdentityRole role = RoleRepo.FindByNameAsync("Simple user").GetAwaiter().GetResult();
@@ -99,7 +99,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестим, правильно ли работает функционал добавления роли и добавления юзера в роль
         [Test]
-        public void _02TestOfAddingToTheUserDBNewRole()
+        public void UserIntegrTest_02AddingToTheUserDBNewRole()
         {
             User user = UserService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
 
@@ -114,7 +114,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем, как работает метот GetRolesAsynс IUserService
         [Test]
-        public void _03TestOfGettingRolesOfTheUser()
+        public void UserIntegrTest_03GettingRolesOfTheUser()
         {
             User user = UserService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
             user.Roles = UserService.GetRolesAsync(user).GetAwaiter().GetResult();
@@ -124,7 +124,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем изъятие из роли
         [Test]
-        public void _04TestOfRemovingUserFromRole()
+        public void UserIntegrTest_04RemovingUserFromRole()
         {
             User user = UserService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
             Assert.AreEqual(user.Roles.FirstOrDefault(), "Simple user");
@@ -138,7 +138,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // Тестируем добавление утверждения (Claim) в юзера
         [Test]
-        public void _05TestOfAddingClaimToUser()
+        public void UserIntegrTest_05AddingClaimToUser()
         {
             User user = UserService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
             var claim = new Claim("SomeType", "SomeValue");
@@ -156,7 +156,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем удаление утверждения из юзера
         [Test]
-        public void _06TestOfDeletingClaimFromUser()
+        public void UserIntegrTest_06DeletingClaimFromUser()
         {
             User user = UserService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
             Assert.AreEqual(user.Claims.Count, 1);
@@ -170,7 +170,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем добавление логина в юзера
         [Test]
-        public void _07TestOfAddingLoginToUser()
+        public void UserIntegrTest_07AddingLoginToUser()
         {
             User user = UserService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
             var login = new UserLogin { LoginProvider = "SomeLoginProvider", ProviderKey = "SomeProviderKey" };
@@ -186,7 +186,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем удаление логина из юзера
         [Test]
-        public void _08TestOfDeletingLoginFromUser()
+        public void UserIntegrTest_08DeletingLoginFromUser()
         {
             User user = UserService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
             var login = new UserLogin { LoginProvider = "SomeLoginProvider", ProviderKey = "SomeProviderKey" };
@@ -201,7 +201,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем апдейт юзера
         [Test]
-        public void _09TestOfUserUpdating()
+        public void UserIntegrTest_09UserUpdating()
         {
             User user = UserService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
 
@@ -215,10 +215,9 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             Assert.AreEqual(user.PhoneNumber, "+375172020327");
         }
 
-        // TODO настроить Fluent API, иначе не реализую многие ко многим связь друзей
         // тестируем добавление друзей
         [Test]
-        public void _10TestOfAddingNewFriendsToUser()
+        public void UserIntegrTest_10AddingNewFriendsToUser()
         {
             User user = UserService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
             Assert.AreEqual(0, user.Friends.Count);
@@ -239,7 +238,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем удаление друзей
         [Test]
-        public void _11TestOfDeletingFriendsFromUser()
+        public void UserIntegrTest_11DeletingFriendsFromUser()
         {
             User user = UserService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
             Assert.AreEqual(2, user.Friends.Count);
@@ -255,44 +254,38 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             Assert.AreEqual(0, user.Friends.Count);
         }
 
-        // тестируем добавление продуктов
-        [Test]
-        public void _12TestOfAddingNewProductsToUser()
+        // TODO доделать этот тест после того, как появится толковая реализация продуктов
+        // тестируем добавление продуктов (плохо сделан тест с использованием WasteContext кстати,
+        // скорее всего сможет добавить продукт только вместе с добавлением его второй раз в БД)
+        //[Test]
+        public void UserIntegrTest_12AddingNewProductsToUser()
         {
-            User user = UserService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
-
-            Product product = new Product
+            using (var db = new WasteContext(NAME_OR_CONNECTION_STRING))
             {
+                var user = db.Users.FirstOrDefault();
 
-            };
+                var prod = new ProductDB
+                {
+                    Created = DateTime.UtcNow,
+                    Name = "WasteProduct",
+                };
 
-            UserService.AddProductAsync(user, product);
+                user.Products.Add(prod);
+                db.SaveChanges();
+                Assert.AreEqual(user.Products.FirstOrDefault().Name, "WasteProduct");
+            }
 
-            //using (var db = new WasteContext(NAME_OR_CONNECTION_STRING))
-            //{
-            //    var user = db.Users.FirstOrDefault();
-
-            //    var prod = new ProductDB
-            //    {
-            //        Created = DateTime.UtcNow,
-            //        Name = "WasteProduct",
-            //    };
-
-            //    user.Products.Add(prod);
-            //    db.SaveChanges();
-            //    Assert.AreEqual(user.Products.FirstOrDefault().Name, "WasteProduct");
-            //}
-
-            //using (var db = new WasteContext(NAME_OR_CONNECTION_STRING))
-            //{
-            //    var user = db.Users.FirstOrDefault();
-            //    Assert.AreEqual(user.Products.FirstOrDefault().Name, "WasteProduct");
-            //}
+            using (var db = new WasteContext(NAME_OR_CONNECTION_STRING))
+            {
+                var user = db.Users.FirstOrDefault();
+                Assert.AreEqual(user.Products.FirstOrDefault().Name, "WasteProduct");
+            }
         }
 
+        // TODO доделать этот тест после того, как появится толковая реализация продуктов
         // тестируем удаление продуктов
-        [Test]
-        public void _13TestOfDeletingProductsFromUser()
+        //[Test]
+        public void UserIntegrTest_13DeletingProductsFromUser()
         {
 
         }
