@@ -78,6 +78,19 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             }
         }
 
+        public async Task AddFriendAsync(string userId, string friendId)
+        {
+            using (var db = GetWasteContext())
+            {
+                UserDB user = db.Users.Include(p => p.Friends).First(u => u.Id == userId);
+                UserDB friend = db.Users.First(u => u.Id == friendId);
+
+                user.Friends.Add(friend);
+
+                await db.SaveChangesAsync();
+            }
+        }
+
         public async Task DeleteAsync(UserDB user)
         {
             using (var db = GetWasteContext())
@@ -135,6 +148,19 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 {
                     db.Entry(loginToDelete).State = EntityState.Deleted;
                 }
+
+                await db.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteFriendAsync(string userId, string deletingFriendId)
+        {
+            using (var db = GetWasteContext())
+            {
+                UserDB user = db.Users.Include(p => p.Friends).First(u => u.Id == userId);
+                UserDB friend = db.Users.First(u => u.Id == deletingFriendId);
+
+                user.Friends.Remove(friend);
 
                 await db.SaveChangesAsync();
             }

@@ -35,12 +35,14 @@ namespace WasteProducts.DataAccess.Contexts
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<UserDB>()
                 .HasMany(u => u.Friends)
                 .WithMany();
-                //.Map(t => t.MapLeftKey("UserId")
-                //           .MapRightKey("FriendId")
-                //           .ToTable("UserFriends"));
+            //.Map(t => t.MapLeftKey("UserId")
+            //           .MapRightKey("FriendId")
+            //           .ToTable("UserFriends"));
 
             modelBuilder.Entity<UserDB>()
                 .HasMany(u => u.Products)
@@ -48,8 +50,6 @@ namespace WasteProducts.DataAccess.Contexts
                 .Map(t => t.MapLeftKey("UserId")
                            .MapRightKey("ProductId")
                            .ToTable("UserProducts"));
-
-            base.OnModelCreating(modelBuilder);
         }
     }
 }

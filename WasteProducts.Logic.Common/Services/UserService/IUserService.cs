@@ -63,7 +63,7 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// Deletes a specific friend from the specific user's friend list.
         /// </summary>
         /// <param name="user">From the list of friends of this user the deletingFriend user will be deleted.</param>
-        /// <param name="deletingFriend">Specific friend to delete from the user' sfriend list.</param>
+        /// <param name="deletingFriend">Specific friend to delete from the user's friend list.</param>
         Task DeleteFriendAsync(User user, User deletingFriend);
 
         /// <summary>
