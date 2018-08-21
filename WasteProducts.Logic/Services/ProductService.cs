@@ -16,15 +16,25 @@ namespace WasteProducts.Logic.Services
     class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
+        private readonly IMapper _mapper;
 
-        public ProductService(IProductRepository productRepository)
+        public ProductService(IProductRepository productRepository, IMapper mapper)
         {
             _productRepository = productRepository;
+            _mapper = mapper;
         }
 
         public bool AddByBarcode(Barcode barcode)
         {
-            throw new NotImplementedException();
+            var products = _productRepository.SelectWhere(p =>
+                string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase));
+
+            if (!products.Any()) return false;
+
+            var newProduct = new Product {Barcode = barcode, Name = barcode.ProductName};
+            _productRepository.Add(_mapper.Map<ProductDB>(newProduct));
+
+            return true;
         }
         
         public bool AddByName(string name)
@@ -35,7 +45,7 @@ namespace WasteProducts.Logic.Services
             if (!products.Any()) return false;
 
             var newProduct = new Product {Name = name};
-            _productRepository.Add(Mapper.Map<ProductDB>(newProduct));
+            _productRepository.Add(_mapper.Map<ProductDB>(newProduct));
 
             return true;
         }
