@@ -57,5 +57,19 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         /// Defines the product description
         /// </summary>
         public string Description { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ProductDB other &&
+                   this.Name == other.Name &&
+                   this.AvgRating == other.AvgRating &&
+                   this.Id == other.Id &&
+                   this.Created == other.Created &&
+                   this.Modified == other.Modified &&
+                   this.Category == other.Category &&
+                   this.Barcode == other.Barcode &&
+                   this.Price == other.Price &&
+                   this.RateCount == other.RateCount;
+        }
     }
 }

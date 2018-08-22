@@ -51,6 +51,15 @@ namespace WasteProducts.Logic.Tests
             _productSrvc = new ProductService(_repo);
             _db = Substitute.For<ProductDB>();
         }
+        //[Test]
+        //public void AddingProductByBarcore_BarcodeIsNotNull()
+        //{
+        //    var _repoMoq = new Mock<IProductRepository>();
+        //    _repoMoq.Setup(s => s.Add(_productDb)).Verifiable();
+        //    var productService = new ProductService(_repoMoq.Object);
+        //    productService.AddByBarcode(_barcode);
+        //    _repoMoq.Verify(s => s.Add(_productDb));
+        //}
 
         [Test]
         public void AddingProductByBarcore_BarcodeIsNotNull()
@@ -98,7 +107,7 @@ namespace WasteProducts.Logic.Tests
 
             var result = _productSrvc.AddByName(name);
 
-            name.Should().BeEquivalentTo("CHOCO")
+            name.Should().BeSameAs("CHOCO")
                 .And.NotBeNullOrWhiteSpace()
                 .And.NotBeEmpty();
             result.Should().Be(_added);
