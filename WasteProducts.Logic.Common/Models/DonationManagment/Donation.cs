@@ -2,7 +2,7 @@
 
 namespace WasteProducts.Logic.Common.Models.DonationManagment
 {
-    class Donation
+    public class Donation
     {
         /// <summary>
         /// Unique identifier for a specific donation.

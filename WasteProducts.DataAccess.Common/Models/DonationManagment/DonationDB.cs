@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WasteProducts.DataAccess.Common.Models.DonationManagment
 {
-    class DonationDB
+    public class DonationDB
     {
         /// <summary>
         /// Unique identifier for a specific donation.
