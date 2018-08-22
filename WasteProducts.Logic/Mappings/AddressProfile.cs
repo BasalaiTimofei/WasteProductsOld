@@ -12,6 +12,7 @@ namespace WasteProducts.Logic.Mappings
             CreateMap<Address, AddressDB>()
                 .ForMember(m => m.CreatedOn, opt => opt.UseValue(DateTime.UtcNow))
                 .ForMember(m => m.Id, opt => opt.Ignore())
+                .ForMember(m => m.Donors, opt => opt.Ignore())
                 .ReverseMap();
         }
     }

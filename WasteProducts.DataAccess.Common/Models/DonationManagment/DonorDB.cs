@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -34,9 +35,20 @@ namespace WasteProducts.DataAccess.Common.Models.DonationManagment
         public string LastName { get; set; }
 
         /// <summary>
+        /// Specifies the foreign key.
+        /// </summary>
+        [ForeignKey("Address")]
+        public Guid AddressId { get; set; }
+
+        /// <summary>
         /// Address of donor.
         /// </summary>
-        public AddressDB Address { get; set; }
+        public virtual AddressDB Address { get; set; }
+
+        /// <summary>
+        /// Specifies all donor donations.
+        /// </summary>
+        public virtual ICollection<DonationDB> Donations { get; set; }
 
         /// <summary>
         /// Specifies the timestamp for creating of a specific donor in the database.

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WasteProducts.DataAccess.Common.Models.DonationManagment
 {
@@ -33,9 +34,15 @@ namespace WasteProducts.DataAccess.Common.Models.DonationManagment
         public decimal Fee { get; set; }
 
         /// <summary>
+        /// Specifies the foreign key.
+        /// </summary>
+        [ForeignKey("Donor")]
+        public string DonorId { get; set; }
+
+        /// <summary>
         /// Specifies the donor.
         /// </summary>
-        public DonorDB Donor { get; set; }
+        public virtual DonorDB Donor { get; set; }
 
         /// <summary>
         /// Specifies the timestamp for creating of a specific donation in the database.

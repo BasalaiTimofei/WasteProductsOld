@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -47,6 +48,11 @@ namespace WasteProducts.DataAccess.Common.Models.DonationManagment
         /// Zip code of donor's address.
         /// </summary>
         public string Zip { get; set; }
+
+        /// <summary>
+        /// Specifies all the donors who live at.
+        /// </summary>
+        public virtual ICollection<DonorDB> Donors { get; set; }
 
         /// <summary>
         /// Specifies the timestamp for creating of a specific address in the database.
