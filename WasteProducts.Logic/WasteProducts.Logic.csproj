@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InjectorModule.cs" />
+    <Compile Include="Mappings\AddressProfile.cs" />
     <Compile Include="Mappings\TestProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Groups\GroupService.cs" />

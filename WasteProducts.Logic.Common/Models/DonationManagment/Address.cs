@@ -1,6 +1,6 @@
 ﻿namespace WasteProducts.Logic.Common.Models.DonationManagment
 {
-    class Address
+    public class Address
     {
         /// <summary>
         /// City of donor's address.
