@@ -45,6 +45,7 @@
     <Compile Include="Models\DonationManagment\Donation.cs" />
     <Compile Include="Models\Barcods\Barcode.cs" />
     <Compile Include="Models\Barcods\BarcodeInfo.cs" />
+    <Compile Include="Models\DonationManagment\Donor.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Products\Category.cs" />
     <Compile Include="Models\Search\SearchQuery.cs" />
