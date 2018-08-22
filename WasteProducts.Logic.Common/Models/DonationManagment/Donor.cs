@@ -28,38 +28,8 @@
         string LastName { get; set; }
 
         /// <summary>
-        /// City of donor's address.
+        /// Address of donor.
         /// </summary>
-        string AddressCity { get; set; }
-
-        /// <summary>
-        /// Country of donor's address.
-        /// </summary>
-        string AddressCountry { get; set; }
-
-        /// <summary>
-        /// State of donor's address.
-        /// </summary>
-        string AddressState { get; set; }
-
-        /// <summary>
-        /// That either a donor address confirmed or not.
-        /// </summary>
-        bool IsAddressConfirmed { get; set; }
-
-        /// <summary>
-        /// Name used with address (included when the donor provides a Gift Address).
-        /// </summary>
-        string AddressName { get; set; }
-
-        /// <summary>
-        /// Donor's street address.
-        /// </summary>
-        string AddressStreet { get; set; }
-
-        /// <summary>
-        /// Donor's street address.
-        /// </summary>
-        string AddressZip { get; set; }
+        Address Address { get; set; }
     }
 }
