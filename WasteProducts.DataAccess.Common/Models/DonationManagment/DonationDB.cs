@@ -9,22 +9,33 @@ namespace WasteProducts.DataAccess.Common.Models.DonationManagment
         /// Unique identifier for a specific donation.
         /// </summary>
         [Key]
-        public int PaymentNo { get; set; }
+        public string TransactionId { get; set; }
 
         /// <summary>
         /// Specifies the date of donation.
         /// </summary>
-        public DateTime PaymentDate { get; set; }
+        public DateTime Date { get; set; }
 
         /// <summary>
-        /// Specifies the amount of donation.
+        /// Specifies the gross of donation.
         /// </summary>
-        public decimal Amount { get; set; }
+        public decimal Gross { get; set; }
 
         /// <summary>
         /// Specifies the currency code.
         /// </summary>
-        public int Currency { get; set; }
+        public string Currency { get; set; }
+
+        /// <summary>
+        /// Transaction fee associated with the donation.
+        /// Gross minus Fee equals the amount deposited into the receiver E-Mail account.
+        /// </summary>
+        public decimal Fee { get; set; }
+
+        /// <summary>
+        /// Specifies the donor.
+        /// </summary>
+        public DonorDB Donor { get; set; }
 
         /// <summary>
         /// Specifies the timestamp for creating of a specific donation in the database.
