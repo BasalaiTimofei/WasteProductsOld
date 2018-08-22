@@ -77,10 +77,10 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             userRepoMock = new Mock<IUserRepository>();
             userService = new UserService(mailServiceMock.Object, userRepoMock.Object);
 
-            Mapper.Initialize(cfg => 
-            {
-                cfg.AddProfile(new UserProfile()); ;
-            });
+            //Mapper.Initialize(cfg => 
+            //{
+            //    cfg.AddProfile(new UserProfile()); ;
+            //});
         }
 
         [Test]
