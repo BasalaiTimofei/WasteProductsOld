@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\DonationManagment\AddressDB.cs" />
     <Compile Include="Models\DonationManagment\DonationDB.cs" />
     <Compile Include="Models\Barcods\BarcodeDB.cs" />
     <Compile Include="Models\Entity.cs" />
