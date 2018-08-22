@@ -42,7 +42,7 @@
   <ItemGroup>
     <Compile Include="Attributes\TraceAttribute.cs" />
     <Compile Include="Enums\UserCategory.cs" />
-    <Compile Include="Models\Donation\Donation.cs" />
+    <Compile Include="Models\DonationManagment\Donation.cs" />
     <Compile Include="Models\Barcods\Barcode.cs" />
     <Compile Include="Models\Barcods\BarcodeInfo.cs" />
     <Compile Include="Models\Model.cs" />
