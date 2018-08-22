@@ -164,7 +164,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
                 UserName = expectedUserName
             };
 
-            userRepoMock.Setup(a => a.AddAsync(It.IsAny<UserDB>())).Returns((Task)null);
+            userRepoMock.Setup(a => a.AddAsync(It.IsAny<UserDB>())).Returns(Task.CompletedTask);
             userRepoMock.Setup(b => b.Select(It.Is<string>(c => c == validEmail),
                 It.IsAny<bool>())).Returns(Mapper.Map<UserDB>(expectedUser));
 
