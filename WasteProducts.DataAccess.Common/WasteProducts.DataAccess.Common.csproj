@@ -45,6 +45,7 @@
     <Compile Include="Models\DonationManagment\AddressDB.cs" />
     <Compile Include="Models\DonationManagment\DonationDB.cs" />
     <Compile Include="Models\Barcods\BarcodeDB.cs" />
+    <Compile Include="Models\DonationManagment\DonorDB.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\Products\CategoryDB.cs" />
     <Compile Include="Models\Products\ProductDB.cs" />
