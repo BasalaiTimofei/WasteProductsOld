@@ -56,6 +56,16 @@
     <Compile Include="Services\IBarcodeService.cs" />
     <Compile Include="Services\ITestService.cs" />
     <Compile Include="Services\IUserService.cs" />
+    <Compile Include="Models\Groups\GroupUserInviteTime.cs" />
+    <Compile Include="Models\Groups\GroupBoard.cs" />
+    <Compile Include="Models\Groups\Group.cs" />
+    <Compile Include="Models\Groups\GroupProduct.cs" />
+    <Compile Include="Models\Groups\GroupUser.cs" />
+    <Compile Include="Services\Groups\IGropDataService.cs" />
+    <Compile Include="Services\Groups\IGropUserManagerService.cs" />
+    <Compile Include="Services\Groups\IGropProductService.cs" />
+    <Compile Include="Services\Groups\IGropBoardService.cs" />
+    <Compile Include="Services\Groups\IGropService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">
