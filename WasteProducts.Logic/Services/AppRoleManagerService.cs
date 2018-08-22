@@ -8,6 +8,10 @@ namespace WasteProducts.Logic.Services
     /// </summary>
     public class AppRoleManagerService : RoleManager<IAppRole,int>
     {
+        /// <summary>
+        /// Initializes a new instance of AppRoleManagerService
+        /// </summary>
+        /// <param name="store">Used to set store into RoleManager</param>
         public AppRoleManagerService(IAppRoleStore store) : base(store)
         {
 

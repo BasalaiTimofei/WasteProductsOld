@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Security.Infrastructure;
 using WasteProducts.DataAccess.Common.Repositories.Security;

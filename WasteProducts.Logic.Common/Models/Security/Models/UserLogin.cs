@@ -17,12 +17,12 @@ namespace WasteProducts.Logic.Common.Models.Security.Models
         public IAppUser User { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the provider 
         /// </summary>
         public string LoginProvider { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the unique identifier for the user identity user provided by the login provider.
         /// </summary>
         public string ProviderKey { get; set; }
     }

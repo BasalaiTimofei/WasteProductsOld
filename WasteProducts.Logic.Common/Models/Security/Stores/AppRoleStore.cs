@@ -82,7 +82,7 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             ThrowIfDisposed();
             if (role == null)
                 throw new ArgumentNullException("role");
-            //to do ? приведение
+            //to do ? приведение      
             (_roleRepository as IRepositoryBase<IAppRole>).Add(role);
             await _uow.SaveChangesAsync();
         }

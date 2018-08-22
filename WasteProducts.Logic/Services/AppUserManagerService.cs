@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
-using System;
 using WasteProducts.Logic.Common.Models.Security.Infrastructure;
-using WasteProducts.Logic.Common.Models.Users;
 
 namespace WasteProducts.Logic.Services
 {
@@ -10,6 +8,10 @@ namespace WasteProducts.Logic.Services
     /// </summary>
     public class AppUserManagerService : UserManager<IAppUser, int>
     {
+        /// <summary>
+        /// Initializes a new instance of AppUserManagerService
+        /// </summary>
+        /// <param name="store">Used to set store into UserManager</param>
         public AppUserManagerService(IAppUserStore store) : base(store)
         {
 
