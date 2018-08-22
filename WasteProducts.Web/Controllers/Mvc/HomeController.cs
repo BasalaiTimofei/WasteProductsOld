@@ -1,8 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web.Mvc;
 using NLog;
-using LogLevel = NLog.LogLevel;
 
 namespace WasteProducts.Web.Controllers.Mvc
 {
@@ -10,16 +8,11 @@ namespace WasteProducts.Web.Controllers.Mvc
     {
         public HomeController(ILogger logger) : base(logger)
         {
-
         }
 
         public async Task<ActionResult> Index()
         {
-
             return View();
         }
-
-
-
     }
 }
