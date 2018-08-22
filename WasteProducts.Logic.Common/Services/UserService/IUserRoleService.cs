@@ -45,7 +45,7 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// </summary>
         /// <param name="role">Updating role.</param>
         /// <returns></returns>
-        Task UpdateRoleNameAsync(UserRole role);
+        Task UpdateRoleNameAsync(UserRole role, string newRoleName);
 
         /// <summary>
         /// Returns all users of this role.

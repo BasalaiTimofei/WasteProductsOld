@@ -82,7 +82,7 @@ namespace WasteProducts.Logic.Services.UserService
 
         public async Task<bool> ResetPasswordAsync(User user, string oldPassword, string newPassword, string newPasswordConfirmation)
         {
-            return await Task.Run(() =>
+            return await Task.Run(async () =>
             {
                 if (newPassword != newPasswordConfirmation || oldPassword != user.Password)
                 {
@@ -90,7 +90,7 @@ namespace WasteProducts.Logic.Services.UserService
                 }
                 user.Password = newPassword;
 
-                UpdateAsync(user).GetAwaiter().GetResult();
+                await _userRepo.ResetPasswordAsync(MapTo<UserDB>(user), newPassword);
                 return true;
             });
         }

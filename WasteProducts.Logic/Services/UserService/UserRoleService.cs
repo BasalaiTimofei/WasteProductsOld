@@ -39,8 +39,9 @@ namespace WasteProducts.Logic.Services.UserService
             return MapTo<UserRole>(roleDB);
         }
 
-        public async Task UpdateRoleNameAsync(UserRole role)
+        public async Task UpdateRoleNameAsync(UserRole role, string newRoleName)
         {
+            role.Name = newRoleName;
             await _roleRepo.UpdateRoleNameAsync(MapTo<UserRoleDB>(role));
         }
 
