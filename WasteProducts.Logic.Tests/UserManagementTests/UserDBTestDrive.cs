@@ -46,7 +46,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         public static IUserService UserService;
 
-        public static IUserRoleService UserRoleService;
+        public static IUserRoleService RoleService;
 
         static UserDBTestDrive()
         {
@@ -54,21 +54,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             RoleRepo = new UserRoleRepository(NAME_OR_CONNECTION_STRING);
             MailService = new MailService(null, null, null);
             UserService = new UserService(MailService, UserRepo);
-            UserRoleService = new UserRoleService(RoleRepo);
-        }
-
-        // Просто загружаем то, что нам надо будет для работы
-        [OneTimeSetUp]
-        public void Setup()
-        {
-            // чистим таблицу перед запуском, чтобы она всегда в тестах была одинаковая
-            // чистим её не после тестов для того, чтобы можно было залезть в неё после
-            // тестов и посмотреть на фактические результаты
-            using (WasteContext wc = new WasteContext(NAME_OR_CONNECTION_STRING))
-            {
-                wc.Database.Delete();
-                wc.Database.CreateIfNotExists();
-            }
+            RoleService = new UserRoleService(RoleRepo);
 
             Mapper.Initialize(cfg =>
             {
@@ -76,27 +62,38 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
                 cfg.AddProfile(new UserClaimProfile());
                 cfg.AddProfile(new UserLoginProfile());
             });
-
-
-            User user = UserService.RegisterAsync("umanetto@mail.ru", "Sergei", "qwerty", "qwerty").GetAwaiter().GetResult();
-            user = UserService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
-            user.EmailConfirmed = true;
-            UserService.UpdateAsync(user).GetAwaiter().GetResult();
-
-            UserService.RegisterAsync("test50someemail@gmail.com", "Anton", "qwerty2", "qwerty2").GetAwaiter().GetResult();
-            UserService.RegisterAsync("test51someemail@gmail.com", "Alexander", "qwerty3", "qwerty3").GetAwaiter().GetResult();
-
-            UserRole role = new UserRole() { Name = "Simple user" };
-            UserRoleService.CreateAsync(role).GetAwaiter().GetResult();
         }
 
-        // проверяем, правильно ли выполнен Setup + проверяем запрос юзера по емейлу
-        // и запрос роли по названию
+        // тестируем регистрирование и логин юзеров и создание ролей, плюс делаем начальное заполнение таблицы
+        [Test]
+        public void UserIntegrTest_00AddingUserAndRole()
+        {
+            // чистим таблицу перед запуском, чтобы она всегда в тестах была одинаковая
+            using (WasteContext wc = new WasteContext(NAME_OR_CONNECTION_STRING))
+            {
+                wc.Database.Delete();
+                wc.Database.CreateIfNotExists();
+            }
+
+            User user1 = UserService.RegisterAsync("umanetto@mail.ru", "Sergei", "qwerty", "qwerty").GetAwaiter().GetResult();
+            User user2 = UserService.RegisterAsync("test50someemail@gmail.com", "Anton", "qwerty2", "qwerty2").GetAwaiter().GetResult();
+            User user3 = UserService.RegisterAsync("test51someemail@gmail.com", "Alexander", "qwerty3", "qwerty3").GetAwaiter().GetResult();
+
+            Assert.AreEqual("umanetto@mail.ru", user1.Email);
+            Assert.AreEqual("Anton", user2.UserName);
+            Assert.AreEqual("qwerty3", user3.Password);
+            Assert.IsNotNull(user1.Id);
+
+            UserRole role = new UserRole() { Name = "Simple user" };
+            RoleService.CreateAsync(role).GetAwaiter().GetResult();
+        }
+
+        // проверяем запрос юзера по емейлу с паролем и роли по названию
         [Test]
         public void UserIntegrTest_01QueryingByEmail()
         {
             User user = UserService.LogInAsync("umanetto@mail.ru", "qwerty").GetAwaiter().GetResult();
-            UserRoleDB role = RoleRepo.FindByNameAsync("Simple user").GetAwaiter().GetResult();
+            UserRole role = RoleService.FindByNameAsync("Simple user").GetAwaiter().GetResult();
 
             Assert.AreEqual(user.Email, "umanetto@mail.ru");
             Assert.AreEqual(role.Name, "Simple user");
@@ -291,6 +288,25 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         // тестируем удаление продуктов
         //[Test]
         public void UserIntegrTest_13DeletingProductsFromUser()
+        {
+
+        }
+
+        // тестируем поиск роли по айди и имени
+        [Test]
+        public void UserIntegrTest_14FindRoleByIdAndName()
+        {
+            UserRole foundByName = RoleService.FindByNameAsync("Simple user").GetAwaiter().GetResult();
+            Assert.AreEqual("Simple user", foundByName.Name);
+
+            UserRole foundById = RoleService.FindByIdAsync(foundByName.Id).GetAwaiter().GetResult();
+            Assert.AreEqual(foundByName.Name, foundById.Name);
+            Assert.AreEqual(foundByName.Id, foundById.Id);
+        }
+
+        // тестируем получение всех пользователей определенной роли
+        [Test]
+        public void UserIntegrTest_15GettingRoleUsers()
         {
 
         }

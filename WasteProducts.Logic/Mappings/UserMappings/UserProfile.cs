@@ -17,7 +17,8 @@ namespace WasteProducts.Logic.Mappings.UserMappings
                 //.ForMember(m => m.PasswordHash, opt => opt.MapFrom(u => u.Password));
 
             CreateMap<UserDB, User>()
-                .ForMember(m => m.Roles, opt => opt.ResolveUsing((u, u2) => new List<string>()));
+                .ForMember(m => m.Roles, opt => opt.ResolveUsing((u, u2) => new List<string>()))
+                .ForMember(m => m.Password, opt => opt.MapFrom(u => u.PasswordHash));
         }
     }
 }
