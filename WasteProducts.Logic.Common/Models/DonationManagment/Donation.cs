@@ -7,21 +7,32 @@ namespace WasteProducts.Logic.Common.Models.DonationManagment
         /// <summary>
         /// Unique identifier for a specific donation.
         /// </summary>
-        public int PaymentNo { get; set; }
+        public string TransactionId { get; set; }
 
         /// <summary>
         /// Specifies the date of donation.
         /// </summary>
-        public DateTime PaymentDate { get; set; }
+        public DateTime Date { get; set; }
 
         /// <summary>
-        /// Specifies the amount of donation.
+        /// Specifies the gross of donation.
         /// </summary>
-        public decimal Amount { get; set; }
+        public decimal Gross { get; set; }
 
         /// <summary>
         /// Specifies the currency code.
         /// </summary>
-        public int Currency { get; set; }
+        public string Currency { get; set; }
+
+        /// <summary>
+        /// Transaction fee associated with the donation.
+        /// Gross minus Fee equals the amount deposited into the receiver E-Mail account.
+        /// </summary>
+        public decimal Fee { get; set; }
+
+        /// <summary>
+        /// Specifies the donor.
+        /// </summary>
+        public Donor Donor { get; set; }
     }
 }
