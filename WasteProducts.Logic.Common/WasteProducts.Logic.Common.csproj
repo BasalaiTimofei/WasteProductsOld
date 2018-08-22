@@ -48,9 +48,9 @@
     <Compile Include="Models\Barcods\BarcodeInfo.cs" />
     <Compile Include="Models\DonationManagment\Donor.cs" />
     <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\Search\BoostedSearchQuery.cs" />
     <Compile Include="Models\Products\Category.cs" />
     <Compile Include="Models\Search\SearchQuery.cs" />
-    <Compile Include="Models\Search\SearchResult.cs" />
     <Compile Include="Models\Users\User.cs" />
     <Compile Include="Models\Products\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -76,6 +76,9 @@
       <Project>{9acbec5d-caa7-4e29-a19c-a247190f6da8}</Project>
       <Name>WasteProducts.DataAccess.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
