@@ -49,7 +49,7 @@ namespace WasteProducts.DataAccess.Common.Models.DonationManagment
         string Zip { get; set; }
 
         /// <summary>
-        /// Specifies the timestamp for creating of a specific donation in the database.
+        /// Specifies the timestamp for creating of a specific address in the database.
         /// </summary>
         public DateTime CreatedOn { get; set; }
     }
