@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\LuceneSearchRepositoryException.cs" />
+    <Compile Include="Exceptions\LuceneSearchServiceException.cs" />
     <Compile Include="Models\Donation\DonationDB.cs" />
     <Compile Include="Models\Barcods\BarcodeDB.cs" />
     <Compile Include="Models\Entity.cs" />
@@ -63,5 +65,6 @@
     <Compile Include="Models\Groups\GroupProductDB.cs" />
     <Compile Include="Repositories\Groups\IGroupRepository.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
