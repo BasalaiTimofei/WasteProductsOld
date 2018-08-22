@@ -58,6 +58,12 @@
     <Compile Include="Repositories\IUserRepository.cs" />
     <Compile Include="Repositories\Search\ISearchRepository.cs" />
     <Compile Include="UoW\IUnitOfWork.cs" />
+    <Compile Include="Models\Groups\GroupBoardDB.cs" />
+    <Compile Include="Models\Groups\GroupDB.cs" />
+    <Compile Include="Models\Groups\GroupUserInviteTimeDB.cs" />
+    <Compile Include="Models\Groups\GroupUserDB.cs" />
+    <Compile Include="Models\Groups\GroupProductDB.cs" />
+    <Compile Include="Repositories\Groups\IGroupRepository.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
