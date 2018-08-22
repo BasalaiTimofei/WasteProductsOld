@@ -1,40 +1,42 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WasteProducts.DataAccess.Common.Models.DonationManagment
 {
-    class DonorDB
+    public class DonorDB
     {
         /// <summary>
         /// Unique donor ID.
         /// </summary>
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Key]
-        string Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Donor's primary email address.
         /// </summary>
-        string Email { get; set; }
+        public string Email { get; set; }
 
         /// <summary>
         /// That either a donor verified or not.
         /// </summary>
-        bool IsVerified { get; set; }
+        public bool IsVerified { get; set; }
 
         /// <summary>
         /// Account holder's first name.
         /// </summary>
-        string FirstName { get; set; }
+        public string FirstName { get; set; }
 
         /// <summary>
         /// Account holder's last name.
         /// </summary>
-        string LastName { get; set; }
+        public string LastName { get; set; }
 
         /// <summary>
         /// Address of donor.
         /// </summary>
-        AddressDB Address { get; set; }
+        public AddressDB Address { get; set; }
 
         /// <summary>
         /// Specifies the timestamp for creating of a specific donor in the database.

@@ -1,35 +1,35 @@
 ﻿namespace WasteProducts.Logic.Common.Models.DonationManagment
 {
-    class Donor
+    public class Donor
     {
         /// <summary>
         /// Unique donor ID.
         /// </summary>
-        string Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Donor's primary email address.
         /// </summary>
-        string Email { get; set; }
+        public string Email { get; set; }
 
         /// <summary>
         /// That either a donor verified or not.
         /// </summary>
-        bool IsVerified { get; set; }
+        public bool IsVerified { get; set; }
 
         /// <summary>
         /// Account holder's first name.
         /// </summary>
-        string FirstName { get; set; }
+        public string FirstName { get; set; }
 
         /// <summary>
         /// Account holder's last name.
         /// </summary>
-        string LastName { get; set; }
+        public string LastName { get; set; }
 
         /// <summary>
         /// Address of donor.
         /// </summary>
-        Address Address { get; set; }
+        public Address Address { get; set; }
     }
 }
