@@ -57,5 +57,10 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         /// Defines the product description
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Defines whether the product is in the "hidden" state
+        /// </summary>
+        public bool IsHidden { get; set; }
     }
 }

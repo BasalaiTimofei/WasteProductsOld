@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories;
@@ -54,9 +51,9 @@ namespace WasteProducts.Logic.Services
                 string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
                 out var products)) return false;
 
-            var productFormDB = products.ToList().First();
-            productFormDB.Category = Mapper.Map<CategoryDB>(category);
-            _productRepository.Update(productFormDB);
+            var productFromDB = products.ToList().First();
+            productFromDB.Category = Mapper.Map<CategoryDB>(category);
+            _productRepository.Update(productFromDB);
 
             return true;
         }
@@ -67,11 +64,11 @@ namespace WasteProducts.Logic.Services
                 p => string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
                 out var products)) return false;
 
-            var productFormDB = products.ToList().First();
+            var productFromDB = products.ToList().First();
             //Не уверен, но походу тут косяк в репозитории
-            _productRepository.Delete(productFormDB);
+            _productRepository.Delete(productFromDB);
 
-            return false;
+            return true;
         }
 
         public bool DeleteByName(string name)
@@ -80,47 +77,94 @@ namespace WasteProducts.Logic.Services
                     string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
                 out var products)) return false;
 
-            var productFormDB = products.ToList().First();
+            var productFromDB = products.ToList().First();
             //Не уверен, но походу тут косяк в репозитории
-            _productRepository.Delete(productFormDB);
+            _productRepository.Delete(productFromDB);
 
-            return false;
+            return true;
         }
 
-        //Дальше тоже косяк, не реализовали свойство hidden у Product и ProductDB
         public void Hide(Product product)
         {
-            throw new NotImplementedException();
+            if (!IsProductsInDB(p =>
+                    string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
+                out var products)) throw new NotImplementedException();
+
+            var productFromDB = products.ToList().First();
+            if (productFromDB.IsHidden) return;
+
+            productFromDB.IsHidden = true;
+            _productRepository.Update(productFromDB);
         }
 
         public bool IsHidden(Product product)
         {
-            throw new NotImplementedException();
+            if (!IsProductsInDB(p =>
+                    string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
+                out var products)) throw new NotImplementedException();
+
+            var productFromDB = products.ToList().First();
+
+            return productFromDB.IsHidden;
         }
 
         public void Rate(Product product, int rating)
         {
-            throw new NotImplementedException();
+            if (!IsProductsInDB(p =>
+                    string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
+                out var products)) throw new NotImplementedException();
+
+            var productFromDB = products.ToList().First();
+                productFromDB.AvgRating = (productFromDB.AvgRating * productFromDB.RateCount) / productFromDB.RateCount++;
+                _productRepository.Update(productFromDB);
         }
 
         public bool RemoveCategory(Product product, Category category)
         {
-            throw new NotImplementedException();
+            if (!IsProductsInDB(p =>
+                string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
+                out var products)) return false;
+
+            var productFromDB = products.ToList().First();
+            productFromDB.Category = null;
+            _productRepository.Update(productFromDB);
+
+            return true;
         }
 
         public void Reveal(Product product)
         {
-            throw new NotImplementedException();
+            if (!IsProductsInDB(p =>
+                    string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
+                out var products)) throw new NotImplementedException();
+
+            var productFromDB = products.ToList().First();
+            if (!productFromDB.IsHidden) return;
+
+            productFromDB.IsHidden = false;
+            _productRepository.Update(productFromDB);
         }
 
         public void SetDescription(Product product, string description)
         {
-            throw new NotImplementedException();
+            if (!IsProductsInDB(p =>
+                    string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
+                out var products)) throw new NotImplementedException();
+
+            var productFromDB = products.ToList().First();
+            productFromDB.Description = description;
+            _productRepository.Update(productFromDB);
         }
 
         public void SetPrice(Product product, decimal price)
         {
-            throw new NotImplementedException();
+            if (!IsProductsInDB(p =>
+                    string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
+                out var products)) throw new NotImplementedException();
+
+            var productFromDB = products.ToList().First();
+            productFromDB.Price = price;
+            _productRepository.Update(productFromDB);
         }
 
         private bool IsProductsInDB(Predicate<ProductDB> conditionPredicate, out IEnumerable<ProductDB> products)
