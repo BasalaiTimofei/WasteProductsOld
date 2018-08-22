@@ -63,10 +63,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\Donation\IDonationRepository.cs" />
     <Compile Include="Repositories\IBarcodeRepository.cs" />
-    <Compile Include="Repositories\UserManagement\IRoleRepository.cs" />
     <Compile Include="Repositories\UserManagement\IUserRepository.cs" />
     <Compile Include="Repositories\IProductRepository.cs" />
     <Compile Include="Repositories\Search\ISearchRepository.cs" />
+    <Compile Include="Repositories\UserManagement\IUserRoleRepository.cs" />
     <Compile Include="UoW\IUnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>

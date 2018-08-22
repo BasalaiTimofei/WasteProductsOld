@@ -1,18 +1,18 @@
 ﻿namespace WasteProducts.Logic.Common.Models.Users
 {
     /// <summary>
-    /// BLL level model that represents a user belonging to a role.
+    /// Represents a role of users.
     /// </summary>
     public class UserRole
     {
         /// <summary>
-        /// UserId for the user that is in the role.
+        /// Id of the role.
         /// </summary>
-        public string UserId { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
-        /// RoleId for the role.
+        /// Name of the role.
         /// </summary>
-        public string RoleId { get; set; }
+        public string Name { get; set; }
     }
 }
