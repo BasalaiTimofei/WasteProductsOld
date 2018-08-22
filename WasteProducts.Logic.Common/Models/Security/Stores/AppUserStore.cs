@@ -12,17 +12,52 @@ using WasteProducts.Logic.Common.Models.Security.Models;
 
 namespace WasteProducts.Logic.Common.Repositories.Security.Strores
 {
-   
+
     //to do нужно отнаследоваться и переопределить метод на свой тип
+    /// <summary>
+    /// AppUserStore class has inheritance from IAppUserStore interface
+    /// </summary>
     internal class AppUserStore : IAppUserStore
     {
+        /// <summary>
+        /// _uow field will be contains UnitOfWork object
+        /// </summary>
         private IUnitOfWork _uow;
+
+        /// <summary>
+        /// _userRepository field will be contains User Repository object
+        /// </summary>
         private IUserRepository _userRepository;
+
+        /// <summary>
+        /// _userLoginRepository field will be contains User Login Repository object
+        /// </summary>
         private IUserLoginRepository _userLoginRepository;
+
+        /// <summary>
+        /// _userClaimRepository field will be contains User Claim Repository object
+        /// </summary>
         private IUserClaimRepository _userClaimRepository;
+
+        /// <summary>
+        /// _userRoleRepository field will be contains User Role Repository object
+        /// </summary>
         private IUserRoleRepository _userRoleRepository;
+
+        /// <summary>
+        /// _userRoleRepository field will be contains User Role Repository object
+        /// </summary>
         private IRoleRepository _roleRepository;
 
+        /// <summary>
+        /// Initializes a new instance of AppUserStore
+        /// </summary>
+        /// <param name="uow">Used to set _uow field</param>
+        /// <param name="userRepository">Used to set _userRepository field</param>
+        /// <param name="userLoginRepository">Used to set _userLoginRepository field</param>
+        /// <param name="userClaimRepository">Used to set _userClaimRepository field</param>
+        /// <param name="userRoleRepository">Used to set _userRoleRepository field</param>
+        /// <param name="roleRepository">Used to set _roleRepository field</param>
         public AppUserStore(IUnitOfWork uow,
             IUserRepository userRepository,
             IUserLoginRepository userLoginRepository,
@@ -38,19 +73,33 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             _roleRepository = roleRepository;
         }
 
+        /// <summary>
+        /// Method for Throwing ObjectDisposedException
+        /// </summary>
         private void ThrowIfDisposed()
         {
             if (_disposed)
                 throw new ObjectDisposedException(GetType().Name);
         }
 
+        /// <summary>
+        /// Method for Execute Dispose() and do not call finializer after Dispose
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        /// <summary>
+        /// bool dispose variable
+        /// </summary>
         private bool _disposed;
 
+        /// <summary>
+        /// Dispose method
+        /// </summary>
+        /// <param name="disposing">bool variable for dispose</param>
         public virtual void Dispose(bool disposing)
         {
             if (!_disposed && _uow != null)
@@ -70,6 +119,10 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
 
         #region user
 
+        /// <summary>
+        /// Asynchronously inserts an AppUser.
+        /// </summary>
+        /// <param name="user">New user</param>
         public async Task CreateAsync(IAppUser user)
         {
             ThrowIfDisposed();
@@ -81,6 +134,10 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             await _uow.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Asynchronously update current AppUser
+        /// </summary>
+        /// <param name="user">Update user</param>
         public async Task UpdateAsync(IAppUser user)
         {
             ThrowIfDisposed();
@@ -92,6 +149,10 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             await _uow.SaveChangesAsync();
         }
 
+        /// <summary>
+        ///  Delete an AppUser async.
+        /// </summary>
+        /// <param name="user">Delete user</param>
         public async Task DeleteAsync(IAppUser user)
         {
             ThrowIfDisposed();
@@ -102,6 +163,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             await _uow.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Asynchronously finds a user by ID.
+        /// </summary>
+        /// <param name="userId">user id number</param>
+        /// <returns>returns IAppUser</returns>
         public async Task<IAppUser> FindByIdAsync(int userId)
         {
             ThrowIfDisposed();
@@ -109,6 +175,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             return await (_userRepository as IRepositoryBase<IAppUser>).GetByIdAsync(userId);
         }
 
+        /// <summary>
+        /// Asynchronously finds a user by name.
+        /// </summary>
+        /// <param name="userName">user name string</param>
+        /// <returns>returns Task AppUser</returns>
         public async Task<IAppUser> FindByNameAsync(string userName)
         {
             ThrowIfDisposed();
@@ -121,7 +192,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
         #endregion
 
         #region userlogin
-
+        /// <summary>
+        /// Asynchronously adds a login to the user.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <param name="login">login as UserLoginInfo</param>
         public async Task AddLoginAsync(IAppUser user, UserLoginInfo login)
         {
             ThrowIfDisposed();
@@ -136,6 +211,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             await _uow.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Asynchronously removes a login from a user.
+        /// </summary>
+        /// <param name="user">user as IUser</param>
+        /// <param name="login">login as UserLoginInfo</param>
         public async Task RemoveLoginAsync(IAppUser user, UserLoginInfo login)
         {
             ThrowIfDisposed();
@@ -149,6 +229,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             await _uow.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Asynchronously gets the logins for a user.
+        /// </summary>
+        /// <param name="user">user as IUser</param>
+        /// <returns>returns Task List of UserLoginInfo</returns>
         public async Task<IList<UserLoginInfo>> GetLoginsAsync(IAppUser user)
         {
             ThrowIfDisposed();
@@ -159,6 +244,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             return logins.Select(l => new UserLoginInfo(l.LoginProvider, l.ProviderKey)).ToList();
         }
 
+        /// <summary>
+        /// Asynchronously returns the user associated with this login.
+        /// </summary>
+        /// <param name="user">login as UserLoginInfo</param>
+        /// <returns>returns Task User</returns>
         public async Task<IAppUser> FindAsync(UserLoginInfo login)
         {
             ThrowIfDisposed();
@@ -177,6 +267,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
 
         #region claims
 
+        /// <summary>
+        /// Asynchronously returns the claims for a user.
+        /// </summary>
+        /// <param name="user">user as IUser</param>
+        /// <returns>returns Task List of Claim</returns>
         public async Task<IList<Claim>> GetClaimsAsync(IAppUser user)
         {
             ThrowIfDisposed();
@@ -188,6 +283,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             return claims.Select(c => new Claim(c.ClaimType, c.ClaimValue)).ToList();
         }
 
+        /// <summary>
+        /// Asynchronously adds a claim to a user.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <param name="claim">user as Claim</param>
         public async Task AddClaimAsync(IAppUser user, Claim claim)
         {
             ThrowIfDisposed();
@@ -207,6 +307,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             await _uow.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Asynchronously removes a claim from a user.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <param name="claim">user as IUserClaim</param>
         public async Task RemoveClaimAsync(IAppUser user, Claim claim)
         {
             ThrowIfDisposed();
@@ -224,6 +329,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
 
         #region roles
 
+        /// <summary>
+        /// Asynchronously adds a user to a role.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <param name="roleName">roleName as string name of role</param>
         public async Task AddToRoleAsync(IAppUser user, string roleName)
         {
             ThrowIfDisposed();
@@ -247,6 +357,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             await _uow.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Asynchronously removes a role from a user.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <param name="roleName">roleName as string name of role</param>
         public async Task RemoveFromRoleAsync(IAppUser user, string roleName)
         {
             ThrowIfDisposed();
@@ -264,6 +379,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             await _uow.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Asynchronously gets the names of the roles by user id.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <returns>returns T List of reoles</returns>
         public async Task<IList<string>> GetRolesAsync(IAppUser user)
         {
             ThrowIfDisposed();
@@ -273,6 +393,12 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             return await _roleRepository.GetRolesNameByUserId(user.Id);
         }
 
+        /// <summary>
+        /// Asynchronously determines whether the user is in the named role.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <param name="roleName">roleName as string name of role</param>
+        /// <returns>returns true or false</returns>
         public async Task<bool> IsInRoleAsync(IAppUser user, string roleName)
         {
             ThrowIfDisposed();
@@ -290,7 +416,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
 
         #endregion
 
-
+        /// <summary>
+        /// Asynchronously sets the security stamp for the user.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <param name="stamp">stamp string as security stamp</param>
         public async Task SetSecurityStampAsync(IAppUser user, string stamp)
         {
             ThrowIfDisposed();
@@ -300,6 +430,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             await _uow.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Asynchronously gets the security stamp for a user.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <returns>returns Task security stamp</returns>
         public Task<string> GetSecurityStampAsync(IAppUser user)
         {
             if (user == null)
@@ -308,6 +443,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             return Task.FromResult(user.SecurityStamp);
         }
 
+        /// <summary>
+        /// Asynchronously sets the user e-mail.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <param name="email">email address string</param>
         public async Task SetEmailAsync(IAppUser user, string email)
         {
             ThrowIfDisposed();
@@ -317,6 +457,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             await _uow.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Asynchronously gets the user's e-mail.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <returns>returns Email name</returns>
         public Task<string> GetEmailAsync(IAppUser user)
         {
             if (user == null)
@@ -325,6 +470,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             return Task.FromResult(user.Email);
         }
 
+        /// <summary>
+        /// Asynchronously returns whether the user email is confirmed.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <returns>returns Task true or false</returns>
         public Task<bool> GetEmailConfirmedAsync(IAppUser user)
         {
             if (user == null)
@@ -333,6 +483,12 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             return Task.FromResult(user.EmailConfirmed);
         }
 
+
+        /// <summary>
+        /// Asynchronously sets the IsConfirmed property for the user EmailConfirmed.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <param name="confirmed">status as bool value</param>
         public async Task SetEmailConfirmedAsync(IAppUser user, bool confirmed)
         {
             ThrowIfDisposed();
@@ -344,6 +500,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             await _uow.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Asynchronously finds a user by e-mail.
+        /// </summary>
+        /// <param name="email">user as string address</param>
+        /// <returns>returns Task IAppUser</returns>
         public async Task<IAppUser> FindByEmailAsync(string email)
         {
             ThrowIfDisposed();
@@ -351,6 +512,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             return await _userRepository.FindByEmailAsync(email) as IAppUser;
         }
 
+        /// <summary>
+        /// Asynchronously sets the user phone number.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <param name="phoneNumber">phoneNumber as string</param>
         public async Task SetPhoneNumberAsync(IAppUser user, string phoneNumber)
         {
             ThrowIfDisposed();
@@ -362,6 +528,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             await _uow.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Asynchronously gets a user's phone number.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <returns>returns Task Phone number string</returns>
         public Task<string> GetPhoneNumberAsync(IAppUser user)
         {
             if (user == null)
@@ -370,6 +541,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             return Task.FromResult(user.PhoneNumber);
         }
 
+        /// <summary>
+        /// Asynchronously returns whether the user phone number is confirmed.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <returns>returns true or false</returns>
         public Task<bool> GetPhoneNumberConfirmedAsync(IAppUser user)
         {
             if (user == null)
@@ -378,6 +554,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             return Task.FromResult(user.PhoneNumberConfirmed);
         }
 
+        /// <summary>
+        /// Asynchronously sets the PhoneNumberConfirmed property for the user.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <param name="confirmed">status as bool value</param>
         public async Task SetPhoneNumberConfirmedAsync(IAppUser user, bool confirmed)
         {
             ThrowIfDisposed();
@@ -388,6 +569,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             await _uow.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Asynchronously sets the Two Factor provider for the user.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <param name="confirmed">status as bool value</param>
         public async Task SetTwoFactorEnabledAsync(IAppUser user, bool enabled)
         {
             ThrowIfDisposed();
@@ -398,6 +584,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             await _uow.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Asynchronously determines whether the two-factor providers are enabled for the user.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <returns>returns Task true or false</returns>
         public Task<bool> GetTwoFactorEnabledAsync(IAppUser user)
         {
             if (user == null)
@@ -406,6 +597,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             return Task.FromResult(user.TwoFactorEnabled);
         }
 
+        /// <summary>
+        /// Asynchronously returns the DateTimeOffset that represents the end of a users lockout, any time in the past should be considered not locked out.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <returns>returns Task DateTimeOffset</returns>
         public Task<DateTimeOffset> GetLockoutEndDateAsync(IAppUser user)
         {
             if (user == null)
@@ -414,6 +610,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             return Task.FromResult(user.LockoutEndDateUtc.HasValue ? new DateTimeOffset(DateTime.SpecifyKind(user.LockoutEndDateUtc.Value, DateTimeKind.Utc)) : new DateTimeOffset());
         }
 
+        /// <summary>
+        /// Asynchronously locks a user out until the specified end date (set to a past date, to unlock a user).
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <param name="lockoutEnd">date end of lock</param>
         public async Task SetLockoutEndDateAsync(IAppUser user, DateTimeOffset lockoutEnd)
         {
             ThrowIfDisposed();
@@ -425,6 +626,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             await _uow.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Asynchronously records the failed attempt to access the user.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <returns>returns failed count of access</returns>
         public async Task<int> IncrementAccessFailedCountAsync(IAppUser user)
         {
             ThrowIfDisposed();
@@ -437,6 +643,10 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             return user.AccessFailedCount;
         }
 
+        /// <summary>
+        /// Asynchronously resets the account access failed count, typically after the account is successfully accessed.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
         public async Task ResetAccessFailedCountAsync(IAppUser user)
         {
             ThrowIfDisposed();
@@ -448,6 +658,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             await _uow.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Asynchronously returns the current number of failed access attempts.This number usually will be reset whenever the password is verified or the account is locked out.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <returns>returns failed count of access</returns>
         public Task<int> GetAccessFailedCountAsync(IAppUser user)
         {
             if (user == null)
@@ -456,6 +671,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             return Task.FromResult(user.AccessFailedCount);
         }
 
+        /// <summary>
+        /// Asynchronously returns whether the user can be locked out.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <returns>returns true or false</returns>
         public Task<bool> GetLockoutEnabledAsync(IAppUser user)
         {
             if (user == null)
@@ -464,6 +684,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             return Task.FromResult(user.LockoutEnabled);
         }
 
+        /// <summary>
+        /// Asynchronously sets whether the user can be locked out.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <param name="enabled">enable lockout</param>
         public async Task SetLockoutEnabledAsync(IAppUser user, bool enabled)
         {
             ThrowIfDisposed();
@@ -476,6 +701,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
 
         #region password 
 
+        /// <summary>
+        /// Asynchronously sets the password hash for a user.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <param name="passwordHash">passwordHash string</param>
         public async Task SetPasswordHashAsync(IAppUser user, string passwordHash)
         {
             ThrowIfDisposed();
@@ -485,6 +715,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             await _uow.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Asynchronously gets the password hash for a user.
+        /// </summary>
+        /// <param name="user">user as IAppUser</param>
+        /// <returns>returns Task password Hash</returns>
         public Task<string> GetPasswordHashAsync(IAppUser user)
         {
             if (user == null)
@@ -492,6 +727,11 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             return Task.FromResult(user.PasswordHash);
         }
 
+        /// <summary>
+        /// Hash method for password string.
+        /// </summary>
+        /// <param name="password">current password</param>
+        /// <returns>returns Hashed password string</returns>
         public string HashPassword(string password)
         {
             byte[] salt;
@@ -511,11 +751,22 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             return Convert.ToBase64String(dst);
         }
 
+        /// <summary>
+        /// Checking async that password not null
+        /// </summary>
+        /// <param name="user">current user</param>
+        /// <returns>returns true or false</returns>
         public Task<bool> HasPasswordAsync(IAppUser user)
         {
             return Task.FromResult(user.PasswordHash != null);
         }
 
+        /// <summary>
+        /// Method for verify user password with current hashpassword in database
+        /// </summary>
+        /// <param name="hashedPassword">current hashedPassword</param>
+        /// <param name="providedPassword">current providedPassword</param>
+        /// <returns>returns PasswordVerificationResult.Success or PasswordVerificationResult.Failed</returns>
         public PasswordVerificationResult VerifyHashedPassword(string hashedPassword, string providedPassword)
         {
             byte[] buffer4;
@@ -546,6 +797,12 @@ namespace WasteProducts.Logic.Common.Repositories.Security.Strores
             return PasswordVerificationResult.Failed;
         }
 
+        /// <summary>
+        /// Method checking equal byte arrays
+        /// </summary>
+        /// <param name="b1">first byte array</param>
+        /// <param name="b2">second byte array</param>
+        /// <returns>returns true or false</returns>
         public bool ByteArraysEqual(byte[] b1, byte[] b2)
         {
             if (b1 == b2) return true;

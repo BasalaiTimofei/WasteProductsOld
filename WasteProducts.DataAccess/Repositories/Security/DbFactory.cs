@@ -40,6 +40,7 @@ namespace WasteProducts.DataAccess.Repositories.Security
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
         /// <summary>
         /// Dispose method
         /// </summary>

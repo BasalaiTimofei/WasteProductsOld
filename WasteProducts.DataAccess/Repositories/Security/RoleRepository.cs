@@ -12,6 +12,10 @@ namespace WasteProducts.DataAccess.Repositories.Security
     /// </summary>
     internal class RoleRepository : RepositoryBase<IRoleDb>, IRoleRepository
     {
+        /// <summary>
+        /// Initializes a new instance of RoleRepository
+        /// </summary>
+        /// <param name="dbFactory">Used to set DbFactory property in base RepositoryBase class</param>
         public RoleRepository(DbFactory dbFactory) : base(dbFactory)
         {
         }
