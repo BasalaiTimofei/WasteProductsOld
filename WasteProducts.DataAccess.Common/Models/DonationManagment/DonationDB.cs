@@ -1,6 +1,4 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WasteProducts.DataAccess.Common.Models.DonationManagment
 {
@@ -9,7 +7,6 @@ namespace WasteProducts.DataAccess.Common.Models.DonationManagment
         /// <summary>
         /// Unique identifier for a specific donation.
         /// </summary>
-        [Key]
         public string TransactionId { get; set; }
 
         /// <summary>
@@ -36,7 +33,6 @@ namespace WasteProducts.DataAccess.Common.Models.DonationManagment
         /// <summary>
         /// Specifies the foreign key.
         /// </summary>
-        [ForeignKey("Donor")]
         public string DonorId { get; set; }
 
         /// <summary>

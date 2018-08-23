@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WasteProducts.DataAccess.Common.Models.DonationManagment
 {
@@ -34,7 +33,6 @@ namespace WasteProducts.DataAccess.Common.Models.DonationManagment
         /// <summary>
         /// Specifies the foreign key.
         /// </summary>
-        [ForeignKey("Address")]
         public string AddressId { get; set; }
 
         /// <summary>
