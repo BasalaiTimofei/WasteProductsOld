@@ -12,6 +12,7 @@ namespace WasteProducts.DataAccess
         public override void Load()
         {
             //todo register your repos here
+
             throw new NotImplementedException();
         }
     }

@@ -40,14 +40,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\TraceAttribute.cs" />
     <Compile Include="Enums\UserCategory.cs" />
     <Compile Include="Models\Donation\Donation.cs" />
     <Compile Include="Models\Barcods\Barcode.cs" />
     <Compile Include="Models\Barcods\BarcodeInfo.cs" />
     <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\Search\BoostedSearchQuery.cs" />
     <Compile Include="Models\Products\Category.cs" />
     <Compile Include="Models\Search\SearchQuery.cs" />
-    <Compile Include="Models\Search\SearchResult.cs" />
     <Compile Include="Models\Users\User.cs" />
     <Compile Include="Models\Products\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -57,7 +58,25 @@
     <Compile Include="Services\IBarcodeService.cs" />
     <Compile Include="Services\ITestService.cs" />
     <Compile Include="Services\IUserService.cs" />
+    <Compile Include="Models\Groups\GroupUserInviteTime.cs" />
+    <Compile Include="Models\Groups\GroupBoard.cs" />
+    <Compile Include="Models\Groups\Group.cs" />
+    <Compile Include="Models\Groups\GroupProduct.cs" />
+    <Compile Include="Models\Groups\GroupUser.cs" />
+    <Compile Include="Services\Groups\IGropDataService.cs" />
+    <Compile Include="Services\Groups\IGropUserManagerService.cs" />
+    <Compile Include="Services\Groups\IGropProductService.cs" />
+    <Compile Include="Services\Groups\IGropBoardService.cs" />
+    <Compile Include="Services\Groups\IGropService.cs" />
   </ItemGroup>
-  
+  <ItemGroup>
+    <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">
+      <Project>{9acbec5d-caa7-4e29-a19c-a247190f6da8}</Project>
+      <Name>WasteProducts.DataAccess.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
