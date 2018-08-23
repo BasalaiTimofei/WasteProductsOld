@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WasteProducts.DataAccess.Common.Models.DonationManagment
@@ -10,8 +9,6 @@ namespace WasteProducts.DataAccess.Common.Models.DonationManagment
         /// <summary>
         /// Unique donor ID.
         /// </summary>
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [Key]
         public string Id { get; set; }
 
         /// <summary>
@@ -38,7 +35,7 @@ namespace WasteProducts.DataAccess.Common.Models.DonationManagment
         /// Specifies the foreign key.
         /// </summary>
         [ForeignKey("Address")]
-        public Guid AddressId { get; set; }
+        public string AddressId { get; set; }
 
         /// <summary>
         /// Address of donor.
