@@ -3,14 +3,16 @@ using System;
 using WasteProducts.DataAccess.Common.Models.DonationManagment;
 using WasteProducts.Logic.Common.Models.DonationManagment;
 
-namespace WasteProducts.Logic.Mappings
+namespace WasteProducts.Logic.Mappings.DonationManagment
 {
-    class DonationProfile : Profile
+    class DonorProfile : Profile
     {
-        public DonationProfile()
+        public DonorProfile()
         {
-            CreateMap<Donation, DonationDB>()
+            CreateMap<Donor, DonorDB>()
                 .ForMember(m => m.CreatedOn, opt => opt.UseValue(DateTime.UtcNow))
+                .ForMember(m => m.ModifiedOn, opt => opt.Ignore())
+                .ForMember(m => m.Donations, opt => opt.Ignore())
                 .ReverseMap();
         }
     }

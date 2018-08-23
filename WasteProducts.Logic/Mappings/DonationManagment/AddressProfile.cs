@@ -3,16 +3,16 @@ using System;
 using WasteProducts.DataAccess.Common.Models.DonationManagment;
 using WasteProducts.Logic.Common.Models.DonationManagment;
 
-namespace WasteProducts.Logic.Mappings
+namespace WasteProducts.Logic.Mappings.DonationManagment
 {
-    class DonorProfile : Profile
+    class AddressProfile : Profile
     {
-        public DonorProfile()
+        public AddressProfile()
         {
-            CreateMap<Donor, DonorDB>()
+            CreateMap<Address, AddressDB>()
                 .ForMember(m => m.CreatedOn, opt => opt.UseValue(DateTime.UtcNow))
-                .ForMember(m => m.ModifiedOn, opt => opt.Ignore())
-                .ForMember(m => m.Donations, opt => opt.Ignore())
+                .ForMember(m => m.Id, opt => opt.Ignore())
+                .ForMember(m => m.Donors, opt => opt.Ignore())
                 .ReverseMap();
         }
     }
