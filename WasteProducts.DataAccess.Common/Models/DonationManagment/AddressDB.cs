@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WasteProducts.DataAccess.Common.Models.DonationManagment
 {
@@ -10,9 +8,7 @@ namespace WasteProducts.DataAccess.Common.Models.DonationManagment
         /// <summary>
         /// Unique address ID.
         /// </summary>
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// City of donor's address.
