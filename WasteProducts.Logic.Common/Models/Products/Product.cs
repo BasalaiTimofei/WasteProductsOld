@@ -11,6 +11,7 @@ namespace WasteProducts.Logic.Common.Models.Products
         /// Unique identifier of concrete Product.
         /// </summary>
         public string Id { get; set; }
+
         /// <summary>
         /// Unique name of concrete Product.
         /// </summary>

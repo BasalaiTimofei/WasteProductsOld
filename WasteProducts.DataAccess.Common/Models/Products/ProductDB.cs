@@ -9,14 +9,14 @@ namespace WasteProducts.DataAccess.Common.Models.Products
     public class ProductDB
     {
         /// <summary>
+        /// Unique identifier of concrete Product in database.
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
         /// Unique name of concrete Product in database.
         /// </summary>
         public string Name { get; set; }
-
-        /// <summary>
-        /// Unique identifier of concrete Product in database.
-        /// </summary>
-        public int Id { get; set; }
 
         /// <summary>
         /// Specifies the timestamp of creation of concrete Product in database.
