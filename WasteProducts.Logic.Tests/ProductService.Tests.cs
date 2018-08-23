@@ -10,7 +10,8 @@ using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Services;
-using WasteProducts.Logic.Services.ProductService;
+using WasteProducts.Logic.Services;
+using AutoMapper;
 
 namespace WasteProducts.Logic.Tests
 {
@@ -41,14 +42,16 @@ namespace WasteProducts.Logic.Tests
         private IProductService _productSrvc;
         private IProductRepository _repo;
         private ProductDB _db;
+        private readonly IMapper _mapper;
 
         [SetUp]
         public void Init()
         {
             _barcode = new Barcode { Code = "125478569", Brand = "Mars", Country = "Russia", Id = "51515" };
             _repo = Substitute.For<IProductRepository>();
+            //_mapper = new Mapper();
             _added = _deleted = true;
-            _productSrvc = new ProductService(_repo);
+            _productSrvc = new ProductService(_repo, _mapper);
             _db = Substitute.For<ProductDB>();
         }
         //[Test]

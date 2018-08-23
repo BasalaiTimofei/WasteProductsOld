@@ -10,7 +10,7 @@ using WasteProducts.Logic.Common.Services;
 
 namespace WasteProducts.Logic.Services
 {
-    class ProductService : IProductService
+    public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
