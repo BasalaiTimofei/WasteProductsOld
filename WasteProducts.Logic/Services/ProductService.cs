@@ -27,7 +27,7 @@ namespace WasteProducts.Logic.Services
                 p => string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
                 out var products)) return false;
 
-            var newProduct = new Product {Barcode = barcode, Name = barcode.ProductName};
+            var newProduct = new Product {Id = new Guid().ToString(), Barcode = barcode, Name = barcode.ProductName};
             _productRepository.Add(_mapper.Map<ProductDB>(newProduct));
 
             return true;
@@ -39,7 +39,7 @@ namespace WasteProducts.Logic.Services
                 string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
                 out var products)) return false;
 
-            var newProduct = new Product {Name = name};
+            var newProduct = new Product { Id = new Guid().ToString(), Name = name};
             _productRepository.Add(_mapper.Map<ProductDB>(newProduct));
 
             return true;
@@ -48,7 +48,7 @@ namespace WasteProducts.Logic.Services
         public bool AddCategory(Product product, Category category)
         {
             if (!IsProductsInDB(p =>
-                string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
+                string.Equals(p.Id, product.Id, StringComparison.Ordinal),
                 out var products)) return false;
 
             var productFromDB = products.ToList().First();
@@ -65,7 +65,6 @@ namespace WasteProducts.Logic.Services
                 out var products)) return false;
 
             var productFromDB = products.ToList().First();
-            //Не уверен, но походу тут косяк в репозитории
             _productRepository.Delete(productFromDB);
 
             return true;
@@ -78,7 +77,6 @@ namespace WasteProducts.Logic.Services
                 out var products)) return false;
 
             var productFromDB = products.ToList().First();
-            //Не уверен, но походу тут косяк в репозитории
             _productRepository.Delete(productFromDB);
 
             return true;
@@ -87,21 +85,21 @@ namespace WasteProducts.Logic.Services
         public void Hide(Product product)
         {
             if (!IsProductsInDB(p =>
-                    string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
-                out var products)) throw new NotImplementedException();
+                    string.Equals(p.Id, product.Id, StringComparison.Ordinal),
+                out var products)) return;
 
             var productFromDB = products.ToList().First();
             if (productFromDB.IsHidden) return;
 
-            productFromDB.IsHidden = true;
+            productFromDB.IsHidden = product.IsHidden = true;
             _productRepository.Update(productFromDB);
         }
 
         public bool IsHidden(Product product)
         {
             if (!IsProductsInDB(p =>
-                    string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
-                out var products)) throw new NotImplementedException();
+                    string.Equals(p.Id, product.Id, StringComparison.Ordinal),
+                out var products)) return false;
 
             var productFromDB = products.ToList().First();
 
@@ -111,18 +109,20 @@ namespace WasteProducts.Logic.Services
         public void Rate(Product product, int rating)
         {
             if (!IsProductsInDB(p =>
-                    string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
-                out var products)) throw new NotImplementedException();
+                    string.Equals(p.Id, product.Id, StringComparison.Ordinal),
+                out var products)) return;
 
             var productFromDB = products.ToList().First();
-                productFromDB.AvgRating = (productFromDB.AvgRating * productFromDB.RateCount) / productFromDB.RateCount++;
-                _productRepository.Update(productFromDB);
+            //productFromDB.RateCount++ - не правильно инкремент в таком виде не учтется в формуле
+            //productFromDB.AvgRating = (productFromDB.AvgRating * productFromDB.RateCount) / productFromDB.RateCount++;
+            productFromDB.AvgRating = (productFromDB.AvgRating * productFromDB.RateCount) / ++productFromDB.RateCount;
+            _productRepository.Update(productFromDB);
         }
 
         public bool RemoveCategory(Product product, Category category)
         {
             if (!IsProductsInDB(p =>
-                string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
+                string.Equals(p.Id, product.Id, StringComparison.Ordinal),
                 out var products)) return false;
 
             var productFromDB = products.ToList().First();
@@ -135,8 +135,8 @@ namespace WasteProducts.Logic.Services
         public void Reveal(Product product)
         {
             if (!IsProductsInDB(p =>
-                    string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
-                out var products)) throw new NotImplementedException();
+                    string.Equals(p.Id, product.Id, StringComparison.Ordinal),
+                out var products)) return;
 
             var productFromDB = products.ToList().First();
             if (!productFromDB.IsHidden) return;
@@ -148,8 +148,8 @@ namespace WasteProducts.Logic.Services
         public void SetDescription(Product product, string description)
         {
             if (!IsProductsInDB(p =>
-                    string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
-                out var products)) throw new NotImplementedException();
+                    string.Equals(p.Id, product.Id, StringComparison.Ordinal),
+                out var products)) return;
 
             var productFromDB = products.ToList().First();
             productFromDB.Description = description;
@@ -159,8 +159,8 @@ namespace WasteProducts.Logic.Services
         public void SetPrice(Product product, decimal price)
         {
             if (!IsProductsInDB(p =>
-                    string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
-                out var products)) throw new NotImplementedException();
+                    string.Equals(p.Id, product.Id, StringComparison.Ordinal),
+                out var products)) return;
 
             var productFromDB = products.ToList().First();
             productFromDB.Price = price;
