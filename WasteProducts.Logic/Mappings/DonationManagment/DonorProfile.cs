@@ -10,7 +10,7 @@ namespace WasteProducts.Logic.Mappings.DonationManagment
         public DonorProfile()
         {
             CreateMap<Donor, DonorDB>()
-                .ForMember(m => m.CreatedOn, opt => opt.UseValue(DateTime.UtcNow))
+                .ForMember(m => m.CreatedOn, opt => opt.Ignore())
                 .ForMember(m => m.ModifiedOn, opt => opt.Ignore())
                 .ForMember(m => m.Donations, opt => opt.Ignore())
                 .ReverseMap();

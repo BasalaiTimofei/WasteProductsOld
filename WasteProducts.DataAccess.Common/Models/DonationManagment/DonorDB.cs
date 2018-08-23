@@ -48,7 +48,7 @@ namespace WasteProducts.DataAccess.Common.Models.DonationManagment
         /// <summary>
         /// Specifies the timestamp for creating of a specific donor in the database.
         /// </summary>
-        public DateTime CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
 
         /// <summary>
         /// Specifies the timestamp for modifying of a specific donor in the database.
