@@ -6,6 +6,7 @@ using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.DataAccess.Contexts;
 
+
 namespace WasteProducts.DataAccess.Repositories
 {   /// <summary>
     ///This class is a context class. A binder for the 'ProductDB' class with a data access.
