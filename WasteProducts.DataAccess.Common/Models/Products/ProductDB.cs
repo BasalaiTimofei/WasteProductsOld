@@ -54,13 +54,19 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         public int RateCount { get; set; }
 
         /// <summary>
-        /// Defines the product description
+        /// Defines the Product description
         /// </summary>
         public string Description { get; set; }
+
         /// <summary>
-        /// Defines whether the product is in the "hidden" state
+        /// Defines whether the Product is in the "hidden" state
         /// </summary>
         public bool IsHidden { get; set; }
+
+        /// <summary>
+        /// Defines whether the Product is marked for deletion
+        /// </summary>
+        public bool Marked { get; set; }
 
         public override bool Equals(object obj)
         {

@@ -44,8 +44,8 @@ namespace WasteProducts.DataAccess.Repositories
         {
             if (product != null && _context.Products.Contains(product))
             {
-                _context.Products.Remove(product);
-                _context.SaveChanges();
+                product.Marked = true;
+                Update(product);
             }
         }
 
