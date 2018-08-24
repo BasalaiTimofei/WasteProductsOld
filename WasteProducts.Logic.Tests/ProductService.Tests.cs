@@ -53,6 +53,7 @@ namespace WasteProducts.Logic.Tests
             _added = _deleted = true;
             _productSrvc = new ProductService(_repo, _mapper);
             _db = Substitute.For<ProductDB>();
+            
         }
         //[Test]
         //public void AddingProductByBarcore_BarcodeIsNotNull()
@@ -77,14 +78,23 @@ namespace WasteProducts.Logic.Tests
         [Test]
         public void AddingProductByBarcore_IfBarcodesAreEqualShouldNotBeAdded()
         {
-            var barcode1 = new Barcode();
-            var barcode2 = new Barcode();
+            var barc1 = new Barcode
+            {
+                Code = "45376896782",
+                Id = Guid.NewGuid().ToString(),
+                ProductName = "Red Cherry"
+            };
+            var barc2 = new Barcode
+            {
+                Code = "863863896745",
+                Id = Guid.NewGuid().ToString(),
+                ProductName = "Red Cherry"
+            };
 
-            barcode1.Should().NotBeSameAs(barcode2);
+            var result1 = _productSrvc.AddByBarcode(barc1);
+            var result2 = _productSrvc.AddByBarcode(_mapper.Map<Barcode>(barc2));
 
-            var result = _productSrvc.AddByBarcode(barcode1);
-            barcode1.Should().NotBeSameAs(barcode2);
-            result.Should().BeTrue();
+            Assert.AreNotSame(result1,result2);
         }
 
         [Test]
