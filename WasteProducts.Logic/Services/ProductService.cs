@@ -113,9 +113,7 @@ namespace WasteProducts.Logic.Services
                 out var products)) return;
 
             var productFromDB = products.ToList().First();
-            //productFromDB.RateCount++ - не правильно инкремент в таком виде не учтется в формуле
-            //productFromDB.AvgRating = (productFromDB.AvgRating * productFromDB.RateCount) / productFromDB.RateCount++;
-            productFromDB.AvgRating = (productFromDB.AvgRating * productFromDB.RateCount) / ++productFromDB.RateCount;
+            productFromDB.AvgRating = (productFromDB.AvgRating * productFromDB.RateCount + rating) / ++productFromDB.RateCount;
             _productRepository.Update(productFromDB);
         }
 
