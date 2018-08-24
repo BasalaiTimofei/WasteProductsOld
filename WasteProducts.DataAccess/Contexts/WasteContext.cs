@@ -23,11 +23,6 @@ namespace WasteProducts.DataAccess.Contexts
         }
 
         /// <summary>
-        /// IDBSet of Friends.
-        /// </summary>
-        //public IDbSet<Friend> Friends { get; set; }
-
-        /// <summary>
         /// property added for to use an entity set that is used to perform
         ///  create, read, update, delete and to get product list operations in 'ProductRepository' class.
         /// </summary>
