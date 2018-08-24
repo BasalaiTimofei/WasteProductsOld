@@ -76,7 +76,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InjectorModule.cs" />
-    <Compile Include="Mappings\CategoryProfile.cs" />
+    <Compile Include="Mappings\DonationManagment\AddressProfile.cs" />
+    <Compile Include="Mappings\DonationManagment\DonationProfile.cs" />
+    <Compile Include="Mappings\DonationManagment\DonorProfile.cs" />
     <Compile Include="Mappings\TestProfile.cs" />
     <Compile Include="Mappings\ProductProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

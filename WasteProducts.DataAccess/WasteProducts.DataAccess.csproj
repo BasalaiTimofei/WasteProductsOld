@@ -107,6 +107,9 @@
     <Compile Include="Contexts\Config\MsSqlConfiguration.cs" />
     <Compile Include="Contexts\WasteContext.cs" />
     <Compile Include="InjectorModule.cs" />
+    <Compile Include="ModelConfigurations\DonationManagment\AddressEntityConfiguration.cs" />
+    <Compile Include="ModelConfigurations\DonationManagment\DonationEntityConfiguration.cs" />
+    <Compile Include="ModelConfigurations\DonationManagment\DonorEntityConfiguration.cs" />
     <Compile Include="ModelConfigurations\EntityConfiguration.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
