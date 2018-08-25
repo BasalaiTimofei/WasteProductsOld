@@ -48,7 +48,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\TraceAttribute.cs" />
-    <Compile Include="Enums\UserCategory.cs" />
     <Compile Include="Models\Donation\Donation.cs" />
     <Compile Include="Models\Barcods\Barcode.cs" />
     <Compile Include="Models\Barcods\BarcodeInfo.cs" />
@@ -65,8 +64,6 @@
     <Compile Include="Services\IProductService.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\IBarcodeService.cs" />
-    <Compile Include="Services\ITestService.cs" />
-    <Compile Include="Services\IUserService.cs" />
     <Compile Include="Models\Groups\GroupUserInviteTime.cs" />
     <Compile Include="Models\Groups\GroupBoard.cs" />
     <Compile Include="Models\Groups\Group.cs" />

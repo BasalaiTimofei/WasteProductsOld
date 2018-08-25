@@ -29,11 +29,11 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         {
             users = new List<User>
             {
-                new User { Id = 1, Login = "user1", Email = "user1@mail.net" },
-                new User { Id = 2, Login = "user2", Email = "user2@mail.net" },
-                new User { Id = 3, Login = "user3", Email = "user3@mail.net" },
-                new User { Id = 4, Login = "user4 user", Email = "user4@mail.net" },
-                new User { Id = 5, Login = "User5 user", Email = "user5@mail.net" }
+                new User { Id = "1", UserName = "user1", Email = "user1@mail.net" },
+                new User { Id = "2", UserName = "user2", Email = "user2@mail.net" },
+                new User { Id = "3", UserName = "user3", Email = "user3@mail.net" },
+                new User { Id = "4", UserName = "user4 user", Email = "user4@mail.net" },
+                new User { Id = "5", UserName = "User5 user", Email = "user5@mail.net" }
             };
 
             products = new List<TestProduct>
@@ -86,48 +86,48 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void GetById_GetUser_Return_NoException()
         {
-            var user = new User() { Id = 1, Login = "user1" };
+            var user = new User() { Id = "1", UserName = "user1" };
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
 
-            var userFromRepo = sut.GetById<User>(1);
+            var userFromRepo = sut.GetById<User>("1");
         }
 
         [Test]
         public void GetById_GetExistingId_Return_ObjectWithCorrectId()
         {
-            var user = new User() { Id = 1, Login = "user1" };
+            var user = new User() { Id = "1", UserName = "user1" };
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
 
-            var userFromRepo = sut.GetById<User>(1);
+            var userFromRepo = sut.GetById<User>("1");
 
-            Assert.AreEqual(user.Login, userFromRepo.Login);
+            Assert.AreEqual(user.UserName, userFromRepo.UserName);
         }
 
         [Test]
         public void GetById_GetWrongId_Return_ObjectAreNotEqual()
         {
-            var user = new User() { Id = 1, Login = "user1" };
-            var user2 = new User() { Id = 2, Login = "user2" };
+            var user = new User() { Id = "1", UserName = "user1" };
+            var user2 = new User() { Id = "2", UserName = "user2" };
 
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
             sut.Insert(user2);
 
-            var userFromRepo = sut.GetById<User>(2);
+            var userFromRepo = sut.GetById<User>("2");
 
-            Assert.AreNotEqual(user.Login, userFromRepo.Login);
+            Assert.AreNotEqual(user.UserName, userFromRepo.UserName);
         }
 
         [Test]
         public void GetById_GetByNotExistingId_Return_NullObject()
         {
-            var user = new User() { Id = 1, Login = "user1" };
+            var user = new User() { Id = "1", UserName = "user1" };
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
 
-            var userFromRepo = sut.GetById<User>(2);
+            var userFromRepo = sut.GetById<User>("2");
 
             Assert.AreEqual(null, userFromRepo);
         }
@@ -137,7 +137,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void Get_GetUser_Return_NoException()
         {
-            var user = new User() { Id = 1, Login = "user1" };
+            var user = new User() { Id = "1", UserName = "user1" };
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
 
@@ -147,20 +147,20 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void Get_GetExistingId_Return_ObjectWithCorrectId()
         {
-            var user = new User() { Id = 1, Login = "user1" };
+            var user = new User() { Id = "1", UserName = "user1" };
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
 
             var userFromRepo = sut.Get<User>("user1", "Login");
 
-            Assert.AreEqual(user.Login, userFromRepo.Login);
+            Assert.AreEqual(user.UserName, userFromRepo.UserName);
         }
 
         [Test]
         public void Get_GetWrongId_Return_ObjectAreNotEqual()
         {
-            var user = new User() { Id = 1, Login = "user1" };
-            var user2 = new User() { Id = 2, Login = "user2" };
+            var user = new User() { Id = "1", UserName = "user1" };
+            var user2 = new User() { Id = "2", UserName = "user2" };
 
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
@@ -168,13 +168,13 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             var userFromRepo = sut.Get<User>("user2", "Login");
 
-            Assert.AreNotEqual(user.Login, userFromRepo.Login);
+            Assert.AreNotEqual(user.UserName, userFromRepo.UserName);
         }
 
         [Test]
         public void Get_GetByNotExistingId_Return_NullObject()
         {
-            var user = new User() { Id = 1, Login = "user1" };
+            var user = new User() { Id = "1", UserName = "user1" };
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
 
@@ -312,7 +312,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             foreach (var user in users)
                 sut.Insert(user);
             var oldUser = users.ToList()[1];
-            oldUser.Login = "user1_new";
+            oldUser.UserName = "user1_new";
 
             sut.Update<User>(oldUser);
         }
@@ -324,12 +324,12 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             foreach (var user in users)
                 sut.Insert(user);
             var oldUser = users.ToList()[1];
-            oldUser.Login = "user1_new";
+            oldUser.UserName = "user1_new";
 
             sut.Update<User>(oldUser);
             var updUser = sut.GetById<User>(oldUser.Id);
 
-            Assert.AreEqual("user1_new", updUser.Login);
+            Assert.AreEqual("user1_new", updUser.UserName);
         }
 
         [Test]

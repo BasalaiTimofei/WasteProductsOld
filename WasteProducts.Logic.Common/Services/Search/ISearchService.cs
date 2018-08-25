@@ -5,6 +5,9 @@ using WasteProducts.Logic.Common.Models.Search;
 
 namespace WasteProducts.Logic.Common.Services.Search
 {
+    // TODO что это за фигня, это только у меня такого класса вообще не существовало, или как? Ребят, вы чо, вы чо?
+    public class SearchResult { }
+
     /// <summary>
     /// This interface provides search methods
     /// </summary>
