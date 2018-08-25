@@ -101,6 +101,7 @@
     <Compile Include="Services\UserService\UserRoleService.cs" />
     <Compile Include="Services\UserService\UserService.cs" />
     <Compile Include="Validators\TestValidator.cs" />
+    <Compile Include="Validators\UserService\UserValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
