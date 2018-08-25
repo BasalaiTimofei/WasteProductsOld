@@ -55,6 +55,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             UserService = new UserService(MailService, UserRepo);
             RoleService = new UserRoleService(RoleRepo);
 
+            Mapper.Reset();
             Mapper.Initialize(cfg =>
             {
                 cfg.AddProfile(new UserProfile());

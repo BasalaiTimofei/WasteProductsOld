@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNet.Identity;
 using WasteProducts.Logic.Common.Models.Products;
+using WasteProducts.Logic.Mappings.UserMappings;
 
 namespace WasteProducts.Logic.Services.UserService
 {
@@ -22,10 +23,20 @@ namespace WasteProducts.Logic.Services.UserService
 
         private readonly IUserRepository _userRepo;
 
+        private readonly IRuntimeMapper _mapper;
+
         public UserService(IMailService mailService, IUserRepository userRepo)
         {
             _mailService = mailService;
             _userRepo = userRepo;
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new UserProfile());
+                cfg.AddProfile(new UserClaimProfile());
+                cfg.AddProfile(new UserLoginProfile());
+            });
+            _mapper = (new Mapper(config)).DefaultContext.Mapper;
         }
 
         public async Task<User> RegisterAsync(string email, string userName, string password, string passwordConfirmation)
@@ -149,7 +160,7 @@ namespace WasteProducts.Logic.Services.UserService
 
         public async Task AddLoginAsync(User user, UserLogin login)
         {
-            await _userRepo.AddLoginAsync(MapTo<UserDB>(user), Mapper.Map<UserLoginInfo>(login));
+            await _userRepo.AddLoginAsync(MapTo<UserDB>(user), MapTo<UserLoginInfo>(login));
             user.Logins?.Add(login);
         }
 
@@ -188,18 +199,20 @@ namespace WasteProducts.Logic.Services.UserService
 
         public async Task RemoveLoginAsync(User user, UserLogin login)
         {
-            await _userRepo.RemoveLoginAsync(MapTo<UserDB>(user), Mapper.Map<UserLoginInfo>(login));
+            await _userRepo.RemoveLoginAsync(MapTo<UserDB>(user), MapTo<UserLoginInfo>(login));
             user.Logins?.Remove(login);
         }
 
         private UserDB MapTo<T>(User user)
-            where T : UserDB
             =>
-            Mapper.Map<UserDB>(user);
+            _mapper.Map<UserDB>(user);
 
         private User MapTo<T>(UserDB user)
-            where T : User
             =>
-            Mapper.Map<User>(user);
+            _mapper.Map<User>(user);
+
+        private UserLoginInfo MapTo<T>(UserLogin user)
+            =>
+            _mapper.Map<UserLoginInfo>(user);
     }
 }

@@ -5,6 +5,7 @@ using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Common.Models.Users;
 using AutoMapper;
+using WasteProducts.Logic.Mappings.UserMappings;
 
 namespace WasteProducts.Logic.Services.UserService
 {
@@ -12,9 +13,17 @@ namespace WasteProducts.Logic.Services.UserService
     {
         private readonly IUserRoleRepository _roleRepo;
 
+        private readonly IRuntimeMapper _mapper;
+
         public UserRoleService(IUserRoleRepository roleRepo)
         {
             _roleRepo = roleRepo;
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new UserLoginProfile());
+            });
+            _mapper = (new Mapper(config)).DefaultContext.Mapper;
         }
 
         public async Task CreateAsync(UserRole role)
@@ -55,12 +64,12 @@ namespace WasteProducts.Logic.Services.UserService
 
         private UserRoleDB MapTo<T>(UserRole role)
             where T : UserRoleDB 
-            => 
-            Mapper.Map<UserRoleDB>(role);
+            =>
+            _mapper.DefaultContext.Mapper.Map<UserRoleDB>(role);
 
         private UserRole MapTo<T>(UserRoleDB role)
             where T : UserRole
             =>
-            Mapper.Map<UserRole>(role);
+           _mapper.DefaultContext.Mapper.Map<UserRole>(role);
     }
 }
