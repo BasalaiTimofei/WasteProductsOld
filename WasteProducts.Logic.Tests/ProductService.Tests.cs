@@ -12,6 +12,7 @@ using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Services;
 using AutoMapper;
+using WasteProducts.Logic.Mappings;
 
 namespace WasteProducts.Logic.Tests
 {
@@ -36,24 +37,31 @@ namespace WasteProducts.Logic.Tests
     [TestFixture]
     public class ProductServiceTests
     {
-        private bool _added;
         private Barcode _barcode;
-        private bool _deleted;
         private IProductService _productSrvc;
-        private IProductRepository _repo;
+        private Mock<IProductRepository> _repo;
         private ProductDB _db;
         private readonly IMapper _mapper;
+
 
         [SetUp]
         public void Init()
         {
             _barcode = new Barcode { Code = "125478569", Brand = "Mars", Country = "Russia", Id = "51515" };
-            _repo = Substitute.For<IProductRepository>();
-            //_mapper = new Mapper();
-            _added = _deleted = true;
-            _productSrvc = new ProductService(_repo, _mapper);
+            _repo = new Mock<IProductRepository>();
             _db = Substitute.For<ProductDB>();
-            
+
+            var c = new MapperConfiguration(cfg=>cfg.AddProfile(new ProductProfile()));
+            var mapper = new Mapper(c);
+            _productSrvc = new ProductService(_repo.Object, mapper);
+
+        }
+
+        [TearDown]
+        public void Init1()
+        {
+            Mapper.Reset();
+
         }
         //[Test]
         //public void AddingProductByBarcore_BarcodeIsNotNull()
@@ -68,10 +76,9 @@ namespace WasteProducts.Logic.Tests
         [Test]
         public void AddingProductByBarcore_BarcodeIsNotNull()
         {
-            _barcode.Should().NotBe(null);
-            _repo.Add(_db);
-            var isSuccess = _productSrvc.AddByBarcode(_barcode);
 
+            var b = new Barcode();
+            var isSuccess = _productSrvc.AddByBarcode(b);
             isSuccess.Should().BeTrue();
         }
 
@@ -92,7 +99,7 @@ namespace WasteProducts.Logic.Tests
             };
 
             var result1 = _productSrvc.AddByBarcode(barc1);
-            var result2 = _productSrvc.AddByBarcode(_mapper.Map<Barcode>(barc2));
+            var result2 = _productSrvc.AddByBarcode(barc2);
 
             Assert.AreNotSame(result1,result2);
         }
@@ -101,7 +108,7 @@ namespace WasteProducts.Logic.Tests
         public void AddingProductByBarcore_SuccessfullyAdded()
         {
             var isSuccess = _productSrvc.AddByBarcode(_barcode);
-
+           
             Assert.That(isSuccess);
         }
 
@@ -118,12 +125,14 @@ namespace WasteProducts.Logic.Tests
         {
             var name = "Choco";
 
-            var result = _productSrvc.AddByName(name);
 
-            name.Should().BeSameAs("CHOCO")
-                .And.NotBeNullOrWhiteSpace()
-                .And.NotBeEmpty();
-            result.Should().Be(_added);
+            var result = _productSrvc.AddByName(name);
+            var prod = new Product
+            {
+                Name = "Choco"
+            };
+           
+            result.Should().Be(true).And.Should().ReceivedCalls();
         }
 
         [Test]
@@ -194,8 +203,6 @@ namespace WasteProducts.Logic.Tests
 
             var result = _productSrvc.DeleteByName(prod1.Name);
             prod1.Name.Should().BeSameAs(prod2.Name);
-            prod1.Should().NotBe(null);
-            prod2.Should().NotBe(null);
 
             result.Should().BeTrue();
         }
@@ -209,7 +216,133 @@ namespace WasteProducts.Logic.Tests
             prodGummy.Should().BeEquivalentTo("MY FAVORITE GUMMY")
                 .And.NotBeNullOrWhiteSpace()
                 .And.NotBeEmpty();
-            result.Should().Be(_deleted);
+            result.Should().Be(true);
         }
     }
 }
+
+//[TestFixture]
+//public class UserServiceTest
+//{
+//    private Mock<IUserRepository> userRepoMock;
+//    private Mock<IMailService> mailServiceMock;
+//    private UserService userService;
+
+//    [OneTimeSetUp]
+//    public void TestFixtureSetup()
+//    {
+//        mailServiceMock = new Mock<IMailService>();
+//        userRepoMock = new Mock<IUserRepository>();
+//        userService = new UserService(mailServiceMock.Object, userRepoMock.Object);
+
+//        Mapper.Initialize(cfg =>
+//        {
+//            cfg.AddProfile(new UserProfile()); ;
+//        });
+//    }
+
+//    [OneTimeTearDown]
+//    public void TestFixtureTearDown()
+//    {
+//        Mapper.Reset();
+//    }
+
+//    [Test]
+//    public void UserServiceTest_01_RegisterAsync_Password_and_Confirmation_Doesnt_Match_Returns_Null()
+//    {
+//        // arrange
+//        var validEmail = "validEmail@gmail.com";
+//        mailServiceMock.Setup(a => a.IsValidEmail(validEmail)).Returns(true);
+//        var password = "password";
+//        var passwordConfirmationDoesntMatch = "doesn't match";
+//        var userNameValid = "validUserName";
+//        User expected = null;
+
+//        // act
+//        var actual = userService.RegisterAsync(validEmail,
+//            userNameValid, password,
+//            passwordConfirmationDoesntMatch)
+//            .GetAwaiter().GetResult();
+
+//        // assert
+//        Assert.AreEqual(expected, actual);
+//    }
+
+//    [Test]
+//    public void UserServiceTest_02_RegisterAsync_Email_Is_Not_Valid_Returns_Null()
+//    {
+//        // arrange
+//        var invalidEmail = "invalidEmail@gmail.com";
+//        mailServiceMock.Setup(a => a.IsValidEmail(invalidEmail)).Returns(false);
+//        var password = "password";
+//        var passwordConfirmationMatch = "password";
+//        var userNameValid = "validUserName";
+//        User expected = null;
+
+//        // act
+//        var actual = userService.RegisterAsync(invalidEmail,
+//            userNameValid, password, passwordConfirmationMatch)
+//            .GetAwaiter().GetResult();
+
+//        // assert
+//        Assert.AreEqual(expected, actual);
+//    }
+
+//    [Test]
+//    public void UserServiceTest_03_RegisterAsync_Confirmation_and_Email_Invalid_Returns_Null()
+//    {
+//        // arrange
+//        var invalidEmail = "invalidEmail@gmail.com";
+//        mailServiceMock.Setup(a => a.IsValidEmail(invalidEmail)).Returns(false);
+//        var password = "password";
+//        var passwordConfirmationDoesntMatch = "doesn't match";
+//        var userNameValid = "validUserName";
+//        User expected = null;
+
+//        // act
+//        var actual = userService.RegisterAsync(invalidEmail,
+//            userNameValid, password, passwordConfirmationDoesntMatch)
+//            .GetAwaiter().GetResult();
+
+//        // assert
+//        Assert.AreEqual(expected, actual);
+//    }
+
+//    [Test]
+//    public void UserServiceTest_04_RegisterAsync_Successful_Register_Returns_Task_User()
+//    {
+//        // arrange
+//        var validEmail = "validEmail@gmail.com";
+//        mailServiceMock.Setup(a => a.IsValidEmail(validEmail)).Returns(true);
+//        var password = "password";
+//        var passwordConfirmationMatch = "password";
+//        var userNameValid = "validUserName";
+//        var expectedEmail = validEmail;
+//        var expectedPassword = password;
+//        var expectedUserName = userNameValid;
+
+//        User expectedUser = new User()
+//        {
+//            Email = expectedEmail,
+//            Password = expectedPassword,
+//            UserName = expectedUserName
+//        };
+
+//        userRepoMock.Setup(a => a.AddAsync(It.IsAny<UserDB>())).Returns(Task.CompletedTask);
+//        userRepoMock.Setup(b => b.Select(It.Is<string>(c => c == validEmail),
+//            It.IsAny<bool>())).Returns(Mapper.Map<UserDB>(expectedUser));
+
+//        // act
+//        var actualUser = userService.RegisterAsync(validEmail,
+//            userNameValid, password, passwordConfirmationMatch)
+//            .GetAwaiter().GetResult();
+
+//        // assert
+//        Assert.AreEqual(expectedUser.Id, actualUser.Id);
+//        Assert.AreEqual(expectedEmail, actualUser.Email);
+//        Assert.AreEqual(expectedPassword, actualUser.Password);
+//        Assert.AreEqual(expectedUserName, actualUser.UserName);
+//    }
+
+
+//}
