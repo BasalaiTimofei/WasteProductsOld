@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WasteProducts.DataAccess.Common.Models.Products;
+using WasteProducts.DataAccess.Common.Models;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Contexts.Config;
 
@@ -46,5 +47,11 @@ namespace WasteProducts.DataAccess.Contexts
                            .MapRightKey("ProductId")
                            .ToTable("UserProducts"));
         }
+
+        public IDbSet<GroupBoardDB> GroupBordDBs { get; set; }
+        public IDbSet<GroupDB> GroupDBs { get; set; }
+        public IDbSet<GroupUserDB> GroupUserDBs { get; set; }
+        public IDbSet<GroupUserInviteTimeDB> GroupUserInviteTimeDBs { get; set; }
+        public IDbSet<GroupProductDB> GroupProductDBs { get; set; }
     }
 }

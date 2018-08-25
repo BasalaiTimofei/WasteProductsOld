@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace WasteProducts.DataAccess.Common.Repositories.Search
@@ -9,25 +10,55 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
     public interface ISearchRepository
     {
         /// <summary>
-        /// Returns object by Id
+        /// Returns object by keyField
         /// </summary>
         /// <typeparam name="TEntity">Object model type</typeparam>
         /// <param name="keyValue">Key value of model key field</param>
         /// <param name="keyField">Key field of model</param>
         /// <returns>Object model</returns>
-        TEntity Get<TEntity>(string keyValue, string keyField = "Id");
-        
+        TEntity Get<TEntity>(string keyValue, string keyField) where TEntity : class;
+
+        /// <summary>
+        /// Returns object by Id
+        /// </summary>
+        /// <typeparam name="TEntity">Object model type</typeparam>
+        /// <param name="id">Id of getting object</param>
+        /// <returns></returns>
+        TEntity GetById<TEntity>(int id) where TEntity : class;
+
         /// <summary>
         /// Async version of Get
         /// </summary>
         Task<TEntity> GetAsync<TEntity>(string Id);
 
         /// <summary>
-        /// Returnes collection of all objects
+        /// Returns collection of all objects
         /// </summary>
         /// <typeparam name="TEntity">Object model type</typeparam>
+        /// <param name="numResults">maximum number of resulte</param>
         /// <returns>IEnumerable of objects</returns>        
-        IEnumerable<TEntity> GetAll<TEntity>();
+        IEnumerable<TEntity> GetAll<TEntity>() where TEntity : class;
+
+        /// <summary>
+        /// Returns collection of all objects. Query string and array of fields are used for search.
+        /// </summary>
+        /// <typeparam name="TEntity">Object model type</typeparam>
+        /// <param name="queryString">Query string</param>
+        /// <param name="searchableFields">Fileds to search.</param>
+        /// <param name="numResults">maximum number of results</param>
+        /// <returns>IEnumerable of objects</returns>  
+        IEnumerable<TEntity> GetAll<TEntity>(string queryString, IEnumerable<string> searchableFields, int numResults) where TEntity : class;
+
+        /// <summary>
+        /// Returns collection of all objects. Query string and array of fields are used for search.
+        /// </summary>
+        /// <typeparam name="TEntity">Object model type</typeparam>
+        /// <param name="queryString">Query string</param>
+        /// <param name="searchableFields">Fileds to search</param>
+        /// <param name="boosts">Dictionary with boosts values for the fields</param>
+        /// <param name="numResults">maximum number of results</param>
+        /// <returns>IEnumerable of objects</returns>  
+        IEnumerable<TEntity> GetAll<TEntity>(string queryString, IEnumerable<string> searchableFields, ReadOnlyDictionary<string, float> boosts, int numResults) where TEntity : class;
 
         /// <summary>
         /// Async version of GetAll
@@ -39,7 +70,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         /// </summary>
         /// <typeparam name="TEntity">Object model type</typeparam>
         /// <param name="obj">Object</param>
-        void Insert<TEntity>(TEntity obj);
+        void Insert<TEntity>(TEntity obj) where TEntity : class;
 
         /// <summary>
         /// Async version of Insert
@@ -51,7 +82,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         /// </summary>
         /// <typeparam name="TEntity">Object model type</typeparam>
         /// <param name="obj">Object</param>
-        void Update<TEntity>(TEntity obj);
+        void Update<TEntity>(TEntity obj) where TEntity : class;
 
         /// <summary>
         /// Async version of Update
@@ -63,11 +94,22 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         /// </summary>
         /// <typeparam name="TEntity">Object model type</typeparam>
         /// <param name="obj">Object</param>
-        void Delete<TEntity>(TEntity obj);
+        void Delete<TEntity>(TEntity obj) where TEntity : class;
 
         /// <summary>
         /// Async version of Delete
         /// </summary>
-        Task DeleteAsync<TEntity>(TEntity obj);        
+        Task DeleteAsync<TEntity>(TEntity obj);
+
+        /// <summary>
+        /// Clears repository
+        /// </summary>
+        void Clear();
+
+        /// <summary>
+        /// Optimizes repository for faster search
+        /// </summary>
+        void Optimize();
+
     }
 }
