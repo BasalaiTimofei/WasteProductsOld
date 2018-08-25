@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.Logic.Common.Models.Users;
 
 namespace WasteProducts.Logic.Mappings.UserMappings
@@ -9,7 +9,7 @@ namespace WasteProducts.Logic.Mappings.UserMappings
     {
         public UserLoginProfile()
         {
-            CreateMap<UserLogin, UserLoginInfo>().ConstructUsing((ul) => new UserLoginInfo(ul.LoginProvider, ul.ProviderKey)).ReverseMap();
+            CreateMap<UserLogin, UserLoginDB>().ReverseMap();
             CreateMap<UserLogin, IdentityUserLogin>().ForMember(m => m.UserId, opt => opt.Ignore());
         }
     }

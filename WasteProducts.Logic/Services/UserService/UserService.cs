@@ -211,8 +211,9 @@ namespace WasteProducts.Logic.Services.UserService
             =>
             _mapper.Map<User>(user);
 
-        private UserLoginInfo MapTo<T>(UserLogin user)
+        private UserLoginDB MapTo<T>(UserLogin user)
             =>
-            _mapper.Map<UserLoginInfo>(user);
+            _mapper.Map<UserLoginDB>(user);
+
     }
 }

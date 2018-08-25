@@ -54,13 +54,15 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             }
         }
 
-        public async Task AddLoginAsync(UserDB user, UserLoginInfo login)
+        public async Task AddLoginAsync(UserDB user, UserLoginDB login)
         {
+            UserLoginInfo loginInfo = new UserLoginInfo(login.LoginProvider, login.ProviderKey);
+
             using (var db = GetWasteContext())
             {
                 using (var userStore = new UserStore<UserDB>(db))
                 {
-                    await userStore.AddLoginAsync(user, login);
+                    await userStore.AddLoginAsync(user, loginInfo);
                     await db.SaveChangesAsync();
                 }
             }
@@ -134,7 +136,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             }
         }
 
-        public async Task RemoveLoginAsync(UserDB user, UserLoginInfo login)
+        public async Task RemoveLoginAsync(UserDB user, UserLoginDB login)
         {
             using (var db = GetWasteContext())
             {
