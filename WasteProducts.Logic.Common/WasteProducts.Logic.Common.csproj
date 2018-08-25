@@ -76,7 +76,6 @@
     <Compile Include="Services\Groups\IGropService.cs" />
     <Compile Include="Services\MailService\IMailFactory.cs" />
     <Compile Include="Services\MailService\IMailService.cs" />
-    <Compile Include="Services\Search\ISearchService.cs" />
     <Compile Include="Services\UserService\IUserRoleService.cs" />
     <Compile Include="Services\UserService\IUserService.cs" />
   </ItemGroup>
