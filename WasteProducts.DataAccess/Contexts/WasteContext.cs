@@ -34,10 +34,10 @@ namespace WasteProducts.DataAccess.Contexts
 
             modelBuilder.Entity<UserDB>()
                 .HasMany(u => u.Friends)
-                .WithMany();
-            //.Map(t => t.MapLeftKey("UserId")
-            //           .MapRightKey("FriendId")
-            //           .ToTable("UserFriends"));
+                .WithMany()
+                .Map(t => t.MapLeftKey("UserId")
+                           .MapRightKey("FriendId")
+                           .ToTable("UserFriends"));
 
             modelBuilder.Entity<UserDB>()
                 .HasMany(u => u.Products)
