@@ -10,7 +10,7 @@ namespace WasteProducts.Logic.Mappings.UserMappings
         public UserLoginProfile()
         {
             CreateMap<UserLogin, UserLoginDB>().ReverseMap();
-            CreateMap<UserLogin, IdentityUserLogin>().ForMember(m => m.UserId, opt => opt.Ignore());
+            CreateMap<UserLogin, IdentityUserLogin>().ForMember(m => m.UserId, opt => opt.Ignore()).ReverseMap();
         }
     }
 }
