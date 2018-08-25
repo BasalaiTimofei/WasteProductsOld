@@ -247,11 +247,22 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         {
             using (var db = GetWasteContext())
             {
-                using (var userStore = new UserStore<UserDB>(db))
+                // TODO исправить, добавить обработку Password и превращение его в PasswordHash
+                // не аттачу юзера, а запрашиваю, чтобы менялся только пароль, т.к. юзер может прийти измененным, но не сохраненным
+                var userInDB = db.Users.FirstOrDefault(u => u.Id == user.Id);
+                if (userInDB != null)
                 {
-                    await userStore.SetPasswordHashAsync(user, newPassword);
+                    userInDB.PasswordHash = newPassword;
                     await db.SaveChangesAsync();
                 }
+
+                // вот таким кодом пытался установить новый PasswordHash (заметьте, PasswordHash, не Password)
+                // но он как ни странно даже не работает. Оставил коммент на будущее, до оптимизации кода, как образец
+                //using (var userStore = new UserStore<UserDB>(db))
+                //{
+                //    await userStore.SetPasswordHashAsync(user, newPassword);
+                //    await db.SaveChangesAsync();
+                //}
             }
         }
 
