@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using WasteProducts.Logic.Common.Enums;
 using WasteProducts.Logic.Common.Models.Products;
 
 namespace WasteProducts.Logic.Common.Models.Users

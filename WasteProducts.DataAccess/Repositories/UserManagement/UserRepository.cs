@@ -194,11 +194,26 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             }
         }
 
-        public List<UserDB> SelectRange(Func<UserDB, bool> predicate)
+        public IEnumerable<UserDB> SelectRange(Func<UserDB, bool> predicate, bool lazyInitiation = true)
         {
             using (var db = GetWasteContext())
             {
-                return db.Users.Where(predicate).ToList();
+                if (lazyInitiation)
+                {
+                    return db.Users.Where(predicate);
+                }
+                else
+                {
+                    db.Configuration.LazyLoadingEnabled = false;
+
+                    // TODO expand with publicGroups when it awailable
+                    return db.Users.Include(u => u.Roles).
+                        Include(u => u.Claims).
+                        Include(u => u.Logins).
+                        Include(u => u.Friends).
+                        Include(u => u.Products).
+                        Where(predicate);
+                }
             }
         }
 
@@ -228,6 +243,28 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             }
         }
 
+        public async Task ResetPasswordAsync(UserDB user, string newPassword)
+        {
+            using (var db = GetWasteContext())
+            {
+                // TODO исправить, добавить обработку Password и превращение его в PasswordHash
+                user.PasswordHash = newPassword;
+                db.Users.Attach(user);
+                var entry = db.Entry(user);
+                entry.Property(p => p.PasswordHash).IsModified = true;
+
+                await db.SaveChangesAsync();
+
+                // вот таким кодом пытался установить новый PasswordHash (заметьте, PasswordHash, не Password)
+                // но он как ни странно даже не работает. Оставил коммент на будущее, до оптимизации кода, как образец
+                //using (var userStore = new UserStore<UserDB>(db))
+                //{
+                //    await userStore.SetPasswordHashAsync(user, newPassword);
+                //    await db.SaveChangesAsync();
+                //}
+            }
+        }
+
         private (UserDB user, IList<string> roles) Select(Func<UserDB, bool> predicate, bool lazyInitiation, bool getRoles)
         {
             using (var db = GetWasteContext())
@@ -235,7 +272,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 (UserDB user, IList<string> roles) result = (null, null);
                 if (lazyInitiation)
                 {
-                    result.user = db.Users.Where(predicate).FirstOrDefault();
+                    result.user = db.Users.FirstOrDefault(predicate);
                 }
                 else
                 {
@@ -247,7 +284,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                         Include(u => u.Logins).
                         Include(u => u.Friends).
                         Include(u => u.Products).
-                        Where(predicate).FirstOrDefault();
+                        FirstOrDefault(predicate);
                 }
 
                 if (getRoles)

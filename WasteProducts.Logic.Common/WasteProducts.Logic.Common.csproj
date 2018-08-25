@@ -47,13 +47,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums\UserCategory.cs" />
+    <Compile Include="Attributes\TraceAttribute.cs" />
     <Compile Include="Models\Donation\Donation.cs" />
     <Compile Include="Models\Barcods\Barcode.cs" />
     <Compile Include="Models\Barcods\BarcodeInfo.cs" />
+    <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\Search\BoostedSearchQuery.cs" />
     <Compile Include="Models\Products\Category.cs" />
     <Compile Include="Models\Search\SearchQuery.cs" />
-    <Compile Include="Models\Search\SearchResult.cs" />
     <Compile Include="Models\Users\User.cs" />
     <Compile Include="Models\Products\Product.cs" />
     <Compile Include="Models\Users\UserClaim.cs" />
@@ -63,9 +64,18 @@
     <Compile Include="Services\IProductService.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\IBarcodeService.cs" />
+    <Compile Include="Models\Groups\GroupUserInviteTime.cs" />
+    <Compile Include="Models\Groups\GroupBoard.cs" />
+    <Compile Include="Models\Groups\Group.cs" />
+    <Compile Include="Models\Groups\GroupProduct.cs" />
+    <Compile Include="Models\Groups\GroupUser.cs" />
+    <Compile Include="Services\Groups\IGropDataService.cs" />
+    <Compile Include="Services\Groups\IGropUserManagerService.cs" />
+    <Compile Include="Services\Groups\IGropProductService.cs" />
+    <Compile Include="Services\Groups\IGropBoardService.cs" />
+    <Compile Include="Services\Groups\IGropService.cs" />
     <Compile Include="Services\MailService\IMailFactory.cs" />
     <Compile Include="Services\MailService\IMailService.cs" />
-    <Compile Include="Services\Search\ISearchService.cs" />
     <Compile Include="Services\UserService\IUserRoleService.cs" />
     <Compile Include="Services\UserService\IUserService.cs" />
   </ItemGroup>
@@ -78,6 +88,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

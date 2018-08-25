@@ -129,7 +129,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        List<UserDB> SelectRange(Func<UserDB, bool> predicate);
+        IEnumerable<UserDB> SelectRange(Func<UserDB, bool> predicate, bool lazyInitiation = true);
 
         /// <summary>
         /// Get the names of the roles a user is a member of.
@@ -143,5 +143,13 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// </summary>
         /// <param name="user">Specific user to update.</param>
         Task UpdateAsync(UserDB user);
+
+        /// <summary>
+        /// Resets password of a user.
+        /// </summary>
+        /// <param name="user">Password of this user will be reset.</param>
+        /// <param name="newPassword">New password for a user.</param>
+        /// <returns></returns>
+        Task ResetPasswordAsync(UserDB user, string newPassword);
     }
 }

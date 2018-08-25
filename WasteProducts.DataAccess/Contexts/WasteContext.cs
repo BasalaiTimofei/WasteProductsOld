@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WasteProducts.DataAccess.Common.Models.Products;
+using WasteProducts.DataAccess.Common.Models;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Contexts.Config;
 
@@ -23,11 +24,6 @@ namespace WasteProducts.DataAccess.Contexts
         }
 
         /// <summary>
-        /// IDBSet of Friends.
-        /// </summary>
-        //public IDbSet<Friend> Friends { get; set; }
-
-        /// <summary>
         /// property added for to use an entity set that is used to perform
         ///  create, read, update, delete and to get product list operations in 'ProductRepository' class.
         /// </summary>
@@ -39,10 +35,10 @@ namespace WasteProducts.DataAccess.Contexts
 
             modelBuilder.Entity<UserDB>()
                 .HasMany(u => u.Friends)
-                .WithMany();
-            //.Map(t => t.MapLeftKey("UserId")
-            //           .MapRightKey("FriendId")
-            //           .ToTable("UserFriends"));
+                .WithMany()
+                .Map(t => t.MapLeftKey("UserId")
+                           .MapRightKey("FriendId")
+                           .ToTable("UserFriends"));
 
             modelBuilder.Entity<UserDB>()
                 .HasMany(u => u.Products)
@@ -51,5 +47,11 @@ namespace WasteProducts.DataAccess.Contexts
                            .MapRightKey("ProductId")
                            .ToTable("UserProducts"));
         }
+
+        public IDbSet<GroupBoardDB> GroupBordDBs { get; set; }
+        public IDbSet<GroupDB> GroupDBs { get; set; }
+        public IDbSet<GroupUserDB> GroupUserDBs { get; set; }
+        public IDbSet<GroupUserInviteTimeDB> GroupUserInviteTimeDBs { get; set; }
+        public IDbSet<GroupProductDB> GroupProductDBs { get; set; }
     }
 }
