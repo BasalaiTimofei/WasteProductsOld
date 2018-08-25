@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using WasteProducts.DataAccess.Common.Models.Donation;
+using WasteProducts.DataAccess.Common.Models.DonationManagment;
 
-namespace WasteProducts.DataAccess.Common.Repositories.Donation
+namespace WasteProducts.DataAccess.Common.Repositories.DonationManagment
 {
     interface IDonationRepository : IDisposable
     {
