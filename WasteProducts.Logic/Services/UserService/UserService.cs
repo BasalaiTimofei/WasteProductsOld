@@ -46,7 +46,8 @@ namespace WasteProducts.Logic.Services.UserService
                 };
                 var userToAdd = MapTo<UserDB>(registeringUser);
                 _userRepo.AddAsync(userToAdd).GetAwaiter().GetResult();
-                var result = MapTo<User>(_userRepo.Select(email, false));
+                var userDB = _userRepo.Select(email, false);
+                var result = MapTo<User>(userDB);
                 return result;
             });
         }

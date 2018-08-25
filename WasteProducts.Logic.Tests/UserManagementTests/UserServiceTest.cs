@@ -20,6 +20,8 @@ using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.Logic.Services.UserService;
 using System.Net.Mail;
 using WasteProducts.Logic.Mappings.UserMappings;
+using WasteProducts.Logic.Common.Models.Products;
+using System.Linq.Expressions;
 
 namespace WasteProducts.Logic.Tests.UserManagementTests
 {
@@ -127,7 +129,20 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             {
                 Email = expectedEmail,
                 Password = expectedPassword,
-                UserName = expectedUserName
+                UserName = expectedUserName,
+                AccessFailedCount = 0,
+                Claims = new List<System.Security.Claims.Claim>(),
+                EmailConfirmed = false,
+                Friends = new List<User>(),
+                LockoutEnabled = false,
+                LockoutEndDateUtc = null,
+                Logins = new List<UserLogin>(),
+                PhoneNumber = null,
+                PhoneNumberConfirmed = false,
+                Products = new List<Product>(),
+                Roles = new List<string>(),
+                SecurityStamp = null,
+                TwoFactorEnabled = false
             };
 
             userRepoMock.Setup(a => a.AddAsync(It.IsAny<UserDB>())).Returns(Task.CompletedTask);
@@ -139,12 +154,82 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
                 userNameValid, password, passwordConfirmationMatch)
                 .GetAwaiter().GetResult();
 
+
+
             // assert
+            Assert.AreEqual(expectedUser.AccessFailedCount, actualUser.AccessFailedCount);
+            Assert.AreEqual(expectedUser.Claims, actualUser.Claims);
+            Assert.AreEqual(expectedUser.EmailConfirmed, actualUser.EmailConfirmed);
+            Assert.AreEqual(expectedUser.Friends, actualUser.Friends);
             Assert.AreEqual(expectedUser.Id, actualUser.Id);
-            Assert.AreEqual(expectedEmail, actualUser.Email);
-            Assert.AreEqual(expectedPassword, actualUser.Password);
-            Assert.AreEqual(expectedUserName, actualUser.UserName);
+            Assert.AreEqual(expectedUser.LockoutEnabled, actualUser.LockoutEnabled);
+            Assert.AreEqual(expectedUser.LockoutEndDateUtc, actualUser.LockoutEndDateUtc);
+            Assert.AreEqual(expectedUser.Logins, actualUser.Logins);
+            Assert.AreEqual(expectedUser.Password, actualUser.Password);
+            Assert.AreEqual(expectedUser.Email, actualUser.Email);
+            Assert.AreEqual(expectedUser.PhoneNumber, actualUser.PhoneNumber);
+            Assert.AreEqual(expectedUser.PhoneNumberConfirmed, actualUser.PhoneNumberConfirmed);
+            Assert.AreEqual(expectedUser.Products, actualUser.Products);
+            Assert.AreEqual(expectedUser.Roles, actualUser.Roles);
+            Assert.AreEqual(expectedUser.SecurityStamp, actualUser.SecurityStamp);
+            Assert.AreEqual(expectedUser.TwoFactorEnabled, actualUser.TwoFactorEnabled);
+            Assert.AreEqual(expectedUser.UserName, actualUser.UserName);
+            userRepoMock.Verify(m => m.Select(It.Is<string>(c => c == validEmail),
+                It.IsAny<bool>()), Times.Once());
         }
+
+        [Test]
+        public void UserServiceTest_05_LogInAsync_Not_Existing_Email_Returns_Null()
+        {
+            // arrange
+            var invalidEmail = "invalidEmail@gmail.com";
+            var password = "password";
+            UserDB userDB = new UserDB();
+            userDB.Email = "validEmail@gmail.com";
+            userDB.PasswordHash = "password";
+            IList<string> roles = new List<string>();
+
+
+            Expression<Func<UserDB, bool>> exp = u => u.Email == invalidEmail && u.PasswordHash == password;
+            (UserDB, IList<string>) tuple = (userDB, roles);
+
+            userRepoMock.Setup(a => a.
+            SelectWithRoles(It.IsAny<Func<UserDB, bool>>(),
+                It.IsAny<bool>())).Returns(tuple);
+        }
+
+        // PasswordRequestAsync - positive and negative
+        // GetRolesAsync
+        // + other
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     }
