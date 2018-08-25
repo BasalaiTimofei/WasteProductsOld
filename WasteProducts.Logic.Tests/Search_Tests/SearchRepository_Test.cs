@@ -4,13 +4,13 @@ using System;
 using System.Collections.Generic;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.Logic.Common.Models;
-using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Services;
 using System.Linq;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Repositories;
 using WasteProducts.DataAccess.Common.Exceptions;
 using System.Collections.ObjectModel;
+using WasteProducts.Logic.Common.Models.Users;
 
 namespace WasteProducts.Logic.Tests.Search_Tests
 {
@@ -21,19 +21,26 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         public string Description { get; set; }
     }
 
+    public class TestUser
+    {
+        public int Id { get; set; }
+        public string Login { get; set; }
+        public string Email { get; set; }
+    }
+
     [TestFixture]
     class SearchRepository_Test
     {
         [OneTimeSetUp]
         public void Setup()
         {
-            users = new List<User>
+            users = new List<TestUser>
             {
-                new User { Id = 1, Login = "user1", Email = "user1@mail.net" },
-                new User { Id = 2, Login = "user2", Email = "user2@mail.net" },
-                new User { Id = 3, Login = "user3", Email = "user3@mail.net" },
-                new User { Id = 4, Login = "user4 user", Email = "user4@mail.net" },
-                new User { Id = 5, Login = "User5 user", Email = "user5@mail.net" }
+                new TestUser { Id = 1, Login = "user1", Email = "user1@mail.net" },
+                new TestUser { Id = 2, Login = "user2", Email = "user2@mail.net" },
+                new TestUser { Id = 3, Login = "user3", Email = "user3@mail.net" },
+                new TestUser { Id = 4, Login = "user4 user", Email = "user4@mail.net" },
+                new TestUser { Id = 5, Login = "user5 user", Email = "user5@mail.net" }
             };
 
             products = new List<TestProduct>
@@ -47,7 +54,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
         }
 
-        private IEnumerable<User> users;
+        private IEnumerable<TestUser> users;
         private IEnumerable<TestProduct> products;
         private ISearchRepository sut;
 
@@ -76,7 +83,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         public void Insert_InsertNewObject_Return_NoException()
         {
             sut = new LuceneSearchRepository();
-            var user = new User();
+            var user = new TestUser();
 
             sut.Insert(user);
         }
@@ -84,23 +91,23 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
         #region TEntity GetById<TEntity>(int id) where TEntity : class
         [Test]
-        public void GetById_GetUser_Return_NoException()
+        public void GetById_GetTestUser_Return_NoException()
         {
-            var user = new User() { Id = 1, Login = "user1" };
+            var user = new TestUser() { Id = 1, Login = "user1" };
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
 
-            var userFromRepo = sut.GetById<User>(1);
+            var userFromRepo = sut.GetById<TestUser>(1);
         }
 
         [Test]
         public void GetById_GetExistingId_Return_ObjectWithCorrectId()
         {
-            var user = new User() { Id = 1, Login = "user1" };
+            var user = new TestUser() { Id = 1, Login = "user1" };
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
 
-            var userFromRepo = sut.GetById<User>(1);
+            var userFromRepo = sut.GetById<TestUser>(1);
 
             Assert.AreEqual(user.Login, userFromRepo.Login);
         }
@@ -108,14 +115,14 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void GetById_GetWrongId_Return_ObjectAreNotEqual()
         {
-            var user = new User() { Id = 1, Login = "user1" };
-            var user2 = new User() { Id = 2, Login = "user2" };
+            var user = new TestUser() { Id = 1, Login = "user1" };
+            var user2 = new TestUser() { Id = 2, Login = "user2" };
 
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
             sut.Insert(user2);
 
-            var userFromRepo = sut.GetById<User>(2);
+            var userFromRepo = sut.GetById<TestUser>(2);
 
             Assert.AreNotEqual(user.Login, userFromRepo.Login);
         }
@@ -123,11 +130,11 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void GetById_GetByNotExistingId_Return_NullObject()
         {
-            var user = new User() { Id = 1, Login = "user1" };
+            var user = new TestUser() { Id = 1, Login = "user1" };
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
 
-            var userFromRepo = sut.GetById<User>(2);
+            var userFromRepo = sut.GetById<TestUser>(2);
 
             Assert.AreEqual(null, userFromRepo);
         }
@@ -137,21 +144,21 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void Get_GetUser_Return_NoException()
         {
-            var user = new User() { Id = 1, Login = "user1" };
+            var user = new TestUser() { Id = 1, Login = "user1" };
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
 
-            var userFromRepo = sut.Get<User>("user1", "login");
+            var userFromRepo = sut.Get<TestUser>("user1", "login");
         }
 
         [Test]
         public void Get_GetExistingId_Return_ObjectWithCorrectId()
         {
-            var user = new User() { Id = 1, Login = "user1" };
+            var user = new TestUser() { Id = 1, Login = "user1" };
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
 
-            var userFromRepo = sut.Get<User>("user1", "Login");
+            var userFromRepo = sut.Get<TestUser>("user1", "Login");
 
             Assert.AreEqual(user.Login, userFromRepo.Login);
         }
@@ -159,14 +166,14 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void Get_GetWrongId_Return_ObjectAreNotEqual()
         {
-            var user = new User() { Id = 1, Login = "user1" };
-            var user2 = new User() { Id = 2, Login = "user2" };
+            var user = new TestUser() { Id = 1, Login = "user1" };
+            var user2 = new TestUser() { Id = 2, Login = "user2" };
 
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
             sut.Insert(user2);
 
-            var userFromRepo = sut.Get<User>("user2", "Login");
+            var userFromRepo = sut.Get<TestUser>("user2", "Login");
 
             Assert.AreNotEqual(user.Login, userFromRepo.Login);
         }
@@ -174,11 +181,11 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void Get_GetByNotExistingId_Return_NullObject()
         {
-            var user = new User() { Id = 1, Login = "user1" };
+            var user = new TestUser() { Id = 1, Login = "user1" };
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
 
-            var userFromRepo = sut.Get<User>("user1", "not_existing_filed");
+            var userFromRepo = sut.Get<TestUser>("user1", "not_existing_filed");
 
             Assert.AreEqual(null, userFromRepo);
         }
@@ -192,7 +199,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             foreach (var user in users)
                 sut.Insert(user);
 
-            var userCollectionFromRepo = sut.GetAll<User>();
+            var userCollectionFromRepo = sut.GetAll<TestUser>();
         }
 
         [Test]
@@ -202,7 +209,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             foreach (var user in users)
                 sut.Insert(user);
 
-            var userCollectionFromRepo = sut.GetAll<User>();
+            var userCollectionFromRepo = sut.GetAll<TestUser>();
 
             Assert.AreEqual(users.Count(), userCollectionFromRepo.Count());
         }
@@ -218,7 +225,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
                 sut.Insert(user);
             var queryList = new List<string>();
 
-            Assert.Throws<ArgumentException>(() => sut.GetAll<User>("user", queryList, -1));
+            Assert.Throws<ArgumentException>(() => sut.GetAll<TestUser>("user", queryList, -1));
         }
 
         [Test]
@@ -231,7 +238,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             queryList.Add("Login");
             queryList.Add("Email");
 
-            var userCollectionFromRepo = sut.GetAll<User>("user", queryList, 1000);
+            var userCollectionFromRepo = sut.GetAll<TestUser>("user", queryList, 1000);
 
             Assert.AreEqual(5, userCollectionFromRepo.Count());
         }
@@ -250,7 +257,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             //Assert.AreEqual(0, userCollectionFromRepo.Count());
 
-            Assert.Throws<ArgumentException>(() => sut.GetAll<User>(String.Empty, queryList, 1000));
+            Assert.Throws<ArgumentException>(() => sut.GetAll<TestUser>(String.Empty, queryList, 1000));
         }
 
         [Test]
@@ -264,7 +271,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             //var userCollectionFromRepo = sut.GetAll<User>("user", queryList, 1000);
 
             //Assert.AreEqual(0, userCollectionFromRepo.Count());
-            Assert.Throws<ArgumentException>(() => sut.GetAll<User>("user", queryList, 1000));
+            Assert.Throws<ArgumentException>(() => sut.GetAll<TestUser>("user", queryList, 1000));
         }
 
         //не проходит
@@ -296,7 +303,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             var queryList = new List<string>();
             queryList.Add("Login");
 
-            var userCollectionFromRepo = sut.GetAll<User>("user5", queryList, 1000);
+            var userCollectionFromRepo = sut.GetAll<TestUser>("user5", queryList, 1000);
 
             Assert.AreEqual(1, userCollectionFromRepo.Count());
         }
@@ -314,7 +321,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             var oldUser = users.ToList()[1];
             oldUser.Login = "user1_new";
 
-            sut.Update<User>(oldUser);
+            sut.Update<TestUser>(oldUser);
         }
 
         [Test]
@@ -326,8 +333,8 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             var oldUser = users.ToList()[1];
             oldUser.Login = "user1_new";
 
-            sut.Update<User>(oldUser);
-            var updUser = sut.GetById<User>(oldUser.Id);
+            sut.Update<TestUser>(oldUser);
+            var updUser = sut.GetById<TestUser>(oldUser.Id);
 
             Assert.AreEqual("user1_new", updUser.Login);
         }
@@ -339,9 +346,9 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             foreach (var user in users)
                 sut.Insert(user);
 
-            var oldUser = new User();
+            var oldUser = new TestUser();
 
-            Assert.Throws<LuceneSearchRepositoryException>(() => sut.Update<User>(oldUser));
+            Assert.Throws<LuceneSearchRepositoryException>(() => sut.Update<TestUser>(oldUser));
         }
 
         #endregion
@@ -355,7 +362,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
                 sut.Insert(user);
             var oldUser = users.ToList()[1];
 
-            sut.Delete<User>(oldUser);
+            sut.Delete<TestUser>(oldUser);
         }
 
         [Test]
@@ -366,8 +373,8 @@ namespace WasteProducts.Logic.Tests.Search_Tests
                 sut.Insert(user);
             var oldUser = users.ToList()[1];
 
-            sut.Delete<User>(oldUser);
-            var updUser = sut.GetById<User>(oldUser.Id);
+            sut.Delete<TestUser>(oldUser);
+            var updUser = sut.GetById<TestUser>(oldUser.Id);
 
             Assert.AreEqual(null, updUser);
         }

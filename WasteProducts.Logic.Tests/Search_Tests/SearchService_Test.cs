@@ -4,33 +4,33 @@ using System;
 using System.Collections.Generic;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.Logic.Common.Models;
-using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Services;
 using System.Linq;
 using WasteProducts.Logic.Common.Services;
 
 namespace WasteProducts.Logic.Tests.Search_Tests
 {
+
     [TestFixture]
     public class SearchService_Test
     {
         [SetUp]
         public void Setup()
         {
-            users = new List<User>
+            users = new List<TestUser>
             {
-                new User { Id = 1, Login = "user1", Email = "user1@mail.net" },
-                new User { Id = 2, Login = "user2", Email = "user2@mail.net" },
-                new User { Id = 3, Login = "user3", Email = "user3@mail.net" },
-                new User { Id = 4, Login = "user4", Email = "user4@mail.net" },
-                new User { Id = 5, Login = "user5", Email = "user5@mail.net" }
+                new TestUser { Id = 1, Login = "user1", Email = "user1@mail.net" },
+                new TestUser { Id = 2, Login = "user2", Email = "user2@mail.net" },
+                new TestUser { Id = 3, Login = "user3", Email = "user3@mail.net" },
+                new TestUser { Id = 4, Login = "user4", Email = "user4@mail.net" },
+                new TestUser { Id = 5, Login = "user5", Email = "user5@mail.net" }
             };
 
             mockRepo = new Mock<ISearchRepository>();
             sut = new LuceneSearchService(mockRepo.Object);
         }
 
-        private IEnumerable<User> users;
+        private IEnumerable<TestUser> users;
         private Mock<ISearchRepository> mockRepo;
         private ISearchService sut;
 
@@ -38,10 +38,10 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void Search_EmptyQuery_Return_Exception()
         {
-            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<int>())).Returns(users);
+            mockRepo.Setup(x => x.GetAll<TestUser>(It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<int>())).Returns(users);
 
             var query = new SearchQuery();
-            Assert.Throws<ArgumentException>(()=>sut.Search<User>(query));
+            Assert.Throws<ArgumentException>(()=>sut.Search<TestUser>(query));
         }
 
         /*[Test]
@@ -80,21 +80,21 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void AddIndex_InsertNewIndex_Return_NoException()
         {
-            User user = new User();
-            mockRepo.Setup(x => x.Insert<User>(user));
+            TestUser user = new TestUser();
+            mockRepo.Setup(x => x.Insert<TestUser>(user));
 
-            sut.AddToSearchIndex<User>(user);
+            sut.AddToSearchIndex<TestUser>(user);
         }
 
         [Test]
         public void AddIndex_InsertNewIndexVerify_Return_Once()
         {
-            var user = new User();
-            mockRepo.Setup(x => x.Insert<User>(user)).Verifiable();
+            var user = new TestUser();
+            mockRepo.Setup(x => x.Insert<TestUser>(user)).Verifiable();
 
-            sut.AddToSearchIndex<User>(user);
+            sut.AddToSearchIndex<TestUser>(user);
 
-            mockRepo.Verify(v => v.Insert<User>(user), Times.Once);
+            mockRepo.Verify(v => v.Insert<TestUser>(user), Times.Once);
         }
         #endregion
 
@@ -102,19 +102,19 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void AddIndex_InsertNewIndexIEnumerable_Return_NoException()
         {
-            mockRepo.Setup(x => x.Insert<User>(It.IsAny<User>()));
+            mockRepo.Setup(x => x.Insert<TestUser>(It.IsAny<TestUser>()));
 
-            sut.AddToSearchIndex<User>(users);
+            sut.AddToSearchIndex<TestUser>(users);
         }
 
         [Test]
         public void AddIndex_InsertNewIndexIEnumerableVerify_Return_UsersCount()
         {
-            mockRepo.Setup(x => x.Insert<User>(It.IsAny<User>())).Verifiable();
+            mockRepo.Setup(x => x.Insert<TestUser>(It.IsAny<TestUser>())).Verifiable();
 
-            sut.AddToSearchIndex<User>(users);
+            sut.AddToSearchIndex<TestUser>(users);
 
-            mockRepo.Verify(v => v.Insert<User>(It.IsAny<User>()), Times.Exactly(users.Count<User>()));
+            mockRepo.Verify(v => v.Insert<TestUser>(It.IsAny<TestUser>()), Times.Exactly(users.Count<TestUser>()));
         }
         #endregion
 
@@ -122,21 +122,21 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void RemoveIndex_DeleteIndex_Return_NoException()
         {
-            User user = new User();
-            mockRepo.Setup(x => x.Delete<User>(user));
+            TestUser user = new TestUser();
+            mockRepo.Setup(x => x.Delete<TestUser>(user));
 
-            sut.RemoveFromSearchIndex<User>(user);
+            sut.RemoveFromSearchIndex<TestUser>(user);
         }
 
         [Test]
         public void RemoveIndex_DeleteIndexVerify_Return_Once()
         {
-            var user = new User();
-            mockRepo.Setup(x => x.Delete<User>(user)).Verifiable();
+            var user = new TestUser();
+            mockRepo.Setup(x => x.Delete<TestUser>(user)).Verifiable();
 
-            sut.RemoveFromSearchIndex<User>(user);
+            sut.RemoveFromSearchIndex<TestUser>(user);
 
-            mockRepo.Verify(v => v.Delete<User>(user), Times.Once);
+            mockRepo.Verify(v => v.Delete<TestUser>(user), Times.Once);
         }
         #endregion
 
@@ -144,19 +144,19 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void RemoveIndex_DeleteIndexIEnumerable_Return_NoException()
         {
-            mockRepo.Setup(x => x.Delete<User>(It.IsAny<User>()));
+            mockRepo.Setup(x => x.Delete<TestUser>(It.IsAny<TestUser>()));
 
-            sut.RemoveFromSearchIndex<User>(users);
+            sut.RemoveFromSearchIndex<TestUser>(users);
         }
 
         [Test]
         public void RemoveIndex_DeleteIndexIEnumerableVerify_Return_UsersCount()
         {
-            mockRepo.Setup(x => x.Delete<User>(It.IsAny<User>())).Verifiable();
+            mockRepo.Setup(x => x.Delete<TestUser>(It.IsAny<TestUser>())).Verifiable();
 
-            sut.RemoveFromSearchIndex<User>(users);
+            sut.RemoveFromSearchIndex<TestUser>(users);
 
-            mockRepo.Verify(v => v.Delete<User>(It.IsAny<User>()), Times.Exactly(users.Count<User>()));
+            mockRepo.Verify(v => v.Delete<TestUser>(It.IsAny<TestUser>()), Times.Exactly(users.Count<TestUser>()));
         }
         #endregion
 
@@ -164,21 +164,21 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void UpdateIndex_UpdateIndex_Return_NoException()
         {
-            User user = new User();
-            mockRepo.Setup(x => x.Update<User>(user));
+            TestUser user = new TestUser();
+            mockRepo.Setup(x => x.Update<TestUser>(user));
 
-            sut.UpdateInSearchIndex<User>(user);
+            sut.UpdateInSearchIndex<TestUser>(user);
         }
 
         [Test]
         public void UpdateIndex_UpdateIndexVerify_Return_Once()
         {
-            var user = new User();
-            mockRepo.Setup(x => x.Update<User>(user)).Verifiable();
+            var user = new TestUser();
+            mockRepo.Setup(x => x.Update<TestUser>(user)).Verifiable();
 
-            sut.UpdateInSearchIndex<User>(user);
+            sut.UpdateInSearchIndex<TestUser>(user);
 
-            mockRepo.Verify(v => v.Update<User>(user), Times.Once);
+            mockRepo.Verify(v => v.Update<TestUser>(user), Times.Once);
         }
         #endregion
 
@@ -186,19 +186,19 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void UpdateIndex_UpdateIndexIEnumerable_Return_NoException()
         {
-            mockRepo.Setup(x => x.Update<User>(It.IsAny<User>()));
+            mockRepo.Setup(x => x.Update<TestUser>(It.IsAny<TestUser>()));
 
-            sut.UpdateInSearchIndex<User>(users);
+            sut.UpdateInSearchIndex<TestUser>(users);
         }
 
         [Test]
         public void UpdateIndex_UpdateIndexIEnumerableVerify_Return_UsersCount()
         {
-            mockRepo.Setup(x => x.Update<User>(It.IsAny<User>())).Verifiable();
+            mockRepo.Setup(x => x.Update<TestUser>(It.IsAny<TestUser>())).Verifiable();
 
-            sut.UpdateInSearchIndex<User>(users);
+            sut.UpdateInSearchIndex<TestUser>(users);
 
-            mockRepo.Verify(v => v.Update<User>(It.IsAny<User>()), Times.Exactly(users.Count<User>()));
+            mockRepo.Verify(v => v.Update<TestUser>(It.IsAny<TestUser>()), Times.Exactly(users.Count<TestUser>()));
         }
         #endregion
 
