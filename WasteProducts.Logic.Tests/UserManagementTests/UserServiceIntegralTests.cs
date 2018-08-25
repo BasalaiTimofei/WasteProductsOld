@@ -231,8 +231,11 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         public void UserIntegrTest_10ResettingUserPassword()
         {
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            user.PhoneNumber = "3334455";
             UserService.ResetPasswordAsync(user, "qwerty1", "New password", "New password").GetAwaiter().GetResult();
+
             user = UserService.LogInAsync("test49someemail@gmail.com", "New password").GetAwaiter().GetResult();
+            Assert.AreNotEqual("3334455", user.PhoneNumber);
             UserService.ResetPasswordAsync(user, "New password", "qwerty1", "qwerty1").GetAwaiter().GetResult();
         }
 
