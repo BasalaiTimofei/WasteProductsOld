@@ -13,7 +13,6 @@ namespace WasteProducts.Logic.Mappings
                 .ForMember(m => m.Created,
                     opt => opt.MapFrom(p => p.Name != null ? DateTime.UtcNow : default(DateTime)))
                 .ForMember(m => m.Modified, opt => opt.UseValue((DateTime?) null))
-                //.ForMember(m => m.Barcode, opt => opt.)
                 .ReverseMap();
         }
     }
