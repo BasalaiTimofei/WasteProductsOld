@@ -9,5 +9,6 @@ namespace WasteProducts.Logic.Mappings
 {
     public class GroupBoardProfile : Profile
     {
+
     }
 }
