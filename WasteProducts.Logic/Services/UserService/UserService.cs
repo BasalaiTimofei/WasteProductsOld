@@ -12,7 +12,6 @@ using System.Security.Claims;
 using Microsoft.AspNet.Identity;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Mappings.UserMappings;
-using WasteProducts.Logic.Mappings;
 
 namespace WasteProducts.Logic.Services.UserService
 {

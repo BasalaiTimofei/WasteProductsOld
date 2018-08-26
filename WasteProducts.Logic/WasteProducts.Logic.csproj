@@ -88,7 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InjectorModule.cs" />
-    <Compile Include="Mappings\ProductProfile.cs" />
+    <Compile Include="Mappings\UserMappings\ProductProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserClaimProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserLoginProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserProfile.cs" />
