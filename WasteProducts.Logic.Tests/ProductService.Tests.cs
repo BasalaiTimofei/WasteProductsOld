@@ -42,11 +42,11 @@ namespace WasteProducts.Logic.Tests
     public class ProductServiceTests
     {
         private Barcode _barcode;
+        private Mock<Product> _product;
         private IProductService _productSrvc;
         private Mock<IProductRepository> _repo;
-        private IMapper _mapper;
-        private List<ProductDB> listDb;
-        private List<Product> list;
+        private List<ProductDB> _listDb;
+        private List<Product> _list;
 
 
 
@@ -55,8 +55,9 @@ namespace WasteProducts.Logic.Tests
         {
             _barcode = new Barcode();
             _repo = new Mock<IProductRepository>();
+            _product=new Mock<Product>();
             
-            listDb = new List<ProductDB>();
+            _listDb = new List<ProductDB>();
             var prodConf = new MapperConfiguration(option => option.CreateMap<Product, ProductDB>()
                 .ForMember(m => m.Created,
                     opt => opt.MapFrom(p => p.Name != null ? DateTime.UtcNow : default(DateTime)))
@@ -67,7 +68,6 @@ namespace WasteProducts.Logic.Tests
             
             var prodMapper = new Mapper(prodConf);
             _productSrvc = new ProductService(_repo.Object, prodMapper);
-
         }
 
         [TearDown]
@@ -80,7 +80,7 @@ namespace WasteProducts.Logic.Tests
         public void AddByBarcode_InsertNewProduct_callsMethod_AddOfRepository()
         {
             _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(listDb);
+                .Returns(_listDb);
             
             _productSrvc.AddByBarcode(_barcode);
 
@@ -96,7 +96,7 @@ namespace WasteProducts.Logic.Tests
         }
 
         [Test]
-        public void AddingProductByBarcore_ReturnsProduct()
+        public void AddingProductByBarcore_ReturnsProduct_ResultTrue()
         {
             var barc = new Barcode
             {
@@ -107,11 +107,11 @@ namespace WasteProducts.Logic.Tests
             var r = _repo.Object;
 
             _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(listDb);
+                .Returns(_listDb);
             var d = r.SelectWhere(db => _productSrvc.AddByBarcode(barc));
 
             Assert.That(d != null);
-            Assert.AreEqual(listDb.Count, d.Count());
+            Assert.AreEqual(_listDb.Count, d.Count());
         }
 
         [Test]
@@ -151,7 +151,7 @@ namespace WasteProducts.Logic.Tests
 
             var result = _productSrvc.AddByName(name);
            
-            result.Should().Be(true);
+            result.Should().BeTrue();
         }
 
         [Test]
@@ -180,28 +180,27 @@ namespace WasteProducts.Logic.Tests
         }
 
         [Test]
-        public void DeletingProductByBarcore_BarcodeIsNotNull_AndProductSuccessfullyDeleted()
+        public void DeletingProductByBarcore_BarcodeIsNotNull_AndProductSuccessfullyMarked()
         {
             var prod = new ProductDB();
-            
-            listDb.Add(prod);
+            _listDb.Add(prod);
             _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(listDb);
+                .Returns(_listDb);
             var result = _productSrvc.DeleteByBarcode(new Barcode());
             
             result.Should().BeTrue();
         }
 
         [Test]
-        public void DeletingProductByBarcore_BarcodeIsNotNull_AndProductSuccessfullyDeleted_CalledOnce()
+        public void DeletingProductByBarcore_BarcodeIsNotNull_AndProductSuccessfullyMarked_CalledOnce()
         {
             var prod = new ProductDB();
             var prod1 = new ProductDB();
 
-            listDb.Add(prod);
-            listDb.Add(prod1);
+            _listDb.Add(prod);
+            _listDb.Add(prod1);
             _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(listDb);
+                .Returns(_listDb);
             _productSrvc.DeleteByBarcode(new Barcode());
 
             _repo.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Once);
@@ -224,10 +223,10 @@ namespace WasteProducts.Logic.Tests
             var prod1 = new ProductDB { Name = "Red Cherry", Barcode = barc1 };
             var prod2 = new ProductDB { Name = "Red Cherry", Barcode = barc2 };
 
-            listDb.Add(prod1);
-            listDb.Add(prod2);
+            _listDb.Add(prod1);
+            _listDb.Add(prod2);
             _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(listDb);
+                .Returns(_listDb);
 
             var result = _productSrvc.DeleteByName(prod1.Name);
 
@@ -254,10 +253,10 @@ namespace WasteProducts.Logic.Tests
             var prod1 = new ProductDB { Name = "Red Cherry", Barcode = barc1 };
             var prod2 = new ProductDB { Name = "Red Cherry", Barcode = barc2 };
 
-            listDb.Add(prod1);
-            listDb.Add(prod2);
+            _listDb.Add(prod1);
+            _listDb.Add(prod2);
             _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(listDb);
+                .Returns(_listDb);
             _productSrvc.DeleteByName(prod1.Name);
             prod1.Name.Should().BeSameAs(prod2.Name);
 
@@ -273,9 +272,9 @@ namespace WasteProducts.Logic.Tests
                 ProductName = "Red Cherry"
             };
             var prod = new ProductDB { Name = "Red Cherry", Barcode = barc };
-            listDb.Add(prod);
+            _listDb.Add(prod);
             _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(listDb);
+                .Returns(_listDb);
 
             var result = _productSrvc.DeleteByName(prod.Name);
 
@@ -288,11 +287,11 @@ namespace WasteProducts.Logic.Tests
         public void DeleteProductByName_IfNameIsEmpty_CalledNever()
         {
             var prod = new ProductDB {Name = ""};
-            listDb.Add(prod);
+            _listDb.Add(prod);
 
             _productSrvc.DeleteByName(prod.Name);
             _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(listDb);
+                .Returns(_listDb);
             prod.Name.Should().BeEmpty();
 
             _repo.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Never);
@@ -302,14 +301,38 @@ namespace WasteProducts.Logic.Tests
         public void DeleteProductByName_IfNameIsNull_CalledNever()
         {
             var prod = new ProductDB { Name = null };
-            listDb.Add(prod);
+            _listDb.Add(prod);
 
             _productSrvc.DeleteByName(prod.Name);
             _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(listDb);
+                .Returns(_listDb);
 
             prod.Name.Should().BeNull();
             _repo.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Never);
+        }
+
+        [Test]
+        public void IsHidden_ReturnsTrue()
+        {
+            var prod = new ProductDB();
+            _listDb.Add(prod);
+
+            _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(_listDb);
+            _productSrvc.Hide(_product.Object);
+
+            Assert.That(_productSrvc.IsHidden(_product.Object));
+        }
+        [Test]
+        public void Hide_CallsOnce()
+        {
+            var prod = new ProductDB();
+            _listDb.Add(prod);
+
+            _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(_listDb);
+            _productSrvc.Hide(_product.Object);
+            _repo.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Once);
         }
     }
 }
