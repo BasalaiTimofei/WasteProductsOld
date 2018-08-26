@@ -16,8 +16,6 @@ namespace WasteProducts.DataAccess.Contexts
             Database.Log = (s) => Debug.WriteLine(s);
         }
 
-        // "name=ConStrByServer" - такой по этому имени в конфиге тестового проекта лежит ссыль на connectionString
-        // к базе данных, которой я (Тишков Сергей, User Management) пользовался для функционального тестирования UserService
         public WasteContext(string nameOrConnectionString) : base(nameOrConnectionString)
         {
             Database.Log = (s) => Debug.WriteLine(s);

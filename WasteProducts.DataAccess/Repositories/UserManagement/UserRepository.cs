@@ -95,14 +95,22 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task DeleteAsync(UserDB user)
         {
-            using (var db = GetWasteContext())
+            await Task.Run(async () =>
             {
-                using (var userStore = new UserStore<UserDB>(db))
+                using (var db = GetWasteContext())
                 {
-                    await userStore.DeleteAsync(user);
+                    db.Users.Attach(user);
+                    var entry = db.Entry(user);
+                    entry.State = EntityState.Deleted;
                     await db.SaveChangesAsync();
+
+                    //using (var userStore = new UserStore<UserDB>(db))
+                    //{
+                    //    await userStore.DeleteAsync(user);
+                    //    await db.SaveChangesAsync();
+                    //}
                 }
-            }
+            });
         }
 
         public async Task RemoveClaimAsync(UserDB user, Claim claim)

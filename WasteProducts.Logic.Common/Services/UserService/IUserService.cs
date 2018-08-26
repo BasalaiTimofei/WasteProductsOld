@@ -137,6 +137,13 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// <returns></returns>
         Task RemoveLoginAsync(User user, UserLogin login);
 
+        /// <summary>
+        /// Deletes user from the WasteProducts
+        /// </summary>
+        /// <param name="user">Deleting user.</param>
+        /// <returns></returns>
+        Task DeleteUserAsunc(User user);
+
         // TODO USER MANAGEMENT PENDING FUNCTIONAL TO ADD:
         // sharing my products with my friends after model "Product" is created
         // subscribing special users to watch their news (if this functional will be approved)
