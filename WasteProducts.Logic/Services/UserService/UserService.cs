@@ -141,7 +141,7 @@ namespace WasteProducts.Logic.Services.UserService
                 user.Products
                 .FirstOrDefault(p => p.Barcode.Id == product.Barcode.Id &&
                                      p.Barcode.Code == product.Barcode.Code)
-                                     != null)
+                                     == null)
             {
                 user.Products.Add(product);
                 await UpdateAsync(user);
