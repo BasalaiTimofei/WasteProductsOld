@@ -39,7 +39,7 @@ namespace WasteProducts.DataAccess.Common.Models
         /// <summary>
         /// TimeDelete - datatime when group deleted
         /// </summary>
-        public DateTime TimeDelete { get; set; }
+        public DateTime? TimeDelete { get; set; }
         /// <summary>
         /// Bool - group deleted/greated
         ///     true - group greated

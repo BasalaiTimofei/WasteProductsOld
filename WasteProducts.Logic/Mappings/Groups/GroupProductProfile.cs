@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using System;
+using WasteProducts.DataAccess.Common.Models;
+using WasteProducts.Logic.Common.Models;
 
 namespace WasteProducts.Logic.Mappings
 {
-    class GroupProductProfile
+    public class GroupProductProfile : Profile
     {
+        public GroupProductProfile()
+        {
+            CreateMap<GroupProduct, GroupProductDB>();
+        }
     }
 }

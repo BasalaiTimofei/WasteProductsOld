@@ -20,9 +20,5 @@ namespace WasteProducts.Logic.Common.Models
         /// UserId - user which entered in group
         /// </summary>
         public int UserId { get; set; }
-        /// <summary>
-        /// UserId - user which entered in group
-        /// </summary>
-        public IList<GroupUserInviteTime> GroupUserInviteTimes { get; set; }
     }
 }
