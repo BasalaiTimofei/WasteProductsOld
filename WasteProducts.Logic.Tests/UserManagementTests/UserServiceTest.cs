@@ -25,6 +25,7 @@ using System.Linq.Expressions;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Barcods;
+using System.Threading;
 
 namespace WasteProducts.Logic.Tests.UserManagementTests
 {
@@ -160,7 +161,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
                 .GetAwaiter().GetResult();
 
 
-
             // assert
             Assert.AreEqual(expectedUser.AccessFailedCount, actualUser.AccessFailedCount);
             Assert.AreEqual(expectedUser.Claims, actualUser.Claims);
@@ -195,7 +195,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             var userName = "UserName";
             IList<string> roles = new List<string>();
 
-
             (UserDB, IList<string>) tuple = (null, roles);
 
             userRepoMock.Setup(a => a.
@@ -207,9 +206,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
             // assert
             Assert.IsNull(actual);
-
-
-            
         }
 
         [Test]
@@ -265,7 +261,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             // arrange
             IList<string> expected = new List<string>() {"1", "2" };
 
-
             userRepoMock.Setup(a =>
             a.GetRolesAsync(It.IsAny<UserDB>()))
             .Returns(Task.FromResult((expected)));
@@ -315,15 +310,12 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             user.Products.Add(product);
             userServiceMock.Setup(a => a.UpdateAsync(It.IsAny<User>())).Verifiable();
 
-
             // act
             userService.AddProductAsync(user, product).GetAwaiter().GetResult();
-
 
             // assert
             userServiceMock.Verify(a => a.UpdateAsync(It.IsAny<User>()),
                 Times.Never());
-
         }
 
         [Test]
@@ -346,7 +338,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
                 hasProduct
             };
 
-
             Product newProduct = new Product
             {
                 Barcode = new Barcode()
@@ -359,8 +350,8 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             userRepoMock.Setup(a => a.UpdateAsync(It.Is<UserDB>(u => u.Id == "asdas"))).Verifiable();
 
             // act
-            userService.AddProductAsync(user, newProduct).GetAwaiter().GetResult();
-
+            userService.AddProductAsync(user, newProduct);
+            Thread.Sleep(20);
             // assert
             userRepoMock.Verify(a => a.UpdateAsync(It.Is<UserDB>(u => u.Id == "asdas")),
                 Times.Once());
