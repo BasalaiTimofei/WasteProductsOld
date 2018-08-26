@@ -23,6 +23,8 @@ using WasteProducts.Logic.Mappings.UserMappings;
 using WasteProducts.Logic.Common.Models.Products;
 using System.Linq.Expressions;
 using WasteProducts.Logic.Common.Models.Barcods;
+using WasteProducts.DataAccess.Common.Models.Products;
+using WasteProducts.DataAccess.Common.Models.Barcods;
 
 namespace WasteProducts.Logic.Tests.UserManagementTests
 {
@@ -329,6 +331,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         {
             // arrange
             User user = new User();
+            user.Id = "asdas";
 
             Product hasProduct = new Product
             {
@@ -343,6 +346,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
                 hasProduct
             };
 
+
             Product newProduct = new Product
             {
                 Barcode = new Barcode()
@@ -352,13 +356,13 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
                 }
             };
-            userServiceMock.Setup(a => a.UpdateAsync(It.IsAny<User>())).Verifiable();
+            userRepoMock.Setup(a => a.UpdateAsync(It.Is<UserDB>(u => u.Id == "asdas"))).Verifiable();
 
             // act
             userService.AddProductAsync(user, newProduct).GetAwaiter().GetResult();
 
             // assert
-            userServiceMock.Verify(a => a.UpdateAsync(It.IsAny<User>()),
+            userRepoMock.Verify(a => a.UpdateAsync(It.Is<UserDB>(u => u.Id == "asdas")),
                 Times.Once());
 
         }

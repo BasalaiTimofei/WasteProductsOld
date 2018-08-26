@@ -138,12 +138,10 @@ namespace WasteProducts.Logic.Services.UserService
         public async Task AddProductAsync(User user, Product product)
         {
             if (user.Products.Count == 0 ||
-                !(user.Products.Where(a => a.Barcode.Id == 
-                product.Barcode.Id).Any() 
-                &&
-                user.Products.Where(b => b.Barcode.Code == 
-                product.Barcode.Code).Any()
-                ))
+                user.Products
+                .FirstOrDefault(p => p.Barcode.Id == product.Barcode.Id &&
+                                     p.Barcode.Code == product.Barcode.Code)
+                                     != null)
             {
                 user.Products.Add(product);
                 await UpdateAsync(user);
