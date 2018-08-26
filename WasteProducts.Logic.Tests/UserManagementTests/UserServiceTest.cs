@@ -32,29 +32,29 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
     [TestFixture]
     public class UserServiceTest
     {
-        private Mock<IUserRepository> userRepoMock;
-        private Mock<IMailService> mailServiceMock;
-        private Mock<IUserService> userServiceMock;
-        private UserService userService;
+        private Mock<IUserRepository> _userRepoMock;
+        private Mock<IMailService> _mailServiceMock;
+        private Mock<IUserService> _userServiceMock;
+        private UserService _userService;
+        private IRuntimeMapper _mapper;
 
         [OneTimeSetUp]
         public void TestFixtureSetup()
         {
-            mailServiceMock = new Mock<IMailService>();
-            userRepoMock = new Mock<IUserRepository>();
-            userServiceMock = new Mock<IUserService>();
-            userService = new UserService(mailServiceMock.Object, userRepoMock.Object);
+            _mailServiceMock = new Mock<IMailService>();
+            _userRepoMock = new Mock<IUserRepository>();
+            _userServiceMock = new Mock<IUserService>();
+            _userService = new UserService(_mailServiceMock.Object, _userRepoMock.Object);
 
-            //Mapper.Initialize(cfg => 
-            //{
-            //    cfg.AddProfile(new UserProfile()); ;
-            //});
-        }
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new UserProfile());
+                cfg.AddProfile(new UserClaimProfile());
+                cfg.AddProfile(new UserLoginProfile());
+                cfg.AddProfile(new ProductProfile());
+            });
 
-        [OneTimeTearDown]
-        public void TestFixtureTearDown()
-        {
-            //Mapper.Reset();
+            _mapper = (new Mapper(config)).DefaultContext.Mapper;
         }
 
         [Test]
@@ -62,14 +62,14 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         {
             // arrange
             var validEmail = "validEmail@gmail.com";
-            mailServiceMock.Setup(a => a.IsValidEmail(validEmail)).Returns(true);
+            _mailServiceMock.Setup(a => a.IsValidEmail(validEmail)).Returns(true);
             var password = "password";
             var passwordConfirmationDoesntMatch = "doesn't match";
             var userNameValid = "validUserName";
             User expected = null;
 
             // act
-            var actual = userService.RegisterAsync(validEmail, 
+            var actual = _userService.RegisterAsync(validEmail, 
                 userNameValid, password, 
                 passwordConfirmationDoesntMatch)
                 .GetAwaiter().GetResult();
@@ -83,14 +83,14 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         {
             // arrange
             var invalidEmail = "invalidEmail@gmail.com";
-            mailServiceMock.Setup(a => a.IsValidEmail(invalidEmail)).Returns(false);
+            _mailServiceMock.Setup(a => a.IsValidEmail(invalidEmail)).Returns(false);
             var password = "password";
             var passwordConfirmationMatch = "password";
             var userNameValid = "validUserName";
             User expected = null;
 
             // act
-            var actual = userService.RegisterAsync(invalidEmail,
+            var actual = _userService.RegisterAsync(invalidEmail,
                 userNameValid, password, passwordConfirmationMatch)
                 .GetAwaiter().GetResult();
 
@@ -103,14 +103,14 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         {
             // arrange
             var invalidEmail = "invalidEmail@gmail.com";
-            mailServiceMock.Setup(a => a.IsValidEmail(invalidEmail)).Returns(false);
+            _mailServiceMock.Setup(a => a.IsValidEmail(invalidEmail)).Returns(false);
             var password = "password";
             var passwordConfirmationDoesntMatch = "doesn't match";
             var userNameValid = "validUserName";
             User expected = null;
 
             // act
-            var actual = userService.RegisterAsync(invalidEmail,
+            var actual = _userService.RegisterAsync(invalidEmail,
                 userNameValid, password, passwordConfirmationDoesntMatch)
                 .GetAwaiter().GetResult();
 
@@ -123,7 +123,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         {
             // arrange
             var validEmail = "validEmail@gmail.com";
-            mailServiceMock.Setup(a => a.IsValidEmail(validEmail)).Returns(true);
+            _mailServiceMock.Setup(a => a.IsValidEmail(validEmail)).Returns(true);
             var password = "password";
             var passwordConfirmationMatch = "password";
             var userNameValid = "validUserName";
@@ -151,12 +151,12 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
                 TwoFactorEnabled = false
             };
 
-            userRepoMock.Setup(a => a.AddAsync(It.IsAny<UserDB>())).Returns(Task.CompletedTask);
-            userRepoMock.Setup(b => b.Select(It.Is<string>(c => c == validEmail),
-                It.IsAny<bool>())).Returns(Mapper.Map<UserDB>(expectedUser));
+            _userRepoMock.Setup(a => a.AddAsync(It.IsAny<UserDB>())).Returns(Task.CompletedTask);
+            _userRepoMock.Setup(b => b.Select(It.Is<string>(c => c == validEmail),
+                It.IsAny<bool>())).Returns(_mapper.Map<UserDB>(expectedUser));
 
             // act
-            var actualUser = userService.RegisterAsync(validEmail,
+            var actualUser = _userService.RegisterAsync(validEmail,
                 userNameValid, password, passwordConfirmationMatch)
                 .GetAwaiter().GetResult();
 
@@ -179,7 +179,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             Assert.AreEqual(expectedUser.SecurityStamp, actualUser.SecurityStamp);
             Assert.AreEqual(expectedUser.TwoFactorEnabled, actualUser.TwoFactorEnabled);
             Assert.AreEqual(expectedUser.UserName, actualUser.UserName);
-            userRepoMock.Verify(m => m.Select(It.Is<string>(c => c == validEmail),
+            _userRepoMock.Verify(m => m.Select(It.Is<string>(c => c == validEmail),
                 It.IsAny<bool>()), Times.Once());
         }
 
@@ -197,12 +197,12 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
             (UserDB, IList<string>) tuple = (null, roles);
 
-            userRepoMock.Setup(a => a.
+            _userRepoMock.Setup(a => a.
             SelectWithRoles(It.IsAny<Func<UserDB, bool>>(),
                 It.IsAny<bool>())).Returns(tuple);
 
             // act
-            var actual = userService.LogInAsync(invalidEmail, password, true).GetAwaiter().GetResult();
+            var actual = _userService.LogInAsync(invalidEmail, password, true).GetAwaiter().GetResult();
 
             // assert
             Assert.IsNull(actual);
@@ -213,20 +213,20 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         {
             // arrange
             var invalidEmail = "incorrectEmail";
-            userRepoMock.Setup(b => b.Select(It.Is<string>(c => 
+            _userRepoMock.Setup(b => b.Select(It.Is<string>(c => 
             c == invalidEmail), It.IsAny<bool>())).Returns((UserDB)null);
 
-            mailServiceMock.Setup(a => a.SendAsync(It.Is<string>(c => 
+            _mailServiceMock.Setup(a => a.SendAsync(It.Is<string>(c => 
             c == invalidEmail), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
 
             //act
-            userService.PasswordRequestAsync(invalidEmail).GetAwaiter().GetResult();
+            _userService.PasswordRequestAsync(invalidEmail).GetAwaiter().GetResult();
 
             //assert
-            userRepoMock.Verify(m => m.Select(It.Is<string>(c => 
+            _userRepoMock.Verify(m => m.Select(It.Is<string>(c => 
             c == invalidEmail), It.IsAny<bool>()), Times.Once());
 
-            mailServiceMock.Verify(m => m.SendAsync(It.Is<string>(c => 
+            _mailServiceMock.Verify(m => m.SendAsync(It.Is<string>(c => 
             c == invalidEmail), It.IsAny<string>(), It.IsAny<string>()), 
             Times.Never());
         }
@@ -238,19 +238,19 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             var existingEmail = "existingEmail";
             UserDB userDB = new UserDB();
             userDB.PasswordHash = "passwordHash";
-            userRepoMock.Setup(b => b.Select(It.Is<string>(c =>
+            _userRepoMock.Setup(b => b.Select(It.Is<string>(c =>
             c == existingEmail), It.IsAny<bool>())).Returns(userDB);
-            mailServiceMock.Setup(a => a.SendAsync(It.Is<string>(c =>
+            _mailServiceMock.Setup(a => a.SendAsync(It.Is<string>(c =>
             c == existingEmail), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
 
             // act
-            userService.PasswordRequestAsync(existingEmail).GetAwaiter().GetResult();
+            _userService.PasswordRequestAsync(existingEmail).GetAwaiter().GetResult();
 
             // assert
-            userRepoMock.Verify(m => m.Select(It.Is<string>(c =>
+            _userRepoMock.Verify(m => m.Select(It.Is<string>(c =>
             c == existingEmail), It.IsAny<bool>()), Times.Once());
 
-            mailServiceMock.Verify(m => m.SendAsync(It.Is<string>(c =>
+            _mailServiceMock.Verify(m => m.SendAsync(It.Is<string>(c =>
             c == existingEmail), It.IsAny<string>(), It.IsAny<string>()),
             Times.Once());
         }
@@ -261,13 +261,13 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             // arrange
             IList<string> expected = new List<string>() {"1", "2" };
 
-            userRepoMock.Setup(a =>
+            _userRepoMock.Setup(a =>
             a.GetRolesAsync(It.IsAny<UserDB>()))
             .Returns(Task.FromResult((expected)));
             User user = new User();
 
             // act
-            var actual = userService.GetRolesAsync(user)
+            var actual = _userService.GetRolesAsync(user)
                 .GetAwaiter().GetResult();
 
             // arrange
@@ -286,15 +286,15 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             user.Products = new List<Product>();
             product.Barcode.Code = "code";
             user.Products.Add(product);
-            userServiceMock.Setup(a => a.UpdateAsync(It.IsAny<User>())).Verifiable();
+            _userServiceMock.Setup(a => a.UpdateAsync(It.IsAny<User>())).Verifiable();
 
 
             // act
-            userService.AddProductAsync(user, product).GetAwaiter().GetResult();
+            _userService.AddProductAsync(user, product).GetAwaiter().GetResult();
 
 
             // assert
-            userServiceMock.Verify(a => a.UpdateAsync(It.IsAny<User>()), 
+            _userServiceMock.Verify(a => a.UpdateAsync(It.IsAny<User>()), 
                 Times.Never());
 
         }
@@ -308,13 +308,13 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             product.Barcode = new Barcode() { Id = "identification" };
             user.Products = new List<Product>();
             user.Products.Add(product);
-            userServiceMock.Setup(a => a.UpdateAsync(It.IsAny<User>())).Verifiable();
+            _userServiceMock.Setup(a => a.UpdateAsync(It.IsAny<User>())).Verifiable();
 
             // act
-            userService.AddProductAsync(user, product).GetAwaiter().GetResult();
+            _userService.AddProductAsync(user, product).GetAwaiter().GetResult();
 
             // assert
-            userServiceMock.Verify(a => a.UpdateAsync(It.IsAny<User>()),
+            _userServiceMock.Verify(a => a.UpdateAsync(It.IsAny<User>()),
                 Times.Never());
         }
 
@@ -347,13 +347,13 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
                 }
             };
-            userRepoMock.Setup(a => a.UpdateAsync(It.Is<UserDB>(u => u.Id == "asdas"))).Verifiable();
+            _userRepoMock.Setup(a => a.UpdateAsync(It.Is<UserDB>(u => u.Id == "asdas"))).Verifiable();
 
             // act
-            userService.AddProductAsync(user, newProduct);
+            _userService.AddProductAsync(user, newProduct);
             Thread.Sleep(20);
             // assert
-            userRepoMock.Verify(a => a.UpdateAsync(It.Is<UserDB>(u => u.Id == "asdas")),
+            _userRepoMock.Verify(a => a.UpdateAsync(It.Is<UserDB>(u => u.Id == "asdas")),
                 Times.Once());
 
         }
