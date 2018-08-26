@@ -22,6 +22,7 @@ using System.Net.Mail;
 using WasteProducts.Logic.Mappings.UserMappings;
 using WasteProducts.Logic.Common.Models.Products;
 using System.Linq.Expressions;
+using WasteProducts.Logic.Common.Models.Barcods;
 
 namespace WasteProducts.Logic.Tests.UserManagementTests
 {
@@ -30,6 +31,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
     {
         private Mock<IUserRepository> userRepoMock;
         private Mock<IMailService> mailServiceMock;
+        private Mock<IUserService> userServiceMock;
         private UserService userService;
 
         [OneTimeSetUp]
@@ -37,18 +39,19 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         {
             mailServiceMock = new Mock<IMailService>();
             userRepoMock = new Mock<IUserRepository>();
+            userServiceMock = new Mock<IUserService>();
             userService = new UserService(mailServiceMock.Object, userRepoMock.Object);
 
-            Mapper.Initialize(cfg => 
-            {
-                cfg.AddProfile(new UserProfile()); ;
-            });
+            //Mapper.Initialize(cfg => 
+            //{
+            //    cfg.AddProfile(new UserProfile()); ;
+            //});
         }
 
         [OneTimeTearDown]
         public void TestFixtureTearDown()
         {
-            Mapper.Reset();
+            //Mapper.Reset();
         }
 
         [Test]
@@ -277,16 +280,86 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         }
 
         [Test]
-        public void UserServiceTest_09_AddProductAsync_User_Already_Has_The_Product_Dont_Add()
+        public void UserServiceTest_09_AddProductAsync_User_Already_Has_The_Product_With_Same_Barcode_Code_Dont_Add()
         {
             // arrange
             User user = new User();
             Product product = new Product();
+            product.Barcode = new Barcode();
+            user.Products = new List<Product>();
+            product.Barcode.Code = "code";
             user.Products.Add(product);
+            userServiceMock.Setup(a => a.UpdateAsync(It.IsAny<User>())).Verifiable();
+
 
             // act
+            userService.AddProductAsync(user, product).GetAwaiter().GetResult();
+
 
             // assert
+            userServiceMock.Verify(a => a.UpdateAsync(It.IsAny<User>()), 
+                Times.Never());
+
+        }
+
+        [Test]
+        public void UserServiceTest_10_AddProductAsync_User_Already_Has_The_Product_With_Same_Barcode_ID_Dont_Add()
+        {
+            // arrange
+            User user = new User();
+            Product product = new Product();
+            product.Barcode = new Barcode() { Id = "identification" };
+            user.Products = new List<Product>();
+            user.Products.Add(product);
+            userServiceMock.Setup(a => a.UpdateAsync(It.IsAny<User>())).Verifiable();
+
+
+            // act
+            userService.AddProductAsync(user, product).GetAwaiter().GetResult();
+
+
+            // assert
+            userServiceMock.Verify(a => a.UpdateAsync(It.IsAny<User>()),
+                Times.Never());
+
+        }
+
+        [Test]
+        public void UserServiceTest_11_AddProductAsync_User_Doesnt_Have_The_Product_With_Same_Barcode_ID_or_Code_New_Product_Added()
+        {
+            // arrange
+            User user = new User();
+
+            Product hasProduct = new Product
+            {
+                Barcode = new Barcode()
+                {
+                    Id = "identification",
+                    Code = "code"
+                }
+            };
+            user.Products = new List<Product>
+            {
+                hasProduct
+            };
+
+            Product newProduct = new Product
+            {
+                Barcode = new Barcode()
+                {
+                    Id = "anotherIdentification",
+                    Code = "anotherCode"
+
+                }
+            };
+            userServiceMock.Setup(a => a.UpdateAsync(It.IsAny<User>())).Verifiable();
+
+            // act
+            userService.AddProductAsync(user, newProduct).GetAwaiter().GetResult();
+
+            // assert
+            userServiceMock.Verify(a => a.UpdateAsync(It.IsAny<User>()),
+                Times.Once());
 
         }
 
