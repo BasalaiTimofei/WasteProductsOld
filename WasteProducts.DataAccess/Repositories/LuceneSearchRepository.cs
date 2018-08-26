@@ -84,10 +84,12 @@ namespace WasteProducts.DataAccess.Repositories
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="id">Id</param>
         /// <returns></returns>
-        public TEntity GetById<TEntity>(int id) where TEntity : class
+        public TEntity GetById<TEntity>(string id) where TEntity : class
         {
-            Query queryGet = NumericRangeQuery.NewInt64Range(IDField, id, id, true, true);
-            return ProceedQuery<TEntity>(queryGet);
+            //TODO переделать со стринговым айдишником
+            throw new NotImplementedException();
+            //Query queryGet = NumericRangeQuery.NewInt64Range(IDField, id, id, true, true);
+            //return ProceedQuery<TEntity>(queryGet);
         }
 
         /// <summary>
@@ -164,20 +166,23 @@ namespace WasteProducts.DataAccess.Repositories
         /// <param name="obj"></param>
         public void Update<TEntity>(TEntity obj) where TEntity : class 
         {
-            System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty(IDField);
-            int id = (int)keyFieldInfo.GetValue(obj);
-            if (id>0)
-            {
-                if (GetById<TEntity>(id) != null)
-                {
-                    Delete<TEntity>(obj);
-                    Insert<TEntity>(obj);
-                }
-            }
-            else
-            {
-                throw new LuceneSearchRepositoryException("Сan't update entity with empty id.");
-            }
+            //TODO переделать со стринговым айдишником
+            throw new NotImplementedException();
+
+            //System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty(IDField);
+            //int id = (int)keyFieldInfo.GetValue(obj);
+            //if (id>0)
+            //{
+            //    if (GetById<TEntity>(id) != null)
+            //    {
+            //        Delete<TEntity>(obj);
+            //        Insert<TEntity>(obj);
+            //    }
+            //}
+            //else
+            //{
+            //    throw new LuceneSearchRepositoryException("Сan't update entity with empty id.");
+            //}
         }
 
         /// <summary>
@@ -412,6 +417,8 @@ namespace WasteProducts.DataAccess.Repositories
             // TODO: uncomment the following line if the finalizer is overridden above.
             // GC.SuppressFinalize(this);
         }
+
+        
 
         #endregion
     }

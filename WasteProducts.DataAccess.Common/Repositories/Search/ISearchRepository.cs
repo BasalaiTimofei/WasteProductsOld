@@ -24,7 +24,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         /// <typeparam name="TEntity">Object model type</typeparam>
         /// <param name="id">Id of getting object</param>
         /// <returns></returns>
-        TEntity GetById<TEntity>(int id) where TEntity : class;
+        TEntity GetById<TEntity>(string id) where TEntity : class;
 
         /// <summary>
         /// Async version of Get

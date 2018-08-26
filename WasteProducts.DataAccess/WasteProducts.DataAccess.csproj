@@ -124,6 +124,7 @@
     <Compile Include="Repositories\EntityRepository.cs" />
     <Compile Include="Repositories\LuceneSearchRepository.cs" />
     <Compile Include="Repositories\Groups\GroupRepository.cs" />
+    <Compile Include="Repositories\UserManagement\UserRepository.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />
     <Compile Include="Repositories\Security\DbFactory.cs" />
     <Compile Include="Repositories\Security\RepositoryBase.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Repositories\Security\UserRepository.cs" />
     <Compile Include="Repositories\Security\UserRoleRepository.cs" />
     <Compile Include="UoW\Security\UnitOfWork.cs" />
+    <Compile Include="Repositories\UserManagement\UserRoleRepository.cs" />
     <Compile Include="UoW\UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>

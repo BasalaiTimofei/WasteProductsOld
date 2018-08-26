@@ -35,6 +35,18 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Build.Tasks.v4.0" />
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.2\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -53,6 +65,7 @@
     <Compile Include="Models\Barcods\BarcodeDB.cs" />
     <Compile Include="Models\DonationManagment\DonorDB.cs" />
     <Compile Include="Models\Entity.cs" />
+    <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Products\CategoryDB.cs" />
     <Compile Include="Models\Products\ProductDB.cs" />
     <Compile Include="Models\Security\Models\ClaimDb.cs" />
@@ -66,14 +79,16 @@
     <Compile Include="Models\Security\Models\UserDb.cs" />
     <Compile Include="Models\Security\Models\UserLoginDb.cs" />
     <Compile Include="Models\Security\Models\UserRoleDb.cs" />
+    <Compile Include="Models\Users\UserLoginDB.cs" />
     <Compile Include="Models\Users\UserDB.cs" />
+    <Compile Include="Models\Users\UserRoleDB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\DonationManagment\IDonationRepository.cs" />
     <Compile Include="Repositories\IBarcodeRepository.cs" />
     <Compile Include="Repositories\ICategoryRepository.cs" />
     <Compile Include="Repositories\IEntityRepository.cs" />
+    <Compile Include="Repositories\UserManagement\IUserRepository.cs" />
     <Compile Include="Repositories\IProductRepository.cs" />
-    <Compile Include="Repositories\IUserRepository.cs" />
     <Compile Include="Repositories\Search\ISearchRepository.cs" />
     <Compile Include="Repositories\Security\IRepositoryBase.cs" />
     <Compile Include="Repositories\Security\IRoleRepository.cs" />
@@ -81,17 +96,21 @@
     <Compile Include="Repositories\Security\IUserLoginRepository.cs" />
     <Compile Include="Repositories\Security\IUserRepository.cs" />
     <Compile Include="Repositories\Security\IUserRoleRepository.cs" />
+    <Compile Include="Repositories\UserManagement\IUserRoleRepository.cs" />
     <Compile Include="UoW\IUnitOfWork.cs" />
     <Compile Include="UoW\Security\IUnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <Compile Include="Models\Groups\GroupBoardDB.cs" />
     <Compile Include="Models\Groups\GroupDB.cs" />
     <Compile Include="Models\Groups\GroupUserInviteTimeDB.cs" />
     <Compile Include="Models\Groups\GroupUserDB.cs" />
     <Compile Include="Models\Groups\GroupProductDB.cs" />
     <Compile Include="Repositories\Groups\IGroupRepository.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

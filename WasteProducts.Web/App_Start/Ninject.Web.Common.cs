@@ -92,7 +92,7 @@ namespace WasteProducts.Web.App_Start
                 var targetName = ctx.Request.Target?.Member.DeclaringType.FullName ?? "GlobalLogger";
                 return LogManager.GetLogger(targetName);
             });
-            kernel.Bind<IExceptionLogger>().To<ApiUnhandledExceptionLogger>();
+            //kernel.Bind<IExceptionLogger>().To<ApiUnhandledExceptionLogger>();
             kernel.Bind<TraceInterceptor>().ToSelf();
         }
 

@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace WasteProducts.DataAccess.Common.Models
 {
@@ -6,8 +10,8 @@ namespace WasteProducts.DataAccess.Common.Models
     {
         public int Id { get; set; }
 
-        public DateTime Created { get; set; }
+        public virtual DateTime Created { get; set; }
 
-        public DateTime? Modified { get; set; }
+        public virtual DateTime? Modified { get; set; }
     }
 }
