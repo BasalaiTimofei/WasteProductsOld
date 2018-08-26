@@ -4,7 +4,7 @@ using WasteProducts.Logic.Common.Models.Products;
 
 namespace WasteProducts.Logic.Mappings
 {
-    class CategoryProfile : Profile
+    public class CategoryProfile : Profile
     {
         public CategoryProfile()
         {

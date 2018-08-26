@@ -29,6 +29,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         private MapperConfiguration mapConfig;
         private Mapper mapper;
         private Mock<IProductRepository> mockProductRepository;
+        private Category category;
 
         [SetUp]
         public void Init()
@@ -48,18 +49,29 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             selectedList = new List<ProductDB>();
 
-            mapConfig = new MapperConfiguration(cfg => cfg.CreateMap<Product, ProductDB>()
-                .ForMember(m => m.Created,
-                    opt => opt.MapFrom(p => p.Name != null ? DateTime.UtcNow : default(DateTime)))
-                .ForMember(m => m.Modified, opt => opt.UseValue((DateTime?)null))
-                .ForMember(m => m.Barcode, opt => opt.Ignore())
-                .ForMember(m => m.Category, opt => opt.Ignore())
-                .ReverseMap());
+            mapConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Product, ProductDB>()
+                    .ForMember(m => m.Created,
+                        opt => opt.MapFrom(p => p.Name != null ? DateTime.UtcNow : default(DateTime)))
+                    .ForMember(m => m.Modified, opt => opt.UseValue((DateTime?) null))
+                    .ForMember(m => m.Barcode, opt => opt.Ignore())
+                    .ReverseMap();
+                cfg.AddProfile<CategoryProfile>();
+            });
 
              mapper = new Mapper(mapConfig);
 
              mockProductRepository = new Mock<IProductRepository>();
 
+            category = new Category
+            {
+                Name = "Vegetables",
+                Description = "Some description",
+                Products = new List<Product>()
+            };
+
+            productDB = new ProductDB {Id = (new Guid()).ToString(), Name = "Some name"};
         }
 
         [Test]
@@ -160,6 +172,19 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             productService.AddByName(It.IsAny<string>());
 
             mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Never);
+        }
+
+        [Test]
+        public void AddCategoty_AddsCategoryInProductWithoutCategory_returns_true()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.AddCategory(product, category);
+
+            Assert.That(result, Is.EqualTo(true));
         }
     }
 }

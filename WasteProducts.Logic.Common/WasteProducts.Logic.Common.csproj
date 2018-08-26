@@ -71,6 +71,7 @@
     <Compile Include="Models\Users\User.cs" />
     <Compile Include="Models\Products\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ICategoryService.cs" />
     <Compile Include="Services\IDonationLogger.cs" />
     <Compile Include="Services\IProductService.cs" />
     <Compile Include="Services\ISearchService.cs" />
