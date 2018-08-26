@@ -14,6 +14,7 @@ using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Services;
 using AutoMapper;
+using NUnit.Framework.Internal;
 using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.Logic.Mappings;
 
@@ -44,7 +45,9 @@ namespace WasteProducts.Logic.Tests
         private IProductService _productSrvc;
         private Mock<IProductRepository> _repo;
         private IMapper _mapper;
-        private List<ProductDB> list;
+        private List<ProductDB> listDb;
+        private List<Product> list;
+
 
 
         [SetUp]
@@ -52,12 +55,8 @@ namespace WasteProducts.Logic.Tests
         {
             _barcode = new Barcode();
             _repo = new Mock<IProductRepository>();
-
-            //var barcConf = new MapperConfiguration(option => option.CreateMap<Barcode, BarcodeDB>()
-            //    .ForMember(s => s.Brend, d => d.Ignore())
-            //    .ForMember(s => s.Modified, d => d.Ignore())
-            //    .ForMember(s => s.Created, d => d.Ignore()));
-            list = new List<ProductDB>();
+            
+            listDb = new List<ProductDB>();
             var prodConf = new MapperConfiguration(option => option.CreateMap<Product, ProductDB>()
                 .ForMember(m => m.Created,
                     opt => opt.MapFrom(p => p.Name != null ? DateTime.UtcNow : default(DateTime)))
@@ -80,16 +79,10 @@ namespace WasteProducts.Logic.Tests
         [Test]
         public void AddByBarcode_InsertNewProduct_callsMethod_AddOfRepository()
         {
-            var barc = new Barcode
-            {
-                Code = "45376896782",
-                Id = Guid.NewGuid().ToString(),
-                ProductName = "Red Cherry"
-            };
             _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(list);
+                .Returns(listDb);
             
-            var result = _productSrvc.AddByBarcode(barc);
+            _productSrvc.AddByBarcode(_barcode);
 
             _repo.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Once);
         }
@@ -105,7 +98,7 @@ namespace WasteProducts.Logic.Tests
         [Test]
         public void AddingProductByBarcore_ReturnsProduct()
         {
-            var barc1 = new Barcode
+            var barc = new Barcode
             {
                 Code = "45376896782",
                 Id = Guid.NewGuid().ToString(),
@@ -114,14 +107,11 @@ namespace WasteProducts.Logic.Tests
             var r = _repo.Object;
 
             _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(list);
-            var d = r.SelectWhere(db => _productSrvc.AddByBarcode(barc1));
-           
+                .Returns(listDb);
+            var d = r.SelectWhere(db => _productSrvc.AddByBarcode(barc));
 
             Assert.That(d != null);
-            Assert.AreEqual(list.Count, d.Count());
-            _repo.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Once);
-
+            Assert.AreEqual(listDb.Count, d.Count());
         }
 
         [Test]
@@ -149,9 +139,9 @@ namespace WasteProducts.Logic.Tests
         [Test]
         public void AddingProductByName_NameIsNull()
         {
-            var goal = _productSrvc.AddByName(null);
+            _productSrvc.AddByName(null);
 
-            goal.Should().BeTrue();
+            _repo.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Never);
         }
 
         [Test]
@@ -162,15 +152,6 @@ namespace WasteProducts.Logic.Tests
             var result = _productSrvc.AddByName(name);
            
             result.Should().Be(true);
-        }
-
-        [Test]
-        public void AddingProductByName_WasNotAddedProduct()
-        {
-            var chocolate = "Chocolate";
-            var goal = _productSrvc.AddByName(chocolate);
-
-            goal.Should().BeFalse();
         }
 
         [Test]
@@ -201,51 +182,136 @@ namespace WasteProducts.Logic.Tests
         [Test]
         public void DeletingProductByBarcore_BarcodeIsNotNull_AndProductSuccessfullyDeleted()
         {
-            var result = _productSrvc.DeleteByBarcode(_barcode);
-
-            _barcode.Should().NotBe(null);
+            var prod = new ProductDB();
+            
+            listDb.Add(prod);
+            _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(listDb);
+            var result = _productSrvc.DeleteByBarcode(new Barcode());
+            
             result.Should().BeTrue();
         }
+
         [Test]
-        public void DeletingProductByName_IfProductsNamesAreSame()
+        public void DeletingProductByBarcore_BarcodeIsNotNull_AndProductSuccessfullyDeleted_CalledOnce()
         {
-            var barc1 = new Barcode
+            var prod = new ProductDB();
+            var prod1 = new ProductDB();
+
+            listDb.Add(prod);
+            listDb.Add(prod1);
+            _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(listDb);
+            _productSrvc.DeleteByBarcode(new Barcode());
+
+            _repo.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Once);
+        }
+        [Test]
+        public void DeletingProductByName_IfProductsNamesAreSame_ReturnsTrue()
+        {
+            var barc1 = new BarcodeDB
             {
                 Code = "45376896782",
                 Id = Guid.NewGuid().ToString(),
                 ProductName = "Red Cherry"
             };
-            var barc2 = new Barcode
+            var barc2 = new BarcodeDB
             {
                 Code = "863863896745",
                 Id = Guid.NewGuid().ToString(),
                 ProductName = "Red Cherry"
             };
-            var prod1 = new Product { Name = "Red Cherry", Barcode = barc1 };
-            var prod2 = new Product { Name = "Red Cherry", Barcode = barc2 };
+            var prod1 = new ProductDB { Name = "Red Cherry", Barcode = barc1 };
+            var prod2 = new ProductDB { Name = "Red Cherry", Barcode = barc2 };
 
-            barc1.ProductName.Should().BeEquivalentTo(barc2.ProductName);
-            prod1.Name.Should().BeSameAs(barc1.ProductName);
-            prod2.Name.Should().BeSameAs(barc2.ProductName);
-            barc1.Code.Should().NotBeSameAs(barc2.Code);
-            barc1.Id.Should().NotBeSameAs(barc2.Id);
+            listDb.Add(prod1);
+            listDb.Add(prod2);
+            _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(listDb);
 
             var result = _productSrvc.DeleteByName(prod1.Name);
+
             prod1.Name.Should().BeSameAs(prod2.Name);
 
             result.Should().BeTrue();
         }
+
         [Test]
-        public void DeletingProductByName_SuccessfullyDeletedProduct()
+        public void DeletingProductByName_IfProductsNamesAreSame_ReturnsTrue_CalledOnce()
         {
-            var prodGummy = "My favorite gummy";
+            var barc1 = new BarcodeDB
+            {
+                Code = "45376896782",
+                Id = Guid.NewGuid().ToString(),
+                ProductName = "Red Cherry"
+            };
+            var barc2 = new BarcodeDB
+            {
+                Code = "863863896745",
+                Id = Guid.NewGuid().ToString(),
+                ProductName = "Red Cherry"
+            };
+            var prod1 = new ProductDB { Name = "Red Cherry", Barcode = barc1 };
+            var prod2 = new ProductDB { Name = "Red Cherry", Barcode = barc2 };
 
-            var result = _productSrvc.DeleteByName(prodGummy);
+            listDb.Add(prod1);
+            listDb.Add(prod2);
+            _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(listDb);
 
-            prodGummy.Should().BeEquivalentTo("MY FAVORITE GUMMY")
-                .And.NotBeNullOrWhiteSpace()
+            _productSrvc.DeleteByName(prod1.Name);
+
+            prod1.Name.Should().BeSameAs(prod2.Name);
+
+            _repo.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Once);
+        }
+        [Test]
+        public void DeletingProductByName_SuccessfullyMarkedProduct()
+        {
+            var barc = new BarcodeDB
+            {
+                Code = "45376896782",
+                Id = Guid.NewGuid().ToString(),
+                ProductName = "Red Cherry"
+            };
+            var prod = new ProductDB { Name = "Red Cherry", Barcode = barc };
+            listDb.Add(prod);
+            _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(listDb);
+
+            var result = _productSrvc.DeleteByName(prod.Name);
+
+            prod.Name.Should().BeEquivalentTo("RED CHERRY")
                 .And.NotBeEmpty();
             result.Should().Be(true);
+        }
+
+        [Test]
+        public void DeleteProductByName_IfNameIsEmpty_CalledNever()
+        {
+            var prod = new ProductDB {Name = ""};
+            listDb.Add(prod);
+
+            _productSrvc.DeleteByName(prod.Name);
+            _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(listDb);
+            prod.Name.Should().BeEmpty();
+
+            _repo.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Never);
+        }
+
+        [Test]
+        public void DeleteProductByName_IfNameIsNull_CalledNever()
+        {
+            var prod = new ProductDB { Name = null };
+            listDb.Add(prod);
+
+            _productSrvc.DeleteByName(prod.Name);
+            _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(listDb);
+
+            prod.Name.Should().BeNull();
+            _repo.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Never);
         }
     }
 }
