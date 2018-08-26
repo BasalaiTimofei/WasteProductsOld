@@ -258,9 +258,7 @@ namespace WasteProducts.Logic.Tests
             listDb.Add(prod2);
             _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(listDb);
-
             _productSrvc.DeleteByName(prod1.Name);
-
             prod1.Name.Should().BeSameAs(prod2.Name);
 
             _repo.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Once);
