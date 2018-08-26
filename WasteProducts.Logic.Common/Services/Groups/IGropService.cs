@@ -24,6 +24,6 @@ namespace WasteProducts.Logic.Common.Services
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
-        void Delete<T>(T item);
+        void Delete(int id);
     }
 }

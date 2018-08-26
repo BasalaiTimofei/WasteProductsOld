@@ -25,5 +25,11 @@ namespace WasteProducts.DataAccess.Common.Models
         /// UserId - user which entered in group
         /// </summary>
         public IList<GroupUserInviteTimeDB> GroupUserInviteTimeDBs { get; set; }
+        /// <summary>
+        /// Bool - user in a group/not in a group
+        ///     true - user in a group
+        ///     false - user not in a group
+        /// </summary>
+        public bool Bool { get; set; }
     }
 }

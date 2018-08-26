@@ -20,16 +20,16 @@ namespace WasteProducts.DataAccess.Common.Models
         /// <summary>
         /// Entry - data entry in the group
         /// </summary>
-        public DateTime Entry { get; set; }
+        public DateTime TimeEntry { get; set; }
         /// <summary>
         /// Exit - data left the group
         /// </summary>
-        public DateTime Exit { get; set; }
+        public DateTime TimeExit { get; set; }
         /// <summary>
         /// Invite - user action when administrator inviting
-        ///     0 -invite send;
-        ///     1- invite user confirmed;
-        ///     2- invite user rejected;
+        ///     0 - invite send;
+        ///     1 - invite user confirmed;
+        ///     2 - invite user rejected;
         /// </summary>
         public int Invite { get; set; }
     }

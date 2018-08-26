@@ -34,12 +34,18 @@ namespace WasteProducts.DataAccess.Common.Models
         /// </summary>
         public IList<GroupProductDB> GroupProductDBs { get; set; }
         /// <summary>
-        /// Create - datatime when board created
+        /// TimeCreate - datatime when board created
         /// </summary>
-        public DateTime Create { get; set; }
+        public DateTime TimeCreate { get; set; }
         /// <summary>
-        /// Delete - datatime when board deleted
+        /// TimeDelete - datatime when board deleted
         /// </summary>
-        public DateTime Delete { get; set; }
+        public DateTime TimeDelete { get; set; }
+        /// <summary>
+        /// Bool - board deleted/greated
+        ///     true - board greated
+        ///     false - board deleted
+        /// </summary>
+        public bool Bool { get; set; }
     }
 }
