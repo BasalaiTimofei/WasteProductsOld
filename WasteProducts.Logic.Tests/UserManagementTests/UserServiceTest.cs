@@ -314,16 +314,13 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             user.Products = new List<Product>();
             user.Products.Add(product);
             userServiceMock.Setup(a => a.UpdateAsync(It.IsAny<User>())).Verifiable();
-
-
+            
             // act
             userService.AddProductAsync(user, product).GetAwaiter().GetResult();
-
 
             // assert
             userServiceMock.Verify(a => a.UpdateAsync(It.IsAny<User>()),
                 Times.Never());
-
         }
 
         [Test]
@@ -346,7 +343,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
                 hasProduct
             };
 
-
             Product newProduct = new Product
             {
                 Barcode = new Barcode()
@@ -366,6 +362,27 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
                 Times.Once());
 
         }
+
+        [Test]
+        public void UserServiceTest_12_DeleteProductAsync_User_Already_Has_The_Product_With_Same_Barcode_ID_Will_be_Deleted()
+        {
+            // arrange
+            User user = new User();
+            Product product = new Product();
+            product.Barcode = new Barcode() { Id = "identification" };
+            user.Products = new List<Product>();
+            user.Products.Add(product);
+            userServiceMock.Setup(a => a.UpdateAsync(It.IsAny<User>())).Verifiable();
+
+            // act
+            userService.AddProductAsync(user, product).GetAwaiter();
+
+            // assert
+            userServiceMock.Verify(a => a.UpdateAsync(It.IsAny<User>()),
+                Times.Never());
+        }
+
+
 
         // AddProductAsync
         // DeleteProductAsync

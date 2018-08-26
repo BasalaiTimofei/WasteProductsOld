@@ -186,7 +186,11 @@ namespace WasteProducts.Logic.Services.UserService
         public async Task DeleteProductAsync(User user, Product product)
         {
             if (user.Products.Contains(product))
-            {
+                if (user.Products
+                .FirstOrDefault(p => p.Barcode.Id == product.Barcode.Id &&
+                                     p.Barcode.Code == product.Barcode.Code)
+                                     == null)
+                {
                 user.Products.Remove(product);
                 await UpdateAsync(user);
             }
