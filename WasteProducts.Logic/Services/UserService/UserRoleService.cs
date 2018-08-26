@@ -21,6 +21,8 @@ namespace WasteProducts.Logic.Services.UserService
 
             var config = new MapperConfiguration(cfg =>
             {
+                cfg.AddProfile(new UserProfile());
+                cfg.AddProfile(new UserClaimProfile());
                 cfg.AddProfile(new UserLoginProfile());
             });
             _mapper = (new Mapper(config)).DefaultContext.Mapper;
@@ -58,18 +60,18 @@ namespace WasteProducts.Logic.Services.UserService
         {
             UserRoleDB roleDB = MapTo<UserRoleDB>(role);
             IEnumerable<UserDB> subResult = await _roleRepo.GetRoleUsers(roleDB);
-            IEnumerable<User> result = Mapper.Map<IEnumerable<User>>(subResult);
+            IEnumerable<User> result = _mapper.Map<IEnumerable<User>>(subResult);
             return result;
         }
 
         private UserRoleDB MapTo<T>(UserRole role)
             where T : UserRoleDB 
             =>
-            _mapper.DefaultContext.Mapper.Map<UserRoleDB>(role);
+            _mapper.Map<UserRoleDB>(role);
 
         private UserRole MapTo<T>(UserRoleDB role)
             where T : UserRole
             =>
-           _mapper.DefaultContext.Mapper.Map<UserRole>(role);
+           _mapper.Map<UserRole>(role);
     }
 }

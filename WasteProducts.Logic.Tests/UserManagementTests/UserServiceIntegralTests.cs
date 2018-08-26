@@ -53,32 +53,19 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             MailService = new MailService(null, null, null);
             UserService = new UserService(MailService, UserRepo);
             RoleService = new UserRoleService(RoleRepo);
-
-            Mapper.Reset();
-            Mapper.Initialize(cfg =>
-            {
-                cfg.AddProfile(new UserProfile());
-                cfg.AddProfile(new UserClaimProfile());
-                cfg.AddProfile(new UserLoginProfile());
-            });
-        }
-
-        [OneTimeTearDown]
-        public void TestFixtureTearDown()
-        {
-            Mapper.Reset();
         }
 
         // тестируем регистрирование и логин юзеров и создание ролей, плюс делаем начальное заполнение таблицы
         [Test]
         public void UserIntegrTest_00AddingUserAndRole()
         {
-            //чистим тестовую таблицу перед запуском, чтобы она всегда в тестах была одинаковая
-            using (WasteContext wc = new WasteContext(NAME_OR_CONNECTION_STRING))
+            // если таблица не была почищена от юзеров в силу некой причины, например, отвалившегося теста
+            // вызываю метод, удаляющий этих юзеров
+            try
             {
-                wc.Database.Delete();
-                wc.Database.CreateIfNotExists();
+                UserIntegrTest_19DeletingUsers();
             }
+            catch { }
 
             User user1 = UserService.RegisterAsync("test49someemail@gmail.com", "Sergei", "qwerty1", "qwerty1").GetAwaiter().GetResult();
             User user2 = UserService.RegisterAsync("test50someemail@gmail.com", "Anton", "qwerty2", "qwerty2").GetAwaiter().GetResult();
@@ -253,8 +240,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             UserService.AddFriendAsync(user, user3).GetAwaiter().GetResult();
 
             Assert.AreEqual(2, user.Friends.Count);
-
-            UserDB u = Mapper.Map<UserDB>(user);
 
             user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual(2, user.Friends.Count);

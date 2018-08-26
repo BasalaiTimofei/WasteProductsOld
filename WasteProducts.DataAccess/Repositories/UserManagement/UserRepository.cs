@@ -103,12 +103,6 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                     var entry = db.Entry(user);
                     entry.State = EntityState.Deleted;
                     await db.SaveChangesAsync();
-
-                    //using (var userStore = new UserStore<UserDB>(db))
-                    //{
-                    //    await userStore.DeleteAsync(user);
-                    //    await db.SaveChangesAsync();
-                    //}
                 }
             });
         }
