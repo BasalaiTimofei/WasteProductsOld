@@ -136,7 +136,9 @@ namespace WasteProducts.Logic.Services.UserService
 
         public async Task AddProductAsync(User user, Product product)
         {
-            if (!user.Products.Contains(product))
+            if (user.Products.Where(a => a.Barcode == product.Barcode)
+                )
+                // id name barcode
             {
                 user.Products.Add(product);
                 await UpdateAsync(user);

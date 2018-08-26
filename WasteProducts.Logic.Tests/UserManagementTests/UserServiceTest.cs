@@ -275,5 +275,22 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             Assert.AreEqual(expected[0], actual[0]);
             Assert.AreEqual(expected[1], actual[1]);
         }
+
+        [Test]
+        public void UserServiceTest_09_AddProductAsync_User_Already_Has_The_Product_Dont_Add()
+        {
+            // arrange
+            User user = new User();
+            Product product = new Product();
+            user.Products.Add(product);
+
+            // act
+
+            // assert
+
+        }
+
+        // AddProductAsync
+        // DeleteProductAsync
     }
 }
