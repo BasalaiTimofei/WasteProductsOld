@@ -61,6 +61,7 @@
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Products\CategoryDB.cs" />
     <Compile Include="Models\Products\ProductDB.cs" />
+    <Compile Include="Models\Users\UserLoginDB.cs" />
     <Compile Include="Models\Users\UserDB.cs" />
     <Compile Include="Models\Users\UserRoleDB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

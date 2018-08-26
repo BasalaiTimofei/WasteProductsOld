@@ -55,6 +55,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             UserService = new UserService(MailService, UserRepo);
             RoleService = new UserRoleService(RoleRepo);
 
+            Mapper.Reset();
             Mapper.Initialize(cfg =>
             {
                 cfg.AddProfile(new UserProfile());
@@ -73,7 +74,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public void UserIntegrTest_00AddingUserAndRole()
         {
-            // чистим таблицу перед запуском, чтобы она всегда в тестах была одинаковая
+            //чистим тестовую таблицу перед запуском, чтобы она всегда в тестах была одинаковая
             using (WasteContext wc = new WasteContext(NAME_OR_CONNECTION_STRING))
             {
                 wc.Database.Delete();
@@ -279,31 +280,11 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         }
 
         // TODO доделать этот тест после того, как появится толковая реализация продуктов
-        // тестируем добавление продуктов (плохо сделан тест с использованием WasteContext кстати,
-        // скорее всего сможет добавить продукт только вместе с добавлением его второй раз в БД)
+        // тестируем добавление продуктов
         //[Test]
         public void UserIntegrTest_13AddingNewProductsToUser()
         {
-            using (var db = new WasteContext(NAME_OR_CONNECTION_STRING))
-            {
-                var user = db.Users.FirstOrDefault();
-
-                var prod = new ProductDB
-                {
-                    Created = DateTime.UtcNow,
-                    Name = "WasteProduct",
-                };
-
-                user.Products.Add(prod);
-                db.SaveChanges();
-                Assert.AreEqual(user.Products.FirstOrDefault().Name, "WasteProduct");
-            }
-
-            using (var db = new WasteContext(NAME_OR_CONNECTION_STRING))
-            {
-                var user = db.Users.FirstOrDefault();
-                Assert.AreEqual(user.Products.FirstOrDefault().Name, "WasteProduct");
-            }
+            
         }
 
         // TODO доделать этот тест после того, как появится толковая реализация продуктов

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -32,7 +31,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="user">Specific login will be added to the user.</param>
         /// <param name="login">Specific login to add to the user.</param>
         /// <returns></returns>
-        Task AddLoginAsync(UserDB user, UserLoginInfo login);
+        Task AddLoginAsync(UserDB user, UserLoginDB login);
 
         /// <summary>
         /// Add a user to a role.
@@ -78,7 +77,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="user">Specific login will be removed from the user.</param>
         /// <param name="login">Specific login to remove from the user.</param>
         /// <returns></returns>
-        Task RemoveLoginAsync(UserDB user, UserLoginInfo login);
+        Task RemoveLoginAsync(UserDB user, UserLoginDB login);
 
         /// <summary>
         /// Deletes a specific friend from the specific user's friend list.
