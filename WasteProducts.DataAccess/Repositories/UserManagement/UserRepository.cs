@@ -49,6 +49,8 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 using (var userStore = new UserStore<UserDB>(db))
                 {
                     await userStore.AddClaimAsync(user, claim);
+
+                    user.Modified = DateTime.UtcNow;
                     await db.SaveChangesAsync();
                 }
             }
@@ -63,6 +65,8 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 using (var userStore = new UserStore<UserDB>(db))
                 {
                     await userStore.AddLoginAsync(user, loginInfo);
+
+                    user.Modified = DateTime.UtcNow;
                     await db.SaveChangesAsync();
                 }
             }
@@ -75,6 +79,8 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 using (var userStore = new UserStore<UserDB>(db))
                 {
                     await userStore.AddToRoleAsync(user, roleName);
+
+                    user.Modified = DateTime.UtcNow;
                     await db.SaveChangesAsync();
                 }
             }
@@ -89,6 +95,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
                 user.Friends.Add(friend);
 
+                user.Modified = DateTime.UtcNow;
                 await db.SaveChangesAsync();
             }
         }
@@ -120,9 +127,9 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 if (claimToDelete != null)
                 {
                     db.Entry(claimToDelete).State = EntityState.Deleted;
+                    user.Modified = DateTime.UtcNow;
+                    await db.SaveChangesAsync();
                 }
-
-                await db.SaveChangesAsync();
             }
         }
 
@@ -133,6 +140,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 using (var userStore = new UserStore<UserDB>(db))
                 {
                     await userStore.RemoveFromRoleAsync(user, roleName);
+                    user.Modified = DateTime.UtcNow;
                     await db.SaveChangesAsync();
                 }
             }
@@ -151,9 +159,9 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 if (loginToDelete != null)
                 {
                     db.Entry(loginToDelete).State = EntityState.Deleted;
+                    user.Modified = DateTime.UtcNow;
+                    await db.SaveChangesAsync();
                 }
-
-                await db.SaveChangesAsync();
             }
         }
 
@@ -166,6 +174,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
                 user.Friends.Remove(friend);
 
+                user.Modified = DateTime.UtcNow;
                 await db.SaveChangesAsync();
             }
         }
@@ -241,8 +250,8 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 entry.State = EntityState.Modified;
                 entry.Property(u => u.Created).IsModified = false;
                 entry.Property(u => u.PasswordHash).IsModified = false;
-                user.Modified = DateTime.UtcNow;
 
+                user.Modified = DateTime.UtcNow;
                 await db.SaveChangesAsync();
             }
         }
@@ -257,6 +266,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 var entry = db.Entry(user);
                 entry.Property(p => p.PasswordHash).IsModified = true;
 
+                user.Modified = DateTime.UtcNow;
                 await db.SaveChangesAsync();
 
                 // вот таким кодом пытался установить новый PasswordHash (заметьте, PasswordHash, не Password)
