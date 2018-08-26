@@ -44,6 +44,7 @@ namespace WasteProducts.Logic.Tests
         private IProductService _productSrvc;
         private Mock<IProductRepository> _repo;
         private IMapper _mapper;
+        private List<ProductDB> list;
 
 
         [SetUp]
@@ -52,11 +53,11 @@ namespace WasteProducts.Logic.Tests
             _barcode = new Barcode();
             _repo = new Mock<IProductRepository>();
 
-            var barcConf = new MapperConfiguration(option => option.CreateMap<Barcode, BarcodeDB>()
-                .ForMember(s => s.Brend, d => d.Ignore())
-                .ForMember(s => s.Modified, d => d.Ignore())
-                .ForMember(s => s.Created, d => d.Ignore()));
-
+            //var barcConf = new MapperConfiguration(option => option.CreateMap<Barcode, BarcodeDB>()
+            //    .ForMember(s => s.Brend, d => d.Ignore())
+            //    .ForMember(s => s.Modified, d => d.Ignore())
+            //    .ForMember(s => s.Created, d => d.Ignore()));
+            list = new List<ProductDB>();
             var prodConf = new MapperConfiguration(option => option.CreateMap<Product, ProductDB>()
                 .ForMember(m => m.Created,
                     opt => opt.MapFrom(p => p.Name != null ? DateTime.UtcNow : default(DateTime)))
@@ -64,8 +65,7 @@ namespace WasteProducts.Logic.Tests
                 .ForMember(s => s.Category, d => d.Ignore())
                 .ForMember(s => s.Barcode, opt => opt.Ignore())
                 .ReverseMap());
-
-            //var c = new MapperConfiguration(cfg=>cfg.AddProfile(new ProductProfile()));
+            
             var prodMapper = new Mapper(prodConf);
             _productSrvc = new ProductService(_repo.Object, prodMapper);
 
@@ -75,7 +75,23 @@ namespace WasteProducts.Logic.Tests
         public void DropInit()
         {
             Mapper.Reset();
+        }
 
+        [Test]
+        public void AddByBarcode_InsertNewProduct_callsMethod_AddOfRepository()
+        {
+            var barc = new Barcode
+            {
+                Code = "45376896782",
+                Id = Guid.NewGuid().ToString(),
+                ProductName = "Red Cherry"
+            };
+            _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(list);
+            
+            var result = _productSrvc.AddByBarcode(barc);
+
+            _repo.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Once);
         }
 
         [Test]
@@ -96,10 +112,16 @@ namespace WasteProducts.Logic.Tests
                 ProductName = "Red Cherry"
             };
             var r = _repo.Object;
+
+            _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(list);
             var d = r.SelectWhere(db => _productSrvc.AddByBarcode(barc1));
+           
 
             Assert.That(d != null);
-            Assert.IsInstanceOf(typeof(Product), d);
+            Assert.AreEqual(list.Count, d.Count());
+            _repo.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Once);
+
         }
 
         [Test]
