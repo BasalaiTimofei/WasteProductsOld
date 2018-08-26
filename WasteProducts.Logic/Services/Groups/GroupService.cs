@@ -13,25 +13,6 @@ namespace WasteProducts.Logic.Services
     {
         public void Create<Group>(Group item)
         {
-            var config = new MapperConfiguration(cfg => 
-
-                cfg.CreateMap<Group, GroupDB>()
-
-                   .ForMember(destination => destination.Address,
-
-              map => map.MapFrom(
-
-                  source => new Address
-
-                  {
-
-                      City = source.City,
-
-                      State = source.State,
-
-                      Country = source.Country
-
-                  }));
             
         }
 
