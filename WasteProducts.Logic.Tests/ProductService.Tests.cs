@@ -14,6 +14,7 @@ using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Services;
 using AutoMapper;
+using FluentAssertions.Common;
 using NUnit.Framework.Internal;
 using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.Logic.Mappings;
@@ -323,6 +324,7 @@ namespace WasteProducts.Logic.Tests
 
             Assert.That(_productSrvc.IsHidden(_product.Object));
         }
+
         [Test]
         public void Hide_CallsOnce()
         {
@@ -333,6 +335,34 @@ namespace WasteProducts.Logic.Tests
                 .Returns(_listDb);
             _productSrvc.Hide(_product.Object);
             _repo.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Once);
+        }
+
+        [Test]
+        public void Rate_CheckingResultAfterRating()
+        {
+            var prodDb = new ProductDB
+            {
+                AvgRating = 1.1d,
+                RateCount = 1,
+                Id = Guid.NewGuid().ToString()
+            };
+            var prod = new Product
+            {
+                AvgRating = prodDb.AvgRating,
+                RateCount = prodDb.RateCount,
+                Id = prodDb.Id
+            };
+
+            _listDb.Add(prodDb);
+
+            _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(_listDb);
+            //prodDb.AvgRating = prod.AvgRating;
+            _productSrvc.Rate(prod, 5);//.Should().BeEquivalentTo(5d);
+
+            Assert.AreEqual(prodDb.AvgRating, 3.05);
+
+            
         }
     }
 }
