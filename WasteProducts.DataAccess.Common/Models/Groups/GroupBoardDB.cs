@@ -40,7 +40,7 @@ namespace WasteProducts.DataAccess.Common.Models
         /// <summary>
         /// TimeDelete - datatime when board deleted
         /// </summary>
-        public DateTime TimeDelete { get; set; }
+        public DateTime? TimeDelete { get; set; }
         /// <summary>
         /// Bool - board deleted/greated
         ///     true - board greated

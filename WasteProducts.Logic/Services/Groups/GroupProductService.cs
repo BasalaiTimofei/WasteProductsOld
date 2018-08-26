@@ -6,12 +6,12 @@ using WasteProducts.Logic.Common.Services;
 
 namespace WasteProducts.Logic.Services
 {
-    public class GroupService : IGroupService
+    public class GroupProductService : IGroupProductService
     {
         private IGroupRepository<GroupDB> _dataBase;
         private readonly IMapper _mapper;
 
-        public GroupService(IGroupRepository<GroupDB> dataBase, IMapper mapper) 
+        public GroupProductService(IGroupRepository<GroupDB> dataBase, IMapper mapper) 
         {
             _dataBase = dataBase;
             _mapper = mapper;
@@ -43,6 +43,11 @@ namespace WasteProducts.Logic.Services
             result.Bool = false;
 
             _dataBase.Update(result);
+        }
+
+        public void Delete<T>(int? id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

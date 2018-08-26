@@ -5,7 +5,7 @@ namespace WasteProducts.Logic.Common.Services
     /// <summary>
     /// Group administration service
     /// </summary>
-    public interface IGropService
+    public interface IGroupService
     {
         /// <summary>
         /// Create - create new group
@@ -24,6 +24,6 @@ namespace WasteProducts.Logic.Common.Services
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
-        void Delete(int id);
+        void Delete<T>(T item);
     }
 }

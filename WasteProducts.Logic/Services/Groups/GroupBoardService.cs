@@ -6,20 +6,20 @@ using WasteProducts.Logic.Common.Services;
 
 namespace WasteProducts.Logic.Services
 {
-    public class GroupService : IGroupService
+    public class GroupBoardService : IGroupBoardService
     {
-        private IGroupRepository<GroupDB> _dataBase;
+        private IGroupRepository<GroupBoardDB> _dataBase;
         private readonly IMapper _mapper;
 
-        public GroupService(IGroupRepository<GroupDB> dataBase, IMapper mapper) 
+        public GroupBoardService(IGroupRepository<GroupBoardDB> dataBase, IMapper mapper) 
         {
             _dataBase = dataBase;
             _mapper = mapper;
         }
 
-        public void Create<Group>(Group item)
+        public void Create<GroupBoard>(GroupBoard item)
         {
-            var result = _mapper.Map<GroupDB>(item);
+            var result = _mapper.Map<GroupBoardDB>(item);
 
             result.TimeCreate = DateTime.UtcNow;
             result.TimeDelete = null;
@@ -28,16 +28,16 @@ namespace WasteProducts.Logic.Services
             _dataBase.Create(result);
         }
 
-        public void Update<Group>(Group item)
+        public void Update<GroupBoard>(GroupBoard item)
         {
-            var result = _mapper.Map<GroupDB>(item);
+            var result = _mapper.Map<GroupBoardDB>(item);
 
             _dataBase.Update(result);
         }
 
-        public void Delete<Group>(Group item)
+        public void Delete<GroupBoard>(GroupBoard item)
         {
-            var result = _mapper.Map<GroupDB>(item);
+            var result = _mapper.Map<GroupBoardDB>(item);
 
             result.TimeDelete = DateTime.UtcNow;
             result.Bool = false;

@@ -3,27 +3,27 @@
 namespace WasteProducts.Logic.Common.Services
 {
     /// <summary>
-    /// Product administration service
+    /// Board administration service
     /// </summary>
-    public interface IGropProductService
+    public interface IGroupBoardService
     {
         /// <summary>
-        /// Create - create new product on board
+        /// Create - create new board
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
         void Create<T>(T item);
         /// <summary>
-        /// Update - update product information on board
+        /// Update - add or corect information on board
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
         void Update<T>(T item);
         /// <summary>
-        /// Delete - delete product from the board
+        /// Delete - delete board
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
-        void Delete<T>(int? id);
+        void Delete<T>(T item);
     }
 }
