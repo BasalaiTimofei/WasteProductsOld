@@ -1,31 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
 using Moq;
-using NUnit;
 using NUnit.Framework;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
-using WasteProducts.DataAccess.Repositories.UserManagement;
-using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Common.Services.MailService;
-using WasteProducts.Logic.Services;
-using WasteProducts.Logic.Services.MailService;
 using AutoMapper;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.Logic.Services.UserService;
-using System.Net.Mail;
 using WasteProducts.Logic.Mappings.UserMappings;
 using WasteProducts.Logic.Common.Models.Products;
-using System.Linq.Expressions;
 using WasteProducts.Logic.Common.Models.Barcods;
-using WasteProducts.DataAccess.Common.Models.Products;
-using WasteProducts.DataAccess.Common.Models.Barcods;
-using System.Threading;
 
 namespace WasteProducts.Logic.Tests.UserManagementTests
 {
@@ -173,7 +160,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
                 userNameValid, password, passwordConfirmationMatch)
                 .GetAwaiter().GetResult();
 
-
             // assert
             Assert.AreEqual(expectedUser.AccessFailedCount, actualUser.AccessFailedCount);
             Assert.AreEqual(expectedUser.Claims, actualUser.Claims);
@@ -301,15 +287,12 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             user.Products.Add(product);
             _userServiceMock.Setup(a => a.UpdateAsync(It.IsAny<User>())).Verifiable();
 
-
             // act
             _userService.AddProductAsync(user, product).GetAwaiter().GetResult();
-
 
             // assert
             _userServiceMock.Verify(a => a.UpdateAsync(It.IsAny<User>()), 
                 Times.Never());
-
         }
 
         [Test]
@@ -357,7 +340,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
                 {
                     Id = "anotherIdentification",
                     Code = "anotherCode"
-
                 }
             };
             _userRepoMock.Setup(a => a.UpdateAsync(It.Is<UserDB>(u => u.Id == "asdas"))).Verifiable();
@@ -368,7 +350,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             // assert
             _userRepoMock.Verify(a => a.UpdateAsync(It.Is<UserDB>(u => u.Id == "asdas")),
                 Times.Once());
-
         }
 
         [Test]
@@ -412,9 +393,5 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             _userRepoMock.Verify(a => a.UpdateAsync(It.IsAny<UserDB>()),
                 Times.Never());
         }
-
-
-        // AddProductAsync
-        // DeleteProductAsync
     }
 }

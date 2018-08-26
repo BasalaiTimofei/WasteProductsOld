@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNet.Identity.EntityFramework;
 using System.Collections.Generic;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.Logic.Common.Models.Users;
