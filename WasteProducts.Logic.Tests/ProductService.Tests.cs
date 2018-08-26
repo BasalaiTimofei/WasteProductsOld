@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using Moq;
 using NUnit.Framework;
 using NSubstitute;
@@ -47,7 +48,6 @@ namespace WasteProducts.Logic.Tests
         private IProductService _productSrvc;
         private Mock<IProductRepository> _repo;
         private List<ProductDB> _listDb;
-        private List<Product> _list;
 
 
 
@@ -66,6 +66,9 @@ namespace WasteProducts.Logic.Tests
                 .ForMember(s => s.Category, d => d.Ignore())
                 .ForMember(s => s.Barcode, opt => opt.Ignore())
                 .ReverseMap());
+
+            //var e = new MapperConfiguration(o=>o.AddProfiles(Assembly.GetAssembly(typeof(ProductProfile))));
+            //var mapper4 = new Mapper(e);
             
             var prodMapper = new Mapper(prodConf);
             _productSrvc = new ProductService(_repo.Object, prodMapper);
@@ -354,15 +357,11 @@ namespace WasteProducts.Logic.Tests
             };
 
             _listDb.Add(prodDb);
-
             _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(_listDb);
-            //prodDb.AvgRating = prod.AvgRating;
-            _productSrvc.Rate(prod, 5);//.Should().BeEquivalentTo(5d);
+            _productSrvc.Rate(prod, 5);
 
             Assert.AreEqual(prodDb.AvgRating, 3.05);
-
-            
         }
     }
 }
