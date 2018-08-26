@@ -41,11 +41,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [OneTimeSetUp]
         public void TestFixtureSetup()
         {
-            _mailServiceMock = new Mock<IMailService>();
-            _userRepoMock = new Mock<IUserRepository>();
-            _userServiceMock = new Mock<IUserService>();
-            _userService = new UserService(_mailServiceMock.Object, _userRepoMock.Object);
-
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new UserProfile());
@@ -55,6 +50,24 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             });
 
             _mapper = (new Mapper(config)).DefaultContext.Mapper;
+        }
+
+        [SetUp]
+        public void TestCaseSetup()
+        {
+            _mailServiceMock = new Mock<IMailService>();
+            _userRepoMock = new Mock<IUserRepository>();
+            _userServiceMock = new Mock<IUserService>();
+            _userService = new UserService(_mailServiceMock.Object, _userRepoMock.Object);
+        }
+
+        [TearDown]
+        public void TestCaseTeatDown()
+        {
+            _mailServiceMock = null;
+            _userRepoMock = null;
+            _userServiceMock = null;
+            _userService = null;
         }
 
         [Test]
@@ -350,13 +363,56 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             _userRepoMock.Setup(a => a.UpdateAsync(It.Is<UserDB>(u => u.Id == "asdas"))).Verifiable();
 
             // act
-            _userService.AddProductAsync(user, newProduct);
-            Thread.Sleep(20);
+            _userService.AddProductAsync(user, newProduct).GetAwaiter();
+            
             // assert
             _userRepoMock.Verify(a => a.UpdateAsync(It.Is<UserDB>(u => u.Id == "asdas")),
                 Times.Once());
 
         }
+
+        [Test]
+        public void UserServiceTest_12_DeleteProductAsync_User_Already_Has_The_Product_With_Same_Barcode_ID_Will_be_Deleted()
+        {
+            // arrange
+            User user = new User();
+            Product product = new Product();
+            product.Barcode = new Barcode() { Id = "identification", Code = "code" };
+            user.Products = new List<Product>();
+            user.Products.Add(product);
+            _userRepoMock.Setup(a => a.UpdateAsync(It.IsAny<UserDB>())).Verifiable();
+
+            // act
+            _userService.DeleteProductAsync(user, product).GetAwaiter();
+
+            // assert
+            _userRepoMock.Verify(a => a.UpdateAsync(It.IsAny<UserDB>()),
+                Times.Once());
+        }
+
+        [Test]
+        public void UserServiceTest_13_DeleteProductAsync_User_Dont_Have_The_Product_With_Same_Barcode_ID_Nothing_Will_be_Deleted()
+        {
+            // arrange
+            User user = new User();
+            Product product = new Product();
+            product.Barcode = new Barcode() { Id = "identification", Code = "code"};
+            user.Products = new List<Product>();
+            user.Products.Add(product);
+
+            Product otherProduct = new Product();
+            product.Barcode = new Barcode() { Id = "otheridentification" , Code = "otherCode"};
+
+            _userRepoMock.Setup(a => a.UpdateAsync(It.IsAny<UserDB>())).Verifiable();
+
+            // act
+            _userService.DeleteProductAsync(user, otherProduct).GetAwaiter();
+
+            // assert
+            _userRepoMock.Verify(a => a.UpdateAsync(It.IsAny<UserDB>()),
+                Times.Never());
+        }
+
 
         // AddProductAsync
         // DeleteProductAsync
