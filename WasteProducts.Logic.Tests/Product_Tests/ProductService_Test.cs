@@ -94,7 +94,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
                 .Returns(selectedList);
 
             var productService = new ProductService(mockProductRepository.Object, mapper);
-            var result = productService.AddByBarcode(barcode);
+            productService.AddByBarcode(barcode);
 
             mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Once);
         }
@@ -107,7 +107,57 @@ namespace WasteProducts.Logic.Tests.Product_Tests
                 .Returns(selectedList);
 
             var productService = new ProductService(mockProductRepository.Object, mapper);
-            var result = productService.AddByBarcode(barcode);
+            productService.AddByBarcode(barcode);
+
+            mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Never);
+        }
+
+        [Test]
+        public void AddByName_InsertNewProduct_returns_true()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.AddByName(It.IsAny<string>());
+
+            Assert.That(result, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void AddByName_DoNotInsertNewProduct_returns_false()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.AddByName(It.IsAny<string>());
+
+            Assert.That(result, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void AddByName_InsertNewProduct_callsMethod_AddOfRepository()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.AddByName(It.IsAny<string>());
+
+            mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Once);
+        }
+
+        [Test]
+        public void AddByName_DoNotInsertNewProduct_DoesNotcallMethod_AddOfRepository()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.AddByName(It.IsAny<string>());
 
             mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Never);
         }
