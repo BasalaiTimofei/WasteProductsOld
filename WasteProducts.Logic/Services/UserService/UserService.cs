@@ -208,6 +208,11 @@ namespace WasteProducts.Logic.Services.UserService
             user.Logins?.Remove(login);
         }
 
+        public async Task DeleteUserAsunc(User user)
+        {
+            await _userRepo.DeleteAsync(MapTo<UserDB>(user));
+        }
+
         private UserDB MapTo<T>(User user)
             =>
             _mapper.Map<UserDB>(user);
@@ -219,6 +224,5 @@ namespace WasteProducts.Logic.Services.UserService
         private UserLoginDB MapTo<T>(UserLogin user)
             =>
             _mapper.Map<UserLoginDB>(user);
-
     }
 }

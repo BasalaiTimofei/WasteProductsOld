@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Contexts;
@@ -350,5 +349,20 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             Assert.IsNull(user2.Roles.FirstOrDefault());
         }
 
+        // тестируем удаление юзеров, а заодно и чистим базу до изначального состояния
+        [Test]
+        public void UserIntegrTest_19DeletingUsers()
+        {
+            User user1 = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            User user2 = UserService.LogInAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
+            User user3 = UserService.LogInAsync("test51someemail@gmail.com", "qwerty3").GetAwaiter().GetResult();
+
+            user1.Password = "NotWalidPassword";
+            user1.UserName = "SomeNewUnsavedUserName";
+
+            UserService.DeleteUserAsunc(user1).GetAwaiter().GetResult();
+            UserService.DeleteUserAsunc(user2).GetAwaiter().GetResult();
+            UserService.DeleteUserAsunc(user3).GetAwaiter().GetResult();
+        }
     }
 }
