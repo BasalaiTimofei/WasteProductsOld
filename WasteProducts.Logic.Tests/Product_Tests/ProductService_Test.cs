@@ -186,5 +186,42 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             Assert.That(result, Is.EqualTo(true));
         }
+
+        [Test]
+        public void AddCategoty_DoesNotAddCategoryInProductWithCategory_returns_false()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.AddCategory(product, category);
+
+            Assert.That(result, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void AddCategoty_AddsCategoryInProductWithoutCategory_callsMethod_UpdateOfRepository()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.AddCategory(product, category);
+
+            mockProductRepository.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Once);
+        }
+
+        [Test]
+        public void AddCategoty_DoesNotAddCategoryInProductWithCategory_DoesNotcallMethod_UpdateOfRepository()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.AddCategory(product, category);
+
+            mockProductRepository.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Never);
+        }
     }
 }
