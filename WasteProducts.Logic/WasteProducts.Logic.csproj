@@ -85,12 +85,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InjectorModule.cs" />
+    <Compile Include="Mappings\DonationManagment\AddressProfile.cs" />
+    <Compile Include="Mappings\DonationManagment\DonationProfile.cs" />
+    <Compile Include="Mappings\DonationManagment\DonorProfile.cs" />
+    <Compile Include="Mappings\TestProfile.cs" />
     <Compile Include="Mappings\UserMappings\ProductProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserClaimProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserLoginProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserRoleProfile.cs" />
+    <Compile Include="Mappings\ProductProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AppRoleManagerService.cs" />
+    <Compile Include="Services\AppUserManagerService.cs" />
     <Compile Include="Services\LuceneSearchService.cs" />
     <Compile Include="Services\Groups\GroupService.cs" />
     <Compile Include="Services\MailService\MailFactory.cs" />
@@ -114,6 +121,10 @@
       <Project>{643aab59-4858-4e23-9a18-4bbec3ee5f56}</Project>
       <Name>WasteProducts.Logic.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
