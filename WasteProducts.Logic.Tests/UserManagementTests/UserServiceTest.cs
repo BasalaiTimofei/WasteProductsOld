@@ -350,8 +350,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             userRepoMock.Setup(a => a.UpdateAsync(It.Is<UserDB>(u => u.Id == "asdas"))).Verifiable();
 
             // act
-            userService.AddProductAsync(user, newProduct);
-            Thread.Sleep(20);
+            userService.AddProductAsync(user, newProduct).GetAwaiter();
             // assert
             userRepoMock.Verify(a => a.UpdateAsync(It.Is<UserDB>(u => u.Id == "asdas")),
                 Times.Once());
