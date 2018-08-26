@@ -1,33 +1,14 @@
-﻿using AutoMapper;
-using NUnit.Framework;
-using System;
+﻿using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
-using WasteProducts.DataAccess.Contexts;
 using WasteProducts.DataAccess.Repositories.UserManagement;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.MailService;
 using WasteProducts.Logic.Common.Services.UserService;
-using WasteProducts.Logic.Mappings.UserMappings;
 using WasteProducts.Logic.Services.MailService;
 using WasteProducts.Logic.Services.UserService;
-
-
-
-
-
-// INTEGRATIONAL TESTS OF UserService AND UserRepository WITH REAL CONNECTION TO DATABASE 
-// PLEASE DON'T DELETE THIS FILE 
-
-// иНТЕГРАЦИОННЫЕ ТЕСТЫ UserService И UserRepository С РЕАЛЬНЫМ ПОДКЛЮЧЕНИЕМ К БАЗЕ ДАНЫХ
-// ПОЖАЛУЙСТА, НЕ УДАЛЯЙТЕ ЭТОТ ФАЙЛ
-
-
-
-
 
 namespace WasteProducts.Logic.Tests.UserManagementTests
 {
@@ -53,32 +34,19 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             MailService = new MailService(null, null, null);
             UserService = new UserService(MailService, UserRepo);
             RoleService = new UserRoleService(RoleRepo);
-
-            Mapper.Reset();
-            Mapper.Initialize(cfg =>
-            {
-                cfg.AddProfile(new UserProfile());
-                cfg.AddProfile(new UserClaimProfile());
-                cfg.AddProfile(new UserLoginProfile());
-            });
-        }
-
-        [OneTimeTearDown]
-        public void TestFixtureTearDown()
-        {
-            Mapper.Reset();
         }
 
         // тестируем регистрирование и логин юзеров и создание ролей, плюс делаем начальное заполнение таблицы
         [Test]
         public void UserIntegrTest_00AddingUserAndRole()
         {
-            //чистим тестовую таблицу перед запуском, чтобы она всегда в тестах была одинаковая
-            using (WasteContext wc = new WasteContext(NAME_OR_CONNECTION_STRING))
+            // если таблица не была почищена от юзеров в силу некой причины, например, отвалившегося теста
+            // вызываю метод, удаляющий этих юзеров
+            try
             {
-                wc.Database.Delete();
-                wc.Database.CreateIfNotExists();
+                UserIntegrTest_19DeletingUsers();
             }
+            catch { }
 
             User user1 = UserService.RegisterAsync("test49someemail@gmail.com", "Sergei", "qwerty1", "qwerty1").GetAwaiter().GetResult();
             User user2 = UserService.RegisterAsync("test50someemail@gmail.com", "Anton", "qwerty2", "qwerty2").GetAwaiter().GetResult();
@@ -253,8 +221,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             UserService.AddFriendAsync(user, user3).GetAwaiter().GetResult();
 
             Assert.AreEqual(2, user.Friends.Count);
-
-            UserDB u = Mapper.Map<UserDB>(user);
 
             user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual(2, user.Friends.Count);
