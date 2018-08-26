@@ -101,7 +101,6 @@
     <Compile Include="UoW\Security\IUnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
     <Compile Include="Models\Groups\GroupBoardDB.cs" />
     <Compile Include="Models\Groups\GroupDB.cs" />
     <Compile Include="Models\Groups\GroupUserInviteTimeDB.cs" />

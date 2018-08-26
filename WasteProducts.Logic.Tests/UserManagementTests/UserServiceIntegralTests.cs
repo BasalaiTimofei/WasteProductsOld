@@ -40,6 +40,10 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public void UserIntegrTest_00AddingUserAndRole()
         {
+            // раскомментить если тесты отваливаются из-за несоответствия схемы БД, но миграции ещё не используются
+            //var recreator = new UserRepository(NAME_OR_CONNECTION_STRING);
+            //recreator.RecreateTestDatabase();
+            
             // если таблица не была почищена от юзеров в силу некой причины, например, отвалившегося теста
             // вызываю метод, удаляющий этих юзеров
             try

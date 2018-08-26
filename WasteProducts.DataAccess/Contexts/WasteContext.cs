@@ -21,8 +21,6 @@ namespace WasteProducts.DataAccess.Contexts
             Database.Log = (s) => Debug.WriteLine(s);
         }
 
-        
-
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -29,6 +29,18 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             NameOrConnectionString = nameOrConnectionString;
         }
 
+        /// <summary>
+        /// Use ONLY with testDB!
+        /// </summary>
+        public void RecreateTestDatabase()
+        {
+            using (var db = GetWasteContext())
+            {
+                db.Database.Delete();
+                db.Database.CreateIfNotExists();
+            }
+        }
+
         public async Task AddAsync(UserDB user)
         {
             using (var db = GetWasteContext())
