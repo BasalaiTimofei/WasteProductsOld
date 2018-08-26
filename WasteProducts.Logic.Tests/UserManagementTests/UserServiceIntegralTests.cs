@@ -10,20 +10,6 @@ using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.Logic.Services.MailService;
 using WasteProducts.Logic.Services.UserService;
 
-
-
-
-
-// INTEGRATIONAL TESTS OF UserService AND UserRepository WITH REAL CONNECTION TO DATABASE 
-// PLEASE DON'T DELETE THIS FILE 
-
-// иНТЕГРАЦИОННЫЕ ТЕСТЫ UserService И UserRepository С РЕАЛЬНЫМ ПОДКЛЮЧЕНИЕМ К БАЗЕ ДАНЫХ
-// ПОЖАЛУЙСТА, НЕ УДАЛЯЙТЕ ЭТОТ ФАЙЛ
-
-
-
-
-
 namespace WasteProducts.Logic.Tests.UserManagementTests
 {
     public class UserServiceIntegralTests
