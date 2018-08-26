@@ -1,17 +1,12 @@
-﻿using AutoMapper;
-using NUnit.Framework;
-using System;
+﻿using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
-using WasteProducts.DataAccess.Contexts;
 using WasteProducts.DataAccess.Repositories.UserManagement;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.MailService;
 using WasteProducts.Logic.Common.Services.UserService;
-using WasteProducts.Logic.Mappings.UserMappings;
 using WasteProducts.Logic.Services.MailService;
 using WasteProducts.Logic.Services.UserService;
 
