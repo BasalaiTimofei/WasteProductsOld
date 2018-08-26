@@ -102,6 +102,7 @@ namespace WasteProducts.Logic.Services.UserService
             {
                 User user = MapTo<User>(_userRepo.Select(email));
 
+                if (user == null) return;
                 // TODO придумать что писать в письме-восстановителе пароля и где хранить этот стринг
                 await _mailService.SendAsync(email, PASSWORD_RECOWERY_HEADER, $"На ваш аккаунт \"Фуфлопродуктов\" был отправлен запрос на смену пароля. Напоминаем ваш пароль на сайте :\n\n{user.Password}\n\nВы можете поменять пароль в своем личном кабинете.");
             }
@@ -133,7 +134,8 @@ namespace WasteProducts.Logic.Services.UserService
 
         public async Task<IList<string>> GetRolesAsync(User user)
         {
-            return await _userRepo.GetRolesAsync(MapTo<UserDB>(user));
+            var userDB = MapTo<UserDB>(user);
+            return await _userRepo.GetRolesAsync(userDB);
         }
 
         public async Task AddToRoleAsync(User user, string roleName)

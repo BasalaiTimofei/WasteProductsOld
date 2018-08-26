@@ -187,50 +187,93 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             UserDB userDB = new UserDB();
             userDB.Email = "validEmail@gmail.com";
             userDB.PasswordHash = "password";
+            var userName = "UserName";
             IList<string> roles = new List<string>();
 
 
-            Expression<Func<UserDB, bool>> exp = u => u.Email == invalidEmail && u.PasswordHash == password;
-            (UserDB, IList<string>) tuple = (userDB, roles);
+            (UserDB, IList<string>) tuple = (null, roles);
 
             userRepoMock.Setup(a => a.
             SelectWithRoles(It.IsAny<Func<UserDB, bool>>(),
                 It.IsAny<bool>())).Returns(tuple);
+
+            // act
+            var actual = userService.LogInAsync(invalidEmail, password, true).GetAwaiter().GetResult();
+
+            // assert
+            Assert.IsNull(actual);
+
+
+            
         }
 
-        // PasswordRequestAsync - positive and negative
-        // GetRolesAsync
-        // + other
+        [Test]
+        public void UserServiceTest_06_PasswordRequestAsync_Not_Existing_Email_Dont_Send_Email()
+        {
+            // arrange
+            var invalidEmail = "incorrectEmail";
+            userRepoMock.Setup(b => b.Select(It.Is<string>(c => 
+            c == invalidEmail), It.IsAny<bool>())).Returns((UserDB)null);
+
+            mailServiceMock.Setup(a => a.SendAsync(It.Is<string>(c => 
+            c == invalidEmail), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
+
+            //act
+            userService.PasswordRequestAsync(invalidEmail).GetAwaiter().GetResult();
+
+            //assert
+            userRepoMock.Verify(m => m.Select(It.Is<string>(c => 
+            c == invalidEmail), It.IsAny<bool>()), Times.Once());
+
+            mailServiceMock.Verify(m => m.SendAsync(It.Is<string>(c => 
+            c == invalidEmail), It.IsAny<string>(), It.IsAny<string>()), 
+            Times.Never());
+        }
+
+        [Test]
+        public void UserServiceTest_07_PasswordRequest_Existing_Email_Sends_Email_Once()
+        {
+            // arrange
+            var existingEmail = "existingEmail";
+            UserDB userDB = new UserDB();
+            userDB.PasswordHash = "passwordHash";
+            userRepoMock.Setup(b => b.Select(It.Is<string>(c =>
+            c == existingEmail), It.IsAny<bool>())).Returns(userDB);
+            mailServiceMock.Setup(a => a.SendAsync(It.Is<string>(c =>
+            c == existingEmail), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
+
+            // act
+            userService.PasswordRequestAsync(existingEmail).GetAwaiter().GetResult();
+
+            // assert
+            userRepoMock.Verify(m => m.Select(It.Is<string>(c =>
+            c == existingEmail), It.IsAny<bool>()), Times.Once());
+
+            mailServiceMock.Verify(m => m.SendAsync(It.Is<string>(c =>
+            c == existingEmail), It.IsAny<string>(), It.IsAny<string>()),
+            Times.Once());
+        }
+
+        [Test] 
+        public void UserServiceTest_08_GetRolesAsync_Existing_User_Returns()
+        {
+            // arrange
+            IList<string> expected = new List<string>() {"1", "2" };
 
 
+            userRepoMock.Setup(a =>
+            a.GetRolesAsync(It.IsAny<UserDB>()))
+            .Returns(Task.FromResult((expected)));
+            User user = new User();
 
+            // act
+            var actual = userService.GetRolesAsync(user)
+                .GetAwaiter().GetResult();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            // arrange
+            Assert.AreEqual(expected.Count, actual.Count);
+            Assert.AreEqual(expected[0], actual[0]);
+            Assert.AreEqual(expected[1], actual[1]);
+        }
     }
 }
