@@ -83,6 +83,7 @@
     <Compile Include="Services\Groups\GroupProductService.cs" />
     <Compile Include="Services\Groups\GroupService.cs" />
     <Compile Include="Services\TestService.cs" />
+    <Compile Include="Validators\Groups\GroupValidation.cs" />
     <Compile Include="Validators\TestValidator.cs" />
   </ItemGroup>
   <ItemGroup>
