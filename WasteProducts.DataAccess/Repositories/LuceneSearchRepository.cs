@@ -17,6 +17,7 @@ using Lucene.Net.QueryParsers.Classic;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Exceptions;
 using Lucene.Net.Analysis.Standard;
+using System.Web.Configuration;
 
 namespace WasteProducts.DataAccess.Repositories
 {
@@ -43,7 +44,7 @@ namespace WasteProducts.DataAccess.Repositories
 
             string assemblyFilename = Assembly.GetAssembly(typeof(LuceneSearchRepository)).Location;
             string assemblyPath = Path.GetDirectoryName(assemblyFilename);
-            IndexPath = Path.Combine(assemblyPath, ConfigurationManager.AppSettings["LuceneIndexStoragePath"]);
+            IndexPath = Path.Combine(assemblyPath, WebConfigurationManager.AppSettings["LuceneIndexStoragePath"]);
             //_analyzer = new WhitespaceAnalyzer(MATCH_LUCENE_VERSION);
             _analyzer = new StandardAnalyzer(MATCH_LUCENE_VERSION);
             try
@@ -84,12 +85,10 @@ namespace WasteProducts.DataAccess.Repositories
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="id">Id</param>
         /// <returns></returns>
-        public TEntity GetById<TEntity>(string id) where TEntity : class
+        public TEntity GetById<TEntity>(int id) where TEntity : class
         {
-            //TODO переделать со стринговым айдишником
-            throw new NotImplementedException();
-            //Query queryGet = NumericRangeQuery.NewInt64Range(IDField, id, id, true, true);
-            //return ProceedQuery<TEntity>(queryGet);
+            Query queryGet = NumericRangeQuery.NewInt64Range(IDField, id, id, true, true);
+            return ProceedQuery<TEntity>(queryGet);
         }
 
         /// <summary>
@@ -166,23 +165,20 @@ namespace WasteProducts.DataAccess.Repositories
         /// <param name="obj"></param>
         public void Update<TEntity>(TEntity obj) where TEntity : class 
         {
-            //TODO переделать со стринговым айдишником
-            throw new NotImplementedException();
-
-            //System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty(IDField);
-            //int id = (int)keyFieldInfo.GetValue(obj);
-            //if (id>0)
-            //{
-            //    if (GetById<TEntity>(id) != null)
-            //    {
-            //        Delete<TEntity>(obj);
-            //        Insert<TEntity>(obj);
-            //    }
-            //}
-            //else
-            //{
-            //    throw new LuceneSearchRepositoryException("Сan't update entity with empty id.");
-            //}
+            System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty(IDField);
+            int id = (int)keyFieldInfo.GetValue(obj);
+            if (id>0)
+            {
+                if (GetById<TEntity>(id) != null)
+                {
+                    Delete<TEntity>(obj);
+                    Insert<TEntity>(obj);
+                }
+            }
+            else
+            {
+                throw new LuceneSearchRepositoryException("Сan't update entity with empty id.");
+            }
         }
 
         /// <summary>
@@ -417,8 +413,6 @@ namespace WasteProducts.DataAccess.Repositories
             // TODO: uncomment the following line if the finalizer is overridden above.
             // GC.SuppressFinalize(this);
         }
-
-        
 
         #endregion
     }
