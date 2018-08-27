@@ -3,6 +3,8 @@ using System;
 using WasteProducts.DataAccess.Common.Models;
 using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Common.Models;
+using WasteProducts.Logic.Validators;
 
 namespace WasteProducts.Logic.Services
 {
