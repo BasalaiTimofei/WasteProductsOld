@@ -23,8 +23,13 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         public string Description { get; set; }
 
         /// <summary>
-        /// List of products that belong to a specific Ñategory in database
+        /// List of products that belong to a specific Category in database
         /// </summary>
         public virtual ICollection<ProductDB> Products { get; set; }
+
+        /// <summary>
+        /// Defines whether the category is marked for deletion
+        /// </summary>
+        public bool Marked { get; set; }
     }
 }

@@ -34,7 +34,7 @@ namespace WasteProducts.Logic.Common.Services
         /// </summary>
         /// <param name="category">The specific category for which a description is added</param>
         /// <param name="description">The specific description for the specfic category</param>
-        void AddDescription(Category category, string description);
+        void SetDescription(Category category, string description);
 
         /// <summary>
         /// Tries to delete the specific category

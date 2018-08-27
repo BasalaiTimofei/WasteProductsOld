@@ -43,8 +43,8 @@ namespace WasteProducts.DataAccess.Repositories
         {
             if (category != null && _context.Categories.Contains(category))
             {
-                _context.Categories.Remove(category);
-                _context.SaveChanges();
+                category.Marked = true;
+                Update(category);
             }
         }
 
@@ -83,7 +83,7 @@ namespace WasteProducts.DataAccess.Repositories
         public CategoryDB GetById(int id) => _context.Categories.Find(id);
 
         /// <summary>
-        /// Updates the specific category
+        /// Gets category by name
         /// </summary>
         /// <param name="name">The specific category for updating</param>
         public CategoryDB GetByName(string name) => _context.Categories.Find(name);
