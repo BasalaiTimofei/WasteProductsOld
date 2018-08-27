@@ -12,7 +12,7 @@ using WasteProducts.Logic.Services.UserService;
 
 namespace WasteProducts.Logic.Tests.UserManagementTests
 {
-    public class UserServiceIntegralTests
+    public class UserServiceIntegrationTests
     {
         public const string NAME_OR_CONNECTION_STRING = "name=ConStrByServer";
 
