@@ -50,10 +50,10 @@
     <Compile Include="Models\DonationManagment\DonationDB.cs" />
     <Compile Include="Exceptions\LuceneSearchRepositoryException.cs" />
     <Compile Include="Exceptions\LuceneSearchServiceException.cs" />
+    <Compile Include="Models\Products\CategoryDB.cs" />
     <Compile Include="Models\Barcods\BarcodeDB.cs" />
     <Compile Include="Models\DonationManagment\DonorDB.cs" />
     <Compile Include="Models\Entity.cs" />
-    <Compile Include="Models\Products\CategoryDB.cs" />
     <Compile Include="Models\Products\ProductDB.cs" />
     <Compile Include="Models\Security\Models\ClaimDb.cs" />
     <Compile Include="Models\Security\Infrastructure\IClaimDb.cs" />
@@ -92,9 +92,6 @@
     <Compile Include="Models\Groups\GroupUserDB.cs" />
     <Compile Include="Models\Groups\GroupProductDB.cs" />
     <Compile Include="Repositories\Groups\IGroupRepository.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\Donation\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

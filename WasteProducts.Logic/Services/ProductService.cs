@@ -52,7 +52,7 @@ namespace WasteProducts.Logic.Services
                 out var products)) return false;
 
             var productFromDB = products.ToList().First();
-            productFromDB.Category = Mapper.Map<CategoryDB>(category);
+            productFromDB.Category = _mapper.Map<CategoryDB>(category);
             _productRepository.Update(productFromDB);
 
             return true;
