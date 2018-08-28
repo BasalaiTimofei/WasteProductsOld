@@ -23,6 +23,12 @@ namespace WasteProducts.Web
                 } // constraint required so this route only matches valid controller names
             );
 
+            config.Routes.MapHttpRoute(
+                name: "Search",
+                routeTemplate: "api/search/product/{query}",
+                defaults: new { controller = "Search", action = "Product"}
+            );
+
             // catch all route mapped to ErrorController so 404 errors
             // can be logged in elmah
             config.Routes.MapHttpRoute(

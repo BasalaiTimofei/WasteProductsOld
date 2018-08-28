@@ -12,7 +12,6 @@ using WasteProducts.Logic.Common.Services;
 
 namespace WasteProducts.Web.Controllers.Api
 {
-    [RoutePrefix("search/service")]
     public class SearchController : BaseApiController
     {
         private ISearchService _searchService { get; }
@@ -22,31 +21,27 @@ namespace WasteProducts.Web.Controllers.Api
             _searchService = searchService;
         }
 
+        
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
-        [SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty", typeof(IEnumerable<Product>))]        
-        public IEnumerable<Product> Get(string query)
+        [SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty", typeof(IEnumerable<Product>))]
+        [HttpGet]
+        public IEnumerable<Product> Product(string query)
         {
-            IEnumerable<Product> searchResultList;
-
             SearchQuery searchQuery = new SearchQuery();
-            searchQuery.AddField("Title").AddField("Description");
-
+            searchQuery.AddField("Name").AddField("Description");
             searchQuery.Query = query;
 
-            searchResultList = _searchService.Search<Product>(searchQuery);
-            searchResultList = new List<Product>();
-            //searchResultList.Add(new Product { Name = "aaaa", Description = "aaaaaaaaaa" });//для теста, что без DI все работает
-
-            return searchResultList;
+            return _searchService.Search<Product>(searchQuery);
         }
 
         //[SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
         //[SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty", typeof(IEnumerable<Product>))]
-        ////[Route("{fields:string[]}")]
-        //public IEnumerable<Product> Get(string query, string[] fields)
+        //[Route("{fields:string[]}")]
+        //[HttpGet]
+        //public IEnumerable<Product> Products(string query, string[] fields)
         //{
-        //    IEnumerable<Product> searchResultList;
+            IEnumerable<Product> searchResultList = new List<Product>();
 
         //    SearchQuery searchQuery = new SearchQuery();
         //    foreach (string filed in fields)
