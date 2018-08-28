@@ -221,10 +221,10 @@
     </Content>
     <Content Include="Content\images\favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Content\scripts\bootstrap.bundle.js" />
-    <Content Include="Content\scripts\bootstrap.bundle.min.js" />
-    <Content Include="Content\scripts\bootstrap.bundle.min.js.map" />
-    <Content Include="Content\scripts\bootstrap.bundle.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.js" />
+    <Content Include="Scripts\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.js.map" />
     <Content Include="Content\bootstrap\_variables.scss" />
     <Content Include="Content\bootstrap\_utilities.scss" />
     <Content Include="Content\bootstrap\_type.scss" />
@@ -348,10 +348,10 @@
     <Content Include="Content\icons\_shims.scss" />
     <Content Include="Content\icons\_stacked.scss" />
     <Content Include="Content\icons\_variables.scss" />
-    <None Include="Content\scripts\jquery-3.3.1.intellisense.js" />
-    <Content Include="Content\scripts\jquery-3.3.1.js" />
-    <Content Include="Content\scripts\jquery-3.3.1.min.js" />
-    <Content Include="Content\scripts\Site.js" />
+    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.3.1.js" />
+    <Content Include="Scripts\jquery-3.3.1.min.js" />
+    <Content Include="Scripts\Site.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -391,7 +391,7 @@
     </None>
     <None Include="packages.config" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Content\scripts\jquery-3.3.1.min.map" />
+    <Content Include="Scripts\jquery-3.3.1.min.map" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Error\403-Forbidden.cshtml" />
     <Content Include="Views\Error\404-NotFound.cshtml" />
