@@ -41,7 +41,7 @@ namespace WasteProducts.Web.Controllers.Api
         //[HttpGet]
         //public IEnumerable<Product> Products(string query, string[] fields)
         //{
-            IEnumerable<Product> searchResultList = new List<Product>();
+            //IEnumerable<Product> searchResultList = new List<Product>();
 
         //    SearchQuery searchQuery = new SearchQuery();
         //    foreach (string filed in fields)
