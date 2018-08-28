@@ -238,5 +238,44 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             mockCategoryRepo.Verify(m => m.Delete(It.IsAny<CategoryDB>()), Times.Once);
         }
+
+        [Test]
+        public void DeleteRange_DeleteTwoExistingCategories_ReturnsTrue()
+        {
+            selectedList.Add(categoryDB);
+            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(selectedList);
+
+            var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
+            var result = categoryService.DeleteRange(names);
+
+            Assert.That(result, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void DeleteRange_DeleteTwoExistingCategories_DeleteMethodOfRepoIsCalledTwice()
+        {
+            selectedList.Add(categoryDB);
+            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(selectedList);
+
+            var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
+            categoryService.DeleteRange(names);
+
+            mockCategoryRepo.Verify(m => m.Delete(It.IsAny<CategoryDB>()), Times.Exactly(2));
+        }
+
+        [Test]
+        public void DeleteRange_CategoriesWereNotFound_ReturnFalseAndDeleteMethodOfRepoNeverCalled()
+        {
+            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(selectedList);
+
+            var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
+            var result = categoryService.DeleteRange(names);
+
+            Assert.That(result, Is.EqualTo(false));
+            mockCategoryRepo.Verify(m => m.Delete(It.IsAny<CategoryDB>()), Times.Never);
+        }
     }
 }
