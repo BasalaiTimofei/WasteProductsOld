@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using NUnit.Framework;
 using WasteProducts.DataAccess.Repositories;
 using WasteProducts.Logic.Services;
 using WasteProducts.Web.Controllers.Api;
 using NLog;
+using NUnit.Framework.Constraints;
 using WasteProducts.Logic.Common.Models;
 using WasteProducts.Logic.Common.Models.Products;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace WasteProducts.Web.Tests.WebApiTests
 {
@@ -34,29 +33,46 @@ namespace WasteProducts.Web.Tests.WebApiTests
         }
 
         [Test]
-        public void SearchControllerTest()
+        public void SearchControllerTestGetProductWithDefaultFields()
         {
             Mock<ILogger> _mockLogger = new Mock<ILogger>();
             LuceneSearchRepository repo = new LuceneSearchRepository(true);
             LuceneSearchService service = new LuceneSearchService(repo);
             SearchController sut = new SearchController(_mockLogger.Object, service);
 
-            Product product = new Product();
-            product.Name = "Test product 1";
-            product.Description = "Test product 1 description";
             service.AddToSearchIndex<Product>(products);
 
-            var result = sut.Product("test");
+            var result = sut.GetProductsDefaultFields("test");
             Assert.AreEqual(expected: 5, actual: result.ToArray().Length);
 
-            result = sut.Product("unique");
+            result = sut.GetProductsDefaultFields("unique");
             Assert.AreEqual(expected: 1, actual: result.ToArray().Length);
 
-            result = sut.Product("lorem");
+            result = sut.GetProductsDefaultFields("lorem");
             Assert.AreEqual(expected: 0, actual: result.ToArray().Length);
 
             //SearchQuery query = new SearchQuery().SetQueryString("Test").AddField("Name").AddField("Description");
             //var result = service.Search<Product>(query);
+        }
+
+        [Test]
+        public void SearchControllerTestGetProductWithCustomFields()
+        {
+            Mock<ILogger> _mockLogger = new Mock<ILogger>();
+            LuceneSearchRepository repo = new LuceneSearchRepository(true);
+            LuceneSearchService service = new LuceneSearchService(repo);
+            SearchController sut = new SearchController(_mockLogger.Object, service);
+
+            service.AddToSearchIndex<Product>(products);
+
+            string[] fields = new string[] {"Description"};
+
+
+            var result = sut.GetProductsDefaultFields("test");
+            Assert.AreEqual(expected: 5, actual: result.ToArray().Length);
+
+            result = sut.GetProducts("unique", fields);
+            Assert.AreEqual(expected: 0, actual: result.ToArray().Length);
         }
     }
 }
