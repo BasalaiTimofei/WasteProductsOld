@@ -39,16 +39,7 @@ namespace WasteProducts.Logic.Services
 
             foreach(var name in names)
             {
-                if (IsCategoryInDB(p =>
-                string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
-                out var categories)) continue;
-
-                else
-                {
-                    var newCategory = new Category { Name = name };
-                    _categoryRepository.Add(_mapper.Map<CategoryDB>(newCategory));
-                    if (!result) result = true;
-                }
+                if (AddByName(name) && !result) result = true;
             }
 
             return result;
@@ -92,19 +83,7 @@ namespace WasteProducts.Logic.Services
 
             foreach (var name in names)
             {
-                if (!IsCategoryInDB(p =>
-                string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
-                out var categories)) continue;
-
-                else
-                {
-                    var categoriesFromDB = categories.ToList();
-                    foreach (var categoryFromDB in categoriesFromDB)
-                    {
-                        _categoryRepository.Delete(categoryFromDB);
-                        if (!result) result = true;
-                    }
-                }
+                if (Delete(name) && !result) result = true;
             }
 
             return result;

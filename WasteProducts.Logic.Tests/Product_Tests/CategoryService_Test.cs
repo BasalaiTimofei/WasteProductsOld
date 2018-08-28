@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
 using AutoMapper;
 using Moq;
 using NUnit.Framework;
-using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories;
-using WasteProducts.DataAccess.Repositories;
-using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Mappings;
 using WasteProducts.Logic.Services;
@@ -63,7 +59,6 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         public void AddByName_InsertedCategoryExists_ReturnsFalse()
         {
             selectedList.Add(categoryDB);
-
             mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
                 .Returns(selectedList);
 
@@ -99,7 +94,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void AddRange_InsertTwoNewCategories_ReturnsTrue()
+        public void AddRange_InsertAtLeastOneNewCategory_ReturnsTrue()
         {
             mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
                 .Returns(selectedList);
@@ -123,7 +118,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void AddRange_InsertTwoExistingCategories_ReturnFalseAndAddMethodOfRepoNeverCalled()
+        public void AddRange_InsertAllExistingCategories_ReturnsFalseAndAddMethodOfRepoIsNeverCalled()
         {
             selectedList.Add(categoryDB);
             mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
@@ -240,7 +235,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void DeleteRange_DeleteTwoExistingCategories_ReturnsTrue()
+        public void DeleteRange_DeleteAtLeastOneExistingCategory_ReturnsTrue()
         {
             selectedList.Add(categoryDB);
             mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
