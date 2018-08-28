@@ -104,8 +104,11 @@ namespace WasteProducts.Web.App_Start
         /// </summary>
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
-        {
-            kernel.Load(Assembly.GetExecutingAssembly(), typeof(Logic.InjectorModule).Assembly, typeof(DataAccess.InjectorModule).Assembly);            
+        {            
+            kernel.Load("WasteProducts.*.dll", @"d:\!IT Academy\Waste products\WasteProducts.DataAccess\bin\Debug\WasteProducts.DataAccess.dll");            
+            //xcopy "$(TargetDir)WasteProducts.DataAccess.dll" "$(SolutionDir)WasteProducts.Web\bin\"  /Y /I
         }
     }
 }
+
+
