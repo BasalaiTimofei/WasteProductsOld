@@ -25,6 +25,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         private List<CategoryDB> selectedList;
         private MapperConfiguration mapConfig;
         private Mapper mapper;
+        private Category category;
         private CategoryDB categoryDB;
         private List<string> names;
 
@@ -42,6 +43,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             mapper = new Mapper(mapConfig);
 
+            category = new Category { Name = "Meat" };
             categoryDB = new CategoryDB { Name = "Milk products" };
         }
 
@@ -147,7 +149,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void Get_CategoryFound_NamesAreTheSame()
+        public void Get_CategoryWasFound_NamesAreTheSame()
         {
             selectedList.Add(new CategoryDB { Name = "Meat" });
             mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
@@ -158,6 +160,33 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             Assert.That(result, Is.TypeOf(typeof(Category)));
             Assert.AreEqual("Meat", result.Name);
+        }
+
+        [Test]
+        public void SetDescription_CategoryNotFound_UpdateMethodIsNeverCalled()
+        {
+            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(selectedList);
+
+            var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
+            categoryService.SetDescription(category, It.IsAny<string>());
+
+            mockCategoryRepo.Verify(m => m.Update(It.IsAny<CategoryDB>()), Times.Never);
+        }
+
+        [Test]
+        public void SetDescription_CategoryWasFound_DescriptionIsAddedAndUpdateMethodIsCalledOnce()
+        {
+            selectedList.Add(categoryDB);
+            var description = "Some description";
+            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(selectedList);
+
+            var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
+            categoryService.SetDescription(category, description);
+
+            Assert.AreEqual(selectedList[0].Description, description);
+            mockCategoryRepo.Verify(m => m.Update(It.IsAny<CategoryDB>()), Times.Once);
         }
     }
 }
