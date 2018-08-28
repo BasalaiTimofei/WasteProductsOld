@@ -15,6 +15,12 @@ namespace WasteProducts.Logic.Services
         private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
 
+        public CategoryService(ICategoryRepository categoryRepository, IMapper mapper)
+        {
+            _categoryRepository = categoryRepository;
+            _mapper = mapper;
+        }
+
         public bool AddByName(string name)
         {
             if (IsCategoryInDB(p =>
