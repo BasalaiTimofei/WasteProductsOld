@@ -95,7 +95,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             categoryService.AddByName(It.IsAny<string>());
 
-            mockCategoryRepo.Verify(m => m.Add(It.IsAny<CategoryDB>()), Times.Once);
+            mockCategoryRepo.Verify(m => m.Add(It.IsAny<CategoryDB>()), Times.Never);
         }
 
         [Test]
@@ -187,6 +187,56 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             Assert.AreEqual(selectedList[0].Description, description);
             mockCategoryRepo.Verify(m => m.Update(It.IsAny<CategoryDB>()), Times.Once);
+        }
+
+        [Test]
+        public void Delete_CategoryNotFound_ReturnsFalse()
+        {
+            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(selectedList);
+
+            var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
+            var result = categoryService.Delete(It.IsAny<string>());
+
+            Assert.That(result, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void Delete_CategoryWasFound_ReturnsTrue()
+        {
+            selectedList.Add(categoryDB);
+            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(selectedList);
+
+            var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
+            var result = categoryService.Delete(It.IsAny<string>());
+
+            Assert.That(result, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void Delete_CategoryNotFound_DeleteMethodOfRepoIsNeverCalled()
+        {
+            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(selectedList);
+
+            var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
+            categoryService.Delete(It.IsAny<string>());
+
+            mockCategoryRepo.Verify(m => m.Delete(It.IsAny<CategoryDB>()), Times.Never);
+        }
+
+        [Test]
+        public void Delete_CategoryWasFound_DeleteMethodOfRepoIsCalledOnce()
+        {
+            selectedList.Add(categoryDB);
+            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(selectedList);
+
+            var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
+            categoryService.Delete(It.IsAny<string>());
+
+            mockCategoryRepo.Verify(m => m.Delete(It.IsAny<CategoryDB>()), Times.Once);
         }
     }
 }
