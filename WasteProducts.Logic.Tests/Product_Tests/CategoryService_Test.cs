@@ -26,12 +26,14 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         private MapperConfiguration mapConfig;
         private Mapper mapper;
         private CategoryDB categoryDB;
-
+        private List<string> names;
+  
         [SetUp]
         public void Init()
         {
             mockCategoryRepo = new Mock<ICategoryRepository>();
             selectedList = new List<CategoryDB>();
+            names = new List<string>() { "Milk products", "Meat" };
 
             mapConfig = new MapperConfiguration(cfg =>
             {
@@ -91,6 +93,44 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             categoryService.AddByName(It.IsAny<string>());
 
+            mockCategoryRepo.Verify(m => m.Add(It.IsAny<CategoryDB>()), Times.Once);
+        }
+
+        [Test]
+        public void AddRange_InsertTwoNewCategories_ReturnsTrue()
+        {
+            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(selectedList);
+            
+            var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
+            var result = categoryService.AddRange(names);
+
+            Assert.That(result, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void AddRange_InsertTwoNewCategories_AddMethodOfRepoIsCalledTwice()
+        {
+            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(selectedList);
+
+            var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
+            categoryService.AddRange(names);
+
+            mockCategoryRepo.Verify(m => m.Add(It.IsAny<CategoryDB>()), Times.Exactly(2));
+        }
+
+        [Test]
+        public void AddRange_InsertTwoExistingCategories_ReturnFalseAndAddMethodOfRepoNeverCalled()
+        {
+            selectedList.Add(categoryDB);
+            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(selectedList);
+
+            var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
+            var result = categoryService.AddRange(names);
+
+            Assert.That(result, Is.EqualTo(false));
             mockCategoryRepo.Verify(m => m.Add(It.IsAny<CategoryDB>()), Times.Never);
         }
     }
