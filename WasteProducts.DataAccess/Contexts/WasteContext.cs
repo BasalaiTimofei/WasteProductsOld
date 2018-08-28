@@ -1,6 +1,7 @@
 ﻿using System.Data.Entity;
 using System.Diagnostics;
 using Microsoft.AspNet.Identity.EntityFramework;
+using WasteProducts.DataAccess.Common.Context;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models;
 using WasteProducts.DataAccess.Common.Models.Users;
@@ -9,7 +10,7 @@ using WasteProducts.DataAccess.Contexts.Config;
 namespace WasteProducts.DataAccess.Contexts
 {
     [DbConfigurationType(typeof(MsSqlConfiguration))]
-    public class WasteContext : IdentityDbContext<UserDB, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>
+    public class WasteContext : IdentityDbContext<UserDB, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>, IDbContext
     {
         public WasteContext()
         {
