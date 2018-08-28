@@ -13,7 +13,7 @@ namespace WasteProducts.DataAccess
     {
         public override void Load()
         {
-            Bind<ISearchRepository>().To<LuceneSearchRepository>();
+            Bind<ISearchRepository>().To<LuceneSearchRepository>().InSingletonScope();
             //throw new NotImplementedException();
         }
     }
