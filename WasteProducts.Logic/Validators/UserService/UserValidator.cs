@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WasteProducts.Logic.Common.Models
+namespace WasteProducts.Logic.Validators.UserService
 {
-    class Model
+    // TODO Implement UserValidator later
+    public class UserValidator
     {
     }
 }

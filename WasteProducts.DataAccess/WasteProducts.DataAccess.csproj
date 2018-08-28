@@ -97,6 +97,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -124,6 +125,7 @@
     <Compile Include="Repositories\EntityRepository.cs" />
     <Compile Include="Repositories\LuceneSearchRepository.cs" />
     <Compile Include="Repositories\Groups\GroupRepository.cs" />
+    <Compile Include="Repositories\UserManagement\UserRepository.cs" />
     <Compile Include="Repositories\ProductRepository.cs" />
     <Compile Include="Repositories\Security\DbFactory.cs" />
     <Compile Include="Repositories\Security\RepositoryBase.cs" />
@@ -133,6 +135,7 @@
     <Compile Include="Repositories\Security\UserRepository.cs" />
     <Compile Include="Repositories\Security\UserRoleRepository.cs" />
     <Compile Include="UoW\Security\UnitOfWork.cs" />
+    <Compile Include="Repositories\UserManagement\UserRoleRepository.cs" />
     <Compile Include="UoW\UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>

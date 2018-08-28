@@ -17,6 +17,7 @@ using Lucene.Net.QueryParsers.Classic;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Exceptions;
 using Lucene.Net.Analysis.Standard;
+using System.Web.Configuration;
 
 namespace WasteProducts.DataAccess.Repositories
 {
@@ -43,7 +44,7 @@ namespace WasteProducts.DataAccess.Repositories
 
             string assemblyFilename = Assembly.GetAssembly(typeof(LuceneSearchRepository)).Location;
             string assemblyPath = Path.GetDirectoryName(assemblyFilename);
-            IndexPath = Path.Combine(assemblyPath, ConfigurationManager.AppSettings["LuceneIndexStoragePath"]);
+            IndexPath = Path.Combine(assemblyPath, WebConfigurationManager.AppSettings["LuceneIndexStoragePath"]);
             //_analyzer = new WhitespaceAnalyzer(MATCH_LUCENE_VERSION);
             _analyzer = new StandardAnalyzer(MATCH_LUCENE_VERSION);
             try
