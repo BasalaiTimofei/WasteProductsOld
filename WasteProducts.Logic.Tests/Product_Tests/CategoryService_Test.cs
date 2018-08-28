@@ -27,7 +27,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         private Mapper mapper;
         private CategoryDB categoryDB;
         private List<string> names;
-  
+
         [SetUp]
         public void Init()
         {
@@ -101,7 +101,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         {
             mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
                 .Returns(selectedList);
-            
+
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             var result = categoryService.AddRange(names);
 
@@ -133,7 +133,31 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             Assert.That(result, Is.EqualTo(false));
             mockCategoryRepo.Verify(m => m.Add(It.IsAny<CategoryDB>()), Times.Never);
         }
-    }
 
-    
+        [Test]
+        public void Get_CategoryNotFound_ReturnsNull()
+        {
+            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(selectedList);
+
+            var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
+            var result = categoryService.Get(It.IsAny<string>());
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void Get_CategoryFound_NamesAreTheSame()
+        {
+            selectedList.Add(new CategoryDB { Name = "Meat" });
+            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(selectedList);
+
+            var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
+            var result = categoryService.Get(It.IsAny<string>());
+
+            Assert.That(result, Is.TypeOf(typeof(Category)));
+            Assert.AreEqual("Meat", result.Name);
+        }
+    }
 }
