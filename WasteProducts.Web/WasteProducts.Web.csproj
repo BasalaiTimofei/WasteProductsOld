@@ -416,6 +416,10 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WasteProducts.DataAccess\WasteProducts.DataAccess.csproj">
+      <Project>{e9fb0e3e-01d5-4316-8703-84248a90be98}</Project>
+      <Name>WasteProducts.DataAccess</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WasteProducts.Logic.Common\WasteProducts.Logic.Common.csproj">
       <Project>{643aab59-4858-4e23-9a18-4bbec3ee5f56}</Project>
       <Name>WasteProducts.Logic.Common</Name>

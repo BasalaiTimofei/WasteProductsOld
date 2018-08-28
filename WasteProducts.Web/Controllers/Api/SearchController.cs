@@ -17,26 +17,26 @@ namespace WasteProducts.Web.Controllers.Api
     {
         private ISearchService _searchService { get; }
 
-        public SearchController(ILogger logger/*, ISearchService searchService*/) : base(logger)
+        public SearchController(ILogger logger, ISearchService searchService) : base(logger)
         {
-            //_searchService = searchService;
+            _searchService = searchService;
         }
 
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
         [SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty", typeof(IEnumerable<Product>))]        
-        public List<Product> Get(string query)
+        public IEnumerable<Product> Get(string query)
         {
-            List<Product> searchResultList;
+            IEnumerable<Product> searchResultList;
 
             SearchQuery searchQuery = new SearchQuery();
             searchQuery.AddField("Title").AddField("Description");
 
             searchQuery.Query = query;
 
-            //searchResultList = _searchService.Search<Product>(searchQuery);
+            searchResultList = _searchService.Search<Product>(searchQuery);
             searchResultList = new List<Product>();
-            searchResultList.Add(new Product { Name = "aaaa", Description = "aaaaaaaaaa" });
+            //searchResultList.Add(new Product { Name = "aaaa", Description = "aaaaaaaaaa" });//для теста, что без DI все работает
 
             return searchResultList;
         }

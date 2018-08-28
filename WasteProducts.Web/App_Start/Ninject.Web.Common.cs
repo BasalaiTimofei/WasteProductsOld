@@ -20,6 +20,7 @@ namespace WasteProducts.Web.App_Start
     using WasteProducts.Web.Filters;
     using WasteProducts.Logic.Common.Services;
     using WasteProducts.Logic.Services;
+    using System.Reflection;
 
     public static class NinjectWebCommon
     {
@@ -104,7 +105,7 @@ namespace WasteProducts.Web.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<ISearchService>().To<LuceneSearchService>();            
+            kernel.Load(Assembly.GetExecutingAssembly(), typeof(Logic.InjectorModule).Assembly, typeof(DataAccess.InjectorModule).Assembly);            
         }
     }
 }
