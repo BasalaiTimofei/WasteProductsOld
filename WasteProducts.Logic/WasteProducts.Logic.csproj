@@ -84,7 +84,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InjectorModule.cs" />
+    <Compile Include="LogicInjectorModule.cs" />
     <Compile Include="Mappings\DonationManagment\AddressProfile.cs" />
     <Compile Include="Mappings\DonationManagment\DonationProfile.cs" />
     <Compile Include="Mappings\DonationManagment\DonorProfile.cs" />

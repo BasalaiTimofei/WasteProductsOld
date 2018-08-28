@@ -109,7 +109,7 @@
     <Compile Include="Contexts\Config\MsSqlConfiguration.cs" />
     <Compile Include="Contexts\Security\IdentityContext.cs" />
     <Compile Include="Contexts\WasteContext.cs" />
-    <Compile Include="InjectorModule.cs" />
+    <Compile Include="DataAccessInjectorModule.cs" />
     <Compile Include="ModelConfigurations\DonationManagment\AddressEntityConfiguration.cs" />
     <Compile Include="ModelConfigurations\DonationManagment\DonationEntityConfiguration.cs" />
     <Compile Include="ModelConfigurations\DonationManagment\DonorEntityConfiguration.cs" />
@@ -167,4 +167,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.VisualStudio.SlowCheetah.3.1.66\build\Microsoft.VisualStudio.SlowCheetah.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.VisualStudio.SlowCheetah.3.1.66\build\Microsoft.VisualStudio.SlowCheetah.targets'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>cd $(ProjectDir)
+copy /Y bin\debug\*.dll $(SolutionDir)\$(SolutionName)\bin</PostBuildEvent>
+  </PropertyGroup>
 </Project>
