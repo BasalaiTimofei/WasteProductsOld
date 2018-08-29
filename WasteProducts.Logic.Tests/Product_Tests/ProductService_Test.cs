@@ -361,5 +361,59 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             mockProductRepository.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Never);
         }
+
+        [Test]
+        public void IsHidden_PassesHiddenProduct_Returns_True()
+        {
+            productDB.IsHidden = true;
+            product.IsHidden = true;
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.IsHidden(product);
+
+            Assert.That(result, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void IsHidden_PassesNotHiddenProduct_Returns_False()
+        {
+            productDB.IsHidden = false;
+            product.IsHidden = false;
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.IsHidden(product);
+
+            Assert.That(result, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void IsHidden_PassesNull_Returns_False()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.IsHidden(null);
+
+            Assert.That(result, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void IsHidden_PassesProductWichDoesNotExistInDB_Returns_False()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.IsHidden(product);
+
+            Assert.That(result, Is.EqualTo(false));
+        }
     }
 }
