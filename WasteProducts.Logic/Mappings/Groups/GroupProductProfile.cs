@@ -9,7 +9,8 @@ namespace WasteProducts.Logic.Mappings
     {
         public GroupProductProfile()
         {
-            CreateMap<GroupProduct, GroupProductDB>();
+            CreateMap<GroupProduct, GroupProductDB>()
+                .ForMember(x=>x.GroupBoardDBId, y=>y.MapFrom(z=>z.GroupBoardId));
         }
     }
 }

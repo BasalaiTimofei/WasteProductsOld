@@ -12,7 +12,8 @@ namespace WasteProducts.Logic.Mappings
             CreateMap<GroupBoard, GroupBoardDB>()
                 .ForMember(x => x.TimeCreate, y => y.Ignore())
                 .ForMember(x => x.TimeDelete, y => y.Ignore())
-                .ForMember(x => x.Bool, y => y.Ignore());
+                .ForMember(x => x.Bool, y => y.Ignore())
+                .ForMember(x=>x.GroupDBId, y=>y.MapFrom(z=>z.GroupId));
         }
     }
 }

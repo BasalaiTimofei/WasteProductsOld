@@ -8,16 +8,16 @@ namespace WasteProducts.Logic.Services
 {
     public class GroupBoardService : IGroupBoardService
     {
-        private IGroupRepository<GroupBoardDB> _dataBase;
+        private IGroupRepository _dataBase;
         private readonly IMapper _mapper;
 
-        public GroupBoardService(IGroupRepository<GroupBoardDB> dataBase, IMapper mapper) 
+        public GroupBoardService(IGroupRepository dataBase, IMapper mapper)
         {
             _dataBase = dataBase;
             _mapper = mapper;
         }
 
-        public void Create<GroupBoard>(GroupBoard item)
+        public void Create<T>(T item)
         {
             var result = _mapper.Map<GroupBoardDB>(item);
 
@@ -28,21 +28,31 @@ namespace WasteProducts.Logic.Services
             _dataBase.Create(result);
         }
 
-        public void Update<GroupBoard>(GroupBoard item)
+        public void Update<T>(T item)
         {
             var result = _mapper.Map<GroupBoardDB>(item);
+            var model = _dataBase.Get<GroupBoardDB>(result.Id);
 
-            _dataBase.Update(result);
+            model.Information = result.Information;
+            model.Name = result.Name;
+
+            _dataBase.Update(model);
         }
 
-        public void Delete<GroupBoard>(GroupBoard item)
+        public void Delete<T>(T item)
         {
             var result = _mapper.Map<GroupBoardDB>(item);
+            var models = _dataBase.Find<GroupBoardDB>(x => x.Id == result.Id);
 
-            result.TimeDelete = DateTime.UtcNow;
-            result.Bool = false;
-
-            _dataBase.Update(result);
+            foreach (var model in models)
+            {
+                model.Bool = false;
+                model.TimeDelete = DateTime.UtcNow;
+                foreach (var groupProduct in model.GroupProductDBs)
+                {
+                    _dataBase.Delete<GroupProductDB>(model.Id);
+                }
+            }
         }
     }
 }

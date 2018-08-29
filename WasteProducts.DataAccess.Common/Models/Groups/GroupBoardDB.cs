@@ -21,10 +21,10 @@ namespace WasteProducts.DataAccess.Common.Models
         /// </summary>
         public string Information { get; set; }
         /// <summary>
-        /// GroupId - secondary key
+        /// GroupDBId - secondary key
         /// </summary>
-        public int GroupId { get; set; }
-        public GroupDB GroupDB { get; set; }
+        public int GroupDBId { get; set; }
+        public virtual GroupDB GroupDB { get; set; }
         /// <summary>
         /// UserId - user which created board
         /// </summary>
@@ -32,7 +32,7 @@ namespace WasteProducts.DataAccess.Common.Models
         /// <summary>
         /// GroupProductDBs - products which add at board
         /// </summary>
-        public IList<GroupProductDB> GroupProductDBs { get; set; }
+        public virtual IList<GroupProductDB> GroupProductDBs { get; set; }
         /// <summary>
         /// TimeCreate - datatime when board created
         /// </summary>

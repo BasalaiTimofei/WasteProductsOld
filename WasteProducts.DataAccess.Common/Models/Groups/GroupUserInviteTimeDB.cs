@@ -16,7 +16,7 @@ namespace WasteProducts.DataAccess.Common.Models
         /// GroupUserDBId secondary Id
         /// </summary>
         public int GroupUserDBId { get; set; }
-        public GroupUserDB GroupUserDB { get; set; }
+        public virtual GroupUserDB GroupUserDB { get; set; }
         /// <summary>
         /// Entry - data entry in the group
         /// </summary>
@@ -31,6 +31,6 @@ namespace WasteProducts.DataAccess.Common.Models
         ///     1 - invite user confirmed;
         ///     2 - invite user rejected;
         /// </summary>
-        public int Invite { get; set; }
+        public int? Invite { get; set; }
     }
 }

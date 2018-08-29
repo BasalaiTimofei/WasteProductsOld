@@ -8,46 +8,38 @@ namespace WasteProducts.Logic.Services
 {
     public class GroupProductService : IGroupProductService
     {
-        private IGroupRepository<GroupDB> _dataBase;
+        private IGroupRepository _dataBase;
         private readonly IMapper _mapper;
 
-        public GroupProductService(IGroupRepository<GroupDB> dataBase, IMapper mapper) 
+        public GroupProductService(IGroupRepository dataBase, IMapper mapper)
         {
             _dataBase = dataBase;
             _mapper = mapper;
         }
 
-        public void Create<Group>(Group item)
+        public void Create<T>(T item)
         {
-            var result = _mapper.Map<GroupDB>(item);
-
-            result.TimeCreate = DateTime.UtcNow;
-            result.TimeDelete = null;
-            result.Bool = true;
+            var result = _mapper.Map<GroupProductDB>(item);
 
             _dataBase.Create(result);
         }
 
-        public void Update<Group>(Group item)
+        public void Update<T>(T item)
         {
-            var result = _mapper.Map<GroupDB>(item);
+            var result = _mapper.Map<GroupProductDB>(item);
+            var model = _dataBase.Get<GroupProductDB>(result.Id);
 
-            _dataBase.Update(result);
+            model.ProductId = result.ProductId;
+            model.Information = result.Information;
+
+            _dataBase.Update(model);
         }
 
-        public void Delete<Group>(Group item)
+        public void Delete<T>(T item)
         {
-            var result = _mapper.Map<GroupDB>(item);
+            var result = _mapper.Map<GroupProductDB>(item);
 
-            result.TimeDelete = DateTime.UtcNow;
-            result.Bool = false;
-
-            _dataBase.Update(result);
-        }
-
-        public void Delete<T>(int? id)
-        {
-            throw new NotImplementedException();
+            _dataBase.Delete<GroupProductDB>(result.Id);
         }
     }
 }

@@ -22,8 +22,7 @@ namespace WasteProducts.Logic.Common.Services
         /// <summary>
         /// Delete - delete group
         /// </summary>
-        /// <typeparam name="T">Object</typeparam>
-        /// <param name="item">Object</param>
-        void Delete<T>(T item);
+        /// <param name="id">key</param>
+        void Delete<T>(T id);
     }
 }

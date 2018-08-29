@@ -15,7 +15,7 @@ namespace WasteProducts.DataAccess.Contexts
         /// </summary>
         public IDbSet<ProductDB> Products { get; set; }
 
-        public IDbSet<GroupBoardDB> GroupBordDBs { get; set; }
+        public IDbSet<GroupBoardDB> GroupBoardDBs { get; set; }
         public IDbSet<GroupDB> GroupDBs { get; set; }
         public IDbSet<GroupUserDB> GroupUserDBs { get; set; }
         public IDbSet<GroupUserInviteTimeDB> GroupUserInviteTimeDBs { get; set; }
