@@ -71,6 +71,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
                 Products = new List<Product>()
             };
 
+            product = new Product { Id = (new Guid()).ToString(), Name = "Some name" };
             productDB = new ProductDB {Id = (new Guid()).ToString(), Name = "Some name"};
         }
 
@@ -324,6 +325,41 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             mockProductRepository.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Never);
         }
 
+        [Test]
+        public void Hide_HidesProduct_CallsMethod_HideOfRepository()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
 
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.Hide(product);
+
+            mockProductRepository.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Once);
+        }
+
+        [Test]
+        public void Hide_PassesNull_DoesNotCallMethod_HideOfRepository()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.Hide(null);
+
+            mockProductRepository.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Never);
+        }
+
+        [Test]
+        public void Hide_PassesProductWichDoesNotExistInDB_DoesNotCallMethod_HideOfRepository()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.Hide(product);
+
+            mockProductRepository.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Never);
+        }
     }
 }
