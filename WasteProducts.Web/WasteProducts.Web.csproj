@@ -379,6 +379,7 @@
     <Compile Include="Utils\Interception\TraceInterceptor.cs" />
     <Compile Include="Utils\ActionResults\ElmahResult.cs" />
     <Compile Include="Utils\Logging\LoggerExtensions.cs" />
+    <Compile Include="Utils\Search\CustomModelBinder.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config">

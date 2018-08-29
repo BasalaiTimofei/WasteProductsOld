@@ -7,10 +7,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.ModelBinding;
 using Lucene.Net.Analysis.Hunspell;
 using WasteProducts.Logic.Common.Models;
 using WasteProducts.Logic.Common.Models.Products;
+using WasteProducts.Logic.Common.Models.Search;
 using WasteProducts.Logic.Common.Services;
+using WasteProducts.Web.Utils.Search;
 
 namespace WasteProducts.Web.Controllers.Api
 {
@@ -60,16 +63,22 @@ namespace WasteProducts.Web.Controllers.Api
             return _searchService.Search<Product>(searchQuery);
         }
 
-        /*[HttpGet]
+        [HttpGet]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
         [SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty", typeof(IEnumerable<Product>))]
         [Route("products/boosted")]
-        public IEnumerable<Product> GetProductsBoostedFields([FromUri] string query, [FromUri] string[] fields, [FromUri] float[] boost)
+        public IEnumerable<Product> GetProductsBoostedFields([ModelBinder(typeof(BoostedSearchQueryModelBinder))] BoostedSearchQuery query)
         {
 
+            //Add product for testing purposes
+            Product product = new Product();
+            product.Name = "Test product name";
+            product.Description = "Test product description";
+            _searchService.AddToSearchIndex<Product>(product);
 
-            return null;
-        }*/
+            var result = _searchService.Search<Product>(query);
+            return result;
+        }
     }
 }
