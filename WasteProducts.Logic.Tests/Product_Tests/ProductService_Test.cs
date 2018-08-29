@@ -75,7 +75,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void AddByBarcode_InsertNewProduct_returns_true()
+        public void AddByBarcode_InsertsNewProduct_Returns_True()
         {
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(selectedList);
@@ -87,7 +87,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void AddByBarcode_DoNotInsertNewProduct_returns_false()
+        public void AddByBarcode_DoesNotInsertNewProduct_Returns_False()
         {
             selectedList.Add(productDB);
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
@@ -100,7 +100,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void AddByBarcode_InsertNewProduct_callsMethod_AddOfRepository()
+        public void AddByBarcode_InsertsNewProduct_CallsMethod_AddOfRepository()
         {
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(selectedList);
@@ -112,7 +112,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void AddByBarcode_DoNotInsertNewProduct_DoesNotcallMethod_AddOfRepository()
+        public void AddByBarcode_DoesNotInsertNewProduct_DoesNotCallMethod_AddOfRepository()
         {
             selectedList.Add(productDB);
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
@@ -125,7 +125,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void AddByName_InsertNewProduct_returns_true()
+        public void AddByName_InsertsNewProduct_Returns_True()
         {
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(selectedList);
@@ -137,7 +137,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void AddByName_DoNotInsertNewProduct_returns_false()
+        public void AddByName_DoesNotInsertNewProduct_Returns_False()
         {
             selectedList.Add(productDB);
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
@@ -150,7 +150,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void AddByName_InsertNewProduct_callsMethod_AddOfRepository()
+        public void AddByName_InsertsNewProduct_CallsMethod_AddOfRepository()
         {
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(selectedList);
@@ -162,7 +162,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void AddByName_DoNotInsertNewProduct_DoesNotcallMethod_AddOfRepository()
+        public void AddByName_DoesNotInsertNewProduct_DoesNotCallMethod_AddOfRepository()
         {
             selectedList.Add(productDB);
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
@@ -175,7 +175,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void AddCategoty_AddsCategoryInProductWithoutCategory_returns_true()
+        public void AddCategoty_AddsCategoryInProductWithoutCategory_Returns_True()
         {
             selectedList.Add(productDB);
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
@@ -188,7 +188,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void AddCategoty_DoesNotAddCategoryInProductWithCategory_returns_false()
+        public void AddCategoty_DoesNotAddCategoryInProductWithCategory_Returns_False()
         {
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(selectedList);
@@ -200,7 +200,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void AddCategoty_AddsCategoryInProductWithoutCategory_callsMethod_UpdateOfRepository()
+        public void AddCategoty_AddsCategoryInProductWithoutCategory_CallsMethod_UpdateOfRepository()
         {
             selectedList.Add(productDB);
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
@@ -213,7 +213,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void AddCategoty_DoesNotAddCategoryInProductWithCategory_DoesNotcallMethod_UpdateOfRepository()
+        public void AddCategoty_DoesNotAddCategoryInProductWithCategory_DoesNotCallMethod_UpdateOfRepository()
         {
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(selectedList);
@@ -222,6 +222,105 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             productService.AddCategory(product, category);
 
             mockProductRepository.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Never);
+        }
+
+        [Test]
+        public void DeleteByBarcode_DeletesProduct_Returns_True()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.DeleteByBarcode(barcode);
+
+            Assert.That(result, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void DeleteByBarcode_DoNotDeletesProduct_Returns_False()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.DeleteByBarcode(barcode);
+
+            Assert.That(result, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void DeleteByBarcode_DeletesProduct_CallsMethod_DeleteOfRepository()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.DeleteByBarcode(barcode);
+
+            mockProductRepository.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Once);
+        }
+
+        [Test]
+        public void DeleteByBarcode_DoesNotDeleteProduct_DoesNotCallMethod_DeleteOfRepository()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.DeleteByBarcode(barcode);
+
+            mockProductRepository.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Never);
+        }
+
+        [Test]
+        public void DeleteByName_DeletesProduct_Returns_True()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.DeleteByName(It.IsAny<string>());
+
+            Assert.That(result, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void DeleteByName_DoesNotDeleteProduct_Returns_False()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.DeleteByName(It.IsAny<string>());
+
+            Assert.That(result, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void DeleteByName_DeletesProduct_CallsMethod_DeleteOfRepository()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.DeleteByName(It.IsAny<string>());
+
+            mockProductRepository.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Once);
+        }
+
+        [Test] public void DeleteByName_DoNotDeleteProduct_DoesNotCallMethod_DeleteOfRepository()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.DeleteByName(It.IsAny<string>());
+
+            mockProductRepository.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Never);
         }
     }
 }
