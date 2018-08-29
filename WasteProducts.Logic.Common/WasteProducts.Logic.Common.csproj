@@ -55,6 +55,7 @@
     <Compile Include="Models\Products\Category.cs" />
     <Compile Include="Models\Search\BoostedSearchQueryConverter.cs" />
     <Compile Include="Models\Search\SearchQuery.cs" />
+    <Compile Include="Models\Search\SearchQueryConverter.cs" />
     <Compile Include="Models\Security\Infrastructure\IAppRole.cs" />
     <Compile Include="Models\Security\Infrastructure\IAppUser.cs" />
     <Compile Include="Models\Security\Infrastructure\IUserClaim.cs" />

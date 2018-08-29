@@ -76,8 +76,23 @@ namespace WasteProducts.Web.Controllers.Api
             product.Description = "Test product description";
             _searchService.AddToSearchIndex<Product>(product);
 
-            var result = _searchService.Search<Product>(query);
-            return result;
+            return _searchService.Search<Product>(query);
+        }
+
+        [HttpGet]
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
+        [SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty", typeof(IEnumerable<Product>))]
+        [Route("products/custom/fields")]
+        public IEnumerable<Product> GetProducts(SearchQuery query)
+        {
+            //Add product for testing purposes
+            Product product = new Product();
+            product.Name = "Test product name";
+            product.Description = "Test product description";
+            _searchService.AddToSearchIndex<Product>(product);
+
+            return _searchService.Search<Product>(query);
         }
     }
 }

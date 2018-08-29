@@ -6,9 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace WasteProducts.Logic.Common.Models.Search
 {
-    class BoostedSearchQueryConverter : TypeConverter
+    class SearchQueryConverter : TypeConverter
     {
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
@@ -28,22 +29,19 @@ namespace WasteProducts.Logic.Common.Models.Search
                 {
                     return null;
                 }
-                BoostedSearchQuery result = new BoostedSearchQuery();
+                SearchQuery result = new SearchQuery();
 
                 var data = key.Split(new char[] { ';' });
                 if (data.Length > 1)
                 {
                     result.Query = data[0];
-                    string boostFieldValues = data[1];
-                    var boosts = boostFieldValues.Split(new char[] { ',' });
-                    if (boosts.Length > 0)
+                    string searchableFields = data[1];
+                    var fieldNames = searchableFields.Split(new char[] { ',' });
+                    if (fieldNames.Length > 0)
                     {
-                        foreach (var boost in boosts)
+                        foreach (var field in fieldNames)
                         {
-                            var fieldNameBoost = boost.Split(new char[] { ':' });
-                            string fieldName = fieldNameBoost[0];
-                            float fieldBoost = float.Parse(fieldNameBoost[1], CultureInfo.InvariantCulture);
-                            result.AddField(fieldName, fieldBoost);
+                            result.AddField(field);
                         }
                     }
                     return result;
