@@ -31,7 +31,7 @@ namespace WasteProducts.Web.Utils.Search
                 return false;
             }
 
-            string key = val.RawValue as string;
+            string key = HttpUtility.UrlDecode(val.RawValue as string);
             if (key == null)
             {
                 bindingContext.ModelState.AddModelError(
