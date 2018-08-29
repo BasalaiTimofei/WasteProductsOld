@@ -19,12 +19,19 @@ namespace WasteProducts.Logic.Common.Services.Diagnostic
         /// Creates a new database if database not exist and seed, otherwise does nothing.
         /// </summary>
         /// <returns>DatabaseResult</returns>
-        Task<DatabaseResult> CreateAndSeedAsync(bool useTestData = false);
+        Task<DatabaseResult> CreateAsync();
 
         /// <summary>
         /// Deletes the database if it exists, otherwise does nothing.
         /// </summary>
         /// <returns>DatabaseResult</returns>
         Task<DatabaseResult> DeleteAsync();
+
+        /// <summary>
+        /// Seeds into database if database exist and seed, otherwise does nothing.
+        /// </summary>
+        /// <param name="seedTestData">If <c>true</c> test data will also be seeded</param>
+        /// <returns>DatabaseResult</returns>
+        Task<DatabaseResult> SeedAsync(bool seedTestData = false);
     }
 }

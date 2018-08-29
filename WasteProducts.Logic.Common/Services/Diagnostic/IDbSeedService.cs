@@ -8,10 +8,10 @@ namespace WasteProducts.Logic.Common.Services.Diagnostic
     public interface IDbSeedService
     {
         /// <summary>
-        /// 
+        /// Seeds to database through services.
         /// </summary>
-        /// <param name="useTestData">If <c>true</c> database will seeded with test data.</param>
-        /// <returns>Task</returns>
-        Task SeedAsync(bool useTestData = false);
+        /// <param name="seedTestData">If <c>true</c> database will seeded with test data.</param>
+        /// <returns>Return bool if seeding was finished successful</returns>
+        Task<bool> SeedAsync(bool seedTestData = false);
     }
 }

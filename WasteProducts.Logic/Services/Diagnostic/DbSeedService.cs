@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bogus;
@@ -30,37 +31,45 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <inheritdoc />
-        public async Task SeedAsync(bool useTestData)
+        public async Task<bool> SeedAsync(bool useTestData)
         {
             await SeedPermanentDataAsync();
 
             if (useTestData)
+            {
                 await SeedTestDataAsync();
+            }
+
+            return true;
         }
 
-
-
+        /// <summary>
+        /// Seeds permanent data to database
+        /// </summary>
+        /// <returns>Task</returns>
         private async Task SeedPermanentDataAsync()
         {
             //using (var roleService = _dbServiceFactory.CreateRoleService())
             //{
+
             //    string adminRoleName = "Admin";
 
             //    if (await roleService.FindByNameAsync(adminRoleName) == null)
             //    {
-            //        //Create Admin role
+            //        Create Admin role
             //        var role = new UserRole() { Name = adminRoleName };
             //        await roleService.CreateAsync(new UserRole());
             //    }
 
             //    using (var userService = _dbServiceFactory.CreateUserService())
             //    {
-            //        //Create user for administrator
+
+            //        Create user for administrator
             //        User user = GetUserGenerator("Admin@gmail.com", "Admin", "Admin").Generate();
             //        User admin = await userService.RegisterAsync(user.Email, user.UserName, user.Password, user.Password);
 
-            //        //Add user to Role Admin
-            //        if (admin != null)
+            //        Add user to Role Admin
+            //    if (admin != null)
             //        {
             //            await userService.AddToRoleAsync(admin, adminRoleName);
             //        }
@@ -68,6 +77,10 @@ namespace WasteProducts.Logic.Services
             //}
         }
 
+        /// <summary>
+        /// Seeds test data to database
+        /// </summary>
+        /// <returns>Task</returns>
         private async Task SeedTestDataAsync()
         {
             //using (var userService = _dbServiceFactory.CreateUserService())
@@ -103,6 +116,7 @@ namespace WasteProducts.Logic.Services
                 .RuleFor(user => user.Email, faker => email ?? faker.Person.Email)
                 .RuleFor(user => user.UserName, faker => userName ?? faker.Person.UserName)
                 .RuleFor(user => user.Password, faker => password ?? faker.Internet.Password())
+
                 .FinishWith((faker, user) => _logger.Debug($"Created User: {user}"));
 
             return fakerForUser;
