@@ -8,7 +8,6 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
-using Lucene.Net.Analysis.Hunspell;
 using WasteProducts.Logic.Common.Models;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Search;
@@ -16,12 +15,16 @@ using WasteProducts.Logic.Common.Services;
 
 namespace WasteProducts.Web.Controllers.Api
 {
+    /// <summary>
+    /// Controller that returns full-text search results from Lucene repository.
+    /// </summary>
     [RoutePrefix("api/search")]
     public class SearchController : BaseApiController
     {
         private ISearchService _searchService { get; }
         public const string DEFAULT_PRODUCT_NAME_FIELD = "Name";
         public const string DEFAULT_PRODUCT_DESCRIPTION_FIELD = "Description";
+        public const string DEFAULT_PRODUCT_BARCODE_FIELD = "Barcode";
 
         public SearchController(ILogger logger, ISearchService searchService) : base(logger)
         {
@@ -29,6 +32,11 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
 
+        /// <summary>
+        /// Performs full-text search by default fields "Name", "Description", "Barcode".
+        /// </summary>
+        /// <param name="query">Query string</param>
+        /// <returns>Product collection</returns>
         [HttpGet]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
@@ -37,12 +45,18 @@ namespace WasteProducts.Web.Controllers.Api
         public IEnumerable<Product> GetProductsDefaultFields([FromUri]string query)
         {
             SearchQuery searchQuery = new SearchQuery();
-            searchQuery.AddField(DEFAULT_PRODUCT_NAME_FIELD).AddField(DEFAULT_PRODUCT_DESCRIPTION_FIELD);
+            searchQuery.AddField(DEFAULT_PRODUCT_NAME_FIELD).AddField(DEFAULT_PRODUCT_DESCRIPTION_FIELD).AddField(DEFAULT_PRODUCT_BARCODE_FIELD);
             searchQuery.Query = query;
 
             return _searchService.Search<Product>(searchQuery);
         }
 
+        /// <summary>
+        /// Performs full-text in specified fields.
+        /// </summary>
+        /// <param name="query">Query string</param>
+        /// <param name="fields">Searchable fields</param>
+        /// <returns>Product collection</returns>
         [HttpGet]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
@@ -62,6 +76,11 @@ namespace WasteProducts.Web.Controllers.Api
             return _searchService.Search<Product>(searchQuery);
         }
 
+        /// <summary>
+        /// Performs full-text in specified fields with boost values for each field.
+        /// </summary>
+        /// <param name="query">BoostedSearchQuery object converted from string "query;field1:boost1,field2:boost2,..."</param>
+        /// <returns>Product collection</returns>
         [HttpGet]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
@@ -79,6 +98,11 @@ namespace WasteProducts.Web.Controllers.Api
             return _searchService.Search<Product>(query);
         }
 
+        /// <summary>
+        /// Performs full-text in specified fields.
+        /// </summary>
+        /// <param name="query">SearchQuery object converted from string "query;field1,field2,..."</param>
+        /// <returns>Product collection</returns>
         [HttpGet]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
