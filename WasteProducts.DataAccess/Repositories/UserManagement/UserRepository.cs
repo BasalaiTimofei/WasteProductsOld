@@ -43,14 +43,22 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task AddAsync(UserDB user)
         {
-            using (var db = GetWasteContext())
+            WasteContext db = null;
+            UserStore<UserDB> userStore = null;
+            try
             {
-                using (var userStore = new UserStore<UserDB>(db))
-                {
-                    user.Created = DateTime.UtcNow;
-                    await userStore.CreateAsync(user);
-                    await db.SaveChangesAsync();
-                }
+                db = GetWasteContext();
+                userStore = new UserStore<UserDB>(db);
+
+                user.Created = DateTime.UtcNow;
+
+                await userStore.CreateAsync(user);
+                await db.SaveChangesAsync();
+            }
+            finally
+            {
+                db.Dispose();
+                userStore.Dispose();
             }
         }
 

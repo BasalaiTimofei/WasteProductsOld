@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Web;
 
-namespace WasteProducts.Web.Controllers.Mvc.UserControllers
-{
-    public class UserController : BaseMvcController
-    {
-    }
-}
+//namespace WasteProducts.Web.Controllers.Mvc.UserControllers
+//{
+//    public class UserController : BaseMvcController
+//    {
+//    }
+//}
