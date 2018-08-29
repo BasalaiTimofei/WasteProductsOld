@@ -26,7 +26,7 @@ namespace WasteProducts.Logic.Common.Models.Search
                 string key = value as string;
                 if (String.IsNullOrEmpty(key))
                 {
-                    return null;
+                    throw new ArgumentException("Incorrect query.");
                 }
                 BoostedSearchQuery result = new BoostedSearchQuery();
 
@@ -47,6 +47,10 @@ namespace WasteProducts.Logic.Common.Models.Search
                         }
                     }
                     return result;
+                }
+                else
+                {
+                    throw new ArgumentException("Incorrect query.");
                 }
             }
             return base.ConvertFrom(context, culture, value);

@@ -40,15 +40,23 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpGet]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
-        [SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty", typeof(IEnumerable<Product>))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
+        //[SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty")]
         [Route("products/default")]
         public IEnumerable<Product> GetProductsDefaultFields([FromUri]string query)
         {
-            SearchQuery searchQuery = new SearchQuery();
-            searchQuery.AddField(DEFAULT_PRODUCT_NAME_FIELD).AddField(DEFAULT_PRODUCT_DESCRIPTION_FIELD).AddField(DEFAULT_PRODUCT_BARCODE_FIELD);
-            searchQuery.Query = query;
+            if (String.IsNullOrEmpty(query))
+            {
+                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
+            }
+            else
+            {
+                SearchQuery searchQuery = new SearchQuery();
+                searchQuery.AddField(DEFAULT_PRODUCT_NAME_FIELD).AddField(DEFAULT_PRODUCT_DESCRIPTION_FIELD).AddField(DEFAULT_PRODUCT_BARCODE_FIELD);
+                searchQuery.Query = query;
 
-            return _searchService.Search<Product>(searchQuery);
+                return _searchService.Search<Product>(searchQuery);
+            }
         }
 
         /// <summary>
@@ -60,20 +68,26 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpGet]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
-        [SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty", typeof(IEnumerable<Product>))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
+        //[SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty")]
         [Route("products/custom")]
         public IEnumerable<Product> GetProducts([FromUri]string query, [FromUri]string[] fields)
         {
-            IEnumerable<Product> searchResultList = new List<Product>();
-
-            SearchQuery searchQuery = new SearchQuery();
-            searchQuery.Query = query;
-            foreach (string filed in fields)
+            if (String.IsNullOrEmpty(query) || fields.Length == 0)
             {
-                searchQuery.AddField(filed);
+                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
             }
+            else
+            {
+                SearchQuery searchQuery = new SearchQuery();
+                searchQuery.Query = query;
+                foreach (string field in fields)
+                {
+                    searchQuery.AddField(field);
+                }
 
-            return _searchService.Search<Product>(searchQuery);
+                return _searchService.Search<Product>(searchQuery);
+            }
         }
 
         /// <summary>
@@ -84,7 +98,8 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpGet]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
-        [SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty", typeof(IEnumerable<Product>))]
+        //[SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
         [Route("products/boosted")]
         public IEnumerable<Product> GetProductsBoostedFields(BoostedSearchQuery query)
         {
@@ -95,7 +110,16 @@ namespace WasteProducts.Web.Controllers.Api
             product.Description = "Test product description";
             _searchService.AddToSearchIndex<Product>(product);
 
-            return _searchService.Search<Product>(query);
+            HttpResponseMessage response;
+            if (ModelState.IsValid)
+            {
+                return _searchService.Search<Product>(query);
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
+            }
+
         }
 
         /// <summary>
@@ -106,7 +130,8 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpGet]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
-        [SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty", typeof(IEnumerable<Product>))]
+        //[SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
         [Route("products/custom/fields")]
         public IEnumerable<Product> GetProducts(SearchQuery query)
         {
@@ -116,7 +141,16 @@ namespace WasteProducts.Web.Controllers.Api
             product.Description = "Test product description";
             _searchService.AddToSearchIndex<Product>(product);
 
-            return _searchService.Search<Product>(query);
+            HttpResponseMessage response;
+
+            if (ModelState.IsValid)
+            {
+                return _searchService.Search<Product>(query);
+            }
+            else
+            {
+                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
+            }
         }
     }
 }

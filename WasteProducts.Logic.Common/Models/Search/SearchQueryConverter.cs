@@ -27,7 +27,7 @@ namespace WasteProducts.Logic.Common.Models.Search
                 string key = value as string;
                 if (String.IsNullOrEmpty(key))
                 {
-                    return null;
+                    throw new ArgumentException("Incorrect query.");
                 }
                 SearchQuery result = new SearchQuery();
 
