@@ -12,6 +12,7 @@ using WasteProducts.Logic.Common.Services;
 
 namespace WasteProducts.Web.Controllers.Api
 {
+    [RoutePrefix("api/search/")]
     public class SearchController : BaseApiController
     {
         private ISearchService _searchService { get; }
@@ -28,7 +29,7 @@ namespace WasteProducts.Web.Controllers.Api
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
         [SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty", typeof(IEnumerable<Product>))]
-        [Route("api/search/products/{query}")]
+        //[Route("api/search/products/{query}")]
         public IEnumerable<Product> GetProductsDefaultFields(string query)
         {
             SearchQuery searchQuery = new SearchQuery();
@@ -42,7 +43,7 @@ namespace WasteProducts.Web.Controllers.Api
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
         [SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty", typeof(IEnumerable<Product>))]
-        [Route("api/search/products/{query}")]
+        //[Route("api/search/products/{query}")]
         public IEnumerable<Product> GetProducts(string query, string[] fields)
         {
             IEnumerable<Product> searchResultList = new List<Product>();

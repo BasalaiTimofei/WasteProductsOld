@@ -104,10 +104,9 @@ namespace WasteProducts.Web.App_Start
         /// </summary>
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
-        {
-            var path = System.IO.Path.GetDirectoryName(new System.Uri(System.Reflection.Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-            kernel.Load($"{path}\\WasteProducts.DataAccess.dll");
-            kernel.Load($"{path}\\WasteProducts.Logic.dll");
+        {            
+            kernel.Load("WasteProducts.DataAccess.dll");            
+            kernel.Load("WasteProducts.Logic.dll");            
         }
     }
 }
