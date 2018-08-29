@@ -17,13 +17,10 @@ namespace WasteProducts.Web.App_Start
 
     using WasteProducts.Web.Utils.Interception;
     using WasteProducts.Web.Filters;
-<<<<<<< HEAD
     using WasteProducts.Logic.Common.Services;
     using WasteProducts.Logic.Services;
     using System.Reflection;
-=======
     using System.Web.Http.ExceptionHandling;
->>>>>>> develop
 
     public static class NinjectWebCommon
     {
