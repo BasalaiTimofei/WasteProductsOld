@@ -1,11 +1,13 @@
 ﻿using NLog;
 using Swagger.Net.Annotations;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Lucene.Net.Analysis.Hunspell;
 using WasteProducts.Logic.Common.Models;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Services;
@@ -29,8 +31,8 @@ namespace WasteProducts.Web.Controllers.Api
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
         [SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty", typeof(IEnumerable<Product>))]
-        [Route("products/{query}")]
-        public IEnumerable<Product> GetProductsDefaultFields(string query)
+        [Route("products/default")]
+        public IEnumerable<Product> GetProductsDefaultFields([FromUri]string query)
         {
             SearchQuery searchQuery = new SearchQuery();
             searchQuery.AddField(DEFAULT_PRODUCT_NAME_FIELD).AddField(DEFAULT_PRODUCT_DESCRIPTION_FIELD);
@@ -39,12 +41,12 @@ namespace WasteProducts.Web.Controllers.Api
             return _searchService.Search<Product>(searchQuery);
         }
 
-        [HttpPost]
+        [HttpGet]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
         [SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty", typeof(IEnumerable<Product>))]
-        [Route("products/{query}")]
-        public IEnumerable<Product> GetProducts(string query, string[] fields)
+        [Route("products/custom")]
+        public IEnumerable<Product> GetProducts([FromUri]string query, [FromUri]string[] fields)
         {
             IEnumerable<Product> searchResultList = new List<Product>();
 
@@ -57,5 +59,17 @@ namespace WasteProducts.Web.Controllers.Api
 
             return _searchService.Search<Product>(searchQuery);
         }
+
+        /*[HttpGet]
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
+        [SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty", typeof(IEnumerable<Product>))]
+        [Route("products/boosted")]
+        public IEnumerable<Product> GetProductsBoostedFields([FromUri] string query, [FromUri] string[] fields, [FromUri] float[] boost)
+        {
+
+
+            return null;
+        }*/
     }
 }

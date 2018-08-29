@@ -68,7 +68,7 @@ namespace WasteProducts.Web.Tests.WebApiTests
             string[] fields = new string[] {"Description"};
 
 
-            var result = sut.GetProductsDefaultFields("test");
+            var result = sut.GetProducts("test", fields);
             Assert.AreEqual(expected: 5, actual: result.ToArray().Length);
 
             result = sut.GetProducts("unique", fields);
