@@ -22,9 +22,9 @@ namespace WasteProducts.Logic.Common.Models.Users
         public virtual bool EmailConfirmed { get; set; }
 
         /// <summary>
-        /// User password.
+        /// User's hashed password.
         /// </summary>
-        public virtual string Password { get; set; }
+        public virtual string PasswordHash { get; set; }
 
         /// <summary>
         /// A random value that should change whenever a users credentials have changed (password changed, login removed)
@@ -114,7 +114,7 @@ namespace WasteProducts.Logic.Common.Models.Users
                 this.LockoutEnabled == other.LockoutEnabled &&
                 this.LockoutEndDateUtc == other.LockoutEndDateUtc &&
                 this.Logins == other.Logins &&
-                this.Password == other.Password &&
+                this.PasswordHash == other.PasswordHash &&
                 this.PhoneNumber == other.PhoneNumber &&
                 this.PhoneNumberConfirmed == other.PhoneNumberConfirmed &&
                 this.Products == other.Products &&

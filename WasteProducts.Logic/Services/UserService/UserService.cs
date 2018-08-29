@@ -42,7 +42,7 @@ namespace WasteProducts.Logic.Services.UserService
 
         public async Task<User> RegisterAsync(string email, string userName, string password, string passwordConfirmation)
         {
-            return await Task.Run(() =>
+            return await Task.Run(async () =>
             {
                 User registeringUser = null;
                 if (passwordConfirmation != password || !_mailService.IsValidEmail(email))
@@ -53,14 +53,13 @@ namespace WasteProducts.Logic.Services.UserService
                 {
                     Id = Guid.NewGuid().ToString(),
                     Email = email,
-                    Password = password,
                     UserName = userName
                 };
                 var userToAdd = MapTo<UserDB>(registeringUser);
-                _userRepo.AddAsync(userToAdd).GetAwaiter().GetResult();
+                await _userRepo.AddAsync(userToAdd, password);
+
                 var userDB = _userRepo.Select(email, false);
-                var result = MapTo<User>(userDB);
-                return result;
+                return MapTo<User>(userDB);
             });
         }
 
@@ -69,25 +68,15 @@ namespace WasteProducts.Logic.Services.UserService
             return await Task.Run(() =>
             {
                 User loggedInUser = null;
-                if (getRoles)
+                var (userDB, roles) = _userRepo.Select(email, password);
+
+                if (userDB == null)
                 {
-                    var (userDB, roles) = _userRepo.SelectWithRoles(u => u.Email == email && u.PasswordHash == password, false);
-                    if (userDB == null)
-                    {
-                        return loggedInUser;
-                    }
-                    loggedInUser = MapTo<User>(userDB);
-                    loggedInUser.Roles = roles;
+                    return loggedInUser;
                 }
-                else
-                {
-                    UserDB userDB = _userRepo.Select(email, password, false);
-                    if (userDB == null)
-                    {
-                        return loggedInUser;
-                    }
-                    loggedInUser = MapTo<User>(userDB);
-                }
+
+                loggedInUser = MapTo<User>(userDB);
+                loggedInUser.Roles = roles;
 
                 return loggedInUser;
             });
@@ -97,26 +86,27 @@ namespace WasteProducts.Logic.Services.UserService
         {
             return await Task.Run(async () =>
             {
-                if (newPassword != newPasswordConfirmation || oldPassword != user.Password)
+                if (newPassword != newPasswordConfirmation)
                 {
                     return false;
                 }
-                user.Password = newPassword;
 
-                await _userRepo.ResetPasswordAsync(MapTo<UserDB>(user), newPassword);
+                await _userRepo.ResetPasswordAsync(MapTo<UserDB>(user), newPassword, oldPassword);
                 return true;
             });
         }
 
-        public async Task PasswordRequestAsync(string email)
+        public async Task ResetPasswordAsync(string email)
         {
+            // TODO переделать метод, он все равно будет отправлять захешированный пароль
+            throw new NotImplementedException("Метод будет отправлять захешированный пароль, переделать метод");
             try
             {
                 User user = MapTo<User>(_userRepo.Select(email));
 
                 if (user == null) return;
                 // TODO придумать что писать в письме-восстановителе пароля и где хранить этот стринг
-                await _mailService.SendAsync(email, PASSWORD_RECOWERY_HEADER, $"На ваш аккаунт \"Фуфлопродуктов\" был отправлен запрос на смену пароля. Напоминаем ваш пароль на сайте :\n\n{user.Password}\n\nВы можете поменять пароль в своем личном кабинете.");
+                await _mailService.SendAsync(email, PASSWORD_RECOWERY_HEADER, $"На ваш аккаунт \"Фуфлопродуктов\" был отправлен запрос на смену пароля. Напоминаем ваш пароль на сайте :\n\n{user.PasswordHash}\n\nВы можете поменять пароль в своем личном кабинете.");
             }
             catch { }
         }

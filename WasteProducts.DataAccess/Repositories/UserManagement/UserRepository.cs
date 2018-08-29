@@ -41,24 +41,12 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             }
         }
 
-        public async Task AddAsync(UserDB user)
+        public async Task AddAsync(UserDB user, string password)
         {
-            WasteContext db = null;
-            UserStore<UserDB> userStore = null;
-            try
+            using(var userManager = GetUserManager())
             {
-                db = GetWasteContext();
-                userStore = new UserStore<UserDB>(db);
-
                 user.Created = DateTime.UtcNow;
-
-                await userStore.CreateAsync(user);
-                await db.SaveChangesAsync();
-            }
-            finally
-            {
-                db.Dispose();
-                userStore.Dispose();
+                await userManager.CreateAsync(user, password);
             }
         }
 
@@ -214,6 +202,43 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             return (Select(predicate, lazyInitiation, getRoles: false)).user;
         }
 
+        public (UserDB, IList<string>) Select(string email, string password)
+        {
+            WasteContext db = null;
+            UserStore<UserDB> store = null;
+            UserManager<UserDB> manager = null;
+            try
+            {
+                db = GetWasteContext();
+                db.Configuration.LazyLoadingEnabled = false;
+
+                var user = db.Users.Include(u => u.Roles).
+                        Include(u => u.Claims).
+                        Include(u => u.Logins).
+                        Include(u => u.Friends).
+                        Include(u => u.Products).
+                        FirstOrDefault(u => u.Email == email);
+
+                store = new UserStore<UserDB>(db);
+                manager = new UserManager<UserDB>(store);
+                if (user != null && manager.CheckPassword(user, password))
+                {
+                    var roles = manager.GetRoles(user.Id);
+                    return (user, roles);
+                }
+                else
+                {
+                    return (null, null);
+                }
+            }
+            finally
+            {
+                db.Dispose();
+                store.Dispose();
+                manager.Dispose();
+            }
+        }
+
         public (UserDB user, IList<string> roles) SelectWithRoles(Func<UserDB, bool> predicate, bool lazyInitiation = true)
         {
             return Select(predicate, lazyInitiation, getRoles: true);
@@ -276,27 +301,28 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             }
         }
 
-        public async Task ResetPasswordAsync(UserDB user, string newPassword)
+        public async Task ResetPasswordAsync(UserDB user, string newPassword, string oldPassword)
         {
-            using (var db = GetWasteContext())
+            using (var manager = GetUserManager())
             {
-                // TODO исправить, добавить обработку Password и превращение его в PasswordHash
-                user.PasswordHash = newPassword;
-                db.Users.Attach(user);
-                var entry = db.Entry(user);
-                entry.Property(p => p.PasswordHash).IsModified = true;
-
-                user.Modified = DateTime.UtcNow;
-                await db.SaveChangesAsync();
-
-                // вот таким кодом пытался установить новый PasswordHash (заметьте, PasswordHash, не Password)
-                // но он как ни странно даже не работает. Оставил коммент на будущее, до оптимизации кода, как образец
-                //using (var userStore = new UserStore<UserDB>(db))
-                //{
-                //    await userStore.SetPasswordHashAsync(user, newPassword);
-                //    await db.SaveChangesAsync();
-                //}
+                await manager.ChangePasswordAsync(user.Id, oldPassword, newPassword);
             }
+
+
+
+
+
+
+            //using (var db = GetWasteContext())
+            //{
+            //    user.PasswordHash = newPassword;
+            //    db.Users.Attach(user);
+            //    var entry = db.Entry(user);
+            //    entry.Property(p => p.PasswordHash).IsModified = true;
+
+            //    user.Modified = DateTime.UtcNow;
+            //    await db.SaveChangesAsync();
+            //}
         }
 
         private (UserDB user, IList<string> roles) Select(Func<UserDB, bool> predicate, bool lazyInitiation, bool getRoles)
@@ -325,7 +351,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 {
                     using (var userStore = new UserStore<UserDB>(db))
                     {
-                         result.roles = userStore.GetRolesAsync(result.user).GetAwaiter().GetResult();
+                        result.roles = userStore.GetRolesAsync(result.user).GetAwaiter().GetResult();
                     }
                 }
 
@@ -343,6 +369,16 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             {
                 return new WasteContext();
             }
+        }
+
+        private UserManager<UserDB> GetUserManager()
+        {
+            var db = GetWasteContext();
+            var store = new UserStore<UserDB>(db)
+            {
+                DisposeContext = true
+            };
+            return new UserManager<UserDB>(store);
         }
     }
 }

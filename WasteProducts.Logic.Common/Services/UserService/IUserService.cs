@@ -43,7 +43,7 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// </summary>
         /// <param name="email">Email of the user forgotten its password.</param>
         /// <returns>Boolean representing whether email was correct or not.</returns>
-        Task PasswordRequestAsync(string email);
+        Task ResetPasswordAsync(string email);
 
         /// <summary>
         /// Updates the specific user in the Database.

@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
@@ -40,17 +41,17 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public void UserIntegrTest_00AddingUserAndRole()
         {
-            // раскомментить если тесты отваливаются из-за несоответствия схемы БД, но миграции ещё не используются
-            //var recreator = new UserRepository(NAME_OR_CONNECTION_STRING);
-            //recreator.RecreateTestDatabase();
-            
+            //раскомментить если тесты отваливаются из - за несоответствия схемы БД, но миграции ещё не используются
+            var recreator = new UserRepository(NAME_OR_CONNECTION_STRING);
+            recreator.RecreateTestDatabase();
+
             // если таблица не была почищена от юзеров в силу некой причины, например, отвалившегося теста
             // вызываю метод, удаляющий этих юзеров
-            try
-            {
-                UserIntegrTest_19DeletingUsers();
-            }
-            catch { }
+            //try
+            //{
+            //    UserIntegrTest_19DeletingUsers();
+            //}
+            //catch { }
 
             User user1 = UserService.RegisterAsync("test49someemail@gmail.com", "Sergei", "qwerty1", "qwerty1").GetAwaiter().GetResult();
             User user2 = UserService.RegisterAsync("test50someemail@gmail.com", "Anton", "qwerty2", "qwerty2").GetAwaiter().GetResult();
@@ -58,7 +59,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
             Assert.AreEqual("test49someemail@gmail.com", user1.Email);
             Assert.AreEqual("Anton", user2.UserName);
-            Assert.AreEqual("qwerty3", user3.Password);
             Assert.IsNotNull(user1.Id);
 
             UserRole role = new UserRole() { Name = "Simple user" };
@@ -320,14 +320,14 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         }
 
         // тестируем удаление юзеров, а заодно и чистим базу до изначального состояния
-        [Test]
+        //[Test]
         public void UserIntegrTest_19DeletingUsers()
         {
             User user1 = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             User user2 = UserService.LogInAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
             User user3 = UserService.LogInAsync("test51someemail@gmail.com", "qwerty3").GetAwaiter().GetResult();
 
-            user1.Password = "NotWalidPassword";
+            user1.PasswordHash = "NotWalidPassword";
             user1.UserName = "SomeNewUnsavedUserName";
 
             UserService.DeleteUserAsunc(user1).GetAwaiter().GetResult();

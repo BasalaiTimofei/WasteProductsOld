@@ -15,7 +15,9 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// Adds new registered user in the repository.
         /// </summary>
         /// <param name="user">New registered user to add.</param>
-        Task AddAsync(UserDB user);
+        /// <param name="password">Password of the new user.</param>
+        /// <returns></returns>
+        Task AddAsync(UserDB user, string password);
 
         /// <summary>
         /// Add a claim to a user.
@@ -109,6 +111,8 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <returns>User with the specific email and password.</returns>
         UserDB Select(string email, string password, bool lazyInitiation = true);
 
+        (UserDB, IList<string>) Select(string email, string password);
+
         /// <summary>
         /// Returns first registered user matches the predicate with user's roles (or two nulls if there is no matches).
         /// </summary>
@@ -149,6 +153,6 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="user">Password of this user will be reset.</param>
         /// <param name="newPassword">New password for a user.</param>
         /// <returns></returns>
-        Task ResetPasswordAsync(UserDB user, string newPassword);
+        Task ResetPasswordAsync(UserDB user, string newPassword, string oldPassword);
     }
 }
