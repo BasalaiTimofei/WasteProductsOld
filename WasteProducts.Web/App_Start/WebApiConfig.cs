@@ -4,7 +4,6 @@ using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using System.Web.Http.ModelBinding.Binders;
 using WasteProducts.Logic.Common.Models.Search;
-using WasteProducts.Web.Utils.Search;
 
 namespace WasteProducts.Web
 {
@@ -13,8 +12,6 @@ namespace WasteProducts.Web
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
-            var provider = new SimpleModelBinderProvider(typeof(BoostedSearchQuery), new BoostedSearchQueryModelBinder());
-            config.Services.Insert(typeof(ModelBinderProvider), 0, provider);
 
             // Web API routes
             config.MapHttpAttributeRoutes();

@@ -13,7 +13,6 @@ using WasteProducts.Logic.Common.Models;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Search;
 using WasteProducts.Logic.Common.Services;
-using WasteProducts.Web.Utils.Search;
 
 namespace WasteProducts.Web.Controllers.Api
 {
@@ -68,7 +67,7 @@ namespace WasteProducts.Web.Controllers.Api
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
         [SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty", typeof(IEnumerable<Product>))]
         [Route("products/boosted")]
-        public IEnumerable<Product> GetProductsBoostedFields([ModelBinder(typeof(BoostedSearchQueryModelBinder))] BoostedSearchQuery query)
+        public IEnumerable<Product> GetProductsBoostedFields(BoostedSearchQuery query)
         {
 
             //Add product for testing purposes
