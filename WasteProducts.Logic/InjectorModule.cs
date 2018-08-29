@@ -11,7 +11,7 @@ using WasteProducts.DataAccess;
 
 namespace WasteProducts.Logic
 {
-    public class LogicInjectorModule : NinjectModule
+    public class InjectorModule : NinjectModule
     {
         public override void Load()
         {            

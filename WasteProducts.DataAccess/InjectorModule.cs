@@ -9,7 +9,7 @@ using WasteProducts.DataAccess.Repositories;
 
 namespace WasteProducts.DataAccess
 {
-    public class DataAccessInjectorModule : NinjectModule
+    public class InjectorModule : NinjectModule
     {
         public override void Load()
         {
