@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Ninject.Extensions.Factory;
 using Ninject.Modules;
 using WasteProducts.Logic.Common.Factories;
+using WasteProducts.Logic.Common.Services.Diagnostic;
+using WasteProducts.Logic.Services;
 
 namespace WasteProducts.Logic
 {
@@ -18,6 +20,8 @@ namespace WasteProducts.Logic
 
             Kernel.Bind<IDbServiceFactory>().ToFactory();
 
+            Kernel.Bind<IDbSeedService>().To<DbSeedService>();
+            Kernel.Bind<IDbManagementService>().To<DbManagementService>();
         }
     }
 }

@@ -5,21 +5,21 @@ using WasteProducts.Logic.Common.Models.Diagnostic;
 namespace WasteProducts.Logic.Common.Services.Diagnostic
 {
     /// <summary>
-    /// Service, that helps to create/init/delete and fet status of the database;
+    /// Service, that helps to create/seed/delete and gets status of the database;
     /// </summary>
     public interface IDbManagementService : IDisposable
     {
         /// <summary>
-        /// Return state of database
+        /// Return status of database
         /// </summary>
-        /// <returns>DatabaseState</returns>
-        Task<DatabaseState> GetState();
+        /// <returns>DatabaseStatus</returns>
+        Task<DatabaseStatus> GetStatus();
 
         /// <summary>
-        /// Creates a new database if database not exist and initialize with current initialization strategy, otherwise does nothing.
+        /// Creates a new database if database not exist and seed, otherwise does nothing.
         /// </summary>
         /// <returns>DatabaseResult</returns>
-        Task<DatabaseResult> CreateAndInitAsync(bool useTestData = false);
+        Task<DatabaseResult> CreateAndSeedAsync(bool useTestData = false);
 
         /// <summary>
         /// Deletes the database if it exists, otherwise does nothing.

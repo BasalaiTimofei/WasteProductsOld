@@ -3,7 +3,7 @@
     /// <summary>
     /// 
     /// </summary>
-    public class DatabaseState
+    public class DatabaseStatus
     {
         /// <summary>
         /// "True" if database already exist, in otherwise "False".
