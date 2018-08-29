@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WasteProducts.DataAccess.Common.Context
 {
-    public interface IDbContext
+    public interface IDbContext :IDisposable
     {
         Database Database { get; }
     }
