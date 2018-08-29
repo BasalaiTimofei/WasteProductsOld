@@ -35,6 +35,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\WasteProducts.Web.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -362,6 +363,7 @@
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Administration\AdministrationAreaRegistration.cs" />
+    <Compile Include="Areas\Administration\Controllers\Api\DbManagementController.cs" />
     <Compile Include="Areas\Administration\Controllers\ErrorManagementController.cs" />
     <Compile Include="Controllers\Api\BaseApiController.cs" />
     <Compile Include="Controllers\Api\ErrorController.cs" />
@@ -419,10 +421,6 @@
       <Project>{643aab59-4858-4e23-9a18-4bbec3ee5f56}</Project>
       <Name>WasteProducts.Logic.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WasteProducts.Logic\WasteProducts.Logic.csproj">
-      <Project>{6cf2c1b1-05e5-412f-8af5-5d2f6e2450e9}</Project>
-      <Name>WasteProducts.Logic</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
@@ -460,6 +458,13 @@
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.8.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.8.2\build\Microsoft.Net.Compilers.props'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(SolutionDir)WasteProducts.DataAccess\$(OutDir)$(ConfigurationName)\*.*" "$(TargetDir)" /S /E /Y
+xcopy "$(SolutionDir)WasteProducts.Logic\$(OutDir)$(ConfigurationName)\*.*" "$(TargetDir)" /S /E /Y</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>del "$(TargetDir)*.*"  /Q</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
