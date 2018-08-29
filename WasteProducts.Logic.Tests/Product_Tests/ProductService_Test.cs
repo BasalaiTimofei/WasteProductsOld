@@ -312,7 +312,8 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             mockProductRepository.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Once);
         }
 
-        [Test] public void DeleteByName_DoNotDeleteProduct_DoesNotCallMethod_DeleteOfRepository()
+        [Test]
+        public void DeleteByName_DoNotDeleteProduct_DoesNotCallMethod_DeleteOfRepository()
         {
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(selectedList);
@@ -322,5 +323,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             mockProductRepository.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Never);
         }
+
+
     }
 }
