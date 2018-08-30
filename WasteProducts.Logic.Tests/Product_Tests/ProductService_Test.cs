@@ -415,5 +415,50 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             Assert.That(result, Is.EqualTo(false));
         }
+
+        [Test]
+        public void Rate_SetsRating_CallsMethod_UpdateOfRepository()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.Rate(product, It.IsAny<int>());
+
+            mockProductRepository.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Once);
+        }
+
+        [Test]
+        public void Rate_PassedProductIsNull_DoesNotCallMethod_UpdateOfRepository()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.Rate(null, It.IsAny<int>());
+
+            mockProductRepository.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Never);
+        }
+
+        [Test]
+        public void Rate_SetsRating_СorrectlyСalculateRating()
+        {
+            product.AvgRating = 5D;
+            productDB.AvgRating = 5D;
+            product.RateCount = 5;
+            productDB.RateCount = 5;
+            var expectedRating = 4.83333333333D;
+
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.Rate(product, 4);
+
+            mockProductRepository.Verify(m =>
+                m.Update(It.Is<ProductDB>(p => Math.Abs((double) (p.AvgRating - expectedRating)) <= (p.AvgRating * 0.01))));
+        }
     }
 }
