@@ -17,6 +17,9 @@ namespace WasteProducts.Web.App_Start
 
     using WasteProducts.Web.Utils.Interception;
     using WasteProducts.Web.Filters;
+    using WasteProducts.Logic.Common.Services;
+    using WasteProducts.Logic.Services;
+    using System.Reflection;
     using System.Web.Http.ExceptionHandling;
 
     public static class NinjectWebCommon
@@ -101,8 +104,11 @@ namespace WasteProducts.Web.App_Start
         /// </summary>
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
-        {
-            
+        {            
+            kernel.Load("WasteProducts.DataAccess.dll");            
+            kernel.Load("WasteProducts.Logic.dll");            
         }
     }
 }
+
+

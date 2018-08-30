@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using WasteProducts.Logic.Common.Models.Search;
 
 namespace WasteProducts.Logic.Common.Models
 {
+    [TypeConverter(typeof(SearchQueryConverter))]
     /// <summary>
     /// Model of search query
     /// </summary>

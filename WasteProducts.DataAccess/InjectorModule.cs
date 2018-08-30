@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Ninject.Modules;
+using WasteProducts.DataAccess.Common.Repositories.Search;
+using WasteProducts.DataAccess.Repositories;
 
 namespace WasteProducts.DataAccess
 {
@@ -11,9 +13,7 @@ namespace WasteProducts.DataAccess
     {
         public override void Load()
         {
-            //todo register your repos here
-
-            throw new NotImplementedException();
+            Bind<ISearchRepository>().To<LuceneSearchRepository>().InSingletonScope();            
         }
     }
 }
