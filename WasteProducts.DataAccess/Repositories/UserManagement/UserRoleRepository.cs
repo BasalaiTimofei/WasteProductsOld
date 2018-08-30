@@ -74,6 +74,10 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 using (var roleStore = new RoleStore<IdentityRole>(db))
                 {
                     IdentityRole ir = await roleStore.FindByNameAsync(roleName);
+                    if (ir == null)
+                    {
+                        return null;
+                    }
                     UserRoleDB result = new UserRoleDB() { Id = ir.Id, Name = ir.Name };
                     return result;
                 }

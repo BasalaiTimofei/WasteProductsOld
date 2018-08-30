@@ -37,21 +37,12 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             RoleService = new UserRoleService(RoleRepo);
         }
 
-        // тестируем регистрирование и логин юзеров и создание ролей, плюс делаем начальное заполнение таблицы
+        // тестируем регистрирование юзеров и делаем начальное заполнение таблицы юзерами
         [Test]
         public void UserIntegrTest_00AddingUserAndRole()
         {
-            //раскомментить если тесты отваливаются из - за несоответствия схемы БД, но миграции ещё не используются
             var recreator = new UserRepository(NAME_OR_CONNECTION_STRING);
             recreator.RecreateTestDatabase();
-
-            // если таблица не была почищена от юзеров в силу некой причины, например, отвалившегося теста
-            // вызываю метод, удаляющий этих юзеров
-            //try
-            //{
-            //    UserIntegrTest_19DeletingUsers();
-            //}
-            //catch { }
 
             User user1 = UserService.RegisterAsync("test49someemail@gmail.com", "Sergei", "qwerty1", "qwerty1").GetAwaiter().GetResult();
             User user2 = UserService.RegisterAsync("test50someemail@gmail.com", "Anton", "qwerty2", "qwerty2").GetAwaiter().GetResult();
@@ -60,25 +51,46 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             Assert.AreEqual("test49someemail@gmail.com", user1.Email);
             Assert.AreEqual("Anton", user2.UserName);
             Assert.IsNotNull(user1.Id);
-
-            UserRole role = new UserRole() { Name = "Simple user" };
-            RoleService.CreateAsync(role).GetAwaiter().GetResult();
         }
 
-        // проверяем запрос юзера по емейлу с паролем и роли по названию
+        // проверяем запрос юзера по правильным емейлу и паролю
         [Test]
-        public void UserIntegrTest_01QueryingByEmail()
+        public void UserIntegrTest_01CorrectLoggingInByEmail()
         {
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            UserRole role = RoleService.FindByNameAsync("Simple user").GetAwaiter().GetResult();
-
             Assert.AreEqual(user.Email, "test49someemail@gmail.com");
+        }
+
+        // проверяем запрос юзера по неверным емейлу и паролю
+        [Test]
+        public void UserIntegrTest_02IncorrectQueryingByEmail()
+        {
+            User user = UserService.LogInAsync("incorrectEmail", "incorrectPassword").GetAwaiter().GetResult();
+            Assert.IsNull(user);
+        }
+
+        // тестируем создание роли, а так же проверяем, действительно ли роль создается в базе данных
+        [Test]
+        public void UserIntegrTest_03FindingRoleByCorrectRoleName()
+        {
+            UserRole roleToCreate = new UserRole() { Name = "Simple user" };
+            RoleService.CreateAsync(roleToCreate).GetAwaiter().GetResult();
+
+            UserRole role = RoleService.FindByNameAsync("Simple user").GetAwaiter().GetResult();
             Assert.AreEqual(role.Name, "Simple user");
+        }
+
+        // проверяем запрос роли по несуществующему названию
+        [Test]
+        public void UserIntegrTest_04FindingRoleByIncorrectRoleName()
+        {
+            UserRole role = RoleService.FindByNameAsync("Not existing role name").GetAwaiter().GetResult();
+            Assert.IsNull(role);
         }
 
         // тестим, правильно ли работает функционал добавления роли и добавления юзера в роль
         [Test]
-        public void UserIntegrTest_02AddingToTheUserDBNewRole()
+        public void UserIntegrTest_05AddingToTheUserDBNewRole()
         {
             User user1 = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             User user2 = UserService.LogInAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
@@ -97,7 +109,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем, как работает метот GetRolesAsynс IUserService
         [Test]
-        public void UserIntegrTest_03GettingRolesOfTheUser()
+        public void UserIntegrTest_06GettingRolesOfTheUser()
         {
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             user.Roles = UserService.GetRolesAsync(user).GetAwaiter().GetResult();
@@ -107,7 +119,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем изъятие из роли
         [Test]
-        public void UserIntegrTest_04RemovingUserFromRole()
+        public void UserIntegrTest_07RemovingUserFromRole()
         {
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual(user.Roles.FirstOrDefault(), "Simple user");
@@ -121,7 +133,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // Тестируем добавление утверждения (Claim) в юзера
         [Test]
-        public void UserIntegrTest_05AddingClaimToUser()
+        public void UserIntegrTest_08AddingClaimToUser()
         {
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             var claim = new Claim("SomeType", "SomeValue");
@@ -139,7 +151,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем удаление утверждения из юзера
         [Test]
-        public void UserIntegrTest_06DeletingClaimFromUser()
+        public void UserIntegrTest_09DeletingClaimFromUser()
         {
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual(user.Claims.Count, 1);
@@ -153,7 +165,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем добавление логина в юзера
         [Test]
-        public void UserIntegrTest_07AddingLoginToUser()
+        public void UserIntegrTest_10AddingLoginToUser()
         {
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             var login = new UserLogin { LoginProvider = "SomeLoginProvider", ProviderKey = "SomeProviderKey" };
@@ -169,7 +181,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем удаление логина из юзера
         [Test]
-        public void UserIntegrTest_08DeletingLoginFromUser()
+        public void UserIntegrTest_11DeletingLoginFromUser()
         {
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             var login = new UserLogin { LoginProvider = "SomeLoginProvider", ProviderKey = "SomeProviderKey" };
@@ -184,7 +196,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем апдейт юзера
         [Test]
-        public void UserIntegrTest_09UserUpdating()
+        public void UserIntegrTest_12UserUpdating()
         {
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
 
@@ -200,7 +212,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем изменение пароля пользователя
         [Test]
-        public void UserIntegrTest_10ResettingUserPassword()
+        public void UserIntegrTest_13ResettingUserPassword()
         {
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             user.PhoneNumber = "3334455";
@@ -213,7 +225,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем добавление друзей
         [Test]
-        public void UserIntegrTest_11AddingNewFriendsToUser()
+        public void UserIntegrTest_14AddingNewFriendsToUser()
         {
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual(0, user.Friends.Count);
@@ -232,7 +244,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем удаление друзей
         [Test]
-        public void UserIntegrTest_12DeletingFriendsFromUser()
+        public void UserIntegrTest_15DeletingFriendsFromUser()
         {
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual(2, user.Friends.Count);
@@ -251,7 +263,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         // TODO доделать этот тест после того, как появится толковая реализация продуктов
         // тестируем добавление продуктов
         //[Test]
-        public void UserIntegrTest_13AddingNewProductsToUser()
+        public void UserIntegrTest_16AddingNewProductsToUser()
         {
             
         }
@@ -259,14 +271,14 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         // TODO доделать этот тест после того, как появится толковая реализация продуктов
         // тестируем удаление продуктов
         //[Test]
-        public void UserIntegrTest_14DeletingProductsFromUser()
+        public void UserIntegrTest_17DeletingProductsFromUser()
         {
 
         }
 
         // тестируем поиск роли по айди и имени
         [Test]
-        public void UserIntegrTest_15FindRoleByIdAndName()
+        public void UserIntegrTest_18FindRoleByIdAndName()
         {
             UserRole foundByName = RoleService.FindByNameAsync("Simple user").GetAwaiter().GetResult();
             Assert.AreEqual("Simple user", foundByName.Name);
@@ -278,7 +290,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем получение всех пользователей определенной роли
         [Test]
-        public void UserIntegrTest_16GettingRoleUsers()
+        public void UserIntegrTest_19GettingRoleUsers()
         {
             User user1 = UserService.LogInAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
             User user2 = UserService.LogInAsync("test51someemail@gmail.com", "qwerty3").GetAwaiter().GetResult();
@@ -293,7 +305,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем изменение названия роли
         [Test]
-        public void UserIntegrTest_17UpdatingRoleName()
+        public void UserIntegrTest_20UpdatingRoleName()
         {
             User user1 = UserService.LogInAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
             Assert.AreEqual("Simple user", user1.Roles.FirstOrDefault());
@@ -307,7 +319,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем удаление роли
         [Test]
-        public void UserIntegrTest_18DeletingRole()
+        public void UserIntegrTest_21DeletingRole()
         {
             User user1 = UserService.LogInAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
             Assert.AreEqual("Not so simple user", user1.Roles.FirstOrDefault());
@@ -321,7 +333,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем удаление юзеров, а заодно и чистим базу до изначального состояния
         //[Test]
-        public void UserIntegrTest_19DeletingUsers()
+        public void UserIntegrTest_22DeletingUsers()
         {
             User user1 = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             User user2 = UserService.LogInAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();

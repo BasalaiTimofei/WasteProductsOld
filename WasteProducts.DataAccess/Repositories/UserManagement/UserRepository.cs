@@ -307,22 +307,6 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             {
                 await manager.ChangePasswordAsync(user.Id, oldPassword, newPassword);
             }
-
-
-
-
-
-
-            //using (var db = GetWasteContext())
-            //{
-            //    user.PasswordHash = newPassword;
-            //    db.Users.Attach(user);
-            //    var entry = db.Entry(user);
-            //    entry.Property(p => p.PasswordHash).IsModified = true;
-
-            //    user.Modified = DateTime.UtcNow;
-            //    await db.SaveChangesAsync();
-            //}
         }
 
         private (UserDB user, IList<string> roles) Select(Func<UserDB, bool> predicate, bool lazyInitiation, bool getRoles)
