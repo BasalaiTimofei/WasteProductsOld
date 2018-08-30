@@ -35,6 +35,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\WasteProducts.Web.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -123,7 +124,7 @@
       <HintPath>..\packages\Ninject.Web.WebApi.WebHost.3.3.0\lib\net45\Ninject.Web.WebApi.WebHost.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.5.8\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.5.9\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="NLog.Web, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.Web.4.6.0\lib\net35\NLog.Web.dll</HintPath>
@@ -362,6 +363,7 @@
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Administration\AdministrationAreaRegistration.cs" />
+    <Compile Include="Areas\Administration\Controllers\Api\DatabaseController.cs" />
     <Compile Include="Areas\Administration\Controllers\ErrorManagementController.cs" />
     <Compile Include="Controllers\Api\BaseApiController.cs" />
     <Compile Include="Controllers\Api\ErrorController.cs" />
@@ -420,10 +422,6 @@
       <Project>{643aab59-4858-4e23-9a18-4bbec3ee5f56}</Project>
       <Name>WasteProducts.Logic.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WasteProducts.Logic\WasteProducts.Logic.csproj">
-      <Project>{6cf2c1b1-05e5-412f-8af5-5d2f6e2450e9}</Project>
-      <Name>WasteProducts.Logic</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
@@ -462,11 +460,13 @@
     <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.8.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.8.2\build\Microsoft.Net.Compilers.props'))" />
   </Target>
   <PropertyGroup>
-    <PreBuildEvent>xcopy "$(SolutionDir)WasteProducts.DataAccess\$(OutDir)$(ConfigurationName)\*.dll" "$(TargetDir)"   /Y /I</PreBuildEvent>
+    <PostBuildEvent>
+      xcopy "$(SolutionDir)WasteProducts.DataAccess\$(OutDir)$(ConfigurationName)\*.*" "$(TargetDir)" /S /E /Y
+      xcopy "$(SolutionDir)WasteProducts.Logic\$(OutDir)$(ConfigurationName)\*.*" "$(TargetDir)" /S /E /Y
+    </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PreBuildEvent>del "$(TargetDir)*.*" /Q</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
