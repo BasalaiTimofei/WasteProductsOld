@@ -45,7 +45,7 @@ namespace WasteProducts.Logic.Services.UserService
             return await Task.Run(async () =>
             {
                 User registeringUser = null;
-                if (passwordConfirmation != password || !_mailService.IsValidEmail(email))
+                if (passwordConfirmation != password || !_mailService.IsValidEmail(email) || !(await _userRepo.IsEmailAvailableAsync(email)))
                 {
                     return registeringUser;
                 }
@@ -114,6 +114,31 @@ namespace WasteProducts.Logic.Services.UserService
         public async Task UpdateAsync(User user)
         {
             await _userRepo.UpdateAsync(MapTo<UserDB>(user));
+        }
+
+        public async Task<bool> UpdateEmailAsync(User user, string newEmail)
+        {
+            if (!_mailService.IsValidEmail(newEmail))
+            {
+                return false;
+            }
+
+            bool result = await _userRepo.UpdateEmailAsync(MapTo<UserDB>(user), newEmail);
+            if (result)
+            {
+                user.Email = newEmail;
+            }
+            return result;
+        }
+
+        public async Task<bool> UpdateUserNameAsync(User user, string newUserName)
+        {
+            bool result = await _userRepo.UpdateUserNameAsync(MapTo<UserDB>(user), newUserName);
+            if (result)
+            {
+                user.UserName = newUserName;
+            }
+            return result;
         }
 
         public async Task AddFriendAsync(User user, User newFriend)
@@ -220,5 +245,7 @@ namespace WasteProducts.Logic.Services.UserService
         private UserLoginDB MapTo<T>(UserLogin user)
             =>
             _mapper.Map<UserLoginDB>(user);
+
+        
     }
 }

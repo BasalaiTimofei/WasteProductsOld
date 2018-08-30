@@ -50,6 +50,14 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             }
         }
 
+        public async Task<bool> IsEmailAvailableAsync(string email)
+        {
+            using (var db = GetWasteContext())
+            {
+                return !(await db.Users.AnyAsync(u => u.Email == email));
+            }
+        }
+
         public async Task AddClaimAsync(UserDB user, Claim claim)
         {
             using (var db = GetWasteContext())
@@ -286,6 +294,14 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             }
         }
 
+        public async Task ResetPasswordAsync(UserDB user, string newPassword, string oldPassword)
+        {
+            using (var manager = GetUserManager())
+            {
+                await manager.ChangePasswordAsync(user.Id, oldPassword, newPassword);
+            }
+        }
+
         public async Task UpdateAsync(UserDB user)
         {
             using (var db = GetWasteContext())
@@ -293,6 +309,9 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 db.Users.Attach(user);
                 var entry = db.Entry(user);
                 entry.State = EntityState.Modified;
+                //entry.Property(u => u.Id).IsModified = false;
+                entry.Property(u => u.UserName).IsModified = false;
+                entry.Property(u => u.Email).IsModified = false;
                 entry.Property(u => u.Created).IsModified = false;
                 entry.Property(u => u.PasswordHash).IsModified = false;
 
@@ -301,11 +320,37 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             }
         }
 
-        public async Task ResetPasswordAsync(UserDB user, string newPassword, string oldPassword)
+        public async Task<bool> UpdateEmailAsync(UserDB user, string newEmail)
         {
-            using (var manager = GetUserManager())
+            using (var db = GetWasteContext())
             {
-                await manager.ChangePasswordAsync(user.Id, oldPassword, newPassword);
+                bool emailAvailable = !(await db.Users.AnyAsync(u => u.Email == newEmail));
+                if (emailAvailable)
+                {
+                    user.Modified = DateTime.UtcNow;
+                    db.Users.Attach(user);
+                    var entry = db.Entry(user);
+                    entry.Property(u => u.Email).IsModified = true;
+                    await db.SaveChangesAsync();
+                }
+                return emailAvailable;
+            }
+        }
+
+        public async Task<bool> UpdateUserNameAsync(UserDB user, string newUserName)
+        {
+            using (var db = GetWasteContext())
+            {
+                bool userNameAvailable = !(await db.Users.AnyAsync(u => u.UserName == newUserName));
+                if (userNameAvailable)
+                {
+                    user.Modified = DateTime.UtcNow;
+                    db.Users.Attach(user);
+                    var entry = db.Entry(user);
+                    entry.Property(u => u.UserName).IsModified = true;
+                    await db.SaveChangesAsync();
+                }
+                return userNameAvailable;
             }
         }
 
@@ -364,5 +409,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             };
             return new UserManager<UserDB>(store);
         }
+
+        
     }
 }

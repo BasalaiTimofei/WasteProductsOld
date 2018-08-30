@@ -46,11 +46,27 @@ namespace WasteProducts.Logic.Common.Services.UserService
         Task ResetPasswordAsync(string email);
 
         /// <summary>
-        /// Updates the specific user in the Database.
+        /// Updates the specific user in the Database. You can't update email, Id, UserName and Password by this method.
         /// </summary>
         /// <param name="user">The specific user to update.</param>
         /// <returns>Boolean representing whether updating the user was correct or not.</returns>
         Task UpdateAsync(User user);
+
+        /// <summary>
+        /// Updates user's Email. You cannot update email if newEmail is already used by another user.
+        /// </summary>
+        /// <param name="user">User wanting to update its email.</param>
+        /// <param name="newEmail">New unique email to update user's email.</param>
+        /// <returns></returns>
+        Task<bool> UpdateEmailAsync(User user, string newEmail);
+
+        /// <summary>
+        /// Updates user's UserName. You cannot update UserName if newUserName is already used by another user.
+        /// </summary>
+        /// <param name="user">User wanting to update its UserName.</param>
+        /// <param name="newUserName">New unique UserName to update user's UserName.</param>
+        /// <returns></returns>
+        Task<bool> UpdateUserNameAsync(User user, string newUserName);
 
         /// <summary>
         /// Adds a specific new friend to the specific user's friend list.
