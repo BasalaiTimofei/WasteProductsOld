@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -9,11 +8,9 @@ using System.Threading.Tasks;
 using Lucene.Net.Analysis;
 using Lucene.Net.Store;
 using Lucene.Net.Util;
-using Lucene.Net.Analysis.Core;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
-using Lucene.Net.QueryParsers.Classic;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Exceptions;
 using Lucene.Net.Analysis.Standard;
@@ -41,7 +38,6 @@ namespace WasteProducts.DataAccess.Repositories
         /// </summary>
         public LuceneSearchRepository()
         {
-
             string assemblyFilename = Assembly.GetAssembly(typeof(LuceneSearchRepository)).Location;
             string assemblyPath = Path.GetDirectoryName(assemblyFilename);
             string indexStoragePath = WebConfigurationManager.AppSettings["LuceneIndexStoragePath"]; ;
@@ -196,7 +192,6 @@ namespace WasteProducts.DataAccess.Repositories
         /// <param name="obj"></param>
         public void Delete<TEntity>(TEntity obj) where TEntity : class
         {
-
             System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty(IDField);
             int id = (int)keyFieldInfo.GetValue(obj);
             if (id>0)

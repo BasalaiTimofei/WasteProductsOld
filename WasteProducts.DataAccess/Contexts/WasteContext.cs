@@ -5,6 +5,10 @@ using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Contexts.Config;
+using WasteProducts.DataAccess.Repositories;
+using System.Linq;
+using System.Collections.Generic;
+using System;
 
 namespace WasteProducts.DataAccess.Contexts
 {
@@ -55,5 +59,41 @@ namespace WasteProducts.DataAccess.Contexts
         public IDbSet<GroupUserDB> GroupUserDBs { get; set; }
         public IDbSet<GroupUserInviteTimeDB> GroupUserInviteTimeDBs { get; set; }
         public IDbSet<GroupProductDB> GroupProductDBs { get; set; }
+                
+        public override int SaveChanges()
+        {
+            this.ChangeTracker.DetectChanges();
+            SaveChangesToSearchRepository();
+            return base.SaveChanges();
+        }
+
+        private void SaveChangesToSearchRepository()
+        {
+            DetectAndSaveChanges(EntityState.Added, new List<Type> { typeof(ProductDB) });
+            DetectAndSaveChanges(EntityState.Modified, new List<Type> { typeof(ProductDB) });
+            DetectAndSaveChanges(EntityState.Deleted, new List<Type> { typeof(ProductDB) });            
+        }
+
+        private void DetectAndSaveChanges(EntityState state, IEnumerable<Type> types)
+        {
+            //пока так
+            LuceneSearchRepository _repo = new LuceneSearchRepository();            
+
+            var changedList = this.ChangeTracker.Entries()
+                .Where(x => x.State == state)
+                .Select(x => x.Entity).ToList();
+
+            foreach (var item in changedList)
+            {
+                if (types.Contains(item.GetType()))
+                {
+                    if (state == EntityState.Added)
+                        _repo.Insert(item);
+                    else if (state == EntityState.Modified)
+                        _repo.Update(item);
+                    else _repo.Delete(item);
+                }
+            }
+        }
     }
 }
