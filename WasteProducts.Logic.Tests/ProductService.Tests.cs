@@ -47,7 +47,7 @@ namespace WasteProducts.Logic.Tests
         [SetUp]
         public void Init()
         {
-            _barcode = new Barcode { Code = "125478569", Brand = "Mars", Country = "Russia", Id = "51515" };
+            _barcode = new Barcode { Code = "125478569", Brend = "Mars", Country = "Russia", Id = "51515" };
             _repo = Substitute.For<IProductRepository>();
             //_mapper = new Mapper();
             _added = _deleted = true;
