@@ -1,17 +1,26 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
 using AutoMapper;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories;
-using WasteProducts.DataAccess.Repositories;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Mappings;
 using WasteProducts.Logic.Services;
+
+#region FluentAssertions descreiption
+//https://fluentassertions.com/documentation/
+
+//As you may have noticed, the purpose of this open-source project is to not only be the best
+//assertion framework in the.NET realm, but to also demonstrate high-quality code. We heavily
+//practice Test Driven Development and one of the promises TDD makes is that unit tests can be
+//treated as your API’s documentation. So although you are free to go through the many examples
+//here, please consider to analyze the many unit tests. (developer's comment)
+#endregion
 
 namespace WasteProducts.Logic.Tests.Product_Tests
 {
@@ -101,6 +110,17 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
+        //TODO Проверить чисто на null
+        public void AddByBarcore_BarcodeIsNotNull()
+        {
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+
+            var isSuccess = productService.AddByBarcode(barcode);
+
+            isSuccess.Should().BeTrue().And.Should().NotBe(null);
+        }
+
+        [Test]
         public void AddByBarcode_InsertsNewProduct_CallsMethod_AddOfRepository()
         {
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
@@ -148,6 +168,17 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             var result = productService.AddByName(It.IsAny<string>());
 
             Assert.That(result, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void AddName_NameIsNull()
+        {
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.AddByName(null);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            mockProductRepository.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Never);
         }
 
         [Test]
@@ -301,6 +332,37 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
+        public void DeletetByName_IfNameIsEmpty_CalledNever()
+        {
+            var prod = new ProductDB { Name = "" };
+            selectedList.Add(prod);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.DeleteByName(prod.Name);
+
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            prod.Name.Should().BeEmpty();
+
+            mockProductRepository.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Never);
+        }
+
+        [Test]
+        public void DeleteByName_IfNameIsNull_CalledNever()
+        {
+            var prod = new ProductDB { Name = null };
+            _listDb.Add(prod);
+
+            _productSrvc.DeleteByName(prod.Name);
+            _repo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(_listDb);
+
+            prod.Name.Should().BeNull();
+            _repo.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Never);
+        }
+
+        [Test]
         public void DeleteByName_DeletesProduct_CallsMethod_DeleteOfRepository()
         {
             selectedList.Add(productDB);
@@ -442,23 +504,144 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void Rate_SetsRating_СorrectlyСalculateRating()
+        public void Rate_CheckingResultAfterRating()
         {
-            product.AvgRating = 5D;
-            productDB.AvgRating = 5D;
-            product.RateCount = 5;
-            productDB.RateCount = 5;
-            var expectedRating = 4.83333333333D;
+            var prodDb = new ProductDB
+            {
+                AvgRating = 5d,
+                RateCount = 4,
+                Id = Guid.NewGuid().ToString()
+            };
+            var prod = new Product
+            {
+                AvgRating = prodDb.AvgRating,
+                RateCount = prodDb.RateCount,
+                Id = prodDb.Id
+            };
 
-            selectedList.Add(productDB);
-            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(selectedList);
+            _listDb.Add(prodDb);
+            RepoReturnsResult();
+            _productSrvc.Rate(prod, 4);
 
-            var productService = new ProductService(mockProductRepository.Object, mapper);
-            productService.Rate(product, 4);
+            Assert.AreEqual(prodDb.AvgRating, 4.8d);
+        }
 
-            mockProductRepository.Verify(m =>
-                m.Update(It.Is<ProductDB>(p => Math.Abs((double) (p.AvgRating - expectedRating)) <= (p.AvgRating * 0.01))));
+        [Test]
+        public void RemoveCategory_Removed_ReturnsTrue()
+        {
+            var categoryDb = new CategoryDB();
+            var category = new Category();
+            var catList = new List<CategoryDB>();
+
+            _listDb.Add(new ProductDB());
+            catList.Add(categoryDb);
+            RepoReturnsResult();
+
+            _productSrvc.RemoveCategory(_product, category).Should().BeTrue();
+        }
+
+        [Test]
+        public void RemoveCategory_NotRemoved_ReturnsFalse()
+        {
+            var category = new Category();
+            RepoReturnsResult();
+
+            _productSrvc.RemoveCategory(_product, category).Should().BeFalse();
+        }
+
+        [Test]
+        //Переиновать
+        public void RemoveCategory_RemovesCategoryInProductWithoutCategory_callsMethod_UpdateOfRepository()
+        {
+            var categoryDb = new CategoryDB();
+            var catList = new List<CategoryDB> { categoryDb };
+
+            _listDb.Add(_productDb);
+            RepoReturnsResult();
+            _productSrvc.RemoveCategory(_product, _category);
+
+            _repo.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Once);
+        }
+
+        [Test]
+        public void Reveal_OpensAProductToDisplaying_CallsOnce()
+        {
+            _productDb.Equals(_product);
+            _listDb.Add(_productDb);
+            RepoReturnsResult();
+            _productDb.IsHidden = true;
+            _productSrvc.Reveal(_product);
+            _repo.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Once);
+        }
+
+        [Test]
+        public void Reveal_IfProductDoesntHidden_CallsNever()
+        {
+            _productDb.Equals(_product);
+            _listDb.Add(_productDb);
+            RepoReturnsResult();
+            _productDb.IsHidden = false;
+            _productSrvc.Reveal(_product);
+
+            _repo.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Never);
+        }
+
+        [Test]
+        public void SetDescription_Success()
+        {
+            _listDb.Add(_productDb);
+            RepoReturnsResult();
+
+            _productSrvc.SetDescription(_product, "Оч крутой кисель");
+            _repo.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Once);
+        }
+
+        [Test]
+        public void SetDescription_NotSuccess()
+        {
+            RepoReturnsResult();
+
+            _productSrvc.SetDescription(_product, "Оч крутой кисель");
+            _repo.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Never);
+        }
+
+        [Test]
+        public void SetDescription_IfDescriptionIsNull()
+        {
+            _listDb.Add(_productDb);
+            RepoReturnsResult();
+            _productSrvc.SetDescription(_product, null);
+
+            _repo.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Never);
+        }
+
+        [Test]
+        public void SetPrice_SuccessfullySetPrice()
+        {
+            _listDb.Add(_productDb);
+            RepoReturnsResult();
+
+            _productSrvc.SetPrice(_product, 10.22m);
+            _repo.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Once);
+        }
+
+        [Test]
+        public void SetPrice_PriceIsZero()
+        {
+            _listDb.Add(_productDb);
+            RepoReturnsResult();
+
+            _productSrvc.SetPrice(_product, 0);
+            _repo.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Never);
+        }
+
+        [Test]
+        public void SetPrice_DoNotSetsThePrice_DoesNotcallMethod_AddOfRepository()
+        {
+            RepoReturnsResult();
+
+            _productSrvc.SetPrice(_product, 15.1m);
+            _repo.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Never);
         }
     }
 }

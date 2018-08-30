@@ -124,6 +124,8 @@ namespace WasteProducts.Logic.Services
                 out var products)) return false;
 
             var productFromDB = products.ToList().First();
+            if (productFromDB.Category == null) return true;
+
             productFromDB.Category = null;
             _productRepository.Update(productFromDB);
 
@@ -145,7 +147,7 @@ namespace WasteProducts.Logic.Services
 
         public void SetDescription(Product product, string description)
         {
-            if (!IsProductsInDB(p =>
+            if (description == null || !IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.Ordinal),
                 out var products)) return;
 
@@ -156,7 +158,7 @@ namespace WasteProducts.Logic.Services
 
         public void SetPrice(Product product, decimal price)
         {
-            if (!IsProductsInDB(p =>
+            if (price <= 0M || !IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.Ordinal),
                 out var products)) return;
 
