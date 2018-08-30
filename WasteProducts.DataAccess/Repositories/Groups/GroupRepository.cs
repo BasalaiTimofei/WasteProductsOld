@@ -15,7 +15,8 @@ namespace WasteProducts.DataAccess.Repositories
     public class GroupRepository : IGroupRepository
     {
         IdentityDbContext _context;
-        
+        private bool _disposed = false;
+
         public GroupRepository(IdentityDbContext context)
         {
             _context = context;
@@ -37,6 +38,18 @@ namespace WasteProducts.DataAccess.Repositories
         public void Update<T>(T item) where T : class
         {
             _context.Entry(item).State = EntityState.Modified;
+        }
+        /// <summary>
+        /// Update - correct object in db
+        /// </summary>
+        /// <typeparam name="T">Object</typeparam>
+        /// <param name="items">New objects</param>
+        public void Update<T>(IEnumerable<T> items) where T : class
+        {
+            foreach (var item in items)
+            {
+                _context.Entry(item).State = EntityState.Modified;
+            }
         }
         /// <summary>
         /// Delete - delete object from db
@@ -108,6 +121,25 @@ namespace WasteProducts.DataAccess.Repositories
         public void Save()
         {
             _context.SaveChanges();
+        }
+        /// <summary>
+        /// Dispose = delete contecst
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+                _disposed = true;
+            }
         }
         private IQueryable<T> Include<T>(
             params Expression<Func<T, object>>[] includeProperties) where T : class

@@ -10,7 +10,8 @@ namespace WasteProducts.Logic.Mappings
         public GroupProductProfile()
         {
             CreateMap<GroupProduct, GroupProductDB>()
-                .ForMember(x=>x.GroupBoardDBId, y=>y.MapFrom(z=>z.GroupBoardId));
+                .ForMember(x=>x.GroupBoardDBId, y=>y.MapFrom(z=>z.GroupBoardId))
+                .ReverseMap();
         }
     }
 }

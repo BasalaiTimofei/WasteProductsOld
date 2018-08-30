@@ -35,7 +35,7 @@ namespace WasteProducts.DataAccess.Common.Models
         /// <summary>
         /// TimeCreate - datatime when group created
         /// </summary>
-        public DateTime TimeCreate { get; set; }
+        public DateTime? TimeCreate { get; set; }
         /// <summary>
         /// TimeDelete - datatime when group deleted
         /// </summary>

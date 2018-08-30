@@ -13,7 +13,9 @@ namespace WasteProducts.Logic.Mappings
                 .ForMember(x => x.TimeCreate, y => y.Ignore())
                 .ForMember(x => x.TimeDelete, y => y.Ignore())
                 .ForMember(x => x.Bool, y => y.Ignore())
-                .ForMember(x=>x.GroupDBId, y=>y.MapFrom(z=>z.GroupId));
+                .ForMember(x=>x.GroupDBId, y=>y.MapFrom(z=>z.GroupId))
+                .ForMember(x=>x.GroupProductDBs, y=>y.MapFrom(z=>z.GroupProducts))
+                .ReverseMap();
         }
     }
 }

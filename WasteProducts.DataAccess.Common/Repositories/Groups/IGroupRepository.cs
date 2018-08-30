@@ -11,7 +11,7 @@ namespace WasteProducts.DataAccess.Common.Repositories
     /// Group repository
     /// </summary>
     /// <typeparam name="T">Object</typeparam>
-    public interface IGroupRepository
+    public interface IGroupRepository: IDisposable
     {
         /// <summary>
         /// Create - add a new object in db
@@ -25,6 +25,12 @@ namespace WasteProducts.DataAccess.Common.Repositories
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">New object</param>
         void Update<T>(T item) where T : class;
+        /// <summary>
+        /// Update - correct object in db
+        /// </summary>
+        /// <typeparam name="T">Object</typeparam>
+        /// <param name="item">New objects</param>
+        void Update<T>(IEnumerable<T> items) where T : class;
         /// <summary>
         /// Delete - delete object from db
         /// </summary>

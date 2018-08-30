@@ -79,6 +79,9 @@
     <Compile Include="Contexts\WasteContext.cs" />
     <Compile Include="InjectorModule.cs" />
     <Compile Include="ModelConfigurations\EntityConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Groups\GroupUserInviteTime.cs" />
+    <Compile Include="ModelConfigurations\Groups\GroupUser.cs" />
+    <Compile Include="ModelConfigurations\Groups\GroupProduct.cs" />
     <Compile Include="ModelConfigurations\Groups\GroupBoard.cs" />
     <Compile Include="ModelConfigurations\Groups\Group.cs" />
     <Compile Include="Models\Model.cs" />
