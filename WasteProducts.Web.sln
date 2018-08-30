@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WasteProducts.Logic.Common"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WasteProducts.Logic.Tests", "WasteProducts.Logic.Tests\WasteProducts.Logic.Tests.csproj", "{8D1FE6AE-3538-41F6-8C12-E80F7731A007}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WasteProducts.Web.Tests", "WasteProducts.Web.Tests\WasteProducts.Web.Tests.csproj", "{7805B87D-03BA-453F-94EE-03A193F0B4E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{8D1FE6AE-3538-41F6-8C12-E80F7731A007}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D1FE6AE-3538-41F6-8C12-E80F7731A007}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D1FE6AE-3538-41F6-8C12-E80F7731A007}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7805B87D-03BA-453F-94EE-03A193F0B4E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7805B87D-03BA-453F-94EE-03A193F0B4E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7805B87D-03BA-453F-94EE-03A193F0B4E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7805B87D-03BA-453F-94EE-03A193F0B4E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +72,7 @@ Global
 		{6CF2C1B1-05E5-412F-8AF5-5D2F6E2450E9} = {F44E3173-7A14-445E-8CB5-77274C59AF0E}
 		{643AAB59-4858-4E23-9A18-4BBEC3EE5F56} = {F44E3173-7A14-445E-8CB5-77274C59AF0E}
 		{8D1FE6AE-3538-41F6-8C12-E80F7731A007} = {6463C37F-C7DF-4AA9-8C39-DA4EDFC4F260}
+		{7805B87D-03BA-453F-94EE-03A193F0B4E2} = {6463C37F-C7DF-4AA9-8C39-DA4EDFC4F260}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E3BE916F-60B2-474C-B0AE-5F6761BA0B5C}

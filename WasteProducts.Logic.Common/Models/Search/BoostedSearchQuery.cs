@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace WasteProducts.Logic.Common.Models.Search
 {
+    [TypeConverter(typeof(BoostedSearchQueryConverter))]
     /// <summary>
     /// Implements SearchQuery class with term's boosts values
     /// </summary>
