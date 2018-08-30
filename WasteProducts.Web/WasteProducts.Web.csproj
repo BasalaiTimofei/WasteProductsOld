@@ -363,10 +363,11 @@
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Administration\AdministrationAreaRegistration.cs" />
-    <Compile Include="Areas\Administration\Controllers\Api\DbManagementController.cs" />
+    <Compile Include="Areas\Administration\Controllers\Api\DatabaseController.cs" />
     <Compile Include="Areas\Administration\Controllers\ErrorManagementController.cs" />
     <Compile Include="Controllers\Api\BaseApiController.cs" />
     <Compile Include="Controllers\Api\ErrorController.cs" />
+    <Compile Include="Controllers\Api\SearchController.cs" />
     <Compile Include="Controllers\Mvc\BaseMvcController.cs" />
     <Compile Include="Controllers\Mvc\ErrorController.cs" />
     <Compile Include="Controllers\Mvc\HomeController.cs" />
@@ -459,13 +460,13 @@
     <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.8.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.8.2\build\Microsoft.Net.Compilers.props'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(SolutionDir)WasteProducts.DataAccess\$(OutDir)$(ConfigurationName)\*.*" "$(TargetDir)" /S /E /Y
-
-xcopy "$(SolutionDir)WasteProducts.Logic\$(OutDir)$(ConfigurationName)\*.*" "$(TargetDir)" /S /E /Y
-</PostBuildEvent>
+    <PostBuildEvent>
+      xcopy "$(SolutionDir)WasteProducts.DataAccess\$(OutDir)$(ConfigurationName)\*.*" "$(TargetDir)" /S /E /Y
+      xcopy "$(SolutionDir)WasteProducts.Logic\$(OutDir)$(ConfigurationName)\*.*" "$(TargetDir)" /S /E /Y
+    </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>del "$(TargetDir)*.*"  /Q</PreBuildEvent>
+    <PreBuildEvent>del "$(TargetDir)*.*" /Q</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

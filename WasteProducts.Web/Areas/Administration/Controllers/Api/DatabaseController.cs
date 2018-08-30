@@ -12,7 +12,8 @@ namespace WasteProducts.Web.Areas.Administration.Controllers.Api
     /// <summary>
     /// Api controller for database management
     /// </summary>
-    public class DbManagementController : BaseApiController
+    [RoutePrefix("api/Administration/Database")]
+    public class DatabaseController : BaseApiController
     {
         private readonly IDbManagementService _dbManagementService;
 
@@ -21,7 +22,7 @@ namespace WasteProducts.Web.Areas.Administration.Controllers.Api
         /// </summary>
         /// <param name="dbManagementService">Database management service</param>
         /// <param name="logger">NLog logger</param>
-        public DbManagementController(IDbManagementService dbManagementService, ILogger logger) : base(logger)
+        public DatabaseController(IDbManagementService dbManagementService, ILogger logger) : base(logger)
         {
             _dbManagementService = dbManagementService;
         }
@@ -31,6 +32,8 @@ namespace WasteProducts.Web.Areas.Administration.Controllers.Api
         /// </summary>
         /// <returns>DatabaseStatus</returns>
         [HttpGet]
+        [Route("")]
+        [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Returns Db status object", typeof(DatabaseStatus), nameof(DatabaseStatus), "application/json")]
         public async Task<IHttpActionResult> Get()
         {
@@ -45,6 +48,7 @@ namespace WasteProducts.Web.Areas.Administration.Controllers.Api
         /// </summary>
         /// <returns>DatabaseResult</returns>
         [HttpPost]
+        [Route("")]
         [SwaggerResponse(HttpStatusCode.Created, "Returns result of create action with Db", typeof(DatabaseResult), nameof(DatabaseResult), "application/json")]
         public async Task<IHttpActionResult> Post()
         {
@@ -59,6 +63,8 @@ namespace WasteProducts.Web.Areas.Administration.Controllers.Api
         /// </summary>
         /// <returns>DatabaseResult</returns>
         [HttpDelete]
+        [Route("")]
+        [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Returns result of delete action with Db", typeof(DatabaseResult), nameof(DatabaseResult), "application/json")]
         public async Task<IHttpActionResult> Delete()
         {
@@ -74,6 +80,8 @@ namespace WasteProducts.Web.Areas.Administration.Controllers.Api
         /// <param name="seedTestData">If <c>true</c> also will be seeded test data.</param>
         /// <returns>DatabaseResult</returns>
         [HttpPut]
+        [Route("")]
+        [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Returns result of seed action with Db", typeof(DatabaseResult), nameof(DatabaseResult), "application/json")]
         public async Task<IHttpActionResult> Put(bool seedTestData)
         {

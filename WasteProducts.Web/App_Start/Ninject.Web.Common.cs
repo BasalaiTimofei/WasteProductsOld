@@ -6,6 +6,7 @@ namespace WasteProducts.Web.App_Start
     using System;
     using System.Web;
     using System.Web.Mvc;
+    using System.Web.Http.ExceptionHandling;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 
     using Ninject;
@@ -17,7 +18,6 @@ namespace WasteProducts.Web.App_Start
 
     using WasteProducts.Web.Utils.Interception;
     using WasteProducts.Web.Filters;
-    using System.Web.Http.ExceptionHandling;
 
     public static class NinjectWebCommon
     {
