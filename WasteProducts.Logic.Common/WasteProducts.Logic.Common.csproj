@@ -30,7 +30,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -40,22 +44,47 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums\UserCategory.cs" />
-    <Compile Include="Models\Donation\Donation.cs" />
+    <Compile Include="Attributes\TraceAttribute.cs" />
+    <Compile Include="Factories\IDbServiceFactory.cs" />
+    <Compile Include="Models\Diagnostic\DatabaseResult.cs" />
+    <Compile Include="Models\Diagnostic\DatabaseState.cs" />
+    <Compile Include="Models\DonationManagment\Address.cs" />
+    <Compile Include="Models\DonationManagment\Donation.cs" />
     <Compile Include="Models\Barcods\Barcode.cs" />
     <Compile Include="Models\Barcods\BarcodeInfo.cs" />
+    <Compile Include="Models\DonationManagment\Donor.cs" />
     <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\Search\BoostedSearchQuery.cs" />
     <Compile Include="Models\Products\Category.cs" />
+    <Compile Include="Models\Search\BoostedSearchQueryConverter.cs" />
     <Compile Include="Models\Search\SearchQuery.cs" />
-    <Compile Include="Models\Search\SearchResult.cs" />
+    <Compile Include="Models\Search\SearchQueryConverter.cs" />
+    <Compile Include="Models\Security\Infrastructure\IAppRole.cs" />
+    <Compile Include="Models\Security\Infrastructure\IAppUser.cs" />
+    <Compile Include="Models\Security\Infrastructure\IUserClaim.cs" />
+    <Compile Include="Models\Security\Infrastructure\IUserLogin.cs" />
+    <Compile Include="Models\Security\Infrastructure\IUserRole.cs" />
+    <Compile Include="Models\Security\Models\AppRole.cs" />
+    <Compile Include="Models\Security\Models\AppUser.cs" />
+    <Compile Include="Models\Security\Models\UserClaim.cs" />
+    <Compile Include="Models\Security\Models\UserLogin.cs" />
+    <Compile Include="Models\Security\Models\UserRole.cs" />
+    <Compile Include="Models\Security\Stores\AppRoleStore.cs" />
+    <Compile Include="Models\Security\Stores\AppUserStore.cs" />
+    <Compile Include="Models\Security\Infrastructure\IAppRoleStore.cs" />
+    <Compile Include="Models\Security\Infrastructure\IAppUserStore.cs" />
     <Compile Include="Models\Users\User.cs" />
     <Compile Include="Models\Products\Product.cs" />
+    <Compile Include="Models\Users\UserClaim.cs" />
+    <Compile Include="Models\Users\UserLogin.cs" />
+    <Compile Include="Models\Users\UserRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Diagnostic\IDbSeedService.cs" />
+    <Compile Include="Services\Diagnostic\IDbManagementService.cs" />
+    <Compile Include="Services\IDonationLogger.cs" />
     <Compile Include="Services\IProductService.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\IBarcodeService.cs" />
-    <Compile Include="Services\ITestService.cs" />
-    <Compile Include="Services\IUserService.cs" />
     <Compile Include="Models\Groups\GroupBoard.cs" />
     <Compile Include="Models\Groups\Group.cs" />
     <Compile Include="Models\Groups\GroupProduct.cs" />
@@ -65,12 +94,23 @@
     <Compile Include="Services\Groups\IGroupProductService.cs" />
     <Compile Include="Services\Groups\IGroupBoardService.cs" />
     <Compile Include="Services\Groups\IGroupService.cs" />
+    <Compile Include="Services\MailService\IMailFactory.cs" />
+    <Compile Include="Services\MailService\IMailService.cs" />
+    <Compile Include="Services\UserService\IUserRoleService.cs" />
+    <Compile Include="Services\UserService\IUserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">
       <Project>{9acbec5d-caa7-4e29-a19c-a247190f6da8}</Project>
       <Name>WasteProducts.DataAccess.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
