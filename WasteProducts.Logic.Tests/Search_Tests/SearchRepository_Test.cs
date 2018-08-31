@@ -314,16 +314,14 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         public void GetProductWithNestedProperty()
         {
             sut = new LuceneSearchRepository(true);
-            //ProductDB product = new ProductDB();
-            //product.Id = 1;
-            //product.Name = "Test product";
-            //product.Description = "Test product description";
-            //product.Category = new CategoryDB();
-            //product.Category.Id = 11;
-            //product.Category.Name = "Test category name";
-            //product.Category.Description = "Test category description";
-            CategoryDB category = new CategoryDB() { Id = 11, Name = "Test category name", Description = "Test category description" };
-            ProductDB product = new ProductDB() { Id = 1, Name = "Title", Description = "Description", Category = category };
+            ProductDB product = new ProductDB();
+            product.Id = 1;
+            product.Name = "Test product";
+            product.Description = "Test product description";
+            product.Category = new CategoryDB();
+            product.Category.Id = 11;
+            product.Category.Name = "Test category name";
+            product.Category.Description = "Test category description";
             sut.Insert(product);
             var result = sut.GetById<ProductDB>(1);
 
