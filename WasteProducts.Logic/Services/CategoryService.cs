@@ -10,6 +10,9 @@ using WasteProducts.Logic.Common.Services;
 
 namespace WasteProducts.Logic.Services
 {
+    /// <summary>
+    /// Implementation of ICategoryService
+    /// </summary>
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
@@ -21,6 +24,11 @@ namespace WasteProducts.Logic.Services
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Tries to add a new category by name and returns whether the addition is successful or not
+        /// </summary>
+        /// <param name="name">The name of the category to be added</param>
+        /// <returns>Boolean represents whether the addition is successful or not</returns>
         public bool AddByName(string name)
         {
             if (IsCategoryInDB(p =>
@@ -33,6 +41,11 @@ namespace WasteProducts.Logic.Services
             return true;
         }
 
+        /// <summary>
+        /// Tries to add a list of new categories by names and returns whether the addition is successful or not
+        /// </summary>
+        /// <param name="names">The list of names of the categories to be added</param>
+        /// <returns>Boolean represents whether the addition is successful or not</returns>
         public bool AddRange(IEnumerable<string> names)
         {
             var result = false;
@@ -45,6 +58,11 @@ namespace WasteProducts.Logic.Services
             return result;
         }
 
+        /// <summary>
+        /// Returns a spicific category by its name
+        /// </summary>
+        /// <param name="name">The name of the category to be gotten</param>
+        /// <returns>The specific category to be returned</returns>
         public Category Get(string name)
         {
             if (!IsCategoryInDB(p =>
@@ -54,6 +72,11 @@ namespace WasteProducts.Logic.Services
             return _mapper.Map<Category>(categories.ToList().First());
         }
 
+        /// <summary>
+        /// Adds the description for specific category
+        /// </summary>
+        /// <param name="category">The specific category for which a description is added</param>
+        /// <param name="description">The specific description for the specfic category</param>
         public void SetDescription(Category category, string description)
         {
             if (!IsCategoryInDB(p =>
@@ -65,6 +88,11 @@ namespace WasteProducts.Logic.Services
             _categoryRepository.Update(categoryFromDB);
         }
 
+        /// <summary>
+        /// Tries to delete the specific category
+        /// </summary>
+        /// <param name="name">The name of the category to be deleted</param>
+        /// <returns>Boolean represents whether the deletion is successful or not</returns>
         public bool Delete(string name)
         {
             if (!IsCategoryInDB(p =>
@@ -77,6 +105,11 @@ namespace WasteProducts.Logic.Services
             return true;
         }
 
+        /// <summary>
+        /// Tries to delete the list of specific categories
+        /// </summary>
+        /// <param name="names">The list of names of the categories to be deleted</param>
+        /// <returns>Boolean represents whether the deletion is successful or not</returns>
         public bool DeleteRange(IEnumerable<string> names)
         {
             var result = false;
