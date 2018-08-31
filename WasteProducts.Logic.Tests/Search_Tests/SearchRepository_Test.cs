@@ -309,6 +309,27 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             Assert.AreEqual(1, userCollectionFromRepo.Count());
         }
+
+        [Test]
+        public void GetProductWithNestedProperty()
+        {
+            sut = new LuceneSearchRepository(true);
+            ProductDB product = new ProductDB();
+            product.Id = 1;
+            product.Name = "Test product";
+            product.Description = "Test product description";
+            product.Category = new CategoryDB();
+            product.Category.Id = 11;
+            product.Category.Name = "Test category name";
+            product.Category.Description = "Test category description";
+            sut.Insert(product);
+            var result = sut.GetById<ProductDB>(1);
+
+            Assert.AreNotEqual(null, product.Category);
+            Assert.AreEqual(11, product.Category.Id);
+            Assert.AreEqual("Test category name", product.Category.Name);
+            Assert.AreEqual("Test category description", product.Category.Description);
+        }
         #endregion
 
         //TODO: IEnumerable<TEntity> GetAll<TEntity>(string queryString, IEnumerable<string> searchableFields, ReadOnlyDictionary<string, float> boosts, int numResults) where TEntity : class;
