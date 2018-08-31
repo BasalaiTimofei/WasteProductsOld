@@ -61,8 +61,7 @@ namespace WasteProducts.DataAccess.Contexts
         public IDbSet<GroupProductDB> GroupProductDBs { get; set; }
                 
         public override int SaveChanges()
-        {
-            this.ChangeTracker.DetectChanges();
+        {            
             SaveChangesToSearchRepository();
             return base.SaveChanges();
         }
@@ -73,20 +72,20 @@ namespace WasteProducts.DataAccess.Contexts
             DetectAndSaveChanges(EntityState.Modified, new List<Type> { typeof(ProductDB) });
             DetectAndSaveChanges(EntityState.Deleted, new List<Type> { typeof(ProductDB) });            
         }
-
-        private void DetectAndSaveChanges(EntityState state, IEnumerable<Type> types)
+                
+        protected void DetectAndSaveChanges(EntityState state, IEnumerable<Type> types)
         {
             //пока так
             LuceneSearchRepository _repo = new LuceneSearchRepository();            
 
             var changedList = this.ChangeTracker.Entries()
                 .Where(x => x.State == state)
-                .Select(x => x.Entity).ToList();
+                .Select(x => x.Entity).ToList();            
 
             foreach (var item in changedList)
             {
                 if (types.Contains(item.GetType()))
-                {
+                {                    
                     if (state == EntityState.Added)
                         _repo.Insert(item);
                     else if (state == EntityState.Modified)

@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 using WasteProducts.DataAccess.Repositories;
 using WasteProducts.DataAccess.Common.Exceptions;
 using System.Collections.ObjectModel;
+using WasteProducts.DataAccess.Contexts;
+using WasteProducts.DataAccess.Common.Models.Products;
+using System.Data.Entity;
 
 namespace WasteProducts.Logic.Tests.Search_Tests
 {
@@ -406,6 +409,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             Assert.AreEqual(expected: 1, actual: result.Count());
         }
 
+        [Test]
         public void Get_GetAllOneWordQuery_Return_EqualCount_Zero()
         {
             sut = new LuceneSearchRepository(true);
@@ -420,7 +424,6 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             result = sut.GetAll<TestProduct>("name1", new string[] { "Decription" }, 1000);
             Assert.AreEqual(expected: 0, actual: result.Count());
         }
-
 
         [Test]
         public void Get_GetAllMultiplyWordQuery_Return_EqualCount_Not_Zero()
@@ -479,6 +482,34 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
         #endregion
 
+        #region Tests for WasteContext (temp, it will be deleted)
+        public class TestContext : WasteContext
+        {            
+            public TestContext(): base()
+            {                
+            }
+
+            public void DetectAndSaveChanges(System.Data.Entity.EntityState state, IEnumerable<Type> types)
+            {
+                base.DetectAndSaveChanges(state, types);
+            }
+        }
+
+        [Test]
+        public void _DetectChanges_AddNewEntity_Result_Entity_added()
+        {
+            sut = new LuceneSearchRepository(true);
+            TestContext context = new TestContext();
+            ProductDB product = new ProductDB() { Id = 1, Name = "Title", Description = "Description" };
+            context.Products.Add(product);
+
+            context.DetectAndSaveChanges(System.Data.Entity.EntityState.Added, new List<Type>() { typeof(ProductDB) });                        
+
+            var productFromRepo = sut.GetById<ProductDB>(1);
+
+            Assert.AreNotEqual(null, productFromRepo);
+        }
+        #endregion
     }
 
 }
