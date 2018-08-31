@@ -76,11 +76,14 @@ namespace WasteProducts.DataAccess.Contexts
         protected void DetectAndSaveChanges(EntityState state, IEnumerable<Type> types)
         {
             //пока так
-            LuceneSearchRepository _repo = new LuceneSearchRepository();            
+            LuceneSearchRepository _repo = new LuceneSearchRepository();
+            this.Configuration.AutoDetectChangesEnabled = false;
 
             var changedList = this.ChangeTracker.Entries()
                 .Where(x => x.State == state)
-                .Select(x => x.Entity).ToList();            
+                .Select(x => x.Entity).ToList();
+
+            this.Configuration.AutoDetectChangesEnabled = true;
 
             foreach (var item in changedList)
             {

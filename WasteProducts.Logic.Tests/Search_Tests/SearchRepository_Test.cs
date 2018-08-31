@@ -314,14 +314,16 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         public void GetProductWithNestedProperty()
         {
             sut = new LuceneSearchRepository(true);
-            ProductDB product = new ProductDB();
-            product.Id = 1;
-            product.Name = "Test product";
-            product.Description = "Test product description";
-            product.Category = new CategoryDB();
-            product.Category.Id = 11;
-            product.Category.Name = "Test category name";
-            product.Category.Description = "Test category description";
+            //ProductDB product = new ProductDB();
+            //product.Id = 1;
+            //product.Name = "Test product";
+            //product.Description = "Test product description";
+            //product.Category = new CategoryDB();
+            //product.Category.Id = 11;
+            //product.Category.Name = "Test category name";
+            //product.Category.Description = "Test category description";
+            CategoryDB category = new CategoryDB() { Id = 11, Name = "Test category name", Description = "Test category description" };
+            ProductDB product = new ProductDB() { Id = 1, Name = "Title", Description = "Description", Category = category };
             sut.Insert(product);
             var result = sut.GetById<ProductDB>(1);
 
@@ -529,6 +531,24 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             var productFromRepo = sut.GetById<ProductDB>(1);
 
             Assert.AreNotEqual(null, productFromRepo);
+        }
+
+        [Test]
+        public void _DetectChanges_AddNewEntityWithCategory_Result_Entity_added()
+        {
+            sut = new LuceneSearchRepository(true);
+            TestContext context = new TestContext();
+            CategoryDB category = new CategoryDB() { Id = 1, Name = "Category name", Description = "Category description" };
+            ProductDB product = new ProductDB() { Id = 1, Name = "Title", Description = "Description", Category = category };
+            
+            context.Products.Add(product);
+
+            context.DetectAndSaveChanges(System.Data.Entity.EntityState.Added, new List<Type>() { typeof(ProductDB), typeof(CategoryDB) });
+
+            var productFromRepo = sut.GetById<ProductDB>(1);            
+
+            Assert.AreNotEqual(null, productFromRepo);
+            Assert.AreNotEqual(null, productFromRepo.Category);
         }
         #endregion
     }
