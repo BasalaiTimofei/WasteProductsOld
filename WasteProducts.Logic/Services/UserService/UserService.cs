@@ -45,7 +45,8 @@ namespace WasteProducts.Logic.Services.UserService
             return await Task.Run(async () =>
             {
                 User registeringUser = null;
-                if (passwordConfirmation != password || !_mailService.IsValidEmail(email) || !(await _userRepo.IsEmailAvailableAsync(email)))
+                if (email == null || userName == null || password == null || passwordConfirmation == null ||
+                    passwordConfirmation != password || !_mailService.IsValidEmail(email) || !(await _userRepo.IsEmailAvailableAsync(email)))
                 {
                     return registeringUser;
                 }
