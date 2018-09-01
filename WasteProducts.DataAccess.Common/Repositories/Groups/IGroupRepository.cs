@@ -11,53 +11,72 @@ namespace WasteProducts.DataAccess.Common.Repositories
     /// Group repository
     /// </summary>
     /// <typeparam name="T">Object</typeparam>
-    public interface IGroupRepository<T> where T : class
+    public interface IGroupRepository: IDisposable
     {
         /// <summary>
         /// Create - add a new object in db
         /// </summary>
+        /// <typeparam name="T">Object</typeparam>
         /// <param name="item">New object</param>
-        void Create(T item);
+        void Create<T>(T item) where T : class;
         /// <summary>
         /// Update - correct object in db
         /// </summary>
+        /// <typeparam name="T">Object</typeparam>
         /// <param name="item">New object</param>
-        void Update(T item);
+        void Update<T>(T item) where T : class;
+        /// <summary>
+        /// Update - correct object in db
+        /// </summary>
+        /// <typeparam name="T">Object</typeparam>
+        /// <param name="item">New objects</param>
+        void Update<T>(IEnumerable<T> items) where T : class;
         /// <summary>
         /// Delete - delete object from db
         /// </summary>
+        /// <typeparam name="T">Object</typeparam>
         /// <param name="id">Primary key object</param>
-        void Delete(int id);
+        void Delete<T>(int id) where T : class;
         /// <summary>
         /// Get - getting object from db
         /// </summary>
+        /// <typeparam name="T">Object</typeparam>
         /// <param name="id">Primary key object</param>
         /// <returns>Object</returns>
-        T Get(int id);
+        T Get<T>(int id) where T : class;
         /// <summary>
         /// GetAll - returns all objects
         /// </summary>
+        /// <typeparam name="T">Object</typeparam>
         /// <returns>IEnumerable objects</returns>
-        IEnumerable<T> GetAll();
+        IEnumerable<T> GetAll<T>() where T : class;
         /// <summary>
         /// Find - returns objects set with condition
         /// </summary>
-        /// <param name="predicate">lambda function</param>
+        /// <typeparam name="T">Object</typeparam>
+        /// <param name="predicate">Lambda function</param>
         /// <returns>IEnumerable objects</returns>
-        IEnumerable<T> Find(Func<T, Boolean> predicate);
+        IEnumerable<T> Find<T>(Func<T, Boolean> predicate) where T : class;
         /// <summary>
         /// GetWithInclude - immediate loading objects with condition
         /// </summary>
-        /// <param name="includeProperties">expression trees</param>
+        /// <typeparam name="T">Object</typeparam>
+        /// <param name="includeProperties">Expression trees</param>
         /// <returns>IEnumerable objects</returns>
-        IEnumerable<T> GetWithInclude(params Expression<Func<T, object>>[] includeProperties);
+        IEnumerable<T> GetWithInclude<T>(params Expression<Func<T, 
+            object>>[] includeProperties) where T : class;
         /// <summary>
         /// GetWithInclude - immediate loading objects with condition
         /// </summary>
-        /// <param name="predicate">lambda function</param>
-        /// <param name="includeProperties">expression trees</param>
+        /// <typeparam name="T">Object</typeparam>
+        /// <param name="predicate">Lambda function</param>
+        /// <param name="includeProperties">Expression trees</param>
         /// <returns>IEnumerable objects</returns>
-        IEnumerable<T> GetWithInclude(Func<T, bool> predicate,
-            params Expression<Func<T, object>>[] includeProperties);
+        IEnumerable<T> GetWithInclude<T>(Func<T, bool> predicate,
+            params Expression<Func<T, object>>[] includeProperties) where T : class;
+        /// <summary>
+        /// Save = save model 
+        /// </summary>
+        void Save();
     }
 }

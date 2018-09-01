@@ -108,6 +108,10 @@
     <Compile Include="Mappings\UserMappings\UserProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserRoleProfile.cs" />
     <Compile Include="Mappings\ProductProfile.cs" />
+    <Compile Include="Mappings\Groups\GroupBoardProfile.cs" />
+    <Compile Include="Mappings\Groups\GroupProductProfile.cs" />
+    <Compile Include="Mappings\Groups\GroupProfile.cs" />
+    <Compile Include="Mappings\Groups\GroupUserProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AppRoleManagerService.cs" />
     <Compile Include="Services\AppUserManagerService.cs" />
@@ -124,6 +128,7 @@
     <Compile Include="Services\UserService\UserService.cs" />
     <Compile Include="Validators\TestValidator.cs" />
     <Compile Include="Validators\UserService\UserValidator.cs" />
+    <Compile Include="Validators\Groups\GroupValidation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -144,5 +149,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
