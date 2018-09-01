@@ -82,7 +82,7 @@ namespace WasteProducts.Logic.Common.Services
         /// Checks whether a specific product is hidden or not
         /// </summary>
         /// <param name="product">Checked specific product</param>
-        /// <returns></returns>
+        /// <returns>Boolean represents whether the product is in the hidden state</returns>
         bool IsHidden(Product product);
 
         /// <summary>
