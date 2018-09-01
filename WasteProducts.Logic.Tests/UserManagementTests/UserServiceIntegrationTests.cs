@@ -101,7 +101,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             Assert.IsNull(user4);
         }
 
-        // проверяем запрос юзера по правильным емейлу и паролю
+        // проверяем запрос юзера по правильным емейлу и паролю (должно вернуть соответствующего юзера)
         [Test]
         public void UserIntegrTest_05CorrectLoggingInByEmail()
         {
@@ -109,9 +109,17 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             Assert.AreEqual(user.Email, "test49someemail@gmail.com");
         }
 
+        // проверяем запрос юзера по неверным емейлу и паролю (юзер должен быть null-овым)
+        [Test]
+        public void UserIntegrTest_06IncorrectQueryingByEmail()
+        {
+            User user = UserService.LogInAsync("incorrectEmail", "incorrectPassword").GetAwaiter().GetResult();
+            Assert.IsNull(user);
+        }
+
         // пытаемся поменять зарегистрированному юзеру емейл на корректный уникальный емейл (должно поменять)
         [Test]
-        public void UserIntegrTest_06ChangingUserEmailToAvailableEmail()
+        public void UserIntegrTest_07ChangingUserEmailToAvailableEmail()
         {
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual("test49someemail@gmail.com", user.Email);
@@ -126,7 +134,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // пытаемся поменять зарегистрированному юзеру емейл на некорректный уникальный емейл (не должно поменять)
         [Test]
-        public void UserIntegrTest_07ChangingUserEmailToIncorrectEmail()
+        public void UserIntegrTest_08ChangingUserEmailToIncorrectEmail()
         {
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual("test49someemail@gmail.com", user.Email);
@@ -137,9 +145,9 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             Assert.AreEqual("test49someemail@gmail.com", user.Email);
         }
 
-        // пытаемся поменять зарегистрированному юзеру емейл на корректный неуникальный емейл
+        // пытаемся поменять зарегистрированному юзеру емейл на корректный неуникальный емейл (не должно поменять)
         [Test]
-        public void UserIntegrTest_08ChangingUserEmailToAlreadyRegisteredEmail()
+        public void UserIntegrTest_09ChangingUserEmailToAlreadyRegisteredEmail()
         {
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual("test49someemail@gmail.com", user.Email);
@@ -153,9 +161,24 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             Assert.AreEqual("test49someemail@gmail.com", user.Email);
         }
 
-        // пытаемся изменить юзеру юзернейм на юзернейм, уже имеющийся в системе
+        // пытаемся передать в метод UpdateEmailAsync null-овые аргументы (не должно поменять емейла, не должно выдать ошибку)
         [Test]
-        public void UserIntegrTest_09ChangingUserNameToAlreadyExistingUserName()
+        public void UserIntegrTest_10CallUpdateEmailAsyncWithNulArguements()
+        {
+            User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            Assert.IsNotNull(user);
+
+            bool result1 = UserService.UpdateEmailAsync(user, null).GetAwaiter().GetResult();
+            bool result2 = UserService.UpdateEmailAsync(null, "correctuniqueemail@gmail.com").GetAwaiter().GetResult();
+
+            Assert.IsFalse(result1);
+            Assert.IsFalse(result2);
+            Assert.AreEqual("test49someemail@gmail.com", user.Email);
+        }
+
+        // пытаемся изменить юзеру юзернейм на юзернейм, уже имеющийся в системе (не должно поменять)
+        [Test]
+        public void UserIntegrTest_10ChangingUserNameToAlreadyExistingUserName()
         {
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual("Sergei", user.UserName);
@@ -164,14 +187,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
             Assert.IsFalse(result);
             Assert.AreEqual("Sergei", user.UserName);
-        }
-
-        // проверяем запрос юзера по неверным емейлу и паролю
-        [Test]
-        public void UserIntegrTest_10IncorrectQueryingByEmail()
-        {
-            User user = UserService.LogInAsync("incorrectEmail", "incorrectPassword").GetAwaiter().GetResult();
-            Assert.IsNull(user);
         }
 
         // тестируем создание роли, а так же проверяем, действительно ли роль создается в базе данных

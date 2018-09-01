@@ -97,19 +97,10 @@ namespace WasteProducts.Logic.Services.UserService
             });
         }
 
-        public async Task ResetPasswordAsync(string email)
+        // TODO переделать метод, он все равно будет отправлять захешированный пароль
+        public Task ResetPasswordAsync(string email)
         {
-            // TODO переделать метод, он все равно будет отправлять захешированный пароль
-            throw new NotImplementedException("Метод будет отправлять захешированный пароль, переделать метод");
-            try
-            {
-                User user = MapTo<User>(_userRepo.Select(email));
-
-                if (user == null) return;
-                // TODO придумать что писать в письме-восстановителе пароля и где хранить этот стринг
-                await _mailService.SendAsync(email, PASSWORD_RECOWERY_HEADER, $"На ваш аккаунт \"Фуфлопродуктов\" был отправлен запрос на смену пароля. Напоминаем ваш пароль на сайте :\n\n{user.PasswordHash}\n\nВы можете поменять пароль в своем личном кабинете.");
-            }
-            catch { }
+            throw new NotImplementedException("Метод будет отправлять захешированный пароль, переделать метод, чтобы он отправлял ссылку на генерацию нового пароля");
         }
 
         public async Task UpdateAsync(User user)
@@ -119,7 +110,7 @@ namespace WasteProducts.Logic.Services.UserService
 
         public async Task<bool> UpdateEmailAsync(User user, string newEmail)
         {
-            if (!_mailService.IsValidEmail(newEmail))
+            if (user == null || newEmail == null || !_mailService.IsValidEmail(newEmail))
             {
                 return false;
             }
