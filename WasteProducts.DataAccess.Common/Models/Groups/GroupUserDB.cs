@@ -15,8 +15,8 @@ namespace WasteProducts.DataAccess.Common.Models
         /// <summary>
         /// Id - secondary key
         /// </summary>
-        public int GroupId { get; set; }
-        public GroupDB GroupDB { get; set; }
+        public int GroupDBId { get; set; }
+        public virtual GroupDB GroupDB { get; set; }
         /// <summary>
         /// UserId - user which entered in group
         /// </summary>
@@ -24,6 +24,12 @@ namespace WasteProducts.DataAccess.Common.Models
         /// <summary>
         /// UserId - user which entered in group
         /// </summary>
-        public IList<GroupUserInviteTimeDB> GroupUserInviteTimeDBs { get; set; }
+        public virtual IList<GroupUserInviteTimeDB> GroupUserInviteTimeDBs { get; set; }
+        /// <summary>
+        /// Bool - user in a group/not in a group
+        ///     true - user in a group
+        ///     false - user not in a group
+        /// </summary>
+        public bool Bool { get; set; }
     }
 }

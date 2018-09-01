@@ -7,7 +7,7 @@ namespace WasteProducts.Logic.Common.Services
     /// <summary>
     /// Service return information
     /// </summary>
-    public interface IGropDataService
+    public interface IGroupDataService
     {
         /// <summary>
         /// Get - return one object

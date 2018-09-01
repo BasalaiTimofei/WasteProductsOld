@@ -40,17 +40,8 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public void UserIntegrTest_00AddingUserAndRole()
         {
-            // раскомментить если тесты отваливаются из-за несоответствия схемы БД, но миграции ещё не используются
-            //var recreator = new UserRepository(NAME_OR_CONNECTION_STRING);
-            //recreator.RecreateTestDatabase();
-            
-            // если таблица не была почищена от юзеров в силу некой причины, например, отвалившегося теста
-            // вызываю метод, удаляющий этих юзеров
-            try
-            {
-                UserIntegrTest_19DeletingUsers();
-            }
-            catch { }
+            var recreator = new UserRepository(NAME_OR_CONNECTION_STRING);
+            recreator.RecreateTestDatabase();
 
             User user1 = UserService.RegisterAsync("test49someemail@gmail.com", "Sergei", "qwerty1", "qwerty1").GetAwaiter().GetResult();
             User user2 = UserService.RegisterAsync("test50someemail@gmail.com", "Anton", "qwerty2", "qwerty2").GetAwaiter().GetResult();

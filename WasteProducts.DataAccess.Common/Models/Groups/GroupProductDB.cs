@@ -13,10 +13,10 @@ namespace WasteProducts.DataAccess.Common.Models
         /// </summary>
         public int Id { get; set; }
         /// <summary>
-        /// GroupBordId - secondary key
+        /// GroupBoardDBId - secondary key
         /// </summary>
-        public int GroupBordId { get; set; }
-        public GroupBoardDB GroupBoardDB { get; set; }
+        public int GroupBoardDBId { get; set; }
+        public virtual GroupBoardDB GroupBoardDB { get; set; }
         /// <summary>
         /// ProductId - product which add at board
         /// </summary>
