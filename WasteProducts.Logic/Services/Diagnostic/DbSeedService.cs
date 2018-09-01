@@ -115,7 +115,10 @@ namespace WasteProducts.Logic.Services
             var fakerForUser = new Faker<User>()
                 .RuleFor(user => user.Email, faker => email ?? faker.Person.Email)
                 .RuleFor(user => user.UserName, faker => userName ?? faker.Person.UserName)
-                .RuleFor(user => user.Password, faker => password ?? faker.Internet.Password())
+                // TODO Александр Голговский посмотри что тут я (Тишков Сергей) исправил в нижней строке, не поломает это твоей логики? 
+                // тут был user.Password, но теперь у нас на BL уровне хранится хешированный пароль, чтобы не было ошибки
+                // компиляции, исправил
+                .RuleFor(user => user.PasswordHash, faker => password ?? faker.Internet.Password())
 
                 .FinishWith((faker, user) => _logger.Debug($"Created User: {user}"));
 
