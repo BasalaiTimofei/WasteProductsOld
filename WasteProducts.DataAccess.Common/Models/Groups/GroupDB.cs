@@ -27,18 +27,24 @@ namespace WasteProducts.DataAccess.Common.Models
         /// <summary>
         /// GroupUserDBs - users which as part of group
         /// </summary>
-        public IList<GroupUserDB> GroupUserDBs { get; set; }
+        public virtual IList<GroupUserDB> GroupUserDBs { get; set; }
         /// <summary>
         /// GroupBordDBs - boards with products
         /// </summary>
-        public IList<GroupBoardDB> GroupBoardDBs { get; set; }
+        public virtual IList<GroupBoardDB> GroupBoardDBs { get; set; }
         /// <summary>
-        /// Create - datatime when group created
+        /// TimeCreate - datatime when group created
         /// </summary>
-        public DateTime Create { get; set; }
+        public DateTime? TimeCreate { get; set; }
         /// <summary>
-        /// Delete - datatime when group deleted
+        /// TimeDelete - datatime when group deleted
         /// </summary>
-        public DateTime Delete { get; set; }
+        public DateTime? TimeDelete { get; set; }
+        /// <summary>
+        /// Bool - group deleted/greated
+        ///     true - group greated
+        ///     false - group deleted
+        /// </summary>
+        public bool Bool { get; set; }
     }
 }

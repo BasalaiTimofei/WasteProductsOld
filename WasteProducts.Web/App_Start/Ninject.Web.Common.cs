@@ -5,6 +5,7 @@ namespace WasteProducts.Web.App_Start
 {
     using System;
     using System.Web;
+    using System.Web.Mvc;
     using System.Web.Http.ExceptionHandling;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 
@@ -14,9 +15,8 @@ namespace WasteProducts.Web.App_Start
     using Ninject.Web.Common.WebHost;
     using Ninject.Web.Mvc.FilterBindingSyntax;
     using NLog;
+
     using WasteProducts.Web.Utils.Interception;
-
-
     using WasteProducts.Web.Filters;
 
     public static class NinjectWebCommon
@@ -38,7 +38,7 @@ namespace WasteProducts.Web.App_Start
         /// </summary>
         public static void Stop()
         {
-            LogManager.Flush();
+            LogManager.Shutdown();
             bootstrapper.ShutDown();
         }
 
@@ -65,7 +65,7 @@ namespace WasteProducts.Web.App_Start
             catch (Exception e)
             {
                 LogManager.GetCurrentClassLogger().Fatal(e, "Kernel throw exception during the creation process.");
-                LogManager.Flush();
+                LogManager.Shutdown();
 
                 kernel.Dispose();
                 throw;
@@ -78,7 +78,7 @@ namespace WasteProducts.Web.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterFiltres(IKernel kernel)
         {
-            kernel.BindFilter<MvcUnhandledExceptionFilter>(System.Web.Mvc.FilterScope.Global, 0);
+            kernel.BindFilter<MvcUnhandledExceptionFilter>(FilterScope.Global, 0);
         }
 
 		/// <summary>
@@ -92,7 +92,7 @@ namespace WasteProducts.Web.App_Start
                 var targetName = ctx.Request.Target?.Member.DeclaringType.FullName ?? "GlobalLogger";
                 return LogManager.GetLogger(targetName);
             });
-            //kernel.Bind<IExceptionLogger>().To<ApiUnhandledExceptionLogger>();
+            kernel.Bind<IExceptionLogger>().To<ApiUnhandledExceptionLogger>();
             kernel.Bind<TraceInterceptor>().ToSelf();
         }
 
@@ -102,7 +102,8 @@ namespace WasteProducts.Web.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            
+            kernel.Load("WasteProducts.DataAccess.dll");
+            kernel.Load("WasteProducts.Logic.dll");
         }
     }
 }

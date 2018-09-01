@@ -13,9 +13,9 @@ namespace WasteProducts.Logic.Common.Models
         /// </summary>
         public int Id { get; set; }
         /// <summary>
-        /// GroupBordId - secondary key
+        /// GroupBoardId - secondary key
         /// </summary>
-        public int GroupBordId { get; set; }
+        public int GroupBoardId { get; set; }
         /// <summary>
         /// ProductId - product which add at board
         /// </summary>
