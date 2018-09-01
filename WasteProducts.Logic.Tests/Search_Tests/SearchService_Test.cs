@@ -34,7 +34,6 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         private Mock<ISearchRepository> mockRepo;
         private ISearchService sut;
 
-        #region IEnumerable<TEntity> Search<TEntity>(SearchQuery query) where TEntity : class
         [Test]
         public void Search_EmptyQuery_Return_Exception()
         {
@@ -74,9 +73,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             Assert.AreEqual(users.Count(), result.Count());
         }*/
-        #endregion
 
-        #region void AddToSearchIndex<TEntity>(TEntity model) where TEntity : class
         [Test]
         public void AddIndex_InsertNewIndex_Return_NoException()
         {
@@ -96,9 +93,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             mockRepo.Verify(v => v.Insert<TestUser>(user), Times.Once);
         }
-        #endregion
 
-        #region void AddToSearchIndex<TEntity>(IEnumerable<TEntity> models) where TEntity : class
         [Test]
         public void AddIndex_InsertNewIndexIEnumerable_Return_NoException()
         {
@@ -116,9 +111,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             mockRepo.Verify(v => v.Insert<TestUser>(It.IsAny<TestUser>()), Times.Exactly(users.Count<TestUser>()));
         }
-        #endregion
 
-        #region void RemoveFromSearchIndex<TEntity>(TEntity model) where TEntity : class
         [Test]
         public void RemoveIndex_DeleteIndex_Return_NoException()
         {
@@ -138,9 +131,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             mockRepo.Verify(v => v.Delete<TestUser>(user), Times.Once);
         }
-        #endregion
 
-        #region void RemoveFromSearchIndex<TEntity>(IEnumerable<TEntity> models) where TEntity : class
         [Test]
         public void RemoveIndex_DeleteIndexIEnumerable_Return_NoException()
         {
@@ -158,9 +149,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             mockRepo.Verify(v => v.Delete<TestUser>(It.IsAny<TestUser>()), Times.Exactly(users.Count<TestUser>()));
         }
-        #endregion
 
-        #region void UpdateInSearchIndex<TEntity>(TEntity model) where TEntity : class
         [Test]
         public void UpdateIndex_UpdateIndex_Return_NoException()
         {
@@ -180,9 +169,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             mockRepo.Verify(v => v.Update<TestUser>(user), Times.Once);
         }
-        #endregion
 
-        #region void UpdateInSearchIndex<TEntity>(IEnumerable<TEntity> models) where TEntity : class
         [Test]
         public void UpdateIndex_UpdateIndexIEnumerable_Return_NoException()
         {
@@ -200,9 +187,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             mockRepo.Verify(v => v.Update<TestUser>(It.IsAny<TestUser>()), Times.Exactly(users.Count<TestUser>()));
         }
-        #endregion
 
-        #region void ClearSearchIndex()
         [Test]
         public void ClearIndex_ClearIndex_Return_NoException()
         {
@@ -220,9 +205,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             mockRepo.Verify(v => v.Clear(), Times.Once);
         }
-        #endregion
 
-        #region void OptimizeSearchIndex()
         [Test]
         public void OptimizeIndex_OptimizeIndex_Return_NoException()
         {
@@ -240,6 +223,5 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             mockRepo.Verify(v => v.Optimize(), Times.Once);
         }
-        #endregion
     }
 }

@@ -59,8 +59,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         private IEnumerable<TestUser> users;
         private IEnumerable<TestProduct> products;
         private ISearchRepository sut;
-
-        #region public LuceneSearchRepository()
+        
         [Test]
         public void Ctr_NewRepository_Return_NoException()
         {
@@ -77,10 +76,8 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         public void Ctr_NewRepositoryWithFalse_Return_NoException()
         {
             sut = new LuceneSearchRepository(false);
-        }
-        #endregion
+        }        
 
-        #region public void Insert<TEntity>(TEntity obj) where TEntity : class
         [Test]
         public void Insert_InsertNewObject_Return_NoException()
         {
@@ -89,9 +86,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             sut.Insert(user);
         }
-        #endregion
 
-        #region TEntity GetById<TEntity>(int id) where TEntity : class
         [Test]
         public void GetById_GetTestUser_Return_NoException()
         {
@@ -140,9 +135,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             Assert.AreEqual(null, userFromRepo);
         }
-        #endregion
 
-        #region TEntity Get<TEntity>(string keyValue, string keyField) where TEntity : class
         [Test]
         public void Get_GetUser_Return_NoException()
         {
@@ -191,9 +184,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             Assert.AreEqual(null, userFromRepo);
         }
-        #endregion
 
-        #region public IEnumerable<TEntity> GetAll<TEntity>() where TEntity  :class
         [Test]
         public void GetAll_GetAll_Return_NoException()
         {
@@ -215,9 +206,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             Assert.AreEqual(users.Count(), userCollectionFromRepo.Count());
         }
-        #endregion
 
-        #region IEnumerable<TEntity> GetAll<TEntity>(string queryString, IEnumerable<string> searchableFields, int numResults) where TEntity : class
 
         [Test]
         public void GetAllParams_GetAll_Return_ArgumentException()
@@ -330,11 +319,9 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             Assert.AreEqual("Test category name", product.Category.Name);
             Assert.AreEqual("Test category description", product.Category.Description);
         }
-        #endregion
 
         //TODO: IEnumerable<TEntity> GetAll<TEntity>(string queryString, IEnumerable<string> searchableFields, ReadOnlyDictionary<string, float> boosts, int numResults) where TEntity : class;
 
-        #region Update<TEntity>(TEntity obj) where TEntity : class
         [Test]
         public void Update_UpdateObject_Return_NoException()
         {
@@ -374,9 +361,6 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             Assert.Throws<LuceneSearchRepositoryException>(() => sut.Update<TestUser>(oldUser));
         }
 
-        #endregion
-
-        #region Delete<TEntity>(TEntity obj) where TEntity : class;
         [Test]
         public void Delete_UpdateObject_Return_NoException()
         {
@@ -412,9 +396,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             Assert.Throws<LuceneSearchRepositoryException>(() => sut.Delete<TestUser>(oldUser));
         }
-        #endregion
 
-        #region Full-text search testing
         [Test]
         public void Get_GetAllOneWordQuery_Return_EqualCount_Not_Zero()
         {
@@ -501,9 +483,6 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             Assert.AreEqual(expected: 5, actual: result.Count());
         }
 
-        #endregion
-
-        #region Tests for WasteContext (temp, it will be deleted)
         public class TestContext : WasteContext
         {            
             public TestContext(): base()
@@ -548,7 +527,5 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             Assert.AreNotEqual(null, productFromRepo);
             Assert.AreNotEqual(null, productFromRepo.Category);
         }
-        #endregion
     }
-
 }
