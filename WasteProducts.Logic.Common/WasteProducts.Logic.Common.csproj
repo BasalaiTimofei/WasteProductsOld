@@ -54,6 +54,7 @@
     <Compile Include="Models\Barcods\BarcodeInfo.cs" />
     <Compile Include="Models\DonationManagment\Donor.cs" />
     <Compile Include="Models\Groups\GroupComment.cs" />
+    <Compile Include="Models\Groups\GroupUser.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Search\BoostedSearchQuery.cs" />
     <Compile Include="Models\Products\Category.cs" />

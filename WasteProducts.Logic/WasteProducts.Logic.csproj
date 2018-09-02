@@ -100,6 +100,7 @@
     <Compile Include="Mappings\DonationManagment\AddressProfile.cs" />
     <Compile Include="Mappings\DonationManagment\DonationProfile.cs" />
     <Compile Include="Mappings\DonationManagment\DonorProfile.cs" />
+    <Compile Include="Mappings\Groups\GroupUserProfile .cs" />
     <Compile Include="Mappings\TestProfile.cs" />
     <Compile Include="Mappings\UserMappings\ProductProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserClaimProfile.cs" />
