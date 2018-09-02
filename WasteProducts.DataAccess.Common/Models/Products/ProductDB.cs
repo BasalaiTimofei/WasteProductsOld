@@ -78,15 +78,21 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         public override bool Equals(object obj)
         {
             return obj is ProductDB other &&
-                   this.Name == other.Name &&
-                   this.AvgRating == other.AvgRating &&
-                   this.Id == other.Id &&
-                   this.Created == other.Created &&
-                   this.Modified == other.Modified &&
-                   this.Category == other.Category &&
-                   this.Barcode == other.Barcode &&
-                   this.Price == other.Price &&
-                   this.RateCount == other.RateCount;
+                   Name == other.Name &&
+                   AvgRating == other.AvgRating &&
+                   Id == other.Id &&
+                   Created == other.Created &&
+                   Modified == other.Modified &&
+                   Category == other.Category &&
+                   Barcode == other.Barcode &&
+                   Price == other.Price &&
+                   RateCount == other.RateCount;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = Id.GetHashCode();
+            return hashCode;
         }
     }
 }
