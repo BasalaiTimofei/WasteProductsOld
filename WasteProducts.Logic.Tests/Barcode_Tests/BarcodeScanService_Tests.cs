@@ -13,10 +13,10 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
     [TestFixture]
     public class BarcodeScanService_Tests
     {
-        public Image _image = Image.FromFile("S:\\IMG_GoodImage.jpg");
-        public Image _imageOriginal = Image.FromFile("S:\\IMG_NotResize.jpg");
-        public BarcodeInfo _info = new BarcodeInfo { Code = "4810064002096", Type = "EAN_13" };
-        public string _verified = "4810064002096";
+        private Bitmap _image = (Bitmap)Image.FromFile("S:\\IMG_GoodImage.jpg");
+        private Bitmap _imageOriginal = (Bitmap)Image.FromFile("S:\\IMG_NotResize.jpg");
+        private BarcodeInfo _info = new BarcodeInfo { Code = "4810064002096", Type = "EAN_13" };
+        private string _verified = "4810064002096";
 
         [Test]
         public void TestMethod_Spire_WithGoodImage()
@@ -41,9 +41,9 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
             var mock = new Mock<IBarcodeReader>();
 
             //Act
-            mock.Setup(m => m.Decode((Bitmap)_image)).Returns(result);
-            Result resultDecod = mock.Object.Decode((Bitmap)_image);
-            string decoded = mock.Object.Decode((Bitmap)_image).ToString().Trim();
+            mock.Setup(m => m.Decode(_image)).Returns(result);
+            Result resultDecod = mock.Object.Decode(_image);
+            string decoded = mock.Object.Decode(_image).ToString().Trim();
 
             //Assert
             Assert.AreEqual(_verified, decoded);

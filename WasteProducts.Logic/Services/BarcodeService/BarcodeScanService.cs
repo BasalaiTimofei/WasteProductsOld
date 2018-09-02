@@ -11,10 +11,10 @@ namespace WasteProducts.Logic.Services.BarcodeService
 {
     public class BarcodeScanService : IBarcodeScanService
     {
-        public Image Resize(Image img, int width, int height)
+        public Bitmap Resize(Bitmap img, int width, int height)
         {
-            Image result = new Bitmap(width, height);
-            using (Graphics g = Graphics.FromImage((Image)result))
+            Bitmap result = new Bitmap(width, height);
+            using (Graphics g = Graphics.FromImage(result))
             {
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 g.DrawImage(img, 0, 0, width, height);
@@ -23,24 +23,25 @@ namespace WasteProducts.Logic.Services.BarcodeService
             return result;
         }
 
-        public BarcodeInfo ScanByZxing(Image image)
+        public BarcodeInfo ScanByZxing(Bitmap image)
         {
+            string decoded = "";
             BarcodeReader Reader = new BarcodeReader();
-            Result result = Reader.Decode((Bitmap)image);
+            Result result = Reader.Decode(image);
             BarcodeInfo barcode = new BarcodeInfo
             {
                 Code = result.ToString().Trim(),
                 Type = result.BarcodeFormat.ToString(),
             };
             string type = result.BarcodeFormat.ToString();
-            string decoded = result.ToString().Trim();
+            decoded = result.ToString().Trim();
+
             return barcode;
         }
 
-        public string ScanBySpire(Image image)
+        public string ScanBySpire(Bitmap image)
         {
             string decoded = "";
-            image = (Bitmap)image;
             using (Stream stream = new MemoryStream())
             {
                 image.Save(stream, ImageFormat.Bmp);

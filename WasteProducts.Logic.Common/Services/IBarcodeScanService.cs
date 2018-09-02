@@ -12,20 +12,20 @@ namespace WasteProducts.Logic.Common.Services
         /// <param name="width"> width of barcode image result</param>
         /// <param name="height"> height of barcode image result</param>
         /// <returns>Resized image</returns>
-        Image Resize(Image img, int width, int height);
+        Bitmap Resize(Bitmap img, int width, int height);
 
         /// <summary>
         /// get a numerical barcode on the photo
         /// </summary>
         /// <param name="image"> image of barcode photo</param>
         /// <returns>string of a numerical barcode</returns>
-        BarcodeInfo ScanByZxing(Image image);
+        BarcodeInfo ScanByZxing(Bitmap image);
 
         /// <summary>
         /// get a numeric barcode from the photo
         /// </summary>
         /// <param name="image"> image of barcode photo</param>
         /// <returns>string of a numerical barcode</returns>
-        string ScanBySpire(Image image);
+        string ScanBySpire(Bitmap image);
     }
 }
