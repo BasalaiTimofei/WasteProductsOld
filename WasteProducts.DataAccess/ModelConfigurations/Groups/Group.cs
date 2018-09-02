@@ -14,16 +14,16 @@ namespace WasteProducts.DataAccess.ModelConfigurations
             Property(x => x.Information).HasMaxLength(255);
             Property(x => x.Admin).HasColumnName("User_Id");
             Property(x => x.TimeCreate).IsOptional();
-            Property(x => x.TimeDelete).IsOptional();
-            Property(x => x.Bool);
+            Property(x => x.Deleted).IsOptional();
+            Property(x => x.IsDeleted);
 
             HasMany(x => x.GroupBoardDBs)
-                .WithRequired(y=>y.GroupDB)
-                .HasForeignKey(z=>z.GroupDBId);
+                .WithRequired(y => y.GroupDB)
+                .Map(m => m.MapKey("GroupBoardId"));
 
             HasMany(x => x.GroupUserDBs)
                 .WithRequired(y => y.GroupDB)
-                .HasForeignKey(z => z.GroupDBId);
+                .Map(m => m.MapKey("GroupUserId"));
         }
 
     }

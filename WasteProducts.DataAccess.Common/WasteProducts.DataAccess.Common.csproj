@@ -62,6 +62,7 @@
     <Compile Include="Models\Barcods\BarcodeDB.cs" />
     <Compile Include="Models\DonationManagment\DonorDB.cs" />
     <Compile Include="Models\Entity.cs" />
+    <Compile Include="Models\Groups\ProductBoardComment.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Products\CategoryDB.cs" />
     <Compile Include="Models\Products\ProductDB.cs" />
@@ -100,7 +101,6 @@
   <ItemGroup>
     <Compile Include="Models\Groups\GroupBoardDB.cs" />
     <Compile Include="Models\Groups\GroupDB.cs" />
-    <Compile Include="Models\Groups\GroupUserInviteTimeDB.cs" />
     <Compile Include="Models\Groups\GroupUserDB.cs" />
     <Compile Include="Models\Groups\GroupProductDB.cs" />
     <Compile Include="Repositories\Groups\IGroupRepository.cs" />

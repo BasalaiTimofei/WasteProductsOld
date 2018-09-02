@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Users;
 
 namespace WasteProducts.DataAccess.Common.Models
 {
@@ -11,41 +12,52 @@ namespace WasteProducts.DataAccess.Common.Models
         /// <summary>
         /// Id - primary key
         /// </summary>
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
+
         /// <summary>
         /// Name - name board
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
+
         /// <summary>
         /// Information - additional information
         /// </summary>
-        public string Information { get; set; }
+        public virtual string Information { get; set; }
+
         /// <summary>
-        /// GroupDBId - secondary key
+        /// GroupDB of this board
         /// </summary>
-        public int GroupDBId { get; set; }
         public virtual GroupDB GroupDB { get; set; }
+
         /// <summary>
         /// UserId - user which created board
         /// </summary>
-        public int UserId { get; set; }
+        public virtual UserDB Creator { get; set; }
+
         /// <summary>
         /// GroupProductDBs - products which add at board
         /// </summary>
         public virtual IList<GroupProductDB> GroupProductDBs { get; set; }
+
         /// <summary>
-        /// TimeCreate - datatime when board created
+        /// true - group created
+        /// false - group deleted
         /// </summary>
-        public DateTime? TimeCreate { get; set; }
+        public virtual bool IsDeleted { get; set; }
+
         /// <summary>
-        /// TimeDelete - datatime when board deleted
+        /// TimeCreate - datatime when group created
         /// </summary>
-        public DateTime? TimeDelete { get; set; }
+        public virtual DateTime Created { get; set; }
+
         /// <summary>
-        /// Bool - board deleted/greated
-        ///     true - board greated
-        ///     false - board deleted
+        /// Time of last modification.
         /// </summary>
-        public bool Bool { get; set; }
+        public virtual DateTime? Modified { get; set; }
+
+        /// <summary>
+        /// TimeDelete - datatime when group deleted
+        /// </summary>
+        public virtual DateTime? Deleted { get; set; }
     }
 }

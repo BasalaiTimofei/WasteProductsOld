@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Products;
 
 namespace WasteProducts.DataAccess.Common.Models
 {
@@ -11,16 +12,18 @@ namespace WasteProducts.DataAccess.Common.Models
         /// <summary>
         /// Id - primary key
         /// </summary>
-        public int Id { get; set; }
+        public virtual ProductDB Product { get; set; }
+
         /// <summary>
         /// GroupBoardDBId - secondary key
         /// </summary>
-        public int GroupBoardDBId { get; set; }
         public virtual GroupBoardDB GroupBoardDB { get; set; }
+
         /// <summary>
-        /// ProductId - product which add at board
+        /// 
         /// </summary>
-        public int ProductId { get; set; }
+        public virtual ICollection<ProductBoardComment> ProductDiscussion { get; set; }
+
         /// <summary>
         /// Information - additional information
         /// </summary>
