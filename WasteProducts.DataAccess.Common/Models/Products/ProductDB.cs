@@ -75,6 +75,11 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         /// </summary>
         public bool Marked { get; set; }
 
+        /// <summary>
+        /// Determines whether the specified object is equal to the current object
+        /// </summary>
+        /// <param name="obj">The object to compare with the current object</param>
+        /// <returns>Returns true if the specified object is equal to the current object; otherwise, false</returns>
         public override bool Equals(object obj)
         {
             return obj is ProductDB other &&
@@ -89,6 +94,10 @@ namespace WasteProducts.DataAccess.Common.Models.Products
                    RateCount == other.RateCount;
         }
 
+        /// <summary>
+        /// The hash code for this ProductDB
+        /// </summary>
+        /// <returns>A hash code for the current object</returns>
         public override int GetHashCode()
         {
             var hashCode = Id.GetHashCode();
