@@ -39,6 +39,10 @@ namespace WasteProducts.DataAccess.Contexts
                 .Map(t => t.MapLeftKey("UserId")
                            .MapRightKey("ProductId")
                            .ToTable("UserProducts"));
+
+            modelBuilder.Entity<ProductDB>()
+                .HasOptional(p => p.Barcode)
+                .WithRequired(b => b.Product);
         }
 
         /// <summary>

@@ -58,6 +58,6 @@ namespace WasteProducts.DataAccess.Common.Models.Barcods
         /// <summary>
         /// Specifies the concreat product
         /// </summary>
-        //public virtual ProductDB Product { get; set; }
+        public virtual ProductDB Product { get; set; }
     }
 }
