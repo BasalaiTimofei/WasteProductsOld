@@ -62,7 +62,7 @@
     <Compile Include="Models\Barcods\BarcodeDB.cs" />
     <Compile Include="Models\DonationManagment\DonorDB.cs" />
     <Compile Include="Models\Entity.cs" />
-    <Compile Include="Models\Groups\ProductBoardComment.cs" />
+    <Compile Include="Models\Groups\GroupCommentDB.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Products\CategoryDB.cs" />
     <Compile Include="Models\Products\ProductDB.cs" />

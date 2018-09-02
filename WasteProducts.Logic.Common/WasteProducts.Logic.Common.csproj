@@ -53,6 +53,7 @@
     <Compile Include="Models\Barcods\Barcode.cs" />
     <Compile Include="Models\Barcods\BarcodeInfo.cs" />
     <Compile Include="Models\DonationManagment\Donor.cs" />
+    <Compile Include="Models\Groups\GroupComment.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Search\BoostedSearchQuery.cs" />
     <Compile Include="Models\Products\Category.cs" />
@@ -88,7 +89,6 @@
     <Compile Include="Models\Groups\GroupBoard.cs" />
     <Compile Include="Models\Groups\Group.cs" />
     <Compile Include="Models\Groups\GroupProduct.cs" />
-    <Compile Include="Models\Groups\GroupUser.cs" />
     <Compile Include="Services\Groups\IGroupDataService.cs" />
     <Compile Include="Services\Groups\IGroupUserManagerService.cs" />
     <Compile Include="Services\Groups\IGroupProductService.cs" />

@@ -1,24 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Users;
+using WasteProducts.Logic.Common.Models.Users;
 
-namespace WasteProducts.Logic.Common.Models
+namespace WasteProducts.Logic.Common.Models.Groups
 {
     public class GroupUser
     {
         /// <summary>
-        /// Id - primary key
+        /// Primary key
         /// </summary>
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
+
         /// <summary>
-        /// Id - secondary key
+        /// This group
         /// </summary>
-        public int GroupId { get; set; }
+        public virtual Group Group { get; set; }
+
         /// <summary>
-        /// UserId - user which entered in group
+        /// User which entered in group
         /// </summary>
-        public int UserId { get; set; }
+        public virtual User User { get; set; }
+
+        /// <summary>
+        /// true - can created boards;
+        /// false - can't created boards
+        /// </summary>
+        public virtual bool RigtToCreateBoards { get; set; }
+
+        /// <summary>
+        /// User action when administrator inviting
+        ///     0 - invite send;
+        ///     1 - invite user confirmed;
+        ///     2 - invite user rejected;
+        /// </summary>
+        public virtual int? IsInvited { get; set; }
     }
 }

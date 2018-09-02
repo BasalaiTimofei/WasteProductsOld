@@ -1,63 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Users;
 
-namespace WasteProducts.DataAccess.Common.Models
+namespace WasteProducts.DataAccess.Common.Models.Groups
 {
     public class GroupBoardDB
     {
         /// <summary>
-        /// Id - primary key
+        /// Primary key
         /// </summary>
         public virtual int Id { get; set; }
 
         /// <summary>
-        /// Name - name board
+        /// Board name
         /// </summary>
         public virtual string Name { get; set; }
 
         /// <summary>
-        /// Information - additional information
+        /// Additional information
         /// </summary>
         public virtual string Information { get; set; }
 
         /// <summary>
-        /// GroupDB of this board
+        /// This board
         /// </summary>
-        public virtual GroupDB GroupDB { get; set; }
+        public virtual GroupDB Group { get; set; }
 
         /// <summary>
-        /// UserId - user which created board
+        /// User which created board
         /// </summary>
         public virtual UserDB Creator { get; set; }
 
         /// <summary>
-        /// GroupProductDBs - products which add at board
+        /// Products which add at board
         /// </summary>
-        public virtual IList<GroupProductDB> GroupProductDBs { get; set; }
+        public virtual IList<GroupProductDB> GroupProducts { get; set; }
 
         /// <summary>
-        /// true - group created
+        /// Messages sent by users
+        /// </summary>
+        public virtual IList<GroupCommentDB> GroupComments { get; set; }
+
+        /// <summary>
+        /// true - group created;
         /// false - group deleted
         /// </summary>
         public virtual bool IsDeleted { get; set; }
 
         /// <summary>
-        /// TimeCreate - datatime when group created
+        /// Group creation time
         /// </summary>
         public virtual DateTime Created { get; set; }
 
         /// <summary>
-        /// Time of last modification.
-        /// </summary>
-        public virtual DateTime? Modified { get; set; }
-
-        /// <summary>
-        /// TimeDelete - datatime when group deleted
+        /// Group delete time
         /// </summary>
         public virtual DateTime? Deleted { get; set; }
+
+        /// <summary>
+        /// Model modification time
+        /// </summary>
+        public virtual DateTime? Modified { get; set; }
     }
 }

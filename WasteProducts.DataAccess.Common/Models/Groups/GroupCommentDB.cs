@@ -1,19 +1,14 @@
 ﻿using System;
-using WasteProducts.DataAccess.Common.Models.Products;
+using WasteProducts.DataAccess.Common.Models.Users;
 
 namespace WasteProducts.DataAccess.Common.Models.Groups
 {
-    public class GroupProductDB
+    public class GroupCommentDB
     {
         /// <summary>
         /// Primary key
         /// </summary>
-        public virtual int Id { get; set; }
-
-        /// <summary>
-        /// This product
-        /// </summary>
-        public virtual ProductDB Product { get; set; }
+        public virtual string Id { get; set; }
 
         /// <summary>
         /// This board
@@ -21,9 +16,14 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         public virtual GroupBoardDB GroupBoard { get; set; }
 
         /// <summary>
-        /// Additional information
+        /// User who send message
         /// </summary>
-        public string Information { get; set; }
+        public virtual UserDB Commentator { get; set; }
+
+        /// <summary>
+        /// This comment
+        /// </summary>
+        public virtual string Comment { get; set; }
 
         /// <summary>
         /// Model modification time

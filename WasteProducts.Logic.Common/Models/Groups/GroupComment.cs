@@ -1,8 +1,8 @@
-﻿using WasteProducts.Logic.Common.Models.Products;
+﻿using WasteProducts.Logic.Common.Models.Users;
 
 namespace WasteProducts.Logic.Common.Models.Groups
 {
-    public class GroupProduct
+    public class GroupComment
     {
         /// <summary>
         /// Primary key
@@ -10,18 +10,18 @@ namespace WasteProducts.Logic.Common.Models.Groups
         public virtual int Id { get; set; }
 
         /// <summary>
-        /// This product
-        /// </summary>
-        public virtual Product Product { get; set; }
-
-        /// <summary>
         /// This board
         /// </summary>
         public virtual GroupBoard GroupBoard { get; set; }
 
         /// <summary>
-        /// Additional information
+        /// User who send message
         /// </summary>
-        public string Information { get; set; }
+        public virtual User Commentator { get; set; }
+
+        /// <summary>
+        /// This comment
+        /// </summary>
+        public virtual string Comment { get; set; }
     }
 }

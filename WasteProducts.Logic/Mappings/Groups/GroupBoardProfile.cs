@@ -1,20 +1,18 @@
 ﻿using AutoMapper;
-using System;
-using WasteProducts.DataAccess.Common.Models;
-using WasteProducts.Logic.Common.Models;
+using WasteProducts.DataAccess.Common.Models.Groups;
+using WasteProducts.Logic.Common.Models.Groups;
 
-namespace WasteProducts.Logic.Mappings
+namespace WasteProducts.Logic.Mappings.Groups
 {
     public class GroupBoardProfile : Profile
     {
         public GroupBoardProfile()
         {
             CreateMap<GroupBoard, GroupBoardDB>()
-                .ForMember(x => x.TimeCreate, y => y.Ignore())
-                .ForMember(x => x.TimeDelete, y => y.Ignore())
-                .ForMember(x => x.Bool, y => y.Ignore())
-                .ForMember(x=>x.GroupDBId, y=>y.MapFrom(z=>z.GroupId))
-                .ForMember(x=>x.GroupProductDBs, y=>y.MapFrom(z=>z.GroupProducts))
+                .ForMember(x => x.Created, y => y.Ignore())
+                .ForMember(x => x.Deleted, y => y.Ignore())
+                .ForMember(x => x.Modified, y => y.Ignore())
+                .ForMember(x => x.IsDeleted, y => y.Ignore())
                 .ReverseMap();
         }
     }

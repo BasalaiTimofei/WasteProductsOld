@@ -1,36 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Users;
 
-namespace WasteProducts.DataAccess.Common.Models
+namespace WasteProducts.DataAccess.Common.Models.Groups
 {
     public class GroupUserDB
     {
         /// <summary>
-        /// Id - secondary key
+        /// Primary key
         /// </summary>
-        public virtual GroupDB GroupDB { get; set; }
+        public virtual int Id { get; set; }
 
         /// <summary>
-        /// UserId - user which entered in group
+        /// This group
+        /// </summary>
+        public virtual GroupDB Group { get; set; }
+
+        /// <summary>
+        /// User which entered in group
         /// </summary>
         public virtual UserDB User { get; set; }
 
-        //TODO заполнить
         /// <summary>
-        /// 
+        /// true - can created boards;
+        /// false - can't created boards
         /// </summary>
         public virtual bool RigtToCreateBoards { get; set; }
 
         /// <summary>
-        /// Invite - user action wShen administrator inviting
+        /// User action when administrator inviting
         ///     0 - invite send;
         ///     1 - invite user confirmed;
         ///     2 - invite user rejected;
         /// </summary>
-        public virtual int? Bool { get; set; }
+        public virtual int? IsInvited { get; set; }
+
+        /// <summary>
+        /// Model modification time
+        /// </summary>
+        public virtual DateTime? Modified { get; set; }
     }
 }
