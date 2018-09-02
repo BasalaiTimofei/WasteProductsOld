@@ -1,4 +1,5 @@
 ﻿using System;
+using WasteProducts.DataAccess.Common.Models.Products;
 
 namespace WasteProducts.DataAccess.Common.Models.Barcods
 {
@@ -53,5 +54,10 @@ namespace WasteProducts.DataAccess.Common.Models.Barcods
         /// Date of record modified in DB.
         /// </summary>
         public DateTime? Modified { get; set; }
+
+        /// <summary>
+        /// Specifies the concreat product
+        /// </summary>
+        //public virtual ProductDB Product { get; set; }
     }
 }

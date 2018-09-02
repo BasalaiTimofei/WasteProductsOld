@@ -2,7 +2,7 @@
 
 namespace WasteProducts.Logic.Common.Services
 {
-    interface IDonationLogger
+    public interface IDonationService
     {
         /// <summary>
         /// Log new donation.

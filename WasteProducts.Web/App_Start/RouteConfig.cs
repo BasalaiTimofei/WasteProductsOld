@@ -9,6 +9,7 @@ namespace WasteProducts.Web
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.IgnoreRoute("Content/{*pathInfo}");
+            routes.IgnoreRoute("Scripts/{*pathInfo}");
 
             routes.MapRoute(
                 "Default",

@@ -6,7 +6,6 @@ using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.DataAccess.Contexts;
 
-
 namespace WasteProducts.DataAccess.Repositories
 {   /// <summary>
     ///This class is a context class. A binder for the 'ProductDB' class with a data access.
@@ -42,23 +41,22 @@ namespace WasteProducts.DataAccess.Repositories
         /// <param name="product">The specific product for deleting.</param>
         public void Delete(ProductDB product)
         {
-            if (product != null)
-                if (_context.Products.Contains(product))
-                {
-                    _context.Products.Remove(product);
-                    _context.SaveChanges();
-                }
+            if (product == null || !_context.Products.Contains(product)) return;
+            product.Marked = true;
+            Update(product);
         }
 
         /// <summary>
         /// The method that delets the product by ID.
         /// </summary>
         /// <param name="id">Product's ID that needs to be deleted.</param>
-        public void DeleteById(int id)
+        public void DeleteById(string id)
         {
             var product = _context.Products.Find(id);
-            if (product != null) _context.Products.Remove(product);
-            _context.SaveChanges();
+
+            if (id == null || product == null) return;
+            product.Marked = true;
+            Update(product);
         }
 
         /// <summary>
@@ -94,7 +92,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// </summary>
         /// <param name="id">The specific id of product that was sorted.</param>
         /// <returns>Product by ID.</returns>
-        public ProductDB GetById(int id) => _context.Products.Find(id);
+        public ProductDB GetById(string id) => _context.Products.Find(id);
 
         /// <summary>
         /// This method allows you to modify some or all of the product values.
