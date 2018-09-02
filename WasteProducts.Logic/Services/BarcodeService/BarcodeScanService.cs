@@ -1,12 +1,15 @@
 ﻿using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.IO;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Services;
 using ZXing;
+using Spire.Barcode;
 
 namespace WasteProducts.Logic.Services.BarcodeService
 {
-    public class BarcodeService : IBarcodeService
+    public class BarcodeScanService : IBarcodeScanService
     {
         public Image Resize(Image img, int width, int height)
         {
@@ -32,6 +35,18 @@ namespace WasteProducts.Logic.Services.BarcodeService
             string type = result.BarcodeFormat.ToString();
             string decoded = result.ToString().Trim();
             return barcode;
+        }
+
+        public string ScanBySpire(Image image)
+        {
+            string decoded = "";
+            image = (Bitmap)image;
+            using (Stream stream = new MemoryStream())
+            {
+                image.Save(stream, ImageFormat.Bmp);
+                decoded = BarcodeScanner.ScanOne(stream, true);
+            }
+            return decoded;
         }
     }
 }
