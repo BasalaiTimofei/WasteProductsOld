@@ -11,14 +11,14 @@ namespace WasteProducts.DataAccess.Common.Models.Products
     public class ProductDB
     {
         /// <summary>
-        /// Unique name of concrete Product in database.
-        /// </summary>
-        public virtual string Name { get; set; }
-
-        /// <summary>
         /// Unique identifier of concrete Product in database.
         /// </summary>
-        public virtual int Id { get; set; }
+        public virtual string Id { get; set; }
+
+        /// <summary>
+        /// Unique name of concrete Product in database.
+        /// </summary>
+        public string Name { get; set; }
 
         /// <summary>
         /// Specifies the timestamp of creation of concrete Product in database.
@@ -61,8 +61,32 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         public virtual ICollection<UserDB> Users { get; set; }
 
         /// <summary>
-        /// Defines the product description
+        /// Defines the Product description
         /// </summary>
         public virtual string Description { get; set; }
+
+        /// <summary>
+        /// Defines whether the Product is in the "hidden" state
+        /// </summary>
+        public virtual bool IsHidden { get; set; }
+
+        /// <summary>
+        /// Defines whether the Product is marked for deletion
+        /// </summary>
+        public virtual bool Marked { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ProductDB other &&
+                   this.Name == other.Name &&
+                   this.AvgRating == other.AvgRating &&
+                   this.Id == other.Id &&
+                   this.Created == other.Created &&
+                   this.Modified == other.Modified &&
+                   this.Category == other.Category &&
+                   this.Barcode == other.Barcode &&
+                   this.Price == other.Price &&
+                   this.RateCount == other.RateCount;
+        }
     }
 }

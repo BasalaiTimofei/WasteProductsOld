@@ -117,6 +117,11 @@
     <Compile Include="ModelConfigurations\DonationManagment\DonationEntityConfiguration.cs" />
     <Compile Include="ModelConfigurations\DonationManagment\DonorEntityConfiguration.cs" />
     <Compile Include="ModelConfigurations\EntityConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Groups\GroupUserInviteTime.cs" />
+    <Compile Include="ModelConfigurations\Groups\GroupUser.cs" />
+    <Compile Include="ModelConfigurations\Groups\GroupProduct.cs" />
+    <Compile Include="ModelConfigurations\Groups\GroupBoard.cs" />
+    <Compile Include="ModelConfigurations\Groups\Group.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Contexts\Security\Configurations\RoleConfiguration.cs" />
     <Compile Include="Contexts\Security\Configurations\UserClaimConfiguration.cs" />

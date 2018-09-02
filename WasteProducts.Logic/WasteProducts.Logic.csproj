@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InjectorModule.cs" />
+    <Compile Include="Mappings\CategoryProfile.cs" />
     <Compile Include="Mappings\DonationManagment\AddressProfile.cs" />
     <Compile Include="Mappings\DonationManagment\DonationProfile.cs" />
     <Compile Include="Mappings\DonationManagment\DonorProfile.cs" />
@@ -114,14 +115,19 @@
     <Compile Include="Mappings\UserMappings\UserProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserRoleProfile.cs" />
     <Compile Include="Mappings\ProductProfile.cs" />
+    <Compile Include="Mappings\Groups\GroupBoardProfile.cs" />
+    <Compile Include="Mappings\Groups\GroupProductProfile.cs" />
+    <Compile Include="Mappings\Groups\GroupProfile.cs" />
+    <Compile Include="Mappings\Groups\GroupUserProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AppRoleManagerService.cs" />
     <Compile Include="Services\AppUserManagerService.cs" />
     <Compile Include="Services\BarcodeService\BarcodeService.cs" />
+    <Compile Include="Services\CategoryService.cs" />
     <Compile Include="Services\Diagnostic\DbSeedService.cs" />
     <Compile Include="Services\Diagnostic\DbManagementService.cs" />
     <Compile Include="Services\LuceneSearchService.cs" />
-    <Compile Include="Services\Groups\GroupService.cs" />
+    <Compile Include="Services\ProductService.cs" />
     <Compile Include="Services\MailService\MailFactory.cs" />
     <Compile Include="Services\MailService\MailService.cs" />
     <Compile Include="Services\TestService.cs" />
@@ -129,6 +135,7 @@
     <Compile Include="Services\UserService\UserService.cs" />
     <Compile Include="Validators\TestValidator.cs" />
     <Compile Include="Validators\UserService\UserValidator.cs" />
+    <Compile Include="Validators\Groups\GroupValidation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -148,6 +155,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\Groups\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,4 +1,6 @@
-﻿namespace WasteProducts.Logic.Common.Models.Barcods
+﻿using WasteProducts.Logic.Common.Models.Products;
+
+namespace WasteProducts.Logic.Common.Models.Barcods
 {
     public class Barcode
     {
@@ -23,7 +25,7 @@
         public string ProductName { get; set; }
 
         /// <summary>
-        /// Product brend.
+        /// Product brand.
         /// </summary>
         public string Brend { get; set; }
 
@@ -41,5 +43,10 @@
         /// User Id of the sending photo.
         /// </summary>
         public int UserId { get; set; }
+
+        /// <summary>
+        /// Specifies the concreat product
+        /// </summary>
+        public Product Product { get; set; }
     }
 }

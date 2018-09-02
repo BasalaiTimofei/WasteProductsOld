@@ -3,7 +3,7 @@ using WasteProducts.Logic.Common.Models.Barcods;
 
 namespace WasteProducts.Logic.Common.Services
 {
-    public interface IBarcodeService
+    public interface IBarcodeScanService
     {
         /// <summary>
         /// Resize a image of barcode
@@ -22,10 +22,10 @@ namespace WasteProducts.Logic.Common.Services
         BarcodeInfo ScanByZxing(Image image);
 
         /// <summary>
-        /// get product information
+        /// get a numeric barcode from the photo
         /// </summary>
-        /// <param name="barcodeInfo">a model of BarcodeInfo</param>
-        /// <returns>product information in the format Barcode</returns>
-        //Barcode GetBarcode(BarcodeInfo barcodeInfo);
+        /// <param name="image"> image of barcode photo</param>
+        /// <returns>string of a numerical barcode</returns>
+        string ScanBySpire(Image image);
     }
 }
