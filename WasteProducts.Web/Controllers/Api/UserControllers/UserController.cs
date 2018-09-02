@@ -14,10 +14,19 @@ namespace WasteProducts.Web.Controllers.Api
     public class UserController : BaseApiController
     {
         private readonly IUserService _userService;
+        private readonly ILogger _logger;
 
-        public UserController(ILogger logger) : base(logger)
+        /// <summary>
+        /// d
+        /// </summary>
+        /// <param name="userService">ss</param>
+        public UserController(IUserService userService, ILogger logger) : base (logger)
         {
+            _userService = userService;
+            _logger = logger;
         }
+
+
 
         //GET api/user
         //todo async
@@ -30,10 +39,10 @@ namespace WasteProducts.Web.Controllers.Api
         [Route("{id:string}")]
         public async Task<User> Get(string id)
         {
+
             //todo validation
             var user = await _userService.GetUserInfo(id);
-            _users.Add(user);
-            return _users;
+            return user;
         }
 
         //todo get (login) password - login ?login=user1?
