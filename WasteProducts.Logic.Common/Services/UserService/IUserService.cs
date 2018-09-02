@@ -46,6 +46,18 @@ namespace WasteProducts.Logic.Common.Services.UserService
         Task ResetPasswordAsync(string email);
 
         /// <summary>
+        /// Gets info about all Users in the database.
+        /// </summary>
+        /// <returns>List of all Users in dataase.</returns>
+        List<User> GetAllUsersInfo();
+
+        /// <summary>
+        /// Requests a User by its id. User is returned without PasswordHash.
+        /// </summary>
+        /// <param name="id">Id of requested User.</param>
+        /// <returns>Instance of User that has requested Id. Returns WITHOUT PasswordHash.</returns>
+        Task<User> GetUserInfo(string id);
+        /// <summary>
         /// Updates the specific user in the Database. You can't update email, Id, UserName and Password by this method.
         /// </summary>
         /// <param name="user">The specific user to update.</param>
@@ -158,7 +170,7 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// </summary>
         /// <param name="user">Deleting user.</param>
         /// <returns></returns>
-        Task DeleteUserAsunc(User user);
+        Task DeleteUserAsync(User user);
 
         // TODO USER MANAGEMENT PENDING FUNCTIONAL TO ADD:
         // sharing my products with my friends after model "Product" is created

@@ -432,9 +432,9 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             user1.PasswordHash = "NotWalidPassword";
             user1.UserName = "SomeNewUnsavedUserName";
 
-            UserService.DeleteUserAsunc(user1).GetAwaiter().GetResult();
-            UserService.DeleteUserAsunc(user2).GetAwaiter().GetResult();
-            UserService.DeleteUserAsunc(user3).GetAwaiter().GetResult();
+            UserService.DeleteUserAsync(user1).GetAwaiter().GetResult();
+            UserService.DeleteUserAsync(user2).GetAwaiter().GetResult();
+            UserService.DeleteUserAsync(user3).GetAwaiter().GetResult();
         }
     }
 }
