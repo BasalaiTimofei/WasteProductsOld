@@ -8,6 +8,11 @@ namespace WasteProducts.Logic.Common.Models.Products
     public class Product
     {
         /// <summary>
+        /// Unique identifier of concrete Product.
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
         /// Unique name of concrete Product.
         /// </summary>
         public string Name { get; set; }
@@ -41,5 +46,10 @@ namespace WasteProducts.Logic.Common.Models.Products
         /// Defines the product description
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Defines whether the product is in the "hidden" state
+        /// </summary>
+        public bool IsHidden { get; set; }
     }
 }

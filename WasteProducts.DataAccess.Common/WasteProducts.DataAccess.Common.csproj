@@ -62,7 +62,6 @@
     <Compile Include="Models\Barcods\BarcodeDB.cs" />
     <Compile Include="Models\DonationManagment\DonorDB.cs" />
     <Compile Include="Models\Entity.cs" />
-    <Compile Include="Models\Groups\GroupCommentDB.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Products\CategoryDB.cs" />
     <Compile Include="Models\Products\ProductDB.cs" />
@@ -99,6 +98,7 @@
     <Compile Include="UoW\Security\IUnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Groups\GroupCommentDB.cs" />
     <Compile Include="Models\Groups\GroupBoardDB.cs" />
     <Compile Include="Models\Groups\GroupDB.cs" />
     <Compile Include="Models\Groups\GroupUserDB.cs" />

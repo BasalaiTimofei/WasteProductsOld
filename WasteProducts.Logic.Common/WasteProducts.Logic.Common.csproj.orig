@@ -79,23 +79,26 @@
     <Compile Include="Models\Users\UserLogin.cs" />
     <Compile Include="Models\Users\UserRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+<<<<<<< HEAD
+    <Compile Include="Services\ICategoryService.cs" />
+=======
     <Compile Include="Services\Diagnostic\IDbSeedService.cs" />
     <Compile Include="Services\Diagnostic\IDbManagementService.cs" />
-    <Compile Include="Services\ICategoryService.cs" />
+>>>>>>> develop
     <Compile Include="Services\IDonationLogger.cs" />
     <Compile Include="Services\IProductService.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\IBarcodeService.cs" />
+    <Compile Include="Models\Groups\GroupUserInviteTime.cs" />
     <Compile Include="Models\Groups\GroupBoard.cs" />
     <Compile Include="Models\Groups\Group.cs" />
     <Compile Include="Models\Groups\GroupProduct.cs" />
-    <Compile Include="Models\Groups\GroupComment.cs" />
     <Compile Include="Models\Groups\GroupUser.cs" />
-    <Compile Include="Services\Groups\IGroupDataService.cs" />
-    <Compile Include="Services\Groups\IGroupUserManagerService.cs" />
-    <Compile Include="Services\Groups\IGroupProductService.cs" />
-    <Compile Include="Services\Groups\IGroupBoardService.cs" />
-    <Compile Include="Services\Groups\IGroupService.cs" />
+    <Compile Include="Services\Groups\IGropDataService.cs" />
+    <Compile Include="Services\Groups\IGropUserManagerService.cs" />
+    <Compile Include="Services\Groups\IGropProductService.cs" />
+    <Compile Include="Services\Groups\IGropBoardService.cs" />
+    <Compile Include="Services\Groups\IGropService.cs" />
     <Compile Include="Services\MailService\IMailFactory.cs" />
     <Compile Include="Services\MailService\IMailService.cs" />
     <Compile Include="Services\UserService\IUserRoleService.cs" />

@@ -3,9 +3,9 @@ using WasteProducts.DataAccess.Common.Models.Groups;
 
 namespace WasteProducts.DataAccess.ModelConfigurations
 {
-    public class GroupProductConfig : EntityTypeConfiguration<GroupProductDB>
+    public class GroupProductConfiguration : EntityTypeConfiguration<GroupProductDB>
     {
-        public GroupProductConfig()
+        public GroupProductConfiguration()
         {
             ToTable("GroupProduct");
 

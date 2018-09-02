@@ -7,7 +7,7 @@ namespace WasteProducts.Logic.Common.Models.Groups
         /// <summary>
         /// Primary key
         /// </summary>
-        public virtual int Id { get; set; }
+        public virtual string Id { get; set; }
 
         /// <summary>
         /// This board

@@ -3,11 +3,11 @@ using WasteProducts.DataAccess.Common.Models.Groups;
 
 namespace WasteProducts.DataAccess.ModelConfigurations
 {
-    public class GroupBoardConfig : EntityTypeConfiguration<GroupBoardDB>
+    public class GroupConfiguration : EntityTypeConfiguration<GroupDB>
     {
-        public GroupBoardConfig()
+        public GroupConfiguration()
         {
-            ToTable("GroupBoard");
+            ToTable("Group");
 
             HasKey<int>(x => x.Id);
             Property(x => x.Name).HasMaxLength(50);
@@ -17,13 +17,13 @@ namespace WasteProducts.DataAccess.ModelConfigurations
             Property(x => x.Modified).IsOptional();
             Property(x => x.IsDeleted).IsOptional();
 
-            HasMany(x => x.GroupProducts)
-                .WithRequired(y => y.GroupBoard)
-                .Map(m => m.MapKey("GroupBoard_Id"));
+            HasMany(x => x.GroupBoards)
+                .WithRequired(y => y.Group)
+                .Map(m => m.MapKey("GroupBoardId"));
 
-            HasMany(x => x.GroupComments)
-                .WithRequired(y => y.GroupBoard)
-                .Map(m => m.MapKey("GroupBoard_Id"));
+            HasMany(x => x.GroupUsers)
+                .WithRequired(y => y.Group)
+                .Map(m => m.MapKey("GroupUserId"));
         }
 
     }

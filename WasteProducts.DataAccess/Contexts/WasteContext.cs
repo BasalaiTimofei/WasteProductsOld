@@ -42,11 +42,15 @@ namespace WasteProducts.DataAccess.Contexts
                            .MapRightKey("ProductId")
                            .ToTable("UserProducts"));
 
-            modelBuilder.Configurations.Add(new GroupBoardConfig());
-            modelBuilder.Configurations.Add(new GroupConfig());
-            modelBuilder.Configurations.Add(new GroupUserConfig());
-            modelBuilder.Configurations.Add(new GroupCommentConfig());
-            modelBuilder.Configurations.Add(new GroupProductConfig());
+            modelBuilder.Entity<ProductDB>()
+                .HasOptional(p => p.Barcode)
+                .WithRequired(b => b.Product);
+
+            modelBuilder.Configurations.Add(new GroupBoardConfiguration());
+            modelBuilder.Configurations.Add(new GroupConfiguration());
+            modelBuilder.Configurations.Add(new GroupUserConfiguration());
+            modelBuilder.Configurations.Add(new GroupCommentConfiguration());
+            modelBuilder.Configurations.Add(new GroupProductConfiguration());
         }
 
         /// <summary>
@@ -59,6 +63,7 @@ namespace WasteProducts.DataAccess.Contexts
         ///  create, read, update, delete and to get category list operations in 'CategoryRepository' class.
         /// </summary>
         public IDbSet<CategoryDB> Categories { get; set; }
+
         public IDbSet<GroupBoardDB> GroupBordDBs { get; set; }
         public IDbSet<GroupDB> GroupDBs { get; set; }
         public IDbSet<GroupUserDB> GroupUserDBs { get; set; }

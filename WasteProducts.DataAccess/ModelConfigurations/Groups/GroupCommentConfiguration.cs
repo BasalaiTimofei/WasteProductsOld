@@ -3,9 +3,9 @@ using WasteProducts.DataAccess.Common.Models.Groups;
 
 namespace WasteProducts.DataAccess.ModelConfigurations
 {
-    public class GroupCommentConfig : EntityTypeConfiguration<GroupCommentDB>
+    public class GroupCommentConfiguration : EntityTypeConfiguration<GroupCommentDB>
     {
-        public GroupCommentConfig()
+        public GroupCommentConfiguration()
         {
             ToTable("GroupComment");
 

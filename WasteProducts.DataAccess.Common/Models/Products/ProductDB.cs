@@ -11,24 +11,24 @@ namespace WasteProducts.DataAccess.Common.Models.Products
     public class ProductDB
     {
         /// <summary>
-        /// Unique name of concrete Product in database.
-        /// </summary>
-        public virtual string Name { get; set; }
-
-        /// <summary>
         /// Unique identifier of concrete Product in database.
         /// </summary>
-        public virtual int Id { get; set; }
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Unique name of concrete Product in database.
+        /// </summary>
+        public string Name { get; set; }
 
         /// <summary>
         /// Specifies the timestamp of creation of concrete Product in database.
         /// </summary>
-        public virtual DateTime Created { get; set; }
+        public DateTime Created { get; set; }
 
         /// <summary>
         /// Specifies the timestamp of modifying of any property of the Product in database.
         /// </summary>
-        public virtual DateTime? Modified { get; set; }
+        public DateTime? Modified { get; set; }
 
         /// <summary>
         /// Specifies the Product category.
@@ -43,17 +43,17 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         /// <summary>
         /// Defines the average Product rating based on user ratings.
         /// </summary>
-        public virtual double? AvgRating { get; set; }
+        public double? AvgRating { get; set; }
 
         /// <summary>
         /// Defines the price of the Product.
         /// </summary>
-        public virtual decimal Price { get; set; }
+        public decimal Price { get; set; }
 
         /// <summary>
         /// Defines the number of users who have rated the Product. Is used to determine the property "AvgRating".
         /// </summary>
-        public virtual int RateCount { get; set; }
+        public int RateCount { get; set; }
 
         /// <summary>
         /// Users having this product in their lists.
@@ -61,8 +61,32 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         public virtual ICollection<UserDB> Users { get; set; }
 
         /// <summary>
-        /// Defines the product description
+        /// Defines the Product description
         /// </summary>
-        public virtual string Description { get; set; }
+        public string Description { get; set; }
+
+        /// <summary>
+        /// Defines whether the Product is in the "hidden" state
+        /// </summary>
+        public bool IsHidden { get; set; }
+
+        /// <summary>
+        /// Defines whether the Product is marked for deletion
+        /// </summary>
+        public bool Marked { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ProductDB other &&
+                   this.Name == other.Name &&
+                   this.AvgRating == other.AvgRating &&
+                   this.Id == other.Id &&
+                   this.Created == other.Created &&
+                   this.Modified == other.Modified &&
+                   this.Category == other.Category &&
+                   this.Barcode == other.Barcode &&
+                   this.Price == other.Price &&
+                   this.RateCount == other.RateCount;
+        }
     }
 }
