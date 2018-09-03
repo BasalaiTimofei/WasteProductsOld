@@ -122,14 +122,14 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             await _db.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(UserDB user)
+        public async Task DeleteAsync(string userId)
         {
             await Task.Run(async () =>
             {
-                    _db.Users.Attach(user);
-                    var entry = _db.Entry(user);
-                    entry.State = EntityState.Deleted;
-                    await _db.SaveChangesAsync();
+                var user = _db.Users.FirstOrDefault(u => u.Id == userId);
+                var entry = _db.Entry(user);
+                entry.State = EntityState.Deleted;
+                await _db.SaveChangesAsync();
             });
         }
 

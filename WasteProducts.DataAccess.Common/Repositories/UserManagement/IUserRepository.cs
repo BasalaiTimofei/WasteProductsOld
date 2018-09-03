@@ -61,8 +61,8 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <summary>
         /// Deletes the record of the specific user.
         /// </summary>
-        /// <param name="user">Specific user to delete.</param>
-        Task DeleteAsync(UserDB user);
+        /// <param name="userId">ID of the specific user to delete.</param>
+        Task DeleteAsync(string userId);
 
         /// <summary>
         /// Remove a claim from a user.
