@@ -1,50 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Users;
 
-namespace WasteProducts.DataAccess.Common.Models
+namespace WasteProducts.DataAccess.Common.Models.Groups
 {
     public class GroupDB
     {
         /// <summary>
-        /// Id - primary key
+        /// Primary key
         /// </summary>
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
+
         /// <summary>
-        /// Name - name group
+        /// Group name
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
+
         /// <summary>
-        /// Information - additional information
+        /// Additional information
         /// </summary>
-        public string Information { get; set; }
+        public virtual string Information { get; set; }
+
         /// <summary>
-        /// Admin - user which created group
+        /// User which created group
         /// </summary>
-        public int Admin { get; set; }
+        public virtual UserDB Admin { get; set; }
+
         /// <summary>
-        /// GroupUserDBs - users which as part of group
+        /// Users which as part of group
         /// </summary>
-        public virtual IList<GroupUserDB> GroupUserDBs { get; set; }
+        public virtual IList<GroupUserDB> GroupUsers { get; set; }
+
         /// <summary>
-        /// GroupBordDBs - boards with products
+        /// Boards with products
         /// </summary>
-        public virtual IList<GroupBoardDB> GroupBoardDBs { get; set; }
+        public virtual IList<GroupBoardDB> GroupBoards { get; set; }
+
         /// <summary>
-        /// TimeCreate - datatime when group created
+        /// true - group created;
+        /// false - group deleted
         /// </summary>
-        public DateTime? TimeCreate { get; set; }
+        public virtual bool IsDeleted { get; set; }
+
         /// <summary>
-        /// TimeDelete - datatime when group deleted
+        /// Group creation time
         /// </summary>
-        public DateTime? TimeDelete { get; set; }
+        public virtual DateTime Created { get; set; }
+
         /// <summary>
-        /// Bool - group deleted/greated
-        ///     true - group greated
-        ///     false - group deleted
+        /// Group delete time
         /// </summary>
-        public bool Bool { get; set; }
+        public virtual DateTime? Deleted { get; set; }
+
+        /// <summary>
+        /// Model modification time
+        /// </summary>
+        public virtual DateTime? Modified { get; set; }
     }
 }

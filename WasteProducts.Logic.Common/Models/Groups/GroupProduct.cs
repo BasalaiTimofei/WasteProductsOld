@@ -1,27 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using WasteProducts.Logic.Common.Models.Products;
 
-namespace WasteProducts.Logic.Common.Models
+namespace WasteProducts.Logic.Common.Models.Groups
 {
     public class GroupProduct
     {
         /// <summary>
-        /// Id - primary key
+        /// Primary key
         /// </summary>
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
+
         /// <summary>
-        /// GroupBoardId - secondary key
+        /// This product
         /// </summary>
-        public int GroupBoardId { get; set; }
+        public virtual Product Product { get; set; }
+
         /// <summary>
-        /// ProductId - product which add at board
+        /// This board
         /// </summary>
-        public int ProductId { get; set; }
+        public virtual GroupBoard GroupBoard { get; set; }
+
         /// <summary>
-        /// Information - additional information
+        /// Additional information
         /// </summary>
         public string Information { get; set; }
     }

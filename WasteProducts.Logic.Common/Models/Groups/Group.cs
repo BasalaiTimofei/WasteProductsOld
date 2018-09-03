@@ -1,36 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using WasteProducts.Logic.Common.Models.Users;
 
-namespace WasteProducts.Logic.Common.Models
+namespace WasteProducts.Logic.Common.Models.Groups
 {
     public class Group
     {
         /// <summary>
-        /// Id - primary key
+        /// Primary key
         /// </summary>
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
+
         /// <summary>
-        /// Name - name group
+        /// Group name
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
+
         /// <summary>
-        /// Information - additional information
+        /// Additional information
         /// </summary>
-        public string Information { get; set; }
+        public virtual string Information { get; set; }
+
         /// <summary>
-        /// Admin - user which created group
+        /// Boards with products
         /// </summary>
-        public int Admin { get; set; }
-        /// <summary>
-        /// GroupUsers - users which as part of group
-        /// </summary>
-        public IList<GroupUser> GroupUsers { get; set; }
-        /// <summary>
-        /// GroupBoards - boards with products
-        /// </summary>
-        public IList<GroupBoard> GroupBoards { get; set; }
+        public virtual IList<GroupBoard> GroupBoards { get; set; }
     }
 }
