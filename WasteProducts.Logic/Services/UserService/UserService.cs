@@ -103,6 +103,32 @@ namespace WasteProducts.Logic.Services.UserService
             throw new NotImplementedException("Метод будет отправлять захешированный пароль, переделать метод, чтобы он отправлял ссылку на генерацию нового пароля");
         }
 
+        //todo make async + userRepomethod
+        public List<User> GetAllUsersInfo()
+        {
+            var listOfusers = new List<User>();
+            var listOfuserDB = _userRepo.SelectAll();
+            foreach (var userDB in listOfuserDB)
+            {
+                listOfusers.Add(MapTo<User>(userDB));
+            }
+            return listOfusers;
+        }
+
+        public async Task<User> GetUserInfo(string id)
+        {
+            return await Task.Run(() =>
+            {
+                var userDB = _userRepo.Select(a => a.Id == id, true);
+                var user = MapTo<User>(userDB);
+                user.PasswordHash = "";
+                return user;
+            }
+            );
+            
+
+        }
+
         public async Task UpdateAsync(User user)
         {
             await _userRepo.UpdateAsync(MapTo<UserDB>(user));
@@ -221,7 +247,7 @@ namespace WasteProducts.Logic.Services.UserService
             user.Logins?.Remove(login);
         }
 
-        public async Task DeleteUserAsunc(User user)
+        public async Task DeleteUserAsync(User user)
         {
             await _userRepo.DeleteAsync(MapTo<UserDB>(user));
         }

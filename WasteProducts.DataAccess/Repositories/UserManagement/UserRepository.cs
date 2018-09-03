@@ -252,6 +252,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             return Select(predicate, lazyInitiation, getRoles: true);
         }
 
+        //todo fix method
         public List<UserDB> SelectAll()
         {
             using (var db = GetWasteContext())
