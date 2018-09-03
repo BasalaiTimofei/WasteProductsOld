@@ -5,23 +5,27 @@ using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Contexts.Config;
-using WasteProducts.DataAccess.Repositories;
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using WasteProducts.DataAccess.Common.Repositories.Search;
 
 namespace WasteProducts.DataAccess.Contexts
 {
     [DbConfigurationType(typeof(MsSqlConfiguration))]
     public class WasteContext : IdentityDbContext<UserDB, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>
     {
-        public WasteContext()
+        private ISearchRepository _searchRepository { get; }
+
+        public WasteContext(ISearchRepository searchRepository)
         {
+            _searchRepository = searchRepository;
             Database.Log = (s) => Debug.WriteLine(s);
         }
 
-        public WasteContext(string nameOrConnectionString) : base(nameOrConnectionString)
+        public WasteContext(string nameOrConnectionString, ISearchRepository searchRepository) : base(nameOrConnectionString)
         {
+            _searchRepository = searchRepository;
             Database.Log = (s) => Debug.WriteLine(s);
         }
 
@@ -82,9 +86,7 @@ namespace WasteProducts.DataAccess.Contexts
         /// <param name="state">EntityState that needed to detect and save</param>
         /// <param name="types">Object type that needed to detect and save</param>
         protected void DetectAndSaveChanges(EntityState state, IEnumerable<Type> types)
-        {
-            //пока так
-            LuceneSearchRepository _repo = new LuceneSearchRepository();
+        {            
             this.Configuration.AutoDetectChangesEnabled = false;
 
             var changedList = this.ChangeTracker.Entries()
@@ -98,10 +100,10 @@ namespace WasteProducts.DataAccess.Contexts
                 if (types.Contains(item.GetType()))
                 {                    
                     if (state == EntityState.Added)
-                        _repo.Insert(item);
+                        _searchRepository.Insert(item);
                     else if (state == EntityState.Modified)
-                        _repo.Update(item);
-                    else _repo.Delete(item);
+                        _searchRepository.Update(item);
+                    else _searchRepository.Delete(item);
                 }
             }
         }
