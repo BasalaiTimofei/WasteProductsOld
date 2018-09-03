@@ -13,36 +13,49 @@ using WasteProducts.Logic.Services.UserService;
 
 namespace WasteProducts.Logic.Tests.UserManagementTests
 {
+    [TestFixture]
     public class UserServiceIntegrationTests
     {
         public const string NAME_OR_CONNECTION_STRING = "name=ConStrByServer";
 
-        public static IUserRepository UserRepo;
+        public IUserRepository UserRepo;
 
-        public static IUserRoleRepository RoleRepo;
+        public IUserRoleRepository RoleRepo;
 
-        public static IMailService MailService;
+        public IMailService MailService;
 
-        public static IUserService UserService;
+        public IUserService UserService;
 
-        public static IUserRoleService RoleService;
+        public IUserRoleService RoleService;
 
-        [OneTimeSetUp]
-        public void TextFixtureSetUp()
+        ~UserServiceIntegrationTests()
+        {
+            UserService?.Dispose();
+            RoleService?.Dispose();
+        }
+
+        [SetUp]
+        public void SetUp()
         {
             UserRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
             RoleRepo = new UserRoleRepository(NAME_OR_CONNECTION_STRING);
-            MailService = new MailService(null, null, null);
+            MailService = new MailService(null, "somevalidemail@mail.ru", null);
             UserService = new UserService(MailService, UserRepo);
             RoleService = new UserRoleService(RoleRepo);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            UserService.Dispose();
+            RoleService.Dispose();
         }
 
         // тестируем регистрирование юзеров и делаем начальное заполнение таблицы юзерами
         [Test]
         public void UserIntegrTest_00AddingUsers()
         {
-            var recreator = new UserRepository(NAME_OR_CONNECTION_STRING);
-            recreator.RecreateTestDatabase();
+            ((UserRepository)UserRepo).RecreateTestDatabase();
 
             User user1 = UserService.RegisterAsync("test49someemail@gmail.com", "Sergei", "qwerty1", "qwerty1").GetAwaiter().GetResult();
             User user2 = UserService.RegisterAsync("test50someemail@gmail.com", "Anton", "qwerty2", "qwerty2").GetAwaiter().GetResult();
@@ -124,12 +137,11 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual("test49someemail@gmail.com", user.Email);
 
-            bool result = UserService.UpdateEmailAsync(user, "uniqueemail@gmail.com").GetAwaiter().GetResult();
+            bool result = UserService.UpdateEmailAsync(user.Id, "uniqueemail@gmail.com").GetAwaiter().GetResult();
 
             Assert.IsTrue(result);
-            Assert.AreEqual("uniqueemail@gmail.com", user.Email);
 
-            UserService.UpdateEmailAsync(user, "test49someemail@gmail.com").GetAwaiter().GetResult();
+            UserService.UpdateEmailAsync(user.Id, "test49someemail@gmail.com").GetAwaiter().GetResult();
         }
 
         // пытаемся поменять зарегистрированному юзеру емейл на некорректный уникальный емейл (не должно поменять)
@@ -139,7 +151,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual("test49someemail@gmail.com", user.Email);
 
-            bool result = UserService.UpdateEmailAsync(user, "uniqueButIncorrectEmail").GetAwaiter().GetResult();
+            bool result = UserService.UpdateEmailAsync(user.Id, "uniqueButIncorrectEmail").GetAwaiter().GetResult();
 
             Assert.IsFalse(result);
             Assert.AreEqual("test49someemail@gmail.com", user.Email);
@@ -152,7 +164,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual("test49someemail@gmail.com", user.Email);
 
-            bool result = UserService.UpdateEmailAsync(user, "test50someemail@gmail.com").GetAwaiter().GetResult();
+            bool result = UserService.UpdateEmailAsync(user.Id, "test50someemail@gmail.com").GetAwaiter().GetResult();
 
             Assert.IsFalse(result);
             Assert.AreEqual("test49someemail@gmail.com", user.Email);
@@ -168,7 +180,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             User user = UserService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.IsNotNull(user);
 
-            bool result1 = UserService.UpdateEmailAsync(user, null).GetAwaiter().GetResult();
+            bool result1 = UserService.UpdateEmailAsync(user.Id, null).GetAwaiter().GetResult();
             bool result2 = UserService.UpdateEmailAsync(null, "correctuniqueemail@gmail.com").GetAwaiter().GetResult();
 
             Assert.IsFalse(result1);

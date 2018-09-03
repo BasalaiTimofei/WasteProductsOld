@@ -108,7 +108,7 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpPost]
         public async Task<bool> UpdateEmail([FromBody]User user, [FromBody]string newEmail)
         {
-            return await _userService.UpdateEmailAsync(user, newEmail);
+            return await _userService.UpdateEmailAsync(user.Id, newEmail);
         }
 
 

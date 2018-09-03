@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models.Products;
@@ -9,7 +10,7 @@ namespace WasteProducts.Logic.Common.Services.UserService
     /// <summary>
     /// Standart BL level interface provides standart methods of working with User model.
     /// </summary>
-    public interface IUserService
+    public interface IUserService : IDisposable
     {
         /// <summary>
         /// Tries to register a new user with a specific parameters.
@@ -67,10 +68,10 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// <summary>
         /// Updates user's Email. You cannot update email if newEmail is already used by another user.
         /// </summary>
-        /// <param name="user">User wanting to update its email.</param>
+        /// <param name="user">ID of User wanting to update its email.</param>
         /// <param name="newEmail">New unique email to update user's email.</param>
         /// <returns></returns>
-        Task<bool> UpdateEmailAsync(User user, string newEmail);
+        Task<bool> UpdateEmailAsync(string userId, string newEmail);
 
         /// <summary>
         /// Updates user's UserName. You cannot update UserName if newUserName is already used by another user.

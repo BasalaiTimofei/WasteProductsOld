@@ -25,6 +25,8 @@ namespace WasteProducts.Logic.Services.UserService
 
         private readonly IRuntimeMapper _mapper;
 
+        private bool _disposed;
+
         public UserService(IMailService mailService, IUserRepository userRepo)
         {
             _mailService = mailService;
@@ -38,6 +40,24 @@ namespace WasteProducts.Logic.Services.UserService
                 cfg.AddProfile(new ProductProfile());
             });
             _mapper = (new Mapper(config)).DefaultContext.Mapper;
+        }
+
+        ~UserService()
+        {
+            if (!_disposed)
+            {
+                Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                _mailService?.Dispose();
+                _userRepo?.Dispose();
+                _disposed = true;
+            }
         }
 
         public async Task<User> RegisterAsync(string email, string userName, string password, string passwordConfirmation)
@@ -125,8 +145,6 @@ namespace WasteProducts.Logic.Services.UserService
                 return user;
             }
             );
-            
-
         }
 
         public async Task UpdateAsync(User user)
@@ -134,18 +152,14 @@ namespace WasteProducts.Logic.Services.UserService
             await _userRepo.UpdateAsync(MapTo<UserDB>(user));
         }
 
-        public async Task<bool> UpdateEmailAsync(User user, string newEmail)
+        public async Task<bool> UpdateEmailAsync(string userId, string newEmail)
         {
-            if (user == null || newEmail == null || !_mailService.IsValidEmail(newEmail))
+            if (userId == null || newEmail == null || !_mailService.IsValidEmail(newEmail))
             {
                 return false;
             }
 
-            bool result = await _userRepo.UpdateEmailAsync(MapTo<UserDB>(user), newEmail);
-            if (result)
-            {
-                user.Email = newEmail;
-            }
+            bool result = await _userRepo.UpdateEmailAsync(userId, newEmail);
             return result;
         }
 
@@ -263,7 +277,5 @@ namespace WasteProducts.Logic.Services.UserService
         private UserLoginDB MapTo<T>(UserLogin user)
             =>
             _mapper.Map<UserLoginDB>(user);
-
-        
     }
 }

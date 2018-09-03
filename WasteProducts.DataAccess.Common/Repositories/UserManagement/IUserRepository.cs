@@ -9,7 +9,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
     /// <summary>
     /// Standart DAL level interface using to make CRUD operations with User models.
     /// </summary>
-    public interface IUserRepository
+    public interface IUserRepository : IDisposable
     {
         /// <summary>
         /// Adds new registered user in the repository.
@@ -165,10 +165,10 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <summary>
         /// Updates user's email if it isn't used by another user. Returns true if email was successfully updated.
         /// </summary>
-        /// <param name="user">User wanting to update its Email.</param>
+        /// <param name="userId">ID of User wanting to update its Email.</param>
         /// <param name="newEmail">New unique email.</param>
         /// <returns></returns>
-        Task<bool> UpdateEmailAsync(UserDB user, string newEmail);
+        Task<bool> UpdateEmailAsync(string userId, string newEmail);
 
         /// <summary>
         /// Updates user's UserName if it isn't used by another user. Returns true if UserName was successfully updated.

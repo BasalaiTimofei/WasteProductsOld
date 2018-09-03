@@ -14,185 +14,176 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 {
     public class UserRepository : IUserRepository
     {
-        private readonly bool _initiateWithCS;
+        private readonly WasteContext _db;
 
-        public string NameOrConnectionString { get; }
+        private readonly UserStore<UserDB> _store;
+
+        private readonly UserManager<UserDB> _manager;
+
+        private bool _disposed;
 
         public UserRepository()
         {
-            _initiateWithCS = false;
+            _db = new WasteContext();
+            _store = new UserStore<UserDB>(_db)
+            {
+                DisposeContext = true
+            };
+            _manager = new UserManager<UserDB>(_store);
         }
 
         public UserRepository(string nameOrConnectionString)
         {
-            _initiateWithCS = true;
-            NameOrConnectionString = nameOrConnectionString;
+            _db = new WasteContext(nameOrConnectionString);
+            _store = new UserStore<UserDB>(_db)
+            {
+                DisposeContext = true
+            };
+            _manager = new UserManager<UserDB>(_store);
+        }
+
+        ~UserRepository()
+        {
+            if (!_disposed)
+            {
+                Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                _manager?.Dispose();
+                _disposed = true;
+            }
         }
 
         /// <summary>
-        /// Use ONLY with testDB!
+        /// Use ONLY with TestDB!
         /// </summary>
         public void RecreateTestDatabase()
         {
-            using (var db = GetWasteContext())
-            {
-                db.Database.Delete();
-                db.Database.CreateIfNotExists();
-            }
+                _db.Database.Delete();
+                _db.Database.CreateIfNotExists();
         }
 
         public async Task AddAsync(UserDB user, string password)
         {
-            using(var userManager = GetUserManager())
-            {
                 user.Created = DateTime.UtcNow;
-                await userManager.CreateAsync(user, password);
-            }
+                await _manager.CreateAsync(user, password);
         }
 
         public async Task<bool> IsEmailAvailableAsync(string email)
         {
-            using (var db = GetWasteContext())
-            {
-                return !(await db.Users.AnyAsync(u => u.Email == email));
-            }
+            return !(await _db.Users.AnyAsync(u => u.Email == email));
         }
 
         public async Task AddClaimAsync(UserDB user, Claim claim)
         {
-            using (var db = GetWasteContext())
-            {
-                using (var userStore = new UserStore<UserDB>(db))
-                {
-                    await userStore.AddClaimAsync(user, claim);
+            await _store.AddClaimAsync(user, claim);
 
-                    user.Modified = DateTime.UtcNow;
-                    await db.SaveChangesAsync();
-                }
-            }
+            user.Modified = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
         }
 
         public async Task AddLoginAsync(UserDB user, UserLoginDB login)
         {
             UserLoginInfo loginInfo = new UserLoginInfo(login.LoginProvider, login.ProviderKey);
 
-            using (var db = GetWasteContext())
+            using (var userStore = new UserStore<UserDB>(_db))
             {
-                using (var userStore = new UserStore<UserDB>(db))
-                {
-                    await userStore.AddLoginAsync(user, loginInfo);
+                await userStore.AddLoginAsync(user, loginInfo);
 
-                    user.Modified = DateTime.UtcNow;
-                    await db.SaveChangesAsync();
-                }
+                user.Modified = DateTime.UtcNow;
+                await _db.SaveChangesAsync();
             }
         }
 
         public async Task AddToRoleAsync(UserDB user, string roleName)
         {
-            using (var db = GetWasteContext())
+            using (var userStore = new UserStore<UserDB>(_db))
             {
-                using (var userStore = new UserStore<UserDB>(db))
-                {
-                    await userStore.AddToRoleAsync(user, roleName);
+                await userStore.AddToRoleAsync(user, roleName);
 
-                    user.Modified = DateTime.UtcNow;
-                    await db.SaveChangesAsync();
-                }
+                user.Modified = DateTime.UtcNow;
+                await _db.SaveChangesAsync();
             }
         }
 
         public async Task AddFriendAsync(string userId, string friendId)
         {
-            using (var db = GetWasteContext())
-            {
-                UserDB user = db.Users.Include(p => p.Friends).First(u => u.Id == userId);
-                UserDB friend = db.Users.First(u => u.Id == friendId);
+            UserDB user = _db.Users.Include(p => p.Friends).First(u => u.Id == userId);
+            UserDB friend = _db.Users.First(u => u.Id == friendId);
 
-                user.Friends.Add(friend);
+            user.Friends.Add(friend);
 
-                user.Modified = DateTime.UtcNow;
-                await db.SaveChangesAsync();
-            }
+            user.Modified = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(UserDB user)
         {
             await Task.Run(async () =>
             {
-                using (var db = GetWasteContext())
-                {
-                    db.Users.Attach(user);
-                    var entry = db.Entry(user);
+                    _db.Users.Attach(user);
+                    var entry = _db.Entry(user);
                     entry.State = EntityState.Deleted;
-                    await db.SaveChangesAsync();
-                }
+                    await _db.SaveChangesAsync();
             });
         }
 
         public async Task RemoveClaimAsync(UserDB user, Claim claim)
         {
-            using (var db = GetWasteContext())
+            var userInDB = _db.Users.Include(u => u.Claims).FirstOrDefault(u => u.Email == user.Email);
+
+            var claimToDelete = userInDB.Claims.FirstOrDefault(c => c.UserId == userInDB.Id &&
+                                                                    c.ClaimType == claim.Type &&
+                                                                    c.ClaimValue == claim.Value);
+
+            if (claimToDelete != null)
             {
-                var userInDB = db.Users.Include(u => u.Claims).FirstOrDefault(u => u.Email == user.Email);
-
-                var claimToDelete = userInDB.Claims.FirstOrDefault(c => c.UserId == userInDB.Id &&
-                                                                        c.ClaimType == claim.Type &&
-                                                                        c.ClaimValue == claim.Value);
-
-                if (claimToDelete != null)
-                {
-                    db.Entry(claimToDelete).State = EntityState.Deleted;
-                    user.Modified = DateTime.UtcNow;
-                    await db.SaveChangesAsync();
-                }
+                _db.Entry(claimToDelete).State = EntityState.Deleted;
+                user.Modified = DateTime.UtcNow;
+                await _db.SaveChangesAsync();
             }
         }
 
         public async Task RemoveFromRoleAsync(UserDB user, string roleName)
         {
-            using (var db = GetWasteContext())
+            using (var userStore = new UserStore<UserDB>(_db))
             {
-                using (var userStore = new UserStore<UserDB>(db))
-                {
-                    await userStore.RemoveFromRoleAsync(user, roleName);
-                    user.Modified = DateTime.UtcNow;
-                    await db.SaveChangesAsync();
-                }
+                await userStore.RemoveFromRoleAsync(user, roleName);
+                user.Modified = DateTime.UtcNow;
+                await _db.SaveChangesAsync();
             }
         }
 
         public async Task RemoveLoginAsync(UserDB user, UserLoginDB login)
         {
-            using (var db = GetWasteContext())
+            var userInDB = _db.Users.Include(u => u.Logins).FirstOrDefault(u => u.Email == user.Email);
+
+            var loginToDelete = userInDB.Logins.FirstOrDefault(c => c.UserId == userInDB.Id &&
+                                                                    c.LoginProvider == login.LoginProvider &&
+                                                                    c.ProviderKey == login.ProviderKey);
+
+            if (loginToDelete != null)
             {
-                var userInDB = db.Users.Include(u => u.Logins).FirstOrDefault(u => u.Email == user.Email);
-
-                var loginToDelete = userInDB.Logins.FirstOrDefault(c => c.UserId == userInDB.Id &&
-                                                                        c.LoginProvider == login.LoginProvider &&
-                                                                        c.ProviderKey == login.ProviderKey);
-
-                if (loginToDelete != null)
-                {
-                    db.Entry(loginToDelete).State = EntityState.Deleted;
-                    user.Modified = DateTime.UtcNow;
-                    await db.SaveChangesAsync();
-                }
+                _db.Entry(loginToDelete).State = EntityState.Deleted;
+                user.Modified = DateTime.UtcNow;
+                await _db.SaveChangesAsync();
             }
         }
 
         public async Task DeleteFriendAsync(string userId, string deletingFriendId)
         {
-            using (var db = GetWasteContext())
-            {
-                UserDB user = db.Users.Include(p => p.Friends).First(u => u.Id == userId);
-                UserDB friend = db.Users.First(u => u.Id == deletingFriendId);
+            UserDB user = _db.Users.Include(p => p.Friends).First(u => u.Id == userId);
+            UserDB friend = _db.Users.First(u => u.Id == deletingFriendId);
 
-                user.Friends.Remove(friend);
+            user.Friends.Remove(friend);
 
-                user.Modified = DateTime.UtcNow;
-                await db.SaveChangesAsync();
-            }
+            user.Modified = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
         }
 
         public UserDB Select(string email, string password, bool lazyInitiation = true)
@@ -212,38 +203,23 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public (UserDB, IList<string>) Select(string email, string password)
         {
-            WasteContext db = null;
-            UserStore<UserDB> store = null;
-            UserManager<UserDB> manager = null;
-            try
+            _db.Configuration.LazyLoadingEnabled = false;
+
+            var user = _db.Users.Include(u => u.Roles).
+                    Include(u => u.Claims).
+                    Include(u => u.Logins).
+                    Include(u => u.Friends).
+                    Include(u => u.Products).
+                    FirstOrDefault(u => u.Email == email);
+
+            if (user != null && _manager.CheckPassword(user, password))
             {
-                db = GetWasteContext();
-                db.Configuration.LazyLoadingEnabled = false;
-
-                var user = db.Users.Include(u => u.Roles).
-                        Include(u => u.Claims).
-                        Include(u => u.Logins).
-                        Include(u => u.Friends).
-                        Include(u => u.Products).
-                        FirstOrDefault(u => u.Email == email);
-
-                store = new UserStore<UserDB>(db);
-                manager = new UserManager<UserDB>(store);
-                if (user != null && manager.CheckPassword(user, password))
-                {
-                    var roles = manager.GetRoles(user.Id);
-                    return (user, roles);
-                }
-                else
-                {
-                    return (null, null);
-                }
+                var roles = _manager.GetRoles(user.Id);
+                return (user, roles);
             }
-            finally
+            else
             {
-                db.Dispose();
-                store.Dispose();
-                manager.Dispose();
+                return (null, null);
             }
         }
 
@@ -255,162 +231,114 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         //todo fix method
         public List<UserDB> SelectAll()
         {
-            using (var db = GetWasteContext())
-            {
-                return db.Users.ToList();
-            }
+            return _db.Users.ToList();
         }
 
         public IEnumerable<UserDB> SelectRange(Func<UserDB, bool> predicate, bool lazyInitiation = true)
         {
-            using (var db = GetWasteContext())
+            if (lazyInitiation)
             {
-                if (lazyInitiation)
-                {
-                    return db.Users.Where(predicate);
-                }
-                else
-                {
-                    db.Configuration.LazyLoadingEnabled = false;
+                return _db.Users.Where(predicate);
+            }
+            else
+            {
+                _db.Configuration.LazyLoadingEnabled = false;
 
-                    // TODO expand with publicGroups when it awailable
-                    return db.Users.Include(u => u.Roles).
-                        Include(u => u.Claims).
-                        Include(u => u.Logins).
-                        Include(u => u.Friends).
-                        Include(u => u.Products).
-                        Where(predicate);
-                }
+                // TODO expand with publicGroups when it awailable
+                return _db.Users.Include(u => u.Roles).
+                    Include(u => u.Claims).
+                    Include(u => u.Logins).
+                    Include(u => u.Friends).
+                    Include(u => u.Products).
+                    Where(predicate);
             }
         }
 
         public async Task<IList<string>> GetRolesAsync(UserDB user)
         {
-            using (var db = GetWasteContext())
-            {
-                using (var userStore = new UserStore<UserDB>(db))
-                {
-                    return await userStore.GetRolesAsync(user);
-                }
-            }
+            return await _store.GetRolesAsync(user);
         }
 
         public async Task ResetPasswordAsync(UserDB user, string newPassword, string oldPassword)
         {
-            using (var manager = GetUserManager())
-            {
-                await manager.ChangePasswordAsync(user.Id, oldPassword, newPassword);
-            }
+            await _manager.ChangePasswordAsync(user.Id, oldPassword, newPassword);
         }
 
         public async Task UpdateAsync(UserDB user)
         {
-            using (var db = GetWasteContext())
-            {
-                db.Users.Attach(user);
-                var entry = db.Entry(user);
-                entry.State = EntityState.Modified;
-                //entry.Property(u => u.Id).IsModified = false;
-                entry.Property(u => u.UserName).IsModified = false;
-                entry.Property(u => u.Email).IsModified = false;
-                entry.Property(u => u.Created).IsModified = false;
-                entry.Property(u => u.PasswordHash).IsModified = false;
+            var userInDB = _db.Users.FirstOrDefault(u => u.Id == user.Id);
 
-                user.Modified = DateTime.UtcNow;
-                await db.SaveChangesAsync();
-            }
+            var entry = _db.Entry(userInDB);
+            entry.CurrentValues.SetValues(user);
+            entry.Property(u => u.Modified).CurrentValue = DateTime.UtcNow;
+
+            entry.Property(u => u.UserName).IsModified = false;
+            entry.Property(u => u.Email).IsModified = false;
+            entry.Property(u => u.Created).IsModified = false;
+            entry.Property(u => u.PasswordHash).IsModified = false;
+
+            await _db.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdateEmailAsync(UserDB user, string newEmail)
+        public async Task<bool> UpdateEmailAsync(string userId, string newEmail)
         {
-            using (var db = GetWasteContext())
+            var user = _db.Users.FirstOrDefault(u => u.Id == userId);
+            if (user != null && await IsEmailAvailableAsync(newEmail))
             {
-                bool emailAvailable = !(await db.Users.AnyAsync(u => u.Email == newEmail));
-                if (emailAvailable)
-                {
-                    user.Modified = DateTime.UtcNow;
-                    db.Users.Attach(user);
-                    var entry = db.Entry(user);
-                    entry.Property(u => u.Email).IsModified = true;
-                    await db.SaveChangesAsync();
-                }
-                return emailAvailable;
+                user.Modified = DateTime.UtcNow;
+                user.Email = newEmail;
+                var entry = _db.Entry(user);
+                entry.Property(u => u.Email).IsModified = true;
+                entry.Property(u => u.Modified).IsModified = true;
+                await _db.SaveChangesAsync();
+                return true;
             }
+            return false;
         }
 
         public async Task<bool> UpdateUserNameAsync(UserDB user, string newUserName)
         {
-            using (var db = GetWasteContext())
+            bool userNameAvailable = !(await _db.Users.AnyAsync(u => u.UserName == newUserName));
+            if (userNameAvailable)
             {
-                bool userNameAvailable = !(await db.Users.AnyAsync(u => u.UserName == newUserName));
-                if (userNameAvailable)
-                {
-                    user.Modified = DateTime.UtcNow;
-                    db.Users.Attach(user);
-                    var entry = db.Entry(user);
-                    entry.Property(u => u.UserName).IsModified = true;
-                    await db.SaveChangesAsync();
-                }
-                return userNameAvailable;
+                user.Modified = DateTime.UtcNow;
+                _db.Users.Attach(user);
+                var entry = _db.Entry(user);
+                entry.Property(u => u.UserName).IsModified = true;
+                await _db.SaveChangesAsync();
             }
+            return userNameAvailable;
         }
 
         private (UserDB user, IList<string> roles) Select(Func<UserDB, bool> predicate, bool lazyInitiation, bool getRoles)
         {
-            using (var db = GetWasteContext())
+            (UserDB user, IList<string> roles) result = (null, null);
+            if (lazyInitiation)
             {
-                (UserDB user, IList<string> roles) result = (null, null);
-                if (lazyInitiation)
-                {
-                    result.user = db.Users.FirstOrDefault(predicate);
-                }
-                else
-                {
-                    // TODO expand with groups when it will be available
-                    db.Configuration.LazyLoadingEnabled = lazyInitiation;
-
-                    result.user = db.Users.Include(u => u.Roles).
-                        Include(u => u.Claims).
-                        Include(u => u.Logins).
-                        Include(u => u.Friends).
-                        Include(u => u.Products).
-                        FirstOrDefault(predicate);
-                }
-
-                if (getRoles)
-                {
-                    using (var userStore = new UserStore<UserDB>(db))
-                    {
-                        result.roles = userStore.GetRolesAsync(result.user).GetAwaiter().GetResult();
-                    }
-                }
-
-                return result;
-            }
-        }
-
-        private WasteContext GetWasteContext()
-        {
-            if (_initiateWithCS)
-            {
-                return new WasteContext(NameOrConnectionString);
+                result.user = _db.Users.FirstOrDefault(predicate);
             }
             else
             {
-                return new WasteContext();
+                // TODO expand with groups when it will be available
+                _db.Configuration.LazyLoadingEnabled = lazyInitiation;
+
+                result.user = _db.Users.Include(u => u.Roles).
+                    Include(u => u.Claims).
+                    Include(u => u.Logins).
+                    Include(u => u.Friends).
+                    Include(u => u.Products).
+                    FirstOrDefault(predicate);
             }
-        }
 
-        private UserManager<UserDB> GetUserManager()
-        {
-            var db = GetWasteContext();
-            var store = new UserStore<UserDB>(db)
+            if (getRoles)
             {
-                DisposeContext = true
-            };
-            return new UserManager<UserDB>(store);
-        }
+                using (var userStore = new UserStore<UserDB>(_db))
+                {
+                    result.roles = userStore.GetRolesAsync(result.user).GetAwaiter().GetResult();
+                }
+            }
 
-        
+            return result;
+        }
     }
 }

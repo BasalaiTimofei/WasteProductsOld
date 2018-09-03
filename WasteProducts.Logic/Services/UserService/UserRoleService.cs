@@ -15,6 +15,8 @@ namespace WasteProducts.Logic.Services.UserService
 
         private readonly IRuntimeMapper _mapper;
 
+        private bool _disposed;
+
         public UserRoleService(IUserRoleRepository roleRepo)
         {
             _roleRepo = roleRepo;
@@ -26,6 +28,23 @@ namespace WasteProducts.Logic.Services.UserService
                 cfg.AddProfile(new UserLoginProfile());
             });
             _mapper = (new Mapper(config)).DefaultContext.Mapper;
+        }
+
+        ~UserRoleService()
+        {
+            if (!_disposed)
+            {
+                Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                _roleRepo?.Dispose();
+                _disposed = true;
+            }
         }
 
         public async Task CreateAsync(UserRole role)
