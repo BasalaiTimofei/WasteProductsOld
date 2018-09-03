@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Configuration;
 using System.Linq;
 using System.Security.Claims;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
@@ -16,7 +16,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
     [TestFixture]
     public class UserServiceIntegrationTests
     {
-        private const string NAME_OR_CONNECTION_STRING = "name=ConStrByServer";
+        private static readonly string _nameOrConnectionString;
 
         private IUserRepository _userRepo;
 
@@ -30,6 +30,13 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         private readonly List<string> _usersId = new List<string>();
 
+        static UserServiceIntegrationTests()
+        {
+            AppSettingsReader asr = new AppSettingsReader();
+
+            _nameOrConnectionString = (string)asr.GetValue("NameOrConnectionStringUserIntegralTestDB", typeof(string));
+        }
+
         ~UserServiceIntegrationTests()
         {
             _userService?.Dispose();
@@ -39,8 +46,8 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [SetUp]
         public void SetUp()
         {
-            _userRepo = new UserRepository(NAME_OR_CONNECTION_STRING);
-            _roleRepo = new UserRoleRepository(NAME_OR_CONNECTION_STRING);
+            _userRepo = new UserRepository(_nameOrConnectionString);
+            _roleRepo = new UserRoleRepository(_nameOrConnectionString);
             _mailService = new MailService(null, "somevalidemail@mail.ru", null);
             _userService = new UserService(_mailService, _userRepo);
             _roleService = new UserRoleService(_roleRepo);
