@@ -43,36 +43,15 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             Assert.Throws<ArgumentException>(() => sut.Search<TestUser>(query));
         }
 
-        /*[Test]
-        public void Search_EmptyQuery_Return_NoException()
-        {
-            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<int>())).Returns(users);
-
-            var query = new SearchQuery();
-            var result = sut.Search<User>(query);
-        }
-
         [Test]
-        public void Search_GetAllVerify_Return_Once()
+        public void Search_EmptyQuery_Return_ArgumentException()
         {
-            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<string>(), It.IsAny<IEnumerable<string>>(), It.IsAny<int>())).Verifiable();
+            mockRepo.Setup(x => x.GetAll<TestUser>(It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<int>())).Returns(users);
 
             var query = new SearchQuery();            
-            var result = sut.Search<User>(query);
 
-            mockRepo.Verify(v => v.GetAll<User>(It.IsAny<string>(), It.IsAny<IEnumerable<string>> (), It.IsAny<int>()), Times.Once);
+            Assert.Throws<ArgumentException>(() => sut.Search<TestUser>(query));
         }
-
-        [Test]
-        public void Search_GetAll_Return_AllObjectsCount()
-        {
-            mockRepo.Setup(x => x.GetAll<User>(It.IsAny<string>(), It.IsAny<IEnumerable<string>>(), It.IsAny<int>())).Returns(users);
-
-            var query = new SearchQuery();
-            var result = sut.Search<User>(query);
-
-            Assert.AreEqual(users.Count(), result.Count());
-        }*/
 
         [Test]
         public void AddIndex_InsertNewIndex_Return_NoException()
