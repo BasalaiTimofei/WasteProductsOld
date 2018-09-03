@@ -1,51 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Users;
 
-namespace WasteProducts.DataAccess.Common.Models
+namespace WasteProducts.DataAccess.Common.Models.Groups
 {
     public class GroupBoardDB
     {
         /// <summary>
-        /// Id - primary key
+        /// Primary key
         /// </summary>
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
+
         /// <summary>
-        /// Name - name board
+        /// Board name
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
+
         /// <summary>
-        /// Information - additional information
+        /// Additional information
         /// </summary>
-        public string Information { get; set; }
+        public virtual string Information { get; set; }
+
         /// <summary>
-        /// GroupDBId - secondary key
+        /// This board
         /// </summary>
-        public int GroupDBId { get; set; }
-        public virtual GroupDB GroupDB { get; set; }
+        public virtual GroupDB Group { get; set; }
+
         /// <summary>
-        /// UserId - user which created board
+        /// User which created board
         /// </summary>
-        public int UserId { get; set; }
+        public virtual UserDB Creator { get; set; }
+
         /// <summary>
-        /// GroupProductDBs - products which add at board
+        /// Products which add at board
         /// </summary>
-        public virtual IList<GroupProductDB> GroupProductDBs { get; set; }
+        public virtual IList<GroupProductDB> GroupProducts { get; set; }
+
         /// <summary>
-        /// TimeCreate - datatime when board created
+        /// Messages sent by users
         /// </summary>
-        public DateTime? TimeCreate { get; set; }
+        public virtual IList<GroupCommentDB> GroupComments { get; set; }
+
         /// <summary>
-        /// TimeDelete - datatime when board deleted
+        /// true - group created;
+        /// false - group deleted
         /// </summary>
-        public DateTime? TimeDelete { get; set; }
+        public virtual bool IsDeleted { get; set; }
+
         /// <summary>
-        /// Bool - board deleted/greated
-        ///     true - board greated
-        ///     false - board deleted
+        /// Group creation time
         /// </summary>
-        public bool Bool { get; set; }
+        public virtual DateTime Created { get; set; }
+
+        /// <summary>
+        /// Group delete time
+        /// </summary>
+        public virtual DateTime? Deleted { get; set; }
+
+        /// <summary>
+        /// Model modification time
+        /// </summary>
+        public virtual DateTime? Modified { get; set; }
     }
 }

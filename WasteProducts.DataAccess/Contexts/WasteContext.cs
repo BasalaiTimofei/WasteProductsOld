@@ -6,6 +6,8 @@ using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Contexts.Config;
+using WasteProducts.DataAccess.Common.Models.Groups;
+using WasteProducts.DataAccess.ModelConfigurations;
 
 namespace WasteProducts.DataAccess.Contexts
 {
@@ -39,6 +41,16 @@ namespace WasteProducts.DataAccess.Contexts
                 .Map(t => t.MapLeftKey("UserId")
                            .MapRightKey("ProductId")
                            .ToTable("UserProducts"));
+
+            modelBuilder.Entity<ProductDB>()
+                .HasOptional(p => p.Barcode)
+                .WithRequired(b => b.Product);
+
+            modelBuilder.Configurations.Add(new GroupBoardConfiguration());
+            modelBuilder.Configurations.Add(new GroupConfiguration());
+            modelBuilder.Configurations.Add(new GroupUserConfiguration());
+            modelBuilder.Configurations.Add(new GroupCommentConfiguration());
+            modelBuilder.Configurations.Add(new GroupProductConfiguration());
         }
 
         /// <summary>
@@ -60,7 +72,7 @@ namespace WasteProducts.DataAccess.Contexts
 
         public IDbSet<GroupUserDB> GroupUserDBs { get; set; }
 
-        public IDbSet<GroupUserInviteTimeDB> GroupUserInviteTimeDBs { get; set; }
+        public IDbSet<GroupCommentDB> GroupCommentDBs { get; set; }
 
         public IDbSet<GroupProductDB> GroupProductDBs { get; set; }
     }
