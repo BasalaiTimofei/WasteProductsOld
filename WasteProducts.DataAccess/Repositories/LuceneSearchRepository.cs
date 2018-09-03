@@ -23,7 +23,6 @@ namespace WasteProducts.DataAccess.Repositories
     /// </summary>
     public class LuceneSearchRepository : ISearchRepository, IDisposable
     {
-
         public const LuceneVersion MATCH_LUCENE_VERSION = LuceneVersion.LUCENE_48;
         public string IndexPath { get; private set; }
         public string IDField { get; private set; } = "Id";

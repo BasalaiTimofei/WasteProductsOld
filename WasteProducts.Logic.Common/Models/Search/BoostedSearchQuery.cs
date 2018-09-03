@@ -10,7 +10,6 @@ namespace WasteProducts.Logic.Common.Models.Search
     /// </summary>
     public class BoostedSearchQuery : SearchQuery
     {
-
         /// <summary>
         /// Dictionary with boost values for searchable fields
         /// </summary>
@@ -50,6 +49,5 @@ namespace WasteProducts.Logic.Common.Models.Search
             _BoostValues.Add(field, boostValue);
             return this;
         }
-
     }
 }

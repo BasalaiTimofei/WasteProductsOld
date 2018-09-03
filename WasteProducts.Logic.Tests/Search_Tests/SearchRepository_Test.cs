@@ -1,18 +1,13 @@
-using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using WasteProducts.DataAccess.Common.Repositories.Search;
-using WasteProducts.Logic.Common.Models;
-using WasteProducts.Logic.Services;
 using System.Linq;
-using System.Threading.Tasks;
 using WasteProducts.DataAccess.Repositories;
 using WasteProducts.DataAccess.Common.Exceptions;
 using System.Collections.ObjectModel;
 using WasteProducts.DataAccess.Contexts;
 using WasteProducts.DataAccess.Common.Models.Products;
-using System.Data.Entity;
 
 namespace WasteProducts.Logic.Tests.Search_Tests
 {
@@ -207,7 +202,6 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             Assert.AreEqual(users.Count(), userCollectionFromRepo.Count());
         }
 
-
         [Test]
         public void GetAllParams_GetAll_Return_ArgumentException()
         {
@@ -235,7 +229,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         }
 
         [Test]
-        public void GetAllParams_EmptyQuery_Return_EqualCount_0()
+        public void GetAllParams_EmptyQuery_Return_ArgumentException()
         {
             sut = new LuceneSearchRepository(true);
             foreach (var user in users)
@@ -244,46 +238,19 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             queryList.Add("Login");
             queryList.Add("Email");
 
-            //var userCollectionFromRepo = sut.GetAll<User>(String.Empty, queryList, 1000);
-
-            //Assert.AreEqual(0, userCollectionFromRepo.Count());
-
             Assert.Throws<ArgumentException>(() => sut.GetAll<TestUser>(String.Empty, queryList, 1000));
         }
 
         [Test]
-        public void GetAllParams_EmptyFields_Return_EqualCount_0()
+        public void GetAllParams_EmptyFields_Return_ArgumentException()
         {
             sut = new LuceneSearchRepository(true);
             foreach (var user in users)
                 sut.Insert(user);
             var queryList = new List<string>();
-
-            //var userCollectionFromRepo = sut.GetAll<User>("user", queryList, 1000);
-
-            //Assert.AreEqual(0, userCollectionFromRepo.Count());
+            
             Assert.Throws<ArgumentException>(() => sut.GetAll<TestUser>("user", queryList, 1000));
-        }
-
-        //не проходит
-        /*[Test]
-        public void GetAllParams_GetAllQuery_Return_EqualCount_5()
-        {
-            sut = new LuceneSearchRepository(true);
-            foreach (var user in users)
-                sut.Insert(user);
-            var queryList = new List<string>();
-            queryList.Add("Email");
-
-            //такой вариант не проходит по причине как в тесте выше
-            var userCollectionFromRepo = sut.GetAll<User>("@mail*", queryList, 1000);
-
-            //такой вариант не проходи, т.к. выбивает ошибку "нельзя что бы поиск начинался с * или ?". Поэтому вопрос как искать
-            //слова в середине предложений и тд
-            //var userCollectionFromRepo = sut.GetAll<User>("mail*", queryList, 1000);
-
-            Assert.AreEqual(5, userCollectionFromRepo.Count());
-        }*/
+        }        
 
         [Test]
         public void GetAllParams_SearchUpperCase_Return_EqualCount_1()
@@ -387,7 +354,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         }
 
         [Test]
-        public void Delete_NotExistingObject_Return_EqualKeyValue()
+        public void Delete_NotExistingObject_Return_LuceneSearchRepositoryException()
         {
             sut = new LuceneSearchRepository(true);
             foreach (var user in users)
@@ -406,10 +373,10 @@ namespace WasteProducts.Logic.Tests.Search_Tests
                 sut.Insert<TestProduct>(product);
             }
             var result = sut.GetAll<TestProduct>("product", new string[] { "Name", "Description" }, 1000);
-            Assert.AreEqual(expected: 5, actual: result.Count());
+            Assert.AreEqual(5, result.Count());
 
             result = sut.GetAll<TestProduct>("product1", new string[] { "Name", "Description" }, 1000);
-            Assert.AreEqual(expected: 1, actual: result.Count());
+            Assert.AreEqual(1, result.Count());
         }
 
         [Test]
@@ -422,10 +389,10 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             }
 
             var result = sut.GetAll<TestProduct>("word1", new string[] { "Name", "Decription" }, 1000);
-            Assert.AreEqual(expected: 0, actual: result.Count());
+            Assert.AreEqual(0, result.Count());
 
             result = sut.GetAll<TestProduct>("name1", new string[] { "Decription" }, 1000);
-            Assert.AreEqual(expected: 0, actual: result.Count());
+            Assert.AreEqual(0, result.Count());
         }
 
         [Test]
@@ -438,19 +405,19 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             }
 
             var result = sut.GetAll<TestProduct>("name1 word1 word2 word3", new string[] { "Name", "Decription" }, 1000);
-            Assert.AreEqual(expected: 1, actual: result.Count());
+            Assert.AreEqual(1, result.Count());
 
             result = sut.GetAll<TestProduct>("word1 word2 NamE1 word3", new string[] { "Name", "Decription" }, 1000);
-            Assert.AreEqual(expected: 1, actual: result.Count());
+            Assert.AreEqual(1, result.Count());
 
             result = sut.GetAll<TestProduct>("word1 description1", new string[] { "Name", "Description" }, 1000);
-            Assert.AreEqual(expected: 1, actual: result.Count());
+            Assert.AreEqual(1, result.Count());
 
             result = sut.GetAll<TestProduct>("name1 description2", new string[] { "Name", "Description" }, 1000);
-            Assert.AreEqual(expected: 2, actual: result.Count());
+            Assert.AreEqual(2, result.Count());
 
             result = sut.GetAll<TestProduct>("Word1 Word2 NamE1 DescriptioN1 NamE2 ProducT2 Word3 Word4", new string[] { "Description" }, 1000);
-            Assert.AreEqual(expected: 2, actual: result.Count());
+            Assert.AreEqual(2, result.Count());
         }
 
         [Test]
@@ -462,8 +429,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
                 sut.Insert<TestProduct>(product);
             }
             var result = sut.GetAll<TestProduct>("product", new string[] { "NonExistentField" }, 1000);
-            Assert.AreEqual(expected: 0, actual: result.Count());
-
+            Assert.AreEqual(0, result.Count());
         }
 
         [Test]
@@ -480,9 +446,11 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             boostValues.Add("Name", 1.0f);
             boostValues.Add("Description", 1.0f);
             var result = sut.GetAll<TestProduct>("product", new string[] { "Name", "Description" }, new ReadOnlyDictionary<string, float>(boostValues), 1000);
-            Assert.AreEqual(expected: 5, actual: result.Count());
+            Assert.AreEqual(5, result.Count());
         }
 
+
+        //Test for context. It will be deleted
         public class TestContext : WasteContext
         {            
             public TestContext(): base()
@@ -510,6 +478,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             Assert.AreNotEqual(null, productFromRepo);
         }
 
+        //not passed. Need Product mapper
         [Test]
         public void _DetectChanges_AddNewEntityWithCategory_Result_Entity_added()
         {

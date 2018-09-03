@@ -66,13 +66,21 @@ namespace WasteProducts.DataAccess.Contexts
             return base.SaveChanges();
         }
 
+        /// <summary>
+        /// Save changes to Lucene search repository. Runs 3 method with different params (Entity.State)
+        /// </summary>
         private void SaveChangesToSearchRepository()
         {
             DetectAndSaveChanges(EntityState.Added, new List<Type> { typeof(ProductDB) });
             DetectAndSaveChanges(EntityState.Modified, new List<Type> { typeof(ProductDB) });
             DetectAndSaveChanges(EntityState.Deleted, new List<Type> { typeof(ProductDB) });            
         }
-                
+
+        /// <summary>
+        /// Detectes changes and save it to Lucene using LuceneSearchRepository
+        /// </summary>
+        /// <param name="state">EntityState that needed to detect and save</param>
+        /// <param name="types">Object type that needed to detect and save</param>
         protected void DetectAndSaveChanges(EntityState state, IEnumerable<Type> types)
         {
             //пока так

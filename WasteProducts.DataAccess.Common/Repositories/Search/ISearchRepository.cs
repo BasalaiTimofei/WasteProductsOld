@@ -110,6 +110,5 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         /// Optimizes repository for faster search
         /// </summary>
         void Optimize();
-
     }
 }

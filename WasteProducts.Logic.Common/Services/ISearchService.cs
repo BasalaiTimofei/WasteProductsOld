@@ -85,8 +85,7 @@ namespace WasteProducts.Logic.Common.Services
         /// This method provides ability to optimize search repository storage for faster search
         /// </summary>
         void OptimizeSearchIndex();
-
-        #region Async methods
+                
         /// <summary>
         /// Async version of Search
         /// </summary>
@@ -95,8 +94,6 @@ namespace WasteProducts.Logic.Common.Services
         /// <summary>
         ///  Async version of SearchDefault
         /// </summary>
-        Task<IEnumerable<TEntity>> SearchDefaultAsync<TEntity>(SearchQuery query);
-
-        #endregion
+        Task<IEnumerable<TEntity>> SearchDefaultAsync<TEntity>(SearchQuery query);        
     }
 }

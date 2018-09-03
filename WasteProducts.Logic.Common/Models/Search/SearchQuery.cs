@@ -11,7 +11,6 @@ namespace WasteProducts.Logic.Common.Models
     /// </summary>
     public class SearchQuery
     {
-
         /// <summary>
         /// String that contains text to search
         /// </summary>
@@ -52,6 +51,5 @@ namespace WasteProducts.Logic.Common.Models
             Query = query;
             return this;
         }
-
     }
 }
