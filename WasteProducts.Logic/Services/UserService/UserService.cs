@@ -34,20 +34,18 @@ namespace WasteProducts.Logic.Services.UserService
 
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.AddProfile(new UserProfile());
-                cfg.AddProfile(new UserClaimProfile());
-                cfg.AddProfile(new UserLoginProfile());
-                cfg.AddProfile(new ProductProfile());
+                cfg.AddProfile<UserProfile>();
+                cfg.AddProfile<UserClaimProfile>();
+                cfg.AddProfile<UserLoginProfile>();
+                cfg.AddProfile<ProductProfile>();
+                cfg.AddProfile<UserProductDescriptionProfile>();
             });
             _mapper = (new Mapper(config)).DefaultContext.Mapper;
         }
 
         ~UserService()
         {
-            if (!_disposed)
-            {
-                Dispose();
-            }
+            Dispose();
         }
 
         public void Dispose()
@@ -57,6 +55,7 @@ namespace WasteProducts.Logic.Services.UserService
                 _mailService?.Dispose();
                 _userRepo?.Dispose();
                 _disposed = true;
+                GC.SuppressFinalize(this);
             }
         }
 
@@ -183,17 +182,35 @@ namespace WasteProducts.Logic.Services.UserService
             }
         }
 
-        public async Task AddProductAsync(User user, Product product)
+        public async Task DeleteFriendAsync(User user, User deletingFriend)
         {
-            if (user.Products.Count == 0 ||
-                user.Products
-                .FirstOrDefault(p => p.Barcode.Id == product.Barcode.Id &&
-                                     p.Barcode.Code == product.Barcode.Code)
-                                     == null)
+            User delFriend = user.Friends.FirstOrDefault(u => u.Id == deletingFriend.Id);
+
+            if (delFriend != null)
             {
-                user.Products.Add(product);
-                await UpdateAsync(user);
+                user.Friends.Remove(delFriend);
+                await _userRepo.DeleteFriendAsync(user.Id, deletingFriend.Id);
             }
+        }
+
+        public async Task<bool> AddProductAsync(string userId, string productId, int rating, string description)
+        {
+            if (userId == null || productId == null || rating > 10 || rating < 0)
+            {
+                return false;
+            }
+
+            return await _userRepo.AddProductAsync(userId, productId, rating, description);
+        }
+
+        public async Task<bool> DeleteProductAsync(string userId, string productId)
+        {
+            if(userId == null || productId == null)
+            {
+                return false;
+            }
+
+            return await _userRepo.DeleteProductAsync(userId, productId);
         }
 
         public async Task<IList<string>> GetRolesAsync(User user)
@@ -218,29 +235,6 @@ namespace WasteProducts.Logic.Services.UserService
         {
             await _userRepo.AddLoginAsync(MapTo<UserDB>(user), MapTo<UserLoginInfo>(login));
             user.Logins?.Add(login);
-        }
-
-        public async Task DeleteFriendAsync(User user, User deletingFriend)
-        {
-            User delFriend = user.Friends.FirstOrDefault(u => u.Id == deletingFriend.Id);
-
-            if (delFriend != null)
-            {
-                user.Friends.Remove(delFriend);
-                await _userRepo.DeleteFriendAsync(user.Id, deletingFriend.Id);
-            }
-        }
-
-        public async Task DeleteProductAsync(User user, Product product)
-        {
-                if (user.Products
-                .FirstOrDefault(p => p.Barcode.Id == product.Barcode.Id &&
-                                     p.Barcode.Code == product.Barcode.Code)
-                                     != null)
-                {
-                user.Products.Remove(product);
-                await UpdateAsync(user);
-            }
         }
 
         public async Task RemoveFromRoleAsync(User user, string roleName)

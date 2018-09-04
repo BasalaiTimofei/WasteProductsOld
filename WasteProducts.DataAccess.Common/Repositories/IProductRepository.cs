@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Products;
 
 namespace WasteProducts.DataAccess.Common.Repositories
@@ -48,11 +49,18 @@ namespace WasteProducts.DataAccess.Common.Repositories
         IEnumerable<ProductDB> SelectByCategory(CategoryDB category);
 
         /// <summary>
-        /// Getinng products by ID.
+        /// Gets products by ID.
         /// </summary>
         /// <param name="id">The specific id of product that was sorted.</param>
         /// <returns>Returns a product chosen by ID.</returns>
         ProductDB GetById(string id);
+
+        /// <summary>
+        /// Gets product by name.
+        /// </summary>
+        /// <param name="name">Name of the required product.</param>
+        /// <returns>Product with a chosen name.</returns>
+        Task<ProductDB> GetByNameAsync(string name);
 
         /// <summary>
         /// Updating the specific product

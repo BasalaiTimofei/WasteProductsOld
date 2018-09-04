@@ -7,6 +7,7 @@ using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Contexts.Config;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.ModelConfigurations;
+using WasteProducts.DataAccess.ModelConfigurations.UserManagement;
 
 namespace WasteProducts.DataAccess.Contexts
 {
@@ -34,16 +35,11 @@ namespace WasteProducts.DataAccess.Contexts
                            .MapRightKey("FriendId")
                            .ToTable("UserFriends"));
 
-            modelBuilder.Entity<UserDB>()
-                .HasMany(u => u.Products)
-                .WithMany(p => p.Users)
-                .Map(t => t.MapLeftKey("UserId")
-                           .MapRightKey("ProductId")
-                           .ToTable("UserProducts"));
-
             modelBuilder.Entity<ProductDB>()
                 .HasOptional(p => p.Barcode)
                 .WithRequired(b => b.Product);
+
+            modelBuilder.Configurations.Add(new UserProductDescriptionConfiguration());
 
             modelBuilder.Configurations.Add(new GroupBoardConfiguration());
             modelBuilder.Configurations.Add(new GroupConfiguration());
@@ -53,10 +49,16 @@ namespace WasteProducts.DataAccess.Contexts
         }
 
         /// <summary>
+        /// Entity represents many-to-many relationship between User and Product and includes ratings and descriptions of products by specific users.
+        /// </summary>
+        public IDbSet<UserProductDescriptionDB> UserProductDescriptions { get; set; }
+
+        /// <summary>
         /// Property added for to use an entity set that is used to perform
         ///  create, read, update, delete and to get product list operations in 'ProductRepository' class.
         /// </summary>
         public IDbSet<ProductDB> Products { get; set; }
+
         /// <summary>
         /// Property added for to use an entity set that is used to perform
         ///  create, read, update, delete and to get category list operations in 'CategoryRepository' class.

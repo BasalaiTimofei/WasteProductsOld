@@ -122,6 +122,7 @@
     <Compile Include="ModelConfigurations\Groups\GroupConfiguration.cs" />
     <Compile Include="ModelConfigurations\Groups\GroupProductConfiguration.cs" />
     <Compile Include="ModelConfigurations\Groups\GroupUserConfiguration.cs" />
+    <Compile Include="ModelConfigurations\UserManagement\UserProductDescriptionConfiguration.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Contexts\Security\Configurations\RoleConfiguration.cs" />
     <Compile Include="Contexts\Security\Configurations\UserClaimConfiguration.cs" />
@@ -150,10 +151,6 @@
     <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">
       <Project>{9acbec5d-caa7-4e29-a19c-a247190f6da8}</Project>
       <Name>WasteProducts.DataAccess.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WasteProducts.Logic.Common\WasteProducts.Logic.Common.csproj">
-      <Project>{643AAB59-4858-4E23-9A18-4BBEC3EE5F56}</Project>
-      <Name>WasteProducts.Logic.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

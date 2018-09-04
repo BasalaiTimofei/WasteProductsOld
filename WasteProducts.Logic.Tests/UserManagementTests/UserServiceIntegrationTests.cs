@@ -1,13 +1,17 @@
-﻿using NUnit.Framework;
+﻿using Ninject;
+using NUnit.Framework;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Security.Claims;
+using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Repositories.UserManagement;
 using WasteProducts.Logic.Common.Models.Users;
+using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Common.Services.MailService;
 using WasteProducts.Logic.Common.Services.UserService;
+using WasteProducts.Logic.Services;
 using WasteProducts.Logic.Services.MailService;
 using WasteProducts.Logic.Services.UserService;
 
@@ -28,19 +32,33 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         private IUserRoleService _roleService;
 
-        private readonly List<string> _usersId = new List<string>();
+        private StandardKernel _kernel;
+
+        private readonly List<string> _usersIds = new List<string>();
+
+        private readonly List<string> _productIds = new List<string>();
 
         static UserServiceIntegrationTests()
         {
             AppSettingsReader asr = new AppSettingsReader();
 
             _nameOrConnectionString = (string)asr.GetValue("NameOrConnectionStringUserIntegralTestDB", typeof(string));
+
+            StandardKernel kernel = new StandardKernel();
+            kernel.Load(new DataAccess.InjectorModule(), new Logic.InjectorModule());
         }
 
         ~UserServiceIntegrationTests()
         {
             _userService?.Dispose();
             _roleService?.Dispose();
+        }
+
+        [OneTimeSetUp]
+        public void Init()
+        {
+            _kernel = new StandardKernel();
+            _kernel.Load(new DataAccess.InjectorModule(), new Logic.InjectorModule());
         }
 
         [SetUp]
@@ -74,9 +92,9 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             Assert.AreEqual("Anton", user2.UserName);
             Assert.IsNotNull(user1.Id);
 
-            _usersId.Add(user1.Id);
-            _usersId.Add(user2.Id);
-            _usersId.Add(user3.Id);
+            _usersIds.Add(user1.Id);
+            _usersIds.Add(user2.Id);
+            _usersIds.Add(user3.Id);
         }
 
         // пытаемся зарегистрировать юзера с некорректным емейлом
@@ -405,25 +423,55 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             Assert.AreEqual(0, user.Friends.Count);
         }
 
-        // TODO доделать этот тест после того, как появится толковая реализация продуктов
-        // тестируем добавление продуктов
-        //[Test]
-        public void UserIntegrTest_24AddingNewProductsToUser()
+        // тестируем создание продукта (не относится к юзер сервису, но необходимо для следующего теста)
+        [Test]
+        public void UserIntegrTest_24AddingNewProductsToDB()
         {
-            
+            string productName = "Waste product";
+
+            using (var prodService = _kernel.Get<IProductService>("UserIntegrTest"))
+            {
+                prodService.AddByName(productName);
+                var product = prodService.GetByNameAsync(productName).GetAwaiter().GetResult();
+
+                Assert.IsNotNull(product);
+                Assert.AreEqual(productName, product.Name);
+                _productIds.Add(product.Id);
+            }
         }
 
-        // TODO доделать этот тест после того, как появится толковая реализация продуктов
-        // тестируем удаление продуктов
-        //[Test]
-        public void UserIntegrTest_25DeletingProductsFromUser()
+        // тестируем добавление продукта
+        [Test]
+        public void UserIntegrTest_25AddingNewProductsToUser()
         {
+            var user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            Assert.AreEqual(0, user.ProductDescriptions.Count);
 
+            _userService.AddProductAsync(user.Id, _productIds[0], 1, "Tastes like garbage, won't buy it ever again.").GetAwaiter().GetResult();
+            user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+
+            Assert.AreEqual(1, user.ProductDescriptions.Count);
+            Assert.AreEqual(_productIds[0], user.ProductDescriptions[0].Product.Id);
+            Assert.AreEqual(1, user.ProductDescriptions[0].Rating);
+            Assert.AreEqual("Tastes like garbage, won't buy it ever again.", user.ProductDescriptions[0].Description);
+        }
+
+        // тестируем удаление продуктов
+        [Test]
+        public void UserIntegrTest_26DeletingProductsFromUser()
+        {
+            var user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            Assert.AreEqual(1, user.ProductDescriptions.Count);
+
+            _userService.DeleteProductAsync(user.Id, user.ProductDescriptions[0].Product.Id);
+
+            user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            Assert.AreEqual(0, user.ProductDescriptions.Count);
         }
 
         // тестируем поиск роли по айди и имени
         [Test]
-        public void UserIntegrTest_26FindRoleByIdAndName()
+        public void UserIntegrTest_27FindRoleByIdAndName()
         {
             UserRole foundByName = _roleService.FindByNameAsync("Simple user").GetAwaiter().GetResult();
             Assert.AreEqual("Simple user", foundByName.Name);
@@ -435,7 +483,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем получение всех пользователей определенной роли
         [Test]
-        public void UserIntegrTest_27GettingRoleUsers()
+        public void UserIntegrTest_28GettingRoleUsers()
         {
             User user1 = _userService.LogInAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
             User user2 = _userService.LogInAsync("test51someemail@gmail.com", "qwerty3").GetAwaiter().GetResult();
@@ -450,7 +498,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем изменение названия роли
         [Test]
-        public void UserIntegrTest_28UpdatingRoleName()
+        public void UserIntegrTest_29UpdatingRoleName()
         {
             User user1 = _userService.LogInAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
             Assert.AreEqual("Simple user", user1.Roles.FirstOrDefault());
@@ -464,7 +512,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем удаление роли
         [Test]
-        public void UserIntegrTest_29DeletingRole()
+        public void UserIntegrTest_30DeletingRole()
         {
             User user1 = _userService.LogInAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
             Assert.AreEqual("Not so simple user", user1.Roles.FirstOrDefault());
@@ -478,9 +526,9 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем удаление юзеров, а заодно и чистим базу до изначального состояния
         [Test]
-        public void UserIntegrTest_30DeletingUsers()
+        public void UserIntegrTest_31DeletingUsers()
         {
-            foreach (var id in _usersId)
+            foreach (var id in _usersIds)
             {
                 _userService.DeleteUserAsync(id).GetAwaiter().GetResult();
             }

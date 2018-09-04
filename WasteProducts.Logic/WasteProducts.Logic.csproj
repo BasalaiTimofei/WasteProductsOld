@@ -105,6 +105,7 @@
     <Compile Include="Mappings\UserMappings\ProductProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserClaimProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserLoginProfile.cs" />
+    <Compile Include="Mappings\UserMappings\UserProductDescriptionProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserRoleProfile.cs" />
     <Compile Include="Mappings\ProductProfile.cs" />

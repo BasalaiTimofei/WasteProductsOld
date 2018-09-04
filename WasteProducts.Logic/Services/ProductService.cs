@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories;
@@ -16,12 +17,30 @@ namespace WasteProducts.Logic.Services
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
+
         private readonly IMapper _mapper;
+
+        private bool _disposed;
 
         public ProductService(IProductRepository productRepository, IMapper mapper)
         {
             _productRepository = productRepository;
             _mapper = mapper;
+        }
+
+        ~ProductService()
+        {
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                _productRepository?.Dispose();
+                _disposed = true;
+                GC.SuppressFinalize(this);
+            }
         }
 
         /// <summary>
@@ -56,6 +75,16 @@ namespace WasteProducts.Logic.Services
             _productRepository.Add(_mapper.Map<ProductDB>(newProduct));
 
             return true;
+        }
+
+        public async Task<Product> GetByNameAsync(string name)
+        {
+            if(name == null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<Product>(await _productRepository.GetByNameAsync(name));
         }
 
         /// <summary>
@@ -235,6 +264,6 @@ namespace WasteProducts.Logic.Services
         {
             products = _productRepository.SelectWhere(conditionPredicate);
             return products.Any();
-        }
+        }        
     }
 }
