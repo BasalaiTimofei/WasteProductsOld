@@ -11,8 +11,6 @@ using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.Logic.Services.UserService;
 using WasteProducts.Logic.Mappings.UserMappings;
-using WasteProducts.Logic.Common.Models.Products;
-using WasteProducts.Logic.Common.Models.Barcods;
 
 namespace WasteProducts.Logic.Tests.UserManagementTests
 {
