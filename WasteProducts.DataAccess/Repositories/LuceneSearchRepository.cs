@@ -32,7 +32,6 @@ namespace WasteProducts.DataAccess.Repositories
         private Lucene.Net.Store.Directory _directory;
         private Analyzer _analyzer;
         private IndexWriter _writer;
-        //private SearcherManager _searcherManager;
 
         /// <summary>
         /// Creates Lucene repository
@@ -50,7 +49,9 @@ namespace WasteProducts.DataAccess.Repositories
             {
                 throw new LuceneSearchRepositoryException("Can't find Lucene index storage path settings.");
             }
+
             _analyzer = new RussianAnalyzer(MATCH_LUCENE_VERSION);
+
             try
             {
                 _directory = FSDirectory.Open(IndexPath);
