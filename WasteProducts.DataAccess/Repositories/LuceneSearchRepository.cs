@@ -383,11 +383,11 @@ namespace WasteProducts.DataAccess.Repositories
         #endregion
 
         #region IDisposable Support
-        private bool disposedValue = false;
+        private bool disposed = false;
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!disposed)
             {
                 if (disposing)
                 {
@@ -397,13 +397,14 @@ namespace WasteProducts.DataAccess.Repositories
                     _analyzer.Dispose();
                 }
 
-                disposedValue = true;
+                disposed = true;
             }
         }
 
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         #endregion
