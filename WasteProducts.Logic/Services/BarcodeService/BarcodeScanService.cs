@@ -23,20 +23,14 @@ namespace WasteProducts.Logic.Services.BarcodeService
             return result;
         }
 
-        public BarcodeInfo ScanByZxing(Bitmap image)
+        public string ScanByZxing(Bitmap image)
         {
             string decoded = "";
             BarcodeReader Reader = new BarcodeReader();
             Result result = Reader.Decode(image);
-            BarcodeInfo barcode = new BarcodeInfo
-            {
-                Code = result.ToString().Trim(),
-                Type = result.BarcodeFormat.ToString(),
-            };
-            string type = result.BarcodeFormat.ToString();
             decoded = result.ToString().Trim();
 
-            return barcode;
+            return decoded;
         }
 
         public string ScanBySpire(Bitmap image)

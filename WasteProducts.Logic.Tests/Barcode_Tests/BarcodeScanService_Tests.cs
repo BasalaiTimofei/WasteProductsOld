@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using System.Drawing;
-using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Services.BarcodeService;
 using ZXing;
 using Moq;
@@ -13,10 +12,11 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
     [TestFixture]
     public class BarcodeScanService_Tests
     {
-        private Bitmap _image = (Bitmap)Image.FromFile("S:\\IMG_GoodImage.jpg");
-        private Bitmap _imageOriginal = (Bitmap)Image.FromFile("S:\\IMG_NotResize.jpg");
-        private BarcodeInfo _info = new BarcodeInfo { Code = "4810064002096", Type = "EAN_13" };
+        private Bitmap _imageGood = Properties.Resources.IMG_GoodImage;
+        private Bitmap _imageBad = Properties.Resources.IMG_BadImage;
+        private Bitmap _imageOriginal = Properties.Resources.IMG_NotResize;
         private string _verified = "4810064002096";
+        private string _verifiedBad = "";
 
         [Test]
         public void TestMethod_Spire_WithGoodImage()
@@ -25,14 +25,27 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
             var service = new BarcodeScanService();
 
             //Act
-            string result = service.ScanBySpire(_image);
+            string result = service.ScanBySpire(_imageGood);
 
             //Assert
             Assert.AreEqual(_verified, result);
         }
 
         [Test]
-        public void TestZxing()
+        public void TestMethod_Spire_WithBadImage()
+        {
+            //Arrange
+            var service = new BarcodeScanService();
+
+            //Act
+            string result = service.ScanBySpire(_imageBad);
+
+            //Assert
+            Assert.AreNotEqual(_verified, result);
+        }
+
+        [Test]
+        public void TestMethodMock_Zxing_WithGoodImage()
         {
             //Arrange
             byte[] rawBytes = null;
@@ -41,12 +54,30 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
             var mock = new Mock<IBarcodeReader>();
 
             //Act
-            mock.Setup(m => m.Decode(_image)).Returns(result);
-            Result resultDecod = mock.Object.Decode(_image);
-            string decoded = mock.Object.Decode(_image).ToString().Trim();
+            mock.Setup(m => m.Decode(_imageGood)).Returns(result);
+            Result resultDecod = mock.Object.Decode(_imageGood);
+            string decoded = mock.Object.Decode(_imageGood).ToString().Trim();
 
             //Assert
             Assert.AreEqual(_verified, decoded);
+        }
+
+        [Test]
+        public void TestMethodMock_Zxing_WithBadImage()
+        {
+            //Arrange
+            byte[] rawBytes = null;
+            ResultPoint[] resultPoints = null;
+            Result result = new Result(_verifiedBad, rawBytes, resultPoints, BarcodeFormat.EAN_13);
+            var mock = new Mock<IBarcodeReader>();
+
+            //Act
+            mock.Setup(m => m.Decode(_imageBad)).Returns(result);
+            Result resultDecod = mock.Object.Decode(_imageBad);
+            string decoded = mock.Object.Decode(_imageBad).ToString().Trim();
+
+            //Assert
+            Assert.AreEqual(_verifiedBad, decoded);
         }
 
         [Test]
@@ -59,8 +90,8 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
             Image result = service.Resize(_imageOriginal, 400, 400);
 
             //Assert
-            Assert.AreEqual(_image.Width, result.Width);
-            Assert.AreEqual(_image.Height, result.Height);
+            Assert.AreEqual(_imageGood.Width, result.Width);
+            Assert.AreEqual(_imageGood.Height, result.Height);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace WasteProducts.Logic.Common.Services
         /// </summary>
         /// <param name="image"> image of barcode photo</param>
         /// <returns>string of a numerical barcode</returns>
-        BarcodeInfo ScanByZxing(Bitmap image);
+        string ScanByZxing(Bitmap image);
 
         /// <summary>
         /// get a numeric barcode from the photo
