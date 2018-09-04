@@ -11,10 +11,5 @@
         /// Barcode type.
         /// </summary>
         public string Type { get; set; }
-
-        /// <summary>
-        /// User Id of the sending photo.
-        /// </summary>
-        public int UserId { get; set; }      
     }
 }
