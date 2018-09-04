@@ -23,7 +23,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// </summary>
         /// <param name="userService">Instance of UserService from business logic.</param>
         /// <param name="logger">Instance of NLog Logger.</param>
-        public UserController(IUserService userService, ILogger logger) : base (logger)
+        public UserController(IUserService userService, ILogger logger) : base(logger)
         {
             _userService = userService;
             _logger = logger;
@@ -69,7 +69,7 @@ namespace WasteProducts.Web.Controllers.Api
         public async Task Delete(string id)
         {
             var user = await Get(id);
-            await _userService.DeleteUserAsync(user);
+            await _userService.DeleteUserAsync(user.Id);
         }
 
 
@@ -83,8 +83,8 @@ namespace WasteProducts.Web.Controllers.Api
             return await _userService.RegisterAsync(value.Email, value.UserName, value.PasswordHash, value.PasswordHash);
         }
 
-        
-        
+
+
         // POST api/user/resetpassword
         [Route("api/User/ResetPassword")]
         [HttpPut]
@@ -95,7 +95,7 @@ namespace WasteProducts.Web.Controllers.Api
 
         // POST api/user/resetpassword
         [Route("api/User/ResetPassword")]
-        [HttpPut] 
+        [HttpPut]
         public async Task ResetPassword(string email)
         {
             await _userService.ResetPasswordAsync(email);
@@ -121,7 +121,7 @@ namespace WasteProducts.Web.Controllers.Api
             return await _userService.UpdateUserNameAsync(user, newUserName);
         }
 
-        
+
 
         // PUT api/User/Friends
         [Route("api/User/Friends")]
@@ -144,16 +144,16 @@ namespace WasteProducts.Web.Controllers.Api
         //PUT api/User/Products
         [Route("api/User/Product")]
         [HttpPut]
-        public async Task AddProduct([FromBody]User user, [FromBody]Product product)
+        public async Task AddProduct([FromBody]User user, [FromBody]Product product, [FromBody]int rating, [FromBody]string description)
         {
-            await _userService.AddProductAsync(user, product);
+            await _userService.AddProductAsync(user.Id, product.Id, rating, description);
         }
 
         //POST api/User/Products/Delete
         [Route("api/User/Products/Delete")]
         public async Task DeleteProduct([FromBody]User user, [FromBody]Product product)
         {
-            await _userService.DeleteProductAsync(user, product);
+            await _userService.DeleteProductAsync(user.Id, product.Id);
         }
 
 
