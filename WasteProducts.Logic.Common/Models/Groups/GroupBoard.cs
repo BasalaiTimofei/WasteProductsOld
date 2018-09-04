@@ -1,36 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using WasteProducts.Logic.Common.Models.Users;
 
-namespace WasteProducts.Logic.Common.Models
+namespace WasteProducts.Logic.Common.Models.Groups
 {
     public class GroupBoard
     {
         /// <summary>
-        /// Id - primary key
+        /// Primary key
         /// </summary>
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
+
         /// <summary>
-        /// Name - name board
+        /// Board name
         /// </summary>
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
+
         /// <summary>
-        /// Information - additional information
+        /// Additional information
         /// </summary>
-        public string Information { get; set; }
+        public virtual string Information { get; set; }
+
         /// <summary>
-        /// GroupId - secondary key
+        /// This board
         /// </summary>
-        public int GroupId { get; set; }
+        public virtual Group Group { get; set; }
+
         /// <summary>
-        /// UserId - user which created board
+        /// User which created board
         /// </summary>
-        public int UserId { get; set; }
+        public virtual User Creator { get; set; }
+
         /// <summary>
-        /// GroupProducts - products which add at board
+        /// Products which add at board
         /// </summary>
-        public IList<GroupProduct> GroupProducts { get; set; }
+        public virtual IList<GroupProduct> GroupProducts { get; set; }
+
+        /// <summary>
+        /// Messages sent by users
+        /// </summary>
+        public virtual IList<GroupComment> GroupProductComments { get; set; }
     }
 }

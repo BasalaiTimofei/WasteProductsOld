@@ -4,11 +4,11 @@ using WasteProducts.Logic.Common.Models.Groups;
 
 namespace WasteProducts.Logic.Mappings.Groups
 {
-    public class GroupProductProfile : Profile
+    public class GroupCommentProfile : Profile
     {
-        public GroupProductProfile()
+        public GroupCommentProfile()
         {
-            CreateMap<GroupProduct, GroupProductDB>()
+            CreateMap<GroupComment, GroupCommentDB>()
                 .ForMember(x => x.Modified, y => y.Ignore())
                 .ReverseMap();
         }
