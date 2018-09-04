@@ -15,6 +15,8 @@ using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Exceptions;
 using Lucene.Net.Analysis.Standard;
 using System.Web.Configuration;
+using Lucene.Net.Analysis.Ru;
+using Lucene.Net.QueryParsers.Classic;
 
 namespace WasteProducts.DataAccess.Repositories
 {
@@ -48,8 +50,7 @@ namespace WasteProducts.DataAccess.Repositories
             {
                 throw new LuceneSearchRepositoryException("Can't find Lucene index storage path settings.");
             }
-            //_analyzer = new WhitespaceAnalyzer(MATCH_LUCENE_VERSION);
-            _analyzer = new StandardAnalyzer(MATCH_LUCENE_VERSION);
+            _analyzer = new RussianAnalyzer(MATCH_LUCENE_VERSION);
             try
             {
                 _directory = FSDirectory.Open(IndexPath);
@@ -61,7 +62,6 @@ namespace WasteProducts.DataAccess.Repositories
                 {
                     IndexWriter.Unlock(_directory);
                 }
-                //_searcherManager = new SearcherManager(_writer, true, null);
                 _writer.Commit();
             }
             catch (Exception ex)
@@ -268,7 +268,6 @@ namespace WasteProducts.DataAccess.Repositories
                 }
                 catch(Exception ex)
                 {
-                    //_searcherManager.Release(searcher);
                     throw new LuceneSearchRepositoryException($"Can't proceed query. {ex.Message}", ex);
                 }
             }
@@ -300,7 +299,6 @@ namespace WasteProducts.DataAccess.Repositories
                 }
                 catch(Exception ex)
                 {
-                    //_searcherManager.Release(searcher);
                     throw new LuceneSearchRepositoryException($"Can't proceed query. {ex.Message}", ex);
                 }
             }
@@ -334,16 +332,20 @@ namespace WasteProducts.DataAccess.Repositories
                 throw new ArgumentException("Can't search with empty filelds.");
             }
             BooleanQuery booleanQuery = new BooleanQuery();
+
             var searchTerms = queryString.Split(' ');
             foreach (var term in searchTerms)
             {
                 foreach (var field in searchableFields)
                 {
                     WildcardQuery wildcardQuery = new WildcardQuery(new Term(field, $"{term}*"));
+                    QueryParser parser = new QueryParser(MATCH_LUCENE_VERSION, field, _analyzer);
+                    var query = parser.Parse(queryString);
                     if (boosts!=null)
                     {
-                        wildcardQuery.Boost = boosts[field];
+                        query.Boost = boosts[field];
                     }
+                    booleanQuery.Add(query, Occur.SHOULD);
                     booleanQuery.Add(wildcardQuery, Occur.SHOULD);
                 }
             }
@@ -388,32 +390,19 @@ namespace WasteProducts.DataAccess.Repositories
             {
                 if (disposing)
                 {
-                    // TODO: dispose managed state (managed objects).
                     _writer.Commit();
                     _writer.Dispose();
                     _directory.Dispose();
                     _analyzer.Dispose();
                 }
 
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
                 disposedValue = true;
             }
         }
 
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~LuceneSearchRepository() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
         public void Dispose()
         {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
             Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
         }
 
         #endregion
