@@ -115,6 +115,7 @@
     <Compile Include="Mappings\UserMappings\ProductProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserClaimProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserLoginProfile.cs" />
+    <Compile Include="Mappings\UserMappings\UserProductDescriptionProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserRoleProfile.cs" />
     <Compile Include="Mappings\ProductProfile.cs" />
@@ -138,7 +139,6 @@
     <Compile Include="Services\UserService\UserRoleService.cs" />
     <Compile Include="Services\UserService\UserService.cs" />
     <Compile Include="Validators\TestValidator.cs" />
-    <Compile Include="Validators\UserService\UserValidator.cs" />
     <Compile Include="Validators\Groups\GroupValidation.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +146,12 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\Groups\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">
@@ -156,12 +162,6 @@
       <Project>{643aab59-4858-4e23-9a18-4bbec3ee5f56}</Project>
       <Name>WasteProducts.Logic.Common</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\Groups\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

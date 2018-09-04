@@ -1,9 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Users;
 
@@ -12,7 +8,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
     /// <summary>
     /// Standart DAL level interface using to make CRUD operations with UserRoleDB models.
     /// </summary>
-    public interface IUserRoleRepository
+    public interface IUserRoleRepository : IDisposable
     {
         /// <summary>
         /// Create a new role.

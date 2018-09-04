@@ -10,7 +10,7 @@ namespace WasteProducts.Logic.Common.Services.UserService
     /// <summary>
     /// Standart BL level interface that exposes basic role management.
     /// </summary>
-    public interface IUserRoleService
+    public interface IUserRoleService : IDisposable
     {
         /// <summary>
         /// Create a new role.

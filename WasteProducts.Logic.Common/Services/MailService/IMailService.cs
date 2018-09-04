@@ -1,8 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace WasteProducts.Logic.Common.Services.MailService
 {
-    public interface IMailService
+    public interface IMailService : IDisposable
     {
         IMailFactory MailFactory { get; }
 
