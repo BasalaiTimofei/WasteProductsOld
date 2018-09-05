@@ -55,16 +55,23 @@ namespace WasteProducts.Logic.Common.Services
         /// <summary>
         /// Gets product by its name.
         /// </summary>
-        /// <param name="name">Name of the product.</param>
+        /// <param name="name">The name of the product.</param>
         /// <returns>Product with the specific name.</returns>
         Product GetByName(string name);
 
         /// <summary>
         /// Gets asynchronously product by its name.
         /// </summary>
-        /// <param name="name">Name of the product.</param>
+        /// <param name="name">The name of the product.</param>
         /// <returns>Product with the specific name.</returns>
         Task<Product> GetByNameAsync(string name);
+
+        /// <summary>
+        /// Gets products by a category.
+        /// </summary>
+        /// <param name="name">Name of the product.</param>
+        /// <returns>Product with the specific name.</returns>
+        IEnumerable<Product> GetByCategory(Category category);
 
         /// <summary>
         /// Tries to delete the product by barcode and returns whether the deletion is successful or not

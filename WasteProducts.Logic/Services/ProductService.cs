@@ -98,9 +98,28 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
+        /// Gets all products
+        /// </summary>
+        /// <returns>All product in the application</returns>
+        public IEnumerable<Product> GetAll()
+        {
+            return _mapper.Map<IEnumerable<Product>>(_productRepository.SelectAll());
+        }
+
+        /// <summary>
         /// Gets product by its name.
         /// </summary>
-        /// <param name="name">Name of the product.</param>
+        /// <param name="name">The name of the product.</param>
+        /// <returns>Product with the specific name.</returns>
+        public Product GetByName(string name)
+        {
+            return name == null ? null : _mapper.Map<Product>(_productRepository.GetByNameAsync(name));
+        }
+
+        /// <summary>
+        /// Gets asynchronously product by its name.
+        /// </summary>
+        /// <param name="name">The name of the product.</param>
         /// <returns>Product with the specific name.</returns>
         public async Task<Product> GetByNameAsync(string name)
         {
