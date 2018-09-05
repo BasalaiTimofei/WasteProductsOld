@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using WasteProducts.DataAccess.Contexts;
 using WasteProducts.DataAccess.Common.Models.Products;
 using Ninject;
+using WasteProducts.DataAccess.Common.Context;
 
 namespace WasteProducts.Logic.Tests.Search_Tests
 {
@@ -452,50 +453,51 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
 
         //Test for context. It will be deleted
-        public class TestContext : WasteContext
-        {            
-            public TestContext() : base(new LuceneSearchRepository())
-            {                
-            }
+        //public class TestContext : WasteContext
+        //{      
+        //    public TestContext(ISearchRepository repo) : base(repo)
+        //    {           
+                
+        //    }
 
-            public void DetectAndSaveChanges(System.Data.Entity.EntityState state, IEnumerable<Type> types)
-            {
-                base.DetectAndSaveChanges(state, types);
-            }
-        }
+        //    public void DetectAndSaveChanges(System.Data.Entity.EntityState state, IEnumerable<Type> types)
+        //    {
+        //        base.DetectAndSaveChanges(state, types);
+        //    }
+        //}
 
-        [Test]
-        public void _DetectChanges_AddNewEntity_Result_Entity_added()
-        {
-            sut = new LuceneSearchRepository(true);
-            TestContext context = new TestContext();
-            ProductDB product = new ProductDB() { Id = "1", Name = "Title", Description = "Description" };
-            context.Products.Add(product);
+        //[Test]
+        //public void _DetectChanges_AddNewEntity_Result_Entity_added()
+        //{
+        //    sut = new LuceneSearchRepository(true);
+        //    TestContext context = new TestContext(sut);
+        //    ProductDB product = new ProductDB() { Id = "1", Name = "Title", Description = "Description" };
+        //    context.Products.Add(product);
 
-            context.DetectAndSaveChanges(System.Data.Entity.EntityState.Added, new List<Type>() { typeof(ProductDB) });                        
+        //    context.DetectAndSaveChanges(System.Data.Entity.EntityState.Added, new List<Type>() { typeof(ProductDB) });                        
 
-            var productFromRepo = sut.GetById<ProductDB>(1);
+        //    var productFromRepo = sut.GetById<ProductDB>();
 
-            Assert.AreNotEqual(null, productFromRepo);
-        }
+        //    Assert.AreNotEqual(null, productFromRepo);
+        //}
 
-        //not passed. Need Product mapper
-        [Test]
-        public void _DetectChanges_AddNewEntityWithCategory_Result_Entity_added()
-        {
-            sut = new LuceneSearchRepository(true);
-            TestContext context = new TestContext();
-            CategoryDB category = new CategoryDB() { Id = 1, Name = "Category name", Description = "Category description" };
-            ProductDB product = new ProductDB() { Id = "1", Name = "Title", Description = "Description", Category = category };
+        ////not passed. Need Product mapper
+        //[Test]
+        //public void _DetectChanges_AddNewEntityWithCategory_Result_Entity_added()
+        //{
+        //    sut = new LuceneSearchRepository(true);
+        //    TestContext context = new TestContext();
+        //    CategoryDB category = new CategoryDB() { Id = 1, Name = "Category name", Description = "Category description" };
+        //    ProductDB product = new ProductDB() { Id = "1", Name = "Title", Description = "Description", Category = category };
             
-            context.Products.Add(product);
+        //    context.Products.Add(product);
 
-            context.DetectAndSaveChanges(System.Data.Entity.EntityState.Added, new List<Type>() { typeof(ProductDB), typeof(CategoryDB) });
+        //    context.DetectAndSaveChanges(System.Data.Entity.EntityState.Added, new List<Type>() { typeof(ProductDB), typeof(CategoryDB) });
 
-            var productFromRepo = sut.GetById<ProductDB>(1);            
+        //    var productFromRepo = sut.GetById<ProductDB>(1);            
 
-            Assert.AreNotEqual(null, productFromRepo);
-            Assert.AreNotEqual(null, productFromRepo.Category);
-        }
+        //    Assert.AreNotEqual(null, productFromRepo);
+        //    Assert.AreNotEqual(null, productFromRepo.Category);
+        //}
     }
 }
