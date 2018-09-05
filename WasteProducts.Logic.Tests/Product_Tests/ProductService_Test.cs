@@ -87,6 +87,80 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
+        public void Add_InsertsNewProduct_Returns_True()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.Add(product);
+
+            Assert.That(result, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void Add_DoesNotInsertNewProduct_Returns_False()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.Add(product);
+
+            Assert.That(result, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void Add_DoesNotInsertNullProduct_Returns_False()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.Add(null);
+
+            Assert.That(result, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void Add_InsertsNewProduct_CallsMethod_AddOfRepository()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.Add(product);
+
+            mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Once);
+        }
+
+        [Test]
+        public void Add_DoesNotInsertNewProduct_DoesNotCallMethod_AddOfRepository()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.Add(product);
+
+            mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Never);
+        }
+
+        [Test]
+        public void Add_DoesNotInsertNullProduct_DoesNotCallMethod_AddOfRepository()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.Add(null);
+
+            mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Never);
+        }
+
+        [Test]
         public void AddByBarcode_InsertsNewProduct_Returns_True()
         {
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
@@ -112,7 +186,6 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        //TODO Проверить чисто на null
         public void AddByBarcore_BarcodeIsNotNull()
         {
             var productService = new ProductService(mockProductRepository.Object, mapper);

@@ -34,7 +34,7 @@ namespace WasteProducts.Logic.Services
         /// <returns>Boolean represents whether the addition is successful or not</returns>
         public bool Add(Product product)
         {
-            if (product == null && IsProductsInDB(p =>
+            if (product == null || IsProductsInDB(p =>
                     string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
                 out var products)) return false;
 
