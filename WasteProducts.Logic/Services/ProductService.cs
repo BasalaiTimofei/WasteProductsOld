@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Ninject;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.Logic.Common.Models.Barcods;
@@ -22,7 +23,7 @@ namespace WasteProducts.Logic.Services
 
         private bool _disposed;
 
-        public ProductService(IProductRepository productRepository, IMapper mapper)
+        public ProductService(IProductRepository productRepository, [Named("ProductService")] IMapper mapper)
         {
             _productRepository = productRepository;
             _mapper = mapper;
