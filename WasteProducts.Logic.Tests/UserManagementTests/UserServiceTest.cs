@@ -43,7 +43,18 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             _mailServiceMock = new Mock<IMailService>();
             _userRepoMock = new Mock<IUserRepository>();
             _userServiceMock = new Mock<IUserService>();
-            _userService = new UserService(_mailServiceMock.Object, _userRepoMock.Object);
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<UserProfile>();
+                cfg.AddProfile<UserClaimProfile>();
+                cfg.AddProfile<UserLoginProfile>();
+                cfg.AddProfile<Mappings.UserMappings.ProductProfile>();
+                cfg.AddProfile<UserProductDescriptionProfile>();
+            });
+            var mapper = new Mapper(config);
+
+            _userService = new UserService(_userRepoMock.Object, mapper, _mailServiceMock.Object);
         }
 
         [TearDown]
@@ -189,7 +200,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             UserDB userDB = new UserDB();
             userDB.Email = "validEmail@gmail.com";
             userDB.PasswordHash = "password";
-            var userName = "UserName";
             IList<string> roles = new List<string>();
 
             (UserDB, IList<string>) tuple = (null, roles);
