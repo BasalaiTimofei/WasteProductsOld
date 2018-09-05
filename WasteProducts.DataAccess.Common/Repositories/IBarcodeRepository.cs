@@ -10,7 +10,7 @@ namespace WasteProducts.DataAccess.Common.Repositories
     /// <summary>
     /// This interface provides CRUD methods for barcode repository
     /// </summary>
-    public interface IBarcodeRepository
+    public interface IBarcodeRepository : IDisposable
     {
         /// <summary>
         /// Return the barcode by its numerical barcode.

@@ -13,11 +13,11 @@ namespace WasteProducts.Logic.Mappings.UserMappings
                 .ForMember(m => m.Created, opt => opt.Ignore())
                 .ForMember(m => m.Modified, opt => opt.Ignore())
                 .ForMember(m => m.Roles, opt => opt.Ignore())
-                .ForMember(m => m.PasswordHash, opt => opt.MapFrom(u => u.Password));
+                .ForMember(m => m.PasswordHash, opt => opt.MapFrom(u => u.PasswordHash));
 
             CreateMap<UserDB, User>()
                 .ForMember(m => m.Roles, opt => opt.ResolveUsing((u, u2) => new List<string>()))
-                .ForMember(m => m.Password, opt => opt.MapFrom(u => u.PasswordHash));
+                .ForMember(m => m.PasswordHash, opt => opt.MapFrom(u => u.PasswordHash));
         }
     }
 }

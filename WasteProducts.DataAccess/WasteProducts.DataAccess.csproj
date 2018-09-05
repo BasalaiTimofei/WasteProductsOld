@@ -47,8 +47,8 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=1.0.0.4, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpZipLib.1.0.0-rc2\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.0.0.999, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.0.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Lucene.Net, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Lucene.Net.4.8.0-beta00005\lib\net45\Lucene.Net.dll</HintPath>
@@ -122,6 +122,7 @@
     <Compile Include="ModelConfigurations\Groups\GroupConfiguration.cs" />
     <Compile Include="ModelConfigurations\Groups\GroupProductConfiguration.cs" />
     <Compile Include="ModelConfigurations\Groups\GroupUserConfiguration.cs" />
+    <Compile Include="ModelConfigurations\UserManagement\UserProductDescriptionConfiguration.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Contexts\Security\Configurations\RoleConfiguration.cs" />
     <Compile Include="Contexts\Security\Configurations\UserClaimConfiguration.cs" />
@@ -147,16 +148,6 @@
     <Compile Include="UoW\UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">
-      <Project>{9acbec5d-caa7-4e29-a19c-a247190f6da8}</Project>
-      <Name>WasteProducts.DataAccess.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WasteProducts.Logic.Common\WasteProducts.Logic.Common.csproj">
-      <Project>{643AAB59-4858-4E23-9A18-4BBEC3EE5F56}</Project>
-      <Name>WasteProducts.Logic.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.config">
       <TransformOnBuild>true</TransformOnBuild>
     </None>
@@ -169,6 +160,12 @@
       <IsTransformFile>true</IsTransformFile>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">
+      <Project>{9acbec5d-caa7-4e29-a19c-a247190f6da8}</Project>
+      <Name>WasteProducts.DataAccess.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.VisualStudio.SlowCheetah.3.1.66\build\Microsoft.VisualStudio.SlowCheetah.targets" Condition="Exists('..\packages\Microsoft.VisualStudio.SlowCheetah.3.1.66\build\Microsoft.VisualStudio.SlowCheetah.targets')" />

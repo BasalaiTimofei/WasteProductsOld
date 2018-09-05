@@ -16,9 +16,9 @@ namespace WasteProducts.DataAccess.Common.Models.Users
         public virtual IList<UserDB> Friends { get; set; }
 
         /// <summary>
-        /// List of Products which User have ever captured.
+        /// List of products added and described by the user.
         /// </summary>
-        public virtual IList<ProductDB> Products { get; set; }
+        public virtual IList<UserProductDescriptionDB> ProductDescriptions { get; set; }
 
         // TODO decomment after the "Groups" model is enabled
         /// <summary>

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Ninject;
 using Ninject.Modules;
 using WasteProducts.DataAccess.Common.Context;
+using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Contexts;
@@ -23,10 +24,20 @@ namespace WasteProducts.DataAccess
                 return;
 
             Bind<WasteContext>().ToSelf().InTransientScope(); ; // TODO : replace with IDbContext in all repositories
+
             Bind<IDbContext>().ToMethod(context => context.Kernel.Get<WasteContext>());
             
             Bind<IUserRepository>().To<UserRepository>();
+
+            Bind<IProductRepository>().ToMethod(c =>
+            {
+                var db = new WasteContext("name=ConStrByServer");
+                return new ProductRepository(db);
+            })
+            .Named("UserIntegrTest");
+
             Bind<IUserRoleRepository>().To<UserRoleRepository>();
+
             Bind<ISearchRepository>().To<LuceneSearchRepository>().InSingletonScope();
         }
     }
