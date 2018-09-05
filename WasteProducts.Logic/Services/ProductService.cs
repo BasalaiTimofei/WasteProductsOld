@@ -94,7 +94,7 @@ namespace WasteProducts.Logic.Services
             return barcode == null
                 ? null
                 : _mapper.Map<Product>(_productRepository.SelectWhere(p =>
-                    string.Equals(p.Barcode.Code, barcode.Code, StringComparison.OrdinalIgnoreCase)));
+                    string.Equals(p.Barcode.Code, barcode.Code, StringComparison.OrdinalIgnoreCase)).First());
         }
 
         /// <summary>
@@ -113,7 +113,10 @@ namespace WasteProducts.Logic.Services
         /// <returns>Product with the specific name.</returns>
         public Product GetByName(string name)
         {
-            return name == null ? null : _mapper.Map<Product>(_productRepository.GetByNameAsync(name));
+            return name == null
+                ? null
+                : _mapper.Map<Product>(_productRepository.SelectWhere(p =>
+                    string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase)).First());
         }
 
         /// <summary>

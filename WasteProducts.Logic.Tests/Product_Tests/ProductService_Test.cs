@@ -332,6 +332,98 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
+        public void GetById_GetsId_Returns_Product()
+        {
+            var id = new Guid().ToString();
+            mockProductRepository.Setup(repo => repo.GetById(id))
+                .Returns(productDB);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.GetById(id);
+
+            Assert.That(result, Is.InstanceOf(typeof(Product)));
+        }
+
+        [Test]
+        public void GetById_GetsId_Returns_Null()
+        {
+            var id = new Guid().ToString();
+            mockProductRepository.Setup(repo => repo.GetById(id))
+                .Returns(productDB);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.GetById(null);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void GetByBarcode_GetsBarcode_Returns_Product()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.GetByBarcode(barcode);
+
+            Assert.That(result, Is.InstanceOf(typeof(Product)));
+        }
+
+        [Test]
+        public void GetByBarcode_GetsBarcode_Returns_null()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.GetByBarcode(null);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void GetAll_GetsNothing_Returns_GenericEnumerableCollection()
+        {
+            selectedList.Add(productDB);
+            selectedList.Add(new ProductDB { Id = new Guid().ToString(), Name = "New Some Name" });
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.GetAll();
+
+            Assert.That(result, Is.InstanceOf<IEnumerable<Product>>());
+        }
+
+        [Test]
+        public void GetByName_GetProductName_Returns_Product()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.GetByName(productName);
+
+            Assert.That(result, Is.InstanceOf(typeof(Product)));
+        }
+
+        [Test]
+        public void GetByName_GetsProductName_Returns_null()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.GetByName(null);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
         public void DeleteByBarcode_DeletesProduct_Returns_True()
         {
             selectedList.Add(productDB);
