@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Castle.Core.Internal;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.Logic.Common.Models.Barcods;
@@ -17,9 +18,7 @@ namespace WasteProducts.Logic.Services
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
-
         private readonly IMapper _mapper;
-
         private bool _disposed;
 
         public ProductService(IProductRepository productRepository, IMapper mapper)
@@ -28,19 +27,21 @@ namespace WasteProducts.Logic.Services
             _mapper = mapper;
         }
 
-        ~ProductService()
+        /// <summary>
+        /// Tries to add a new product and returns whether the addition is successful or not
+        /// </summary>
+        /// <param name="product">The product to be added</param>
+        /// <returns>Boolean represents whether the addition is successful or not</returns>
+        public bool Add(Product product)
         {
-            Dispose();
-        }
+            if (product == null && IsProductsInDB(p =>
+                    string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
+                out var products)) return false;
 
-        public void Dispose()
-        {
-            if (!_disposed)
-            {
-                _productRepository?.Dispose();
-                _disposed = true;
-                GC.SuppressFinalize(this);
-            }
+            product.Id = new Guid().ToString();
+            _productRepository.Add(_mapper.Map<ProductDB>(product));
+
+            return true;
         }
 
         /// <summary>
@@ -67,14 +68,10 @@ namespace WasteProducts.Logic.Services
         /// <returns>Boolean represents whether the addition is successful or not</returns>
         public bool AddByName(string name)
         {
-            if (IsProductsInDB(p =>
-                string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
-                out var products)) return false;
+            if (name == null) return false;
+            var product = new Product { Name = name };
 
-            var newProduct = new Product { Id = new Guid().ToString(), Name = name};
-            _productRepository.Add(_mapper.Map<ProductDB>(newProduct));
-
-            return true;
+            return Add(product);
         }
 
         public async Task<Product> GetByNameAsync(string name)
@@ -264,6 +261,21 @@ namespace WasteProducts.Logic.Services
         {
             products = _productRepository.SelectWhere(conditionPredicate);
             return products.Any();
-        }        
+        }
+
+        ~ProductService()
+        {
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                _productRepository?.Dispose();
+                _disposed = true;
+                GC.SuppressFinalize(this);
+            }
+        }
     }
 }

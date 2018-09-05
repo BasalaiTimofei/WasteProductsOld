@@ -11,6 +11,13 @@ namespace WasteProducts.Logic.Common.Services
     public interface IProductService : IDisposable
     {
         /// <summary>
+        /// Tries to add a new product and returns whether the addition is successful or not
+        /// </summary>
+        /// <param name="product">The product to be added</param>
+        /// <returns>Boolean represents whether the addition is successful or not</returns>
+        bool Add(Product product);
+
+        /// <summary>
         /// Tries to add a new product by barcode and returns whether the addition is successful or not
         /// </summary>
         /// <param name="barcode">Barcode of the product to be added</param>

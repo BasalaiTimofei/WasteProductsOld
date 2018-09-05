@@ -30,6 +30,8 @@ namespace WasteProducts.Logic.Tests.Product_Tests
     [TestFixture]
     class ProductService_Test
     {
+        private const string productName = "Some name";
+
         private Barcode barcode;
         private BarcodeDB barcodeDB;
         private Product product;
@@ -152,7 +154,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
                 .Returns(selectedList);
 
             var productService = new ProductService(mockProductRepository.Object, mapper);
-            var result = productService.AddByName(It.IsAny<string>());
+            var result = productService.AddByName(productName);
 
             Assert.That(result, Is.EqualTo(true));
         }
@@ -188,7 +190,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
                 .Returns(selectedList);
 
             var productService = new ProductService(mockProductRepository.Object, mapper);
-            productService.AddByName(It.IsAny<string>());
+            productService.AddByName(productName);
 
             mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Once);
         }
