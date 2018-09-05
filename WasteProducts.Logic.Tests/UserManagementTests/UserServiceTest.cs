@@ -200,7 +200,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             UserDB userDB = new UserDB();
             userDB.Email = "validEmail@gmail.com";
             userDB.PasswordHash = "password";
-            var userName = "UserName";
             IList<string> roles = new List<string>();
 
             (UserDB, IList<string>) tuple = (null, roles);

@@ -73,7 +73,8 @@ namespace WasteProducts.Logic
                 Bind<IUserRoleService>().ToMethod(ctx =>
                 {
                     var repo = ctx.Kernel.Get<IUserRoleRepository>("UserIntegrTest");
-                    return new UserRoleService(repo);
+                    var mapper = ctx.Kernel.Get<IMapper>("UserRoleService");
+                    return new UserRoleService(repo, mapper);
                 })
                 .Named("UserIntegrTest");
             }
@@ -108,6 +109,18 @@ namespace WasteProducts.Logic
                     return new Mapper(config);
                 })
                 .Named("UserService");
+
+                Bind<IMapper>().ToMethod(ctx =>
+                {
+                    var config = new MapperConfiguration(cfg =>
+                    {
+                        cfg.AddProfile(new UserProfile());
+                        cfg.AddProfile(new UserClaimProfile());
+                        cfg.AddProfile(new UserLoginProfile());
+                    });
+                    return new Mapper(config);
+                })
+                .Named("UserRoleService");
 
                 Bind<IMapper>().ToMethod(ctx =>
                 {
