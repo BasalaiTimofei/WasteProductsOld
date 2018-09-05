@@ -14,6 +14,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataAccess", "DataAccess", "{D1C023C3-F1E3-464B-827E-6BF8EFCFE77E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logic", "Logic", "{F44E3173-7A14-445E-8CB5-77274C59AF0E}"
+	ProjectSection(SolutionItems) = preProject
+		WasteProducts.DataAccess\App.config = WasteProducts.DataAccess\App.config
+		WasteProducts.DataAccess\App.Debug.config = WasteProducts.DataAccess\App.Debug.config
+		WasteProducts.DataAccess\App.Release.config = WasteProducts.DataAccess\App.Release.config
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WasteProducts.DataAccess", "WasteProducts.DataAccess\WasteProducts.DataAccess.csproj", "{E9FB0E3E-01D5-4316-8703-84248A90BE98}"
 EndProject

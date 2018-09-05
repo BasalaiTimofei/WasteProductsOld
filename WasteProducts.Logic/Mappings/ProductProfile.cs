@@ -10,8 +10,9 @@ namespace WasteProducts.Logic.Mappings
         public ProductProfile()
         {
             CreateMap<Product, ProductDB>()
-                .ForMember(m => m.Created, opt => opt.MapFrom(p => p.Name != null ? DateTime.UtcNow : default(DateTime)))
-                .ForMember(m => m.Modified, opt => opt.UseValue((DateTime?)null))
+                .ForMember(m => m.Created,
+                    opt => opt.MapFrom(p => p.Name != null ? DateTime.UtcNow : default(DateTime)))
+                .ForMember(m => m.Modified, opt => opt.UseValue((DateTime?) null))
                 .ReverseMap();
         }
     }

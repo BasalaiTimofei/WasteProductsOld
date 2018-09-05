@@ -1,4 +1,6 @@
-﻿using WasteProducts.Logic.Common.Models.Barcods;
+﻿using System;
+using System.Threading.Tasks;
+using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
 
 namespace WasteProducts.Logic.Common.Services
@@ -6,7 +8,7 @@ namespace WasteProducts.Logic.Common.Services
     /// <summary>
     /// This interface provides product methods
     /// </summary>
-    public interface IProductService
+    public interface IProductService : IDisposable
     {
         /// <summary>
         /// Tries to add a new product by barcode and returns whether the addition is successful or not
@@ -35,6 +37,13 @@ namespace WasteProducts.Logic.Common.Services
         /// <param name="name">The name of the product to be deleted</param>
         /// <returns>Boolean represents whether the deletion is successful or not</returns>
         bool DeleteByName(string name);
+
+        /// <summary>
+        /// Gets product by its name.
+        /// </summary>
+        /// <param name="name">Name of the product.</param>
+        /// <returns>Product with the specific name.</returns>
+        Task<Product> GetByNameAsync(string name);
 
         /// <summary>
         /// Tries to add the category by specific category and returns whether the addition is successful or not
@@ -82,7 +91,7 @@ namespace WasteProducts.Logic.Common.Services
         /// Checks whether a specific product is hidden or not
         /// </summary>
         /// <param name="product">Checked specific product</param>
-        /// <returns></returns>
+        /// <returns>Boolean represents whether the product is in the hidden state</returns>
         bool IsHidden(Product product);
 
         /// <summary>

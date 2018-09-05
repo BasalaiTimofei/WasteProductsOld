@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Net.Mail;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Services.MailService;
 
@@ -12,13 +7,16 @@ namespace WasteProducts.Logic.Services.MailService
 {
     public class MailService : IMailService
     {
-        private readonly SmtpClientGetter _smtpClientGetter;
+        private readonly SmtpClient _smtpClient;
+
+        private bool _disposed;
 
         public MailService(SmtpClient smtpClient, string ourEmail, IMailFactory mailFactory)
         {
-            if(smtpClient != null)
+            _smtpClient = smtpClient;
+            if (!IsValidEmail(ourEmail))
             {
-                _smtpClientGetter = new SmtpClientGetter(smtpClient);
+                throw new FormatException("Arguement \"ourEmail\" in creating a new MailService inctance wasn't actually valid email.");
             }
             OurEmail = ourEmail;
             MailFactory = mailFactory;
@@ -27,6 +25,23 @@ namespace WasteProducts.Logic.Services.MailService
         public IMailFactory MailFactory { get; }
 
         public string OurEmail { get; set; }
+
+        ~MailService()
+        {
+            if (!_disposed)
+            {
+                Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                _smtpClient?.Dispose();
+                _disposed = true;
+            }
+        }
 
         public bool IsValidEmail(string email)
         {
@@ -51,7 +66,6 @@ namespace WasteProducts.Logic.Services.MailService
                 try
                 {
                     message = MailFactory.Create(OurEmail, to, subject, body);
-                    smtpClient = _smtpClientGetter.Get();
                     await smtpClient.SendMailAsync(message);
                 }
                 catch
@@ -63,52 +77,6 @@ namespace WasteProducts.Logic.Services.MailService
                     smtpClient?.Dispose();
                 }
             });
-        }
-
-        private class SmtpClientGetter
-        {
-            private ICredentialsByHost Credentials { get; }
-            private SmtpDeliveryFormat DeliveryFormat { get; }
-            private SmtpDeliveryMethod DeliveryMethod { get; }
-            private bool EnableSsl { get; }
-            private string Host { get; }
-            private string PickupDirectoryLocation { get; }
-            private int Port { get; }
-            private string TargetName { get; }
-            private int Timeout { get; }
-            private bool UseDefaultCredentials { get; }
-
-            internal SmtpClientGetter(SmtpClient smtpClient)
-            {
-                Credentials = smtpClient.Credentials;
-                DeliveryFormat = smtpClient.DeliveryFormat;
-                DeliveryMethod = smtpClient.DeliveryMethod;
-                EnableSsl = smtpClient.EnableSsl;
-                Host = smtpClient.Host;
-                Port = smtpClient.Port;
-                TargetName = smtpClient.TargetName;
-                Timeout = smtpClient.Timeout;
-                UseDefaultCredentials = smtpClient.UseDefaultCredentials;
-
-                smtpClient.Dispose();
-            }
-
-            internal SmtpClient Get()
-            {
-                SmtpClient result = new SmtpClient(Host, Port)
-                {
-                    Credentials = Credentials,
-                    DeliveryFormat = DeliveryFormat,
-                    DeliveryMethod = DeliveryMethod,
-                    EnableSsl = EnableSsl,
-                    PickupDirectoryLocation = PickupDirectoryLocation,
-                    TargetName = TargetName,
-                    Timeout = Timeout,
-                    UseDefaultCredentials = UseDefaultCredentials
-                };
-
-                return result;
-            }
         }
     }
 }

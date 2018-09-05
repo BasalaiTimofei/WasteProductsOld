@@ -1,29 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Products;
 
-namespace WasteProducts.DataAccess.Common.Models
+namespace WasteProducts.DataAccess.Common.Models.Groups
 {
     public class GroupProductDB
     {
         /// <summary>
-        /// Id - primary key
+        /// Primary key
         /// </summary>
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
+
         /// <summary>
-        /// GroupBordId - secondary key
+        /// This product
         /// </summary>
-        public int GroupBordId { get; set; }
-        public GroupBoardDB GroupBoardDB { get; set; }
+        public virtual ProductDB Product { get; set; }
+
         /// <summary>
-        /// ProductId - product which add at board
+        /// This board
         /// </summary>
-        public int ProductId { get; set; }
+        public virtual GroupBoardDB GroupBoard { get; set; }
+
         /// <summary>
-        /// Information - additional information
+        /// Additional information
         /// </summary>
         public string Information { get; set; }
+
+        /// <summary>
+        /// Model modification time
+        /// </summary>
+        public virtual DateTime? Modified { get; set; }
     }
 }

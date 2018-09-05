@@ -30,12 +30,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper, Version=7.0.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.7.0.1\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,6 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\TraceAttribute.cs" />
+    <Compile Include="Factories\IDbServiceFactory.cs" />
+    <Compile Include="Models\Diagnostic\DatabaseResult.cs" />
+    <Compile Include="Models\Diagnostic\DatabaseState.cs" />
     <Compile Include="Models\DonationManagment\Address.cs" />
     <Compile Include="Models\DonationManagment\Donation.cs" />
     <Compile Include="Models\Barcods\Barcode.cs" />
@@ -74,22 +85,26 @@
     <Compile Include="Models\Products\Product.cs" />
     <Compile Include="Models\Users\UserClaim.cs" />
     <Compile Include="Models\Users\UserLogin.cs" />
+    <Compile Include="Models\Users\UserProductDescription.cs" />
     <Compile Include="Models\Users\UserRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Diagnostic\IDbSeedService.cs" />
+    <Compile Include="Services\Diagnostic\IDbManagementService.cs" />
+    <Compile Include="Services\ICategoryService.cs" />
     <Compile Include="Services\IDonationLogger.cs" />
     <Compile Include="Services\IProductService.cs" />
     <Compile Include="Services\ISearchService.cs" />
-    <Compile Include="Services\IBarcodeService.cs" />
-    <Compile Include="Models\Groups\GroupUserInviteTime.cs" />
+    <Compile Include="Services\IBarcodeScanService.cs" />
     <Compile Include="Models\Groups\GroupBoard.cs" />
     <Compile Include="Models\Groups\Group.cs" />
     <Compile Include="Models\Groups\GroupProduct.cs" />
+    <Compile Include="Models\Groups\GroupComment.cs" />
     <Compile Include="Models\Groups\GroupUser.cs" />
-    <Compile Include="Services\Groups\IGropDataService.cs" />
-    <Compile Include="Services\Groups\IGropUserManagerService.cs" />
-    <Compile Include="Services\Groups\IGropProductService.cs" />
-    <Compile Include="Services\Groups\IGropBoardService.cs" />
-    <Compile Include="Services\Groups\IGropService.cs" />
+    <Compile Include="Services\Groups\IGroupDataService.cs" />
+    <Compile Include="Services\Groups\IGroupUserManagerService.cs" />
+    <Compile Include="Services\Groups\IGroupProductService.cs" />
+    <Compile Include="Services\Groups\IGroupBoardService.cs" />
+    <Compile Include="Services\Groups\IGroupService.cs" />
     <Compile Include="Services\MailService\IMailFactory.cs" />
     <Compile Include="Services\MailService\IMailService.cs" />
     <Compile Include="Services\UserService\IUserRoleService.cs" />

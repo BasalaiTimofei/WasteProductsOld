@@ -5,7 +5,7 @@ namespace WasteProducts.Logic.Common.Services
     /// <summary>
     /// user access service in group
     /// </summary>
-    public interface IGropUserManagerService
+    public interface IGroupUserManagerService
     {
         /// <summary>
         /// Add - joining a group
