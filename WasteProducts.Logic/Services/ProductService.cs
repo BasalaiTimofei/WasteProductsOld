@@ -127,6 +127,18 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
+        /// Gets products by a category.
+        /// </summary>
+        /// <param name="name">Name of the product.</param>
+        /// <returns>Product with the specific name.</returns>
+        public IEnumerable<Product> GetByCategory(Category category)
+        {
+            return category == null
+                ? null
+                : _mapper.Map<IEnumerable<Product>>(_productRepository.SelectByCategory(_mapper.Map<CategoryDB>(category)));
+        }
+
+        /// <summary>
         /// Tries to delete the product by barcode and returns whether the deletion is successful or not
         /// </summary>
         /// <param name="barcode">Barcode of the product to be deleted</param>
