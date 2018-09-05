@@ -74,7 +74,15 @@ namespace WasteProducts.Logic.Services
             return Add(product);
         }
 
-
+        /// <summary>
+        /// Gets the product by its id
+        /// </summary>
+        /// <param name="id">The id of the product</param>
+        /// <returns>The product with the specific id</returns>
+        public Product GetById(string id)
+        {
+            return id == null ? null : _mapper.Map<Product>(_productRepository.GetById(id));
+        }
 
         /// <summary>
         /// Gets product by its name.
@@ -83,12 +91,7 @@ namespace WasteProducts.Logic.Services
         /// <returns>Product with the specific name.</returns>
         public async Task<Product> GetByNameAsync(string name)
         {
-            if(name == null)
-            {
-                return null;
-            }
-
-            return _mapper.Map<Product>(await _productRepository.GetByNameAsync(name));
+            return name == null ? null : _mapper.Map<Product>(await _productRepository.GetByNameAsync(name));
         }
 
         /// <summary>
