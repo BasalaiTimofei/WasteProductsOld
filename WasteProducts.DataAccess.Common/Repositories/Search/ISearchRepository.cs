@@ -26,6 +26,8 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
         /// <returns></returns>
         TEntity GetById<TEntity>(int id) where TEntity : class;
 
+        TEntity GetById<TEntity>(string id) where TEntity : class;
+
         /// <summary>
         /// Async version of Get
         /// </summary>

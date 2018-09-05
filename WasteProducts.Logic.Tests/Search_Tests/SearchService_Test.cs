@@ -19,11 +19,11 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         {
             users = new List<TestUser>
             {
-                new TestUser { Id = 1, Login = "user1", Email = "user1@mail.net" },
-                new TestUser { Id = 2, Login = "user2", Email = "user2@mail.net" },
-                new TestUser { Id = 3, Login = "user3", Email = "user3@mail.net" },
-                new TestUser { Id = 4, Login = "user4", Email = "user4@mail.net" },
-                new TestUser { Id = 5, Login = "user5", Email = "user5@mail.net" }
+                new TestUser { Id = "1", Login = "user1", Email = "user1@mail.net" },
+                new TestUser { Id = "2", Login = "user2", Email = "user2@mail.net" },
+                new TestUser { Id = "3", Login = "user3", Email = "user3@mail.net" },
+                new TestUser { Id = "4", Login = "user4", Email = "user4@mail.net" },
+                new TestUser { Id = "5", Login = "user5", Email = "user5@mail.net" }
             };
 
             mockRepo = new Mock<ISearchRepository>();

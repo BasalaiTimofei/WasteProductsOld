@@ -95,6 +95,11 @@ namespace WasteProducts.DataAccess.Repositories
             return ProceedQuery<TEntity>(queryGet);
         }
 
+        public TEntity GetById<TEntity>(string id) where TEntity : class
+        {
+            return Get<TEntity>(id, IDField);
+        }
+
         /// <summary>
         /// Returns entity from repository by field value
         /// </summary>
@@ -115,7 +120,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// <returns></returns>
         public IEnumerable<TEntity> GetAll<TEntity>() where TEntity  :class
         {           
-            Query queryGet = NumericRangeQuery.NewInt64Range(IDField, 0, Int32.MaxValue, true, true);
+            WildcardQuery queryGet = new WildcardQuery(new Term(IDField, "*"));
             return ProceedQueryList<TEntity>(queryGet, Int32.MaxValue);
         }
 
@@ -170,8 +175,8 @@ namespace WasteProducts.DataAccess.Repositories
         public void Update<TEntity>(TEntity obj) where TEntity : class 
         {
             System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty(IDField);
-            int id = (int)keyFieldInfo.GetValue(obj);
-            if (id>0)
+            string id = (string)keyFieldInfo.GetValue(obj);
+            if (!String.IsNullOrEmpty(id))
             {
                 if (GetById<TEntity>(id) != null)
                 {
@@ -193,10 +198,12 @@ namespace WasteProducts.DataAccess.Repositories
         public void Delete<TEntity>(TEntity obj) where TEntity : class
         {
             System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty(IDField);
-            int id = (int)keyFieldInfo.GetValue(obj);
-            if (id>0)
+            string id = (string)keyFieldInfo.GetValue(obj);
+            if (!String.IsNullOrEmpty(id))
             {
-                _writer.DeleteDocuments<TEntity>(NumericRangeQuery.NewInt64Range(IDField, id, id, true, true));
+                //_writer.DeleteDocuments<TEntity>(NumericRangeQuery.NewInt64Range(IDField, id, id, true, true));
+                Query query = new TermQuery(new Term(IDField, id));
+                _writer.DeleteDocuments<TEntity>(query);
                 _writer.Commit();
             }
             else

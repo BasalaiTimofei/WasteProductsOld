@@ -15,14 +15,14 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 {
     public class TestProduct
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
     }
 
     public class TestUser
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Login { get; set; }
         public string Email { get; set; }
     }
@@ -35,20 +35,20 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         {
             users = new List<TestUser>
             {
-                new TestUser { Id = 1, Login = "user1", Email = "user1@mail.net" },
-                new TestUser { Id = 2, Login = "user2", Email = "user2@mail.net" },
-                new TestUser { Id = 3, Login = "user3", Email = "user3@mail.net" },
-                new TestUser { Id = 4, Login = "user4 user", Email = "user4@mail.net" },
-                new TestUser { Id = 5, Login = "user5 user", Email = "user5@mail.net" }
+                new TestUser { Id = "1", Login = "user1", Email = "user1@mail.net" },
+                new TestUser { Id = "2", Login = "user2", Email = "user2@mail.net" },
+                new TestUser { Id = "3", Login = "user3", Email = "user3@mail.net" },
+                new TestUser { Id = "4", Login = "user4 user", Email = "user4@mail.net" },
+                new TestUser { Id = "5", Login = "user5 user", Email = "user5@mail.net" }
             };
 
             products = new List<TestProduct>
             {
-                new TestProduct { Id=1, Name = "Product1 Name1", Description = "Product1 Description1"},
-                new TestProduct { Id=2, Name = "Product2 Name2", Description = "Product2 Description2"},
-                new TestProduct { Id=3, Name = "Product3 Name3", Description = "Product3 Description3"},
-                new TestProduct { Id=4, Name = "Product4 Name4", Description = "Product4 Description4"},
-                new TestProduct { Id=5, Name = "Product5 Name5", Description = "Product5 Description5"}
+                new TestProduct { Id="1", Name = "Product1 Name1", Description = "Product1 Description1"},
+                new TestProduct { Id="2", Name = "Product2 Name2", Description = "Product2 Description2"},
+                new TestProduct { Id="3", Name = "Product3 Name3", Description = "Product3 Description3"},
+                new TestProduct { Id="4", Name = "Product4 Name4", Description = "Product4 Description4"},
+                new TestProduct { Id="5", Name = "Product5 Name5", Description = "Product5 Description5"}
             };
 
         }
@@ -56,7 +56,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         private IEnumerable<TestUser> users;
         private IEnumerable<TestProduct> products;
         private ISearchRepository sut;
-        
+
         [Test]
         public void Ctr_NewRepository_Return_NoException()
         {
@@ -73,7 +73,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         public void Ctr_NewRepositoryWithFalse_Return_NoException()
         {
             sut = new LuceneSearchRepository(false);
-        }        
+        }
 
         [Test]
         public void Insert_InsertNewObject_Return_NoException()
@@ -87,7 +87,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void GetById_GetTestUser_Return_NoException()
         {
-            var user = new TestUser() { Id = 1, Login = "user1" };
+            var user = new TestUser() { Id = "1", Login = "user1" };
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
 
@@ -97,11 +97,11 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void GetById_GetExistingId_Return_ObjectWithCorrectId()
         {
-            var user = new TestUser() { Id = 1, Login = "user1" };
+            var user = new TestUser() { Id = "1", Login = "user1" };
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
 
-            var userFromRepo = sut.GetById<TestUser>(1);
+            var userFromRepo = sut.GetById<TestUser>("1");
 
             Assert.AreEqual(user.Login, userFromRepo.Login);
         }
@@ -109,14 +109,14 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void GetById_GetWrongId_Return_ObjectAreNotEqual()
         {
-            var user = new TestUser() { Id = 1, Login = "user1" };
-            var user2 = new TestUser() { Id = 2, Login = "user2" };
+            var user = new TestUser() { Id = "1", Login = "user1" };
+            var user2 = new TestUser() { Id = "2", Login = "user2" };
 
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
             sut.Insert(user2);
 
-            var userFromRepo = sut.GetById<TestUser>(2);
+            var userFromRepo = sut.GetById<TestUser>("2");
 
             Assert.AreNotEqual(user.Login, userFromRepo.Login);
         }
@@ -124,7 +124,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void GetById_GetByNotExistingId_Return_NullObject()
         {
-            var user = new TestUser() { Id = 1, Login = "user1" };
+            var user = new TestUser() { Id = "1", Login = "user1" };
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
 
@@ -136,7 +136,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void Get_GetUser_Return_NoException()
         {
-            var user = new TestUser() { Id = 1, Login = "user1" };
+            var user = new TestUser() { Id = "1", Login = "user1" };
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
 
@@ -146,7 +146,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void Get_GetExistingId_Return_ObjectWithCorrectId()
         {
-            var user = new TestUser() { Id = 1, Login = "user1" };
+            var user = new TestUser() { Id = "1", Login = "user1" };
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
 
@@ -158,8 +158,8 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void Get_GetWrongId_Return_ObjectAreNotEqual()
         {
-            var user = new TestUser() { Id = 1, Login = "user1" };
-            var user2 = new TestUser() { Id = 2, Login = "user2" };
+            var user = new TestUser() { Id = "1", Login = "user1" };
+            var user2 = new TestUser() { Id = "2", Login = "user2" };
 
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
@@ -173,7 +173,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         [Test]
         public void Get_GetByNotExistingId_Return_NullObject()
         {
-            var user = new TestUser() { Id = 1, Login = "user1" };
+            var user = new TestUser() { Id = "1", Login = "user1" };
             sut = new LuceneSearchRepository(true);
             sut.Insert(user);
 
@@ -250,9 +250,9 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             foreach (var user in users)
                 sut.Insert(user);
             var queryList = new List<string>();
-            
+
             Assert.Throws<ArgumentException>(() => sut.GetAll<TestUser>("user", queryList, 1000));
-        }        
+        }
 
         [Test]
         public void GetAllParams_SearchUpperCase_Return_EqualCount_1()
@@ -453,33 +453,33 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
 
         //Test for context. It will be deleted
-        //public class TestContext : WasteContext
-        //{      
-        //    public TestContext(ISearchRepository repo) : base(repo)
-        //    {           
-                
-        //    }
+        public class TestContext : WasteContext
+        {
+            public TestContext(ISearchRepository repo) : base(repo)
+            {
 
-        //    public void DetectAndSaveChanges(System.Data.Entity.EntityState state, IEnumerable<Type> types)
-        //    {
-        //        base.DetectAndSaveChanges(state, types);
-        //    }
-        //}
+            }
 
-        //[Test]
-        //public void _DetectChanges_AddNewEntity_Result_Entity_added()
-        //{
-        //    sut = new LuceneSearchRepository(true);
-        //    TestContext context = new TestContext(sut);
-        //    ProductDB product = new ProductDB() { Id = "1", Name = "Title", Description = "Description" };
-        //    context.Products.Add(product);
+            public void DetectAndSaveChanges(System.Data.Entity.EntityState state, IEnumerable<Type> types)
+            {
+                base.DetectAndSaveChanges(state, types);
+            }
+        }
 
-        //    context.DetectAndSaveChanges(System.Data.Entity.EntityState.Added, new List<Type>() { typeof(ProductDB) });                        
+        [Test]
+        public void _DetectChanges_AddNewEntity_Result_Entity_added()
+        {
+            sut = new LuceneSearchRepository(true);
+            TestContext context = new TestContext(sut);
+            ProductDB product = new ProductDB() { Id = "1", Name = "Title", Description = "Description" };
+            context.Products.Add(product);
 
-        //    var productFromRepo = sut.GetById<ProductDB>();
+            context.DetectAndSaveChanges(System.Data.Entity.EntityState.Added, new List<Type>() { typeof(ProductDB) });                        
 
-        //    Assert.AreNotEqual(null, productFromRepo);
-        //}
+            var productFromRepo = sut.GetById<ProductDB>("1");
+
+            Assert.AreNotEqual(null, productFromRepo);
+        }
 
         ////not passed. Need Product mapper
         //[Test]
@@ -489,7 +489,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         //    TestContext context = new TestContext();
         //    CategoryDB category = new CategoryDB() { Id = 1, Name = "Category name", Description = "Category description" };
         //    ProductDB product = new ProductDB() { Id = "1", Name = "Title", Description = "Description", Category = category };
-            
+
         //    context.Products.Add(product);
 
         //    context.DetectAndSaveChanges(System.Data.Entity.EntityState.Added, new List<Type>() { typeof(ProductDB), typeof(CategoryDB) });
