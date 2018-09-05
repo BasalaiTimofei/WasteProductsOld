@@ -46,7 +46,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             //TODO: Injection
             StandardKernel kernel = new StandardKernel();
             kernel.Load(new DataAccess.InjectorModule());
-            _context = new WasteContext(nameOrConnectionString, kernel.Get<ISearchRepository>());
+            _context = new WasteContext(kernel.Get<ISearchRepository>());
 
             //_context = context;
             _store = new UserStore<UserDB>(_context)

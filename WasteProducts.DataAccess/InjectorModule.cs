@@ -31,7 +31,7 @@ namespace WasteProducts.DataAccess
             Bind<IUserRepository>().To<UserRepository>();
             Bind<IUserRepository>().ToMethod(ctx =>
             {
-                var context = ctx.Kernel.Get<WasteContext>("UserIntegrTest", Kernel.Get<ISearchRepository>());
+                var context = ctx.Kernel.Get<WasteContext>("UserIntegrTest");
                 return new UserRepository(context);
             })
             .Named("UserIntegrTest");
