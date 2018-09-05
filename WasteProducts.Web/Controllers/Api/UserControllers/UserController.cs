@@ -69,7 +69,7 @@ namespace WasteProducts.Web.Controllers.Api
         public async Task Delete(string id)
         {
             var user = await Get(id);
-            await _userService.DeleteUserAsync(user);
+            await _userService.DeleteUserAsync(id);
         }
 
 
