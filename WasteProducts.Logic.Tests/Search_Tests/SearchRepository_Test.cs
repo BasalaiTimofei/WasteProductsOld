@@ -454,7 +454,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         //Test for context. It will be deleted
         public class TestContext : WasteContext
         {            
-            public TestContext(): base(new DataAccess.InjectorModule().Kernel.Get<ISearchRepository>())
+            public TestContext() : base(new LuceneSearchRepository())
             {                
             }
 

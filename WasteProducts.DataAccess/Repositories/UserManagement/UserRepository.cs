@@ -26,9 +26,13 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         private bool _disposed;
 
         public UserRepository()
-        {            
+        {
             //TODO: Injection
-            _db = new WasteContext(new InjectorModule().Kernel.Get<ISearchRepository>());
+            StandardKernel kernel = new StandardKernel();
+            kernel.Load(new DataAccess.InjectorModule());
+            _db = new WasteContext(kernel.Get<ISearchRepository>());
+
+            //_db = new WasteContext();
             _store = new UserStore<UserDB>(_db)
             {
                 DisposeContext = true
@@ -39,7 +43,11 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         public UserRepository(string nameOrConnectionString)
         {
             //TODO: Injection
-            _db = new WasteContext(nameOrConnectionString, new InjectorModule().Kernel.Get<ISearchRepository>());
+            StandardKernel kernel = new StandardKernel();
+            kernel.Load(new DataAccess.InjectorModule());
+            _db = new WasteContext(nameOrConnectionString, kernel.Get<ISearchRepository>());
+
+            //_db = new WasteContext(nameOrConnectionString);
             _store = new UserStore<UserDB>(_db)
             {
                 DisposeContext = true
