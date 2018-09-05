@@ -463,7 +463,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             var user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual(1, user.ProductDescriptions.Count);
 
-            _userService.DeleteProductAsync(user.Id, user.ProductDescriptions[0].Product.Id);
+            _userService.DeleteProductAsync(user.Id, user.ProductDescriptions[0].Product.Id).GetAwaiter().GetResult();
 
             user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual(0, user.ProductDescriptions.Count);
