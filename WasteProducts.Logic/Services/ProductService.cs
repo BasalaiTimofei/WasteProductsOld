@@ -85,6 +85,19 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
+        /// Gets the product by its barcode
+        /// </summary>
+        /// <param name="barcode">The barcode of the product</param>
+        /// <returns>The product with the specific barcode</returns>
+        public Product GetByBarcode(Barcode barcode)
+        {
+            return barcode == null
+                ? null
+                : _mapper.Map<Product>(_productRepository.SelectWhere(p =>
+                    string.Equals(p.Barcode.Code, barcode.Code, StringComparison.OrdinalIgnoreCase)));
+        }
+
+        /// <summary>
         /// Gets product by its name.
         /// </summary>
         /// <param name="name">Name of the product.</param>
