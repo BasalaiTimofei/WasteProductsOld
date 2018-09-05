@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using WasteProducts.DataAccess.Common.Models.Barcods;
+using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.Logic.Common.Models;
+using WasteProducts.Logic.Common.Models.Barcods;
+using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Search;
 using WasteProducts.Logic.Common.Services;
 
@@ -15,9 +20,11 @@ namespace WasteProducts.Logic.Services
     /// </summary>
     public class LuceneSearchService : ISearchService
     {
-        private ISearchRepository _repository;
+
         public const int DEFAULT_MAX_LUCENE_RESULTS = 1000;
         public int MaxResultCount { get; set; } = DEFAULT_MAX_LUCENE_RESULTS;
+
+        private ISearchRepository _repository;
 
         public LuceneSearchService(ISearchRepository repository)
         {
@@ -136,6 +143,43 @@ namespace WasteProducts.Logic.Services
         public void OptimizeSearchIndex()
         {
             _repository.Optimize();
+        }
+
+
+        public IEnumerable<Product> SearchProduct(SearchQuery query)
+        {
+            var productDbList = Search<ProductDB>(query);
+
+            //TODO: map all values in productDbList to Product
+            List<Product> result = new List<Product>();
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Product, ProductDB>()
+                    .ForMember(m => m.Created, opt => opt.Ignore())
+                    .ForMember(m => m.Modified, opt => opt.Ignore())
+                    .ReverseMap();
+
+                cfg.CreateMap<Barcode, BarcodeDB>()
+                    .ForMember(m => m.Created, opt => opt.Ignore())
+                    .ForMember(m => m.Modified, opt => opt.Ignore())
+                    .ReverseMap();
+
+                cfg.CreateMap<Category, CategoryDB>()
+                    .ForMember(m => m.Id, opt => opt.Ignore())
+                    .ForMember(m => m.Marked, opt => opt.Ignore())
+                    .ForMember(m => m.Products, opt => opt.Ignore())
+                    .ReverseMap();
+            });
+
+            var mapper = config.CreateMapper();
+
+            foreach (var productDb in productDbList)
+            {
+                result.Add(mapper.Map<Product>(productDb));
+            }
+
+            return result;
         }
 
         //todo: implement async methods later if necessary

@@ -55,7 +55,8 @@ namespace WasteProducts.Web.Controllers.Api
                 searchQuery.AddField(DEFAULT_PRODUCT_NAME_FIELD).AddField(DEFAULT_PRODUCT_DESCRIPTION_FIELD).AddField(DEFAULT_PRODUCT_BARCODE_FIELD);
                 searchQuery.Query = query;
 
-                return _searchService.Search<Product>(searchQuery);
+                //return _searchService.Search<Product>(searchQuery);
+                return _searchService.SearchProduct(searchQuery);
             }
         }
 
@@ -85,7 +86,8 @@ namespace WasteProducts.Web.Controllers.Api
                     searchQuery.AddField(field);
                 }
 
-                return _searchService.Search<Product>(searchQuery);
+                //return _searchService.Search<Product>(searchQuery);
+                return _searchService.SearchProduct(searchQuery);
             }
         }
 
@@ -103,15 +105,16 @@ namespace WasteProducts.Web.Controllers.Api
         {
 
             //Add product for testing purposes
-            Product product = new Product();
-            product.Name = "Название тестового продукта";
-            product.Description = "Описание тестового продукта";
-            _searchService.AddToSearchIndex<Product>(product);
+            //Product product = new Product();
+            //product.Name = "Название тестового продукта";
+            //product.Description = "Описание тестового продукта";
+            //_searchService.AddToSearchIndex<Product>(product);
 
             HttpResponseMessage response;
             if (ModelState.IsValid)
             {
-                return _searchService.Search<Product>(query);
+                //return _searchService.Search<Product>(query);
+                return _searchService.SearchProduct(query);
             }
             else
             {
@@ -133,16 +136,17 @@ namespace WasteProducts.Web.Controllers.Api
         public IEnumerable<Product> GetProducts(SearchQuery query)
         {
             //Add product for testing purposes
-            Product product = new Product();
-            product.Name = "Название тестового продукта";
-            product.Description = "Описание тестового продукта";
-            _searchService.AddToSearchIndex<Product>(product);
+            //Product product = new Product();
+            //product.Name = "Название тестового продукта";
+            //product.Description = "Описание тестового продукта";
+            //_searchService.AddToSearchIndex<Product>(product);
 
             HttpResponseMessage response;
 
             if (ModelState.IsValid)
             {
-                return _searchService.Search<Product>(query);
+                //return _searchService.Search<Product>(query);
+                return _searchService.SearchProduct(query);
             }
             else
             {

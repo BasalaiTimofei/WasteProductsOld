@@ -7,6 +7,7 @@ using WasteProducts.Logic.Common.Models;
 using WasteProducts.Logic.Services;
 using System.Linq;
 using WasteProducts.Logic.Common.Services;
+using AutoMapper;
 
 namespace WasteProducts.Logic.Tests.Search_Tests
 {
@@ -32,6 +33,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
         private IEnumerable<TestUser> users;
         private Mock<ISearchRepository> mockRepo;
+        private Mock<IMapper> mockMapper;
         private ISearchService sut;
 
         [Test]

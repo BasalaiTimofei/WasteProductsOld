@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models;
+using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Search;
 
 namespace WasteProducts.Logic.Common.Services
@@ -85,7 +86,14 @@ namespace WasteProducts.Logic.Common.Services
         /// This method provides ability to optimize search repository storage for faster search
         /// </summary>
         void OptimizeSearchIndex();
-                
+
+        /// <summary>
+        /// Return list of products by search query
+        /// </summary>
+        /// <param name="query">Search query</param>
+        /// <returns>List of products</returns>
+        IEnumerable<Product> SearchProduct(SearchQuery query);
+
         /// <summary>
         /// Async version of Search
         /// </summary>

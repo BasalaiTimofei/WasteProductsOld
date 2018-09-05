@@ -7,27 +7,28 @@ using WasteProducts.DataAccess.Repositories;
 using WasteProducts.Logic.Services;
 using WasteProducts.Web.Controllers.Api;
 using NLog;
-using NUnit.Framework.Constraints;
-using WasteProducts.Logic.Common.Models;
 using WasteProducts.Logic.Common.Models.Products;
+using WasteProducts.DataAccess.Common;
+using AutoMapper;
+using WasteProducts.DataAccess.Common.Models.Products;
 
 namespace WasteProducts.Web.Tests.WebApiTests
 {
     [TestFixture]
     public class SearchWebApiTest
     {
-        private IEnumerable<Product> products;
+        private IEnumerable<ProductDB> products;
 
         [OneTimeSetUp]
         public void Setup()
         {
-            products = new List<Product>
+            products = new List<ProductDB>
             {
-                new Product { Name = "Test Product1 Name1", Description = "Test Product1 Description1"},
-                new Product { Name = "Test Product2 Name2", Description = "Test Product2 Description2"},
-                new Product { Name = "Test Product3 Name3", Description = "Test Product3 Description3"},
-                new Product { Name = "Test Product4 Name4", Description = "Test Product4 Description4"},
-                new Product { Name = "Test Product5 Name5 Unique", Description = "Test Product5 Description5"}
+                new ProductDB { Name = "Test Product1 Name1", Description = "Test Product1 Description1"},
+                new ProductDB { Name = "Test Product2 Name2", Description = "Test Product2 Description2"},
+                new ProductDB { Name = "Test Product3 Name3", Description = "Test Product3 Description3"},
+                new ProductDB { Name = "Test Product4 Name4", Description = "Test Product4 Description4"},
+                new ProductDB { Name = "Test Product5 Name5 Unique", Description = "Test Product5 Description5"}
             };
 
         }
@@ -40,7 +41,7 @@ namespace WasteProducts.Web.Tests.WebApiTests
             LuceneSearchService service = new LuceneSearchService(repo);
             SearchController sut = new SearchController(_mockLogger.Object, service);
 
-            service.AddToSearchIndex<Product>(products);
+            service.AddToSearchIndex<ProductDB>(products);
 
             var result = sut.GetProductsDefaultFields("test");
             Assert.AreEqual(expected: 5, actual: result.ToArray().Length);
@@ -63,7 +64,7 @@ namespace WasteProducts.Web.Tests.WebApiTests
             LuceneSearchService service = new LuceneSearchService(repo);
             SearchController sut = new SearchController(_mockLogger.Object, service);
 
-            service.AddToSearchIndex<Product>(products);
+            service.AddToSearchIndex<ProductDB>(products);
 
             string[] fields = new string[] {"Description"};
 
