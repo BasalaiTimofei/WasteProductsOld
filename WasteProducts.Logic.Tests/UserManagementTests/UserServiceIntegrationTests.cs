@@ -444,16 +444,18 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public void UserIntegrTest_25AddingNewProductsToUser()
         {
+            string description = "Tastes like garbage, won't buy it ever again.";
+
             var user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual(0, user.ProductDescriptions.Count);
 
-            _userService.AddProductAsync(user.Id, _productIds[0], 1, "Tastes like garbage, won't buy it ever again.").GetAwaiter().GetResult();
+            _userService.AddProductAsync(user.Id, _productIds[0], 1, description).GetAwaiter().GetResult();
             user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
 
             Assert.AreEqual(1, user.ProductDescriptions.Count);
             Assert.AreEqual(_productIds[0], user.ProductDescriptions[0].Product.Id);
             Assert.AreEqual(1, user.ProductDescriptions[0].Rating);
-            Assert.AreEqual("Tastes like garbage, won't buy it ever again.", user.ProductDescriptions[0].Description);
+            Assert.AreEqual(description, user.ProductDescriptions[0].Description);
         }
 
         // тестируем удаление продуктов
@@ -463,7 +465,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             var user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual(1, user.ProductDescriptions.Count);
 
-            _userService.DeleteProductAsync(user.Id, user.ProductDescriptions[0].Product.Id);
+            _userService.DeleteProductAsync(user.Id, user.ProductDescriptions[0].Product.Id).GetAwaiter().GetResult();
 
             user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual(0, user.ProductDescriptions.Count);
