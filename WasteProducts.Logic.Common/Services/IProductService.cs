@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
@@ -32,6 +33,40 @@ namespace WasteProducts.Logic.Common.Services
         bool AddByName(string name);
 
         /// <summary>
+        /// Gets the product by its id
+        /// </summary>
+        /// <param name="id">The id of the product</param>
+        /// <returns>The product with the specific id</returns>
+        Product GetById(string id);
+
+        /// <summary>
+        /// Gets the product by its barcode
+        /// </summary>
+        /// <param name="barcode">The barcode of the product</param>
+        /// <returns>The product with the specific barcode</returns>
+        Product GetByBarcode(Barcode barcode);
+
+        /// <summary>
+        /// Gets all products
+        /// </summary>
+        /// <returns>All product in the application</returns>
+        IEnumerable<Product> GetAll();
+
+        /// <summary>
+        /// Gets product by its name.
+        /// </summary>
+        /// <param name="name">Name of the product.</param>
+        /// <returns>Product with the specific name.</returns>
+        Product GetByName(string name);
+
+        /// <summary>
+        /// Gets asynchronously product by its name.
+        /// </summary>
+        /// <param name="name">Name of the product.</param>
+        /// <returns>Product with the specific name.</returns>
+        Task<Product> GetByNameAsync(string name);
+
+        /// <summary>
         /// Tries to delete the product by barcode and returns whether the deletion is successful or not
         /// </summary>
         /// <param name="barcode">Barcode of the product to be deleted</param>
@@ -44,13 +79,6 @@ namespace WasteProducts.Logic.Common.Services
         /// <param name="name">The name of the product to be deleted</param>
         /// <returns>Boolean represents whether the deletion is successful or not</returns>
         bool DeleteByName(string name);
-
-        /// <summary>
-        /// Gets product by its name.
-        /// </summary>
-        /// <param name="name">Name of the product.</param>
-        /// <returns>Product with the specific name.</returns>
-        Task<Product> GetByNameAsync(string name);
 
         /// <summary>
         /// Tries to add the category by specific category and returns whether the addition is successful or not

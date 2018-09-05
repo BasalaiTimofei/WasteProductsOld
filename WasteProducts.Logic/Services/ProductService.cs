@@ -74,6 +74,13 @@ namespace WasteProducts.Logic.Services
             return Add(product);
         }
 
+
+
+        /// <summary>
+        /// Gets product by its name.
+        /// </summary>
+        /// <param name="name">Name of the product.</param>
+        /// <returns>Product with the specific name.</returns>
         public async Task<Product> GetByNameAsync(string name)
         {
             if(name == null)
