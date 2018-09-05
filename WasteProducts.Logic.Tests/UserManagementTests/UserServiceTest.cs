@@ -11,8 +11,6 @@ using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.Logic.Services.UserService;
 using WasteProducts.Logic.Mappings.UserMappings;
-using WasteProducts.Logic.Common.Models.Products;
-using WasteProducts.Logic.Common.Models.Barcods;
 
 namespace WasteProducts.Logic.Tests.UserManagementTests
 {
@@ -45,7 +43,18 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             _mailServiceMock = new Mock<IMailService>();
             _userRepoMock = new Mock<IUserRepository>();
             _userServiceMock = new Mock<IUserService>();
-            _userService = new UserService(_mailServiceMock.Object, _userRepoMock.Object);
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<UserProfile>();
+                cfg.AddProfile<UserClaimProfile>();
+                cfg.AddProfile<UserLoginProfile>();
+                cfg.AddProfile<Mappings.UserMappings.ProductProfile>();
+                cfg.AddProfile<UserProductDescriptionProfile>();
+            });
+            var mapper = new Mapper(config);
+
+            _userService = new UserService(_userRepoMock.Object, mapper, _mailServiceMock.Object);
         }
 
         [TearDown]
@@ -191,7 +200,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             UserDB userDB = new UserDB();
             userDB.Email = "validEmail@gmail.com";
             userDB.PasswordHash = "password";
-            var userName = "UserName";
             IList<string> roles = new List<string>();
 
             (UserDB, IList<string>) tuple = (null, roles);
@@ -277,124 +285,5 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             Assert.AreEqual(expected[0], actual[0]);
             Assert.AreEqual(expected[1], actual[1]);
         }
-
-        //[Test]
-        //public void UserServiceTest_09_AddProductAsync_User_Already_Has_The_Product_With_Same_Barcode_Code_Dont_Add()
-        //{
-        //    // arrange
-        //    User user = new User();
-        //    Product product = new Product();
-        //    product.Barcode = new Barcode();
-        //    user.ProductDescriptions = new List<UserProductDescription>();
-        //    product.Barcode.Code = "code";
-        //    user.ProductDescriptions.Add(product);
-        //    _userServiceMock.Setup(a => a.UpdateAsync(It.IsAny<User>())).Verifiable();
-
-        //    // act
-        //    _userService.AddProductAsync(user, product).GetAwaiter().GetResult();
-
-        //    // assert
-        //    _userServiceMock.Verify(a => a.UpdateAsync(It.IsAny<User>()), 
-        //        Times.Never());
-        //}
-
-        //[Test]
-        //public void UserServiceTest_10_AddProductAsync_User_Already_Has_The_Product_With_Same_Barcode_ID_Dont_Add()
-        //{
-        //    // arrange
-        //    User user = new User();
-        //    Product product = new Product();
-        //    product.Barcode = new Barcode() { Id = "identification" };
-        //    user.ProductDescriptions = new List<Product>();
-        //    user.ProductDescriptions.Add(product);
-        //    _userServiceMock.Setup(a => a.UpdateAsync(It.IsAny<User>())).Verifiable();
-
-        //    // act
-        //    _userService.AddProductAsync(user, product).GetAwaiter().GetResult();
-
-        //    // assert
-        //    _userServiceMock.Verify(a => a.UpdateAsync(It.IsAny<User>()),
-        //        Times.Never());
-        //}
-
-        //[Test]
-        //public void UserServiceTest_11_AddProductAsync_User_Doesnt_Have_The_Product_With_Same_Barcode_ID_or_Code_New_Product_Added()
-        //{
-        //    // arrange
-        //    User user = new User();
-        //    user.Id = "asdas";
-
-        //    Product hasProduct = new Product
-        //    {
-        //        Barcode = new Barcode()
-        //        {
-        //            Id = "identification",
-        //            Code = "code"
-        //        }
-        //    };
-        //    user.ProductDescriptions = new List<Product>
-        //    {
-        //        hasProduct
-        //    };
-
-        //    Product newProduct = new Product
-        //    {
-        //        Barcode = new Barcode()
-        //        {
-        //            Id = "anotherIdentification",
-        //            Code = "anotherCode"
-        //        }
-        //    };
-        //    _userRepoMock.Setup(a => a.UpdateAsync(It.Is<UserDB>(u => u.Id == "asdas"))).Verifiable();
-
-        //    // act
-        //    _userService.AddProductAsync(user, newProduct).GetAwaiter();
-            
-        //    // assert
-        //    _userRepoMock.Verify(a => a.UpdateAsync(It.Is<UserDB>(u => u.Id == "asdas")),
-        //        Times.Once());
-        //}
-
-        //[Test]
-        //public void UserServiceTest_12_DeleteProductAsync_User_Already_Has_The_Product_With_Same_Barcode_ID_Will_be_Deleted()
-        //{
-        //    // arrange
-        //    User user = new User();
-        //    Product product = new Product();
-        //    product.Barcode = new Barcode() { Id = "identification", Code = "code" };
-        //    user.ProductDescriptions = new List<Product>();
-        //    user.ProductDescriptions.Add(product);
-        //    _userRepoMock.Setup(a => a.UpdateAsync(It.IsAny<UserDB>())).Verifiable();
-
-        //    // act
-        //    _userService.DeleteProductAsync(user, product).GetAwaiter();
-
-        //    // assert
-        //    _userRepoMock.Verify(a => a.UpdateAsync(It.IsAny<UserDB>()),
-        //        Times.Once());
-        //}
-
-        //[Test]
-        //public void UserServiceTest_13_DeleteProductAsync_User_Dont_Have_The_Product_With_Same_Barcode_ID_Nothing_Will_be_Deleted()
-        //{
-        //    // arrange
-        //    User user = new User();
-        //    Product product = new Product();
-        //    product.Barcode = new Barcode() { Id = "identification", Code = "code"};
-        //    user.ProductDescriptions = new List<Product>();
-        //    user.ProductDescriptions.Add(product);
-
-        //    Product otherProduct = new Product();
-        //    product.Barcode = new Barcode() { Id = "otheridentification" , Code = "otherCode"};
-
-        //    _userRepoMock.Setup(a => a.UpdateAsync(It.IsAny<UserDB>())).Verifiable();
-
-        //    // act
-        //    _userService.DeleteProductAsync(user, otherProduct).GetAwaiter();
-
-        //    // assert
-        //    _userRepoMock.Verify(a => a.UpdateAsync(It.IsAny<UserDB>()),
-        //        Times.Never());
-        //}
     }
 }

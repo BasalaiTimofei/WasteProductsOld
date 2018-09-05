@@ -69,7 +69,7 @@ namespace WasteProducts.Web.Controllers.Api
         public async Task Delete(string id)
         {
             var user = await Get(id);
-            await _userService.DeleteUserAsync(user.Id);
+            await _userService.DeleteUserAsync(user);
         }
 
 
@@ -144,16 +144,16 @@ namespace WasteProducts.Web.Controllers.Api
         //PUT api/User/Products
         [Route("api/User/Product")]
         [HttpPut]
-        public async Task AddProduct([FromBody]User user, [FromBody]Product product, [FromBody]int rating, [FromBody]string description)
+        public async Task AddProduct([FromBody]User user, [FromBody]Product product)
         {
-            await _userService.AddProductAsync(user.Id, product.Id, rating, description);
+            await _userService.AddProductAsync(user, product);
         }
 
         //POST api/User/Products/Delete
         [Route("api/User/Products/Delete")]
         public async Task DeleteProduct([FromBody]User user, [FromBody]Product product)
         {
-            await _userService.DeleteProductAsync(user.Id, product.Id);
+            await _userService.DeleteProductAsync(user, product);
         }
 
 

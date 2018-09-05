@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNet.Identity;
-using WasteProducts.Logic.Common.Models.Products;
-using WasteProducts.Logic.Mappings.UserMappings;
+using Ninject;
 
 namespace WasteProducts.Logic.Services.UserService
 {
@@ -23,24 +22,15 @@ namespace WasteProducts.Logic.Services.UserService
 
         private readonly IUserRepository _userRepo;
 
-        private readonly IRuntimeMapper _mapper;
+        private readonly IMapper _mapper;
 
         private bool _disposed;
 
-        public UserService(IMailService mailService, IUserRepository userRepo)
+        public UserService(IUserRepository userRepo, [Named("UserService")] IMapper mapper, IMailService mailService)
         {
-            _mailService = mailService;
             _userRepo = userRepo;
-
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<UserProfile>();
-                cfg.AddProfile<UserClaimProfile>();
-                cfg.AddProfile<UserLoginProfile>();
-                cfg.AddProfile<ProductProfile>();
-                cfg.AddProfile<UserProductDescriptionProfile>();
-            });
-            _mapper = (new Mapper(config)).DefaultContext.Mapper;
+            _mapper = mapper;
+            _mailService = mailService;
         }
 
         ~UserService()
@@ -205,7 +195,7 @@ namespace WasteProducts.Logic.Services.UserService
 
         public async Task<bool> DeleteProductAsync(string userId, string productId)
         {
-            if(userId == null || productId == null)
+            if (userId == null || productId == null)
             {
                 return false;
             }
