@@ -17,7 +17,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 {
     public class UserRepository : IUserRepository
     {
-        private readonly WasteContext _db;
+        private readonly WasteContext _context;
 
         private readonly UserStore<UserDB> _store;
 
@@ -30,25 +30,26 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             //TODO: Injection
             StandardKernel kernel = new StandardKernel();
             kernel.Load(new DataAccess.InjectorModule());
-            _db = new WasteContext(kernel.Get<ISearchRepository>());
+            _context = new WasteContext(kernel.Get<ISearchRepository>());
 
-            //_db = new WasteContext();
-            _store = new UserStore<UserDB>(_db)
+
+            //_context = new WasteContext();
+            _store = new UserStore<UserDB>(_context)
             {
                 DisposeContext = true
             };
             _manager = new UserManager<UserDB>(_store);
         }
 
-        public UserRepository(string nameOrConnectionString)
+        public UserRepository(WasteContext context)
         {
             //TODO: Injection
             StandardKernel kernel = new StandardKernel();
             kernel.Load(new DataAccess.InjectorModule());
-            _db = new WasteContext(nameOrConnectionString, kernel.Get<ISearchRepository>());
+            _context = new WasteContext(nameOrConnectionString, kernel.Get<ISearchRepository>());
 
-            //_db = new WasteContext(nameOrConnectionString);
-            _store = new UserStore<UserDB>(_db)
+            //_context = context;
+            _store = new UserStore<UserDB>(_context)
             {
                 DisposeContext = true
             };
@@ -75,8 +76,8 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         /// </summary>
         public void RecreateTestDatabase()
         {
-                _db.Database.Delete();
-                _db.Database.CreateIfNotExists();
+                _context.Database.Delete();
+                _context.Database.CreateIfNotExists();
         }
 
         public async Task AddAsync(UserDB user, string password)
@@ -87,7 +88,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task<bool> IsEmailAvailableAsync(string email)
         {
-            return !(await _db.Users.AnyAsync(u => u.Email == email));
+            return !(await _context.Users.AnyAsync(u => u.Email == email));
         }
 
         public async Task AddClaimAsync(UserDB user, Claim claim)
@@ -95,66 +96,66 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             await _store.AddClaimAsync(user, claim);
 
             user.Modified = DateTime.UtcNow;
-            await _db.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task AddLoginAsync(UserDB user, UserLoginDB login)
         {
             UserLoginInfo loginInfo = new UserLoginInfo(login.LoginProvider, login.ProviderKey);
 
-            using (var userStore = new UserStore<UserDB>(_db))
+            using (var userStore = new UserStore<UserDB>(_context))
             {
                 await userStore.AddLoginAsync(user, loginInfo);
 
                 user.Modified = DateTime.UtcNow;
-                await _db.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
         }
 
         public async Task AddToRoleAsync(UserDB user, string roleName)
         {
-            using (var userStore = new UserStore<UserDB>(_db))
+            using (var userStore = new UserStore<UserDB>(_context))
             {
                 await userStore.AddToRoleAsync(user, roleName);
 
                 user.Modified = DateTime.UtcNow;
-                await _db.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
         }
 
         public async Task AddFriendAsync(string userId, string friendId)
         {
-            UserDB user = _db.Users.Include(p => p.Friends).First(u => u.Id == userId);
-            UserDB friend = _db.Users.First(u => u.Id == friendId);
+            UserDB user = _context.Users.Include(p => p.Friends).First(u => u.Id == userId);
+            UserDB friend = _context.Users.First(u => u.Id == friendId);
 
             user.Friends.Add(friend);
 
             user.Modified = DateTime.UtcNow;
-            await _db.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteFriendAsync(string userId, string deletingFriendId)
         {
-            UserDB user = _db.Users.Include(p => p.Friends).First(u => u.Id == userId);
-            UserDB friend = _db.Users.First(u => u.Id == deletingFriendId);
+            UserDB user = _context.Users.Include(p => p.Friends).First(u => u.Id == userId);
+            UserDB friend = _context.Users.First(u => u.Id == deletingFriendId);
 
             user.Friends.Remove(friend);
 
             user.Modified = DateTime.UtcNow;
-            await _db.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> AddProductAsync(string userId, string productId, int rating, string description)
         {
             return await Task.Run(() =>
             {
-                _db.Configuration.LazyLoadingEnabled = false;
+                _context.Configuration.LazyLoadingEnabled = false;
                 UserDB user = null;
                 ProductDB product = null;
                 try
                 {
-                    user = _db.Users.Include(u => u.ProductDescriptions).First(u => u.Id == userId);
-                    product = _db.Products.FirstOrDefault(p => p.Id == productId);
+                    user = _context.Users.Include(u => u.ProductDescriptions).First(u => u.Id == userId);
+                    product = _context.Products.FirstOrDefault(p => p.Id == productId);
                 }
                 catch (InvalidOperationException)
                 {
@@ -168,8 +169,8 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                     Description = description,
                     Created = DateTime.UtcNow
                 };
-                _db.UserProductDescriptions.Add(userProdDescr);
-                _db.SaveChanges();
+                _context.UserProductDescriptions.Add(userProdDescr);
+                _context.SaveChanges();
                 return true;
             });
         }
@@ -181,15 +182,15 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 UserProductDescriptionDB description = null;
                 try
                 {
-                    description = _db.UserProductDescriptions.First(d => d.User.Id == userId && d.Product.Id == productId);
+                    description = _context.UserProductDescriptions.First(d => d.User.Id == userId && d.Product.Id == productId);
                 }
                 catch (InvalidOperationException)
                 {
                     return false;
                 }
-                var entry = _db.Entry(description);
+                var entry = _context.Entry(description);
                 entry.State = EntityState.Deleted;
-                _db.SaveChanges();
+                _context.SaveChanges();
                 return true;
             });
         }
@@ -198,16 +199,16 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         {
             await Task.Run(async () =>
             {
-                var user = _db.Users.FirstOrDefault(u => u.Id == userId);
-                var entry = _db.Entry(user);
+                var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+                var entry = _context.Entry(user);
                 entry.State = EntityState.Deleted;
-                await _db.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             });
         }
 
         public async Task RemoveClaimAsync(UserDB user, Claim claim)
         {
-            var userInDB = _db.Users.Include(u => u.Claims).FirstOrDefault(u => u.Email == user.Email);
+            var userInDB = _context.Users.Include(u => u.Claims).FirstOrDefault(u => u.Email == user.Email);
 
             var claimToDelete = userInDB.Claims.FirstOrDefault(c => c.UserId == userInDB.Id &&
                                                                     c.ClaimType == claim.Type &&
@@ -215,25 +216,25 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
             if (claimToDelete != null)
             {
-                _db.Entry(claimToDelete).State = EntityState.Deleted;
+                _context.Entry(claimToDelete).State = EntityState.Deleted;
                 user.Modified = DateTime.UtcNow;
-                await _db.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
         }
 
         public async Task RemoveFromRoleAsync(UserDB user, string roleName)
         {
-            using (var userStore = new UserStore<UserDB>(_db))
+            using (var userStore = new UserStore<UserDB>(_context))
             {
                 await userStore.RemoveFromRoleAsync(user, roleName);
                 user.Modified = DateTime.UtcNow;
-                await _db.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
         }
 
         public async Task RemoveLoginAsync(UserDB user, UserLoginDB login)
         {
-            var userInDB = _db.Users.Include(u => u.Logins).FirstOrDefault(u => u.Email == user.Email);
+            var userInDB = _context.Users.Include(u => u.Logins).FirstOrDefault(u => u.Email == user.Email);
 
             var loginToDelete = userInDB.Logins.FirstOrDefault(c => c.UserId == userInDB.Id &&
                                                                     c.LoginProvider == login.LoginProvider &&
@@ -241,9 +242,9 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
             if (loginToDelete != null)
             {
-                _db.Entry(loginToDelete).State = EntityState.Deleted;
+                _context.Entry(loginToDelete).State = EntityState.Deleted;
                 user.Modified = DateTime.UtcNow;
-                await _db.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
         }
 
@@ -264,9 +265,9 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public (UserDB, IList<string>) Select(string email, string password)
         {
-            _db.Configuration.LazyLoadingEnabled = false;
+            _context.Configuration.LazyLoadingEnabled = false;
 
-            var user = _db.Users.Include(u => u.Roles).
+            var user = _context.Users.Include(u => u.Roles).
                     Include(u => u.Claims).
                     Include(u => u.Logins).
                     Include(u => u.Friends).
@@ -292,21 +293,21 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         //todo fix method
         public List<UserDB> SelectAll()
         {
-            return _db.Users.ToList();
+            return _context.Users.ToList();
         }
 
         public IEnumerable<UserDB> SelectRange(Func<UserDB, bool> predicate, bool lazyInitiation = true)
         {
             if (lazyInitiation)
             {
-                return _db.Users.Where(predicate);
+                return _context.Users.Where(predicate);
             }
             else
             {
-                _db.Configuration.LazyLoadingEnabled = false;
+                _context.Configuration.LazyLoadingEnabled = false;
 
                 // TODO expand with publicGroups when it awailable
-                return _db.Users.Include(u => u.Roles).
+                return _context.Users.Include(u => u.Roles).
                     Include(u => u.Claims).
                     Include(u => u.Logins).
                     Include(u => u.Friends).
@@ -327,9 +328,9 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task UpdateAsync(UserDB user)
         {
-            var userInDB = _db.Users.FirstOrDefault(u => u.Id == user.Id);
+            var userInDB = _context.Users.FirstOrDefault(u => u.Id == user.Id);
 
-            var entry = _db.Entry(userInDB);
+            var entry = _context.Entry(userInDB);
             entry.CurrentValues.SetValues(user);
             entry.Property(u => u.Modified).CurrentValue = DateTime.UtcNow;
 
@@ -338,20 +339,20 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             entry.Property(u => u.Created).IsModified = false;
             entry.Property(u => u.PasswordHash).IsModified = false;
 
-            await _db.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> UpdateEmailAsync(string userId, string newEmail)
         {
-            var user = _db.Users.FirstOrDefault(u => u.Id == userId);
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
             if (user != null && await IsEmailAvailableAsync(newEmail))
             {
                 user.Modified = DateTime.UtcNow;
                 user.Email = newEmail;
-                var entry = _db.Entry(user);
+                var entry = _context.Entry(user);
                 entry.Property(u => u.Email).IsModified = true;
                 entry.Property(u => u.Modified).IsModified = true;
-                await _db.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return true;
             }
             return false;
@@ -359,14 +360,14 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task<bool> UpdateUserNameAsync(UserDB user, string newUserName)
         {
-            bool userNameAvailable = !(await _db.Users.AnyAsync(u => u.UserName == newUserName));
+            bool userNameAvailable = !(await _context.Users.AnyAsync(u => u.UserName == newUserName));
             if (userNameAvailable)
             {
                 user.Modified = DateTime.UtcNow;
-                _db.Users.Attach(user);
-                var entry = _db.Entry(user);
+                _context.Users.Attach(user);
+                var entry = _context.Entry(user);
                 entry.Property(u => u.UserName).IsModified = true;
-                await _db.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
             return userNameAvailable;
         }
@@ -376,13 +377,13 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             (UserDB user, IList<string> roles) result = (null, null);
             if (lazyInitiation)
             {
-                result.user = _db.Users.FirstOrDefault(predicate);
+                result.user = _context.Users.FirstOrDefault(predicate);
             }
             else
             {
-                _db.Configuration.LazyLoadingEnabled = lazyInitiation;
+                _context.Configuration.LazyLoadingEnabled = lazyInitiation;
 
-                result.user = _db.Users.Include(u => u.Roles).
+                result.user = _context.Users.Include(u => u.Roles).
                     Include(u => u.Claims).
                     Include(u => u.Logins).
                     Include(u => u.Friends).
@@ -392,7 +393,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
             if (getRoles)
             {
-                using (var userStore = new UserStore<UserDB>(_db))
+                using (var userStore = new UserStore<UserDB>(_context))
                 {
                     result.roles = userStore.GetRolesAsync(result.user).GetAwaiter().GetResult();
                 }

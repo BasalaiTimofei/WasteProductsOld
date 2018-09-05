@@ -374,7 +374,6 @@
     <Compile Include="Controllers\Mvc\BaseMvcController.cs" />
     <Compile Include="Controllers\Mvc\ErrorController.cs" />
     <Compile Include="Controllers\Mvc\HomeController.cs" />
-    <Compile Include="Controllers\Mvc\UserControllers\UserController.cs" />
     <Compile Include="Filters\ApiUnhandledExceptionLogger.cs" />
     <Compile Include="Filters\MvcUnhandledExceptionFilter.cs" />
     <Compile Include="Global.asax.cs">

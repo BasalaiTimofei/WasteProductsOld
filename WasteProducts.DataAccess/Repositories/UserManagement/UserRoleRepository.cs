@@ -14,7 +14,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 {
     public class UserRoleRepository : IUserRoleRepository
     {
-        private readonly WasteContext _db;
+        private readonly WasteContext _context;
 
         private readonly RoleStore<IdentityRole> _store;
 
@@ -22,27 +22,28 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public UserRoleRepository()
         {
+
             //TODO: Injection
             StandardKernel kernel = new StandardKernel();
             kernel.Load(new DataAccess.InjectorModule());
-            _db = new WasteContext(kernel.Get<ISearchRepository>());
+            _context = new WasteContext(kernel.Get<ISearchRepository>());
 
-            //_db = new WasteContext();
-            _store = new RoleStore<IdentityRole>(_db)
+            //_context = new WasteContext();
+            _store = new RoleStore<IdentityRole>(_context)
             {
                 DisposeContext = true
             };
         }
 
-        public UserRoleRepository(string nameOrConnectionString)
+        public UserRoleRepository(WasteContext context)
         {
             //TODO: Injection
             StandardKernel kernel = new StandardKernel();
             kernel.Load(new DataAccess.InjectorModule());
-            _db = new WasteContext(nameOrConnectionString, kernel.Get<ISearchRepository>());
+            _context = new WasteContext(nameOrConnectionString, kernel.Get<ISearchRepository>());
 
-            //_db = new WasteContext(nameOrConnectionString);
-            _store = new RoleStore<IdentityRole>(_db)
+            //_context = context;
+            _store = new RoleStore<IdentityRole>(_context)
             {
                 DisposeContext = true
             };
@@ -70,7 +71,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             IdentityRole identityRole = new IdentityRole(role.Name) { Id = Guid.NewGuid().ToString() };
 
             await _store.CreateAsync(identityRole);
-            await _db.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(UserRoleDB role)
@@ -78,7 +79,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             IdentityRole identityRole = await _store.FindByIdAsync(role.Id);
 
             await _store.DeleteAsync(identityRole);
-            await _db.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<UserRoleDB> FindByIdAsync(string roleId)
@@ -104,7 +105,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             IdentityRole ir = await _store.FindByIdAsync(role.Id);
             ir.Name = role.Name;
             await _store.UpdateAsync(ir);
-            await _db.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<UserDB>> GetRoleUsers(UserRoleDB role)
@@ -117,7 +118,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 userIds.Add(iur.UserId);
             }
 
-            IEnumerable<UserDB> result = _db.Users.Include(u => u.Roles).
+            IEnumerable<UserDB> result = _context.Users.Include(u => u.Roles).
                                                   Include(u => u.Claims).
                                                   Include(u => u.Logins).
                                                   Include(u => u.Friends).
