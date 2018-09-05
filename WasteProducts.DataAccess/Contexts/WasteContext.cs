@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Diagnostics;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WasteProducts.DataAccess.Common.Context;
@@ -12,7 +13,7 @@ using WasteProducts.DataAccess.ModelConfigurations.UserManagement;
 namespace WasteProducts.DataAccess.Contexts
 {
     [DbConfigurationType(typeof(MsSqlConfiguration))]
-    public class WasteContext : IdentityDbContext<UserDB, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>, IDbContext
+    public class WasteContext : IdentityDbContext<UserDB, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>, IDatabase
     {
         public WasteContext()
         {
@@ -70,5 +71,24 @@ namespace WasteProducts.DataAccess.Contexts
         public IDbSet<GroupUserDB> GroupUserDBs { get; set; }
         public IDbSet<GroupCommentDB> GroupCommentDBs { get; set; }
         public IDbSet<GroupProductDB> GroupProductDBs { get; set; }
+
+
+
+
+        /// <inheritdoc />
+        public Action<string> Log
+        {
+            get => Database.Log;
+            set => Database.Log = value;
+        }
+
+        /// <inheritdoc />
+        public bool IsDbExists => Database.Exists();
+
+        /// <inheritdoc />
+        public bool IsDbCompatibleWithModel => Database.CompatibleWithModel(false);
+
+        /// <inheritdoc />
+        public bool DeleteDb() => Database.Delete();
     }
 }

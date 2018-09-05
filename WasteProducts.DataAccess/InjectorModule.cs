@@ -23,9 +23,7 @@ namespace WasteProducts.DataAccess
             if (Kernel is null)
                 return;
 
-            Bind<WasteContext>().ToSelf().InTransientScope(); ; // TODO : replace with IDbContext in all repositories
-
-            Bind<IDbContext>().ToMethod(context => context.Kernel.Get<WasteContext>());
+            Bind<WasteContext, IDatabase>().To<WasteContext>().InTransientScope();
             
             Bind<IUserRepository>().To<UserRepository>();
 
