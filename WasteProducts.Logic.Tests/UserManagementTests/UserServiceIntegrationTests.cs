@@ -45,6 +45,12 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             }
         }
 
+        [OneTimeTearDown]
+        public void LastTearDown()
+        {
+            _kernel?.Dispose();
+        }
+
         [SetUp]
         public void SetUp()
         {
