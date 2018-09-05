@@ -58,6 +58,7 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// <param name="id">Id of requested User.</param>
         /// <returns>Instance of User that has requested Id. Returns WITHOUT PasswordHash.</returns>
         Task<User> GetUserInfo(string id);
+
         /// <summary>
         /// Updates the specific user in the Database. You can't update email, Id, UserName and Password by this method.
         /// </summary>
@@ -98,18 +99,20 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// <summary>
         /// Adds specific new product to the specific user's list of products.
         /// </summary>
-        /// <param name="user">To this user's list of products the specific product will be added.</param>
-        /// <param name="product">Specific product to add to the user's list of products.</param>
-        /// <returns></returns>
-        Task AddProductAsync(User user, Product product);
+        /// <param name="userId">ID of user to whose list of products the specific product will be added.</param>
+        /// <param name="productId">Specific product's ID to add to the user's list of products.</param>
+        /// <param name="rating">Rating from 0 to 10 of this product given by the user.</param>
+        /// <param name="description">Textual description of the product given by the user.</param>
+        /// <returns>Boolean represents whether operation succeed or no.</returns>
+        Task<bool> AddProductAsync(string userId, string productId, int rating, string description);
 
         /// <summary>
         /// Deletes specific product from the specific user's list of products.
         /// </summary>
-        /// <param name="user">From this user's list of products the specific product will be deleted.</param>
-        /// <param name="product">Specific product to delete from the user's list of products.</param>
-        /// <returns></returns>
-        Task DeleteProductAsync(User user, Product product);
+        /// <param name="userId">ID of user frow whose list of products the specific product will be deleted.</param>
+        /// <param name="productId">Specific product's ID to delete from the user's list of products.</param>
+        /// <returns>Boolean represents whether operation succeed or no.</returns>
+        Task<bool> DeleteProductAsync(string userId, string productId);
 
         /// <summary>
         /// Get the names of the roles a user is a member of.

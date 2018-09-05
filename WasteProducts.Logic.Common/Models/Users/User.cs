@@ -92,9 +92,9 @@ namespace WasteProducts.Logic.Common.Models.Users
         public virtual IList<User> Friends { get; set; }
 
         /// <summary>
-        /// List of Products which User have ever captured.
+        /// List of products added and described by the user.
         /// </summary>
-        public virtual IList<Product> Products { get; set; }
+        public virtual IList<UserProductDescription> ProductDescriptions { get; set; }
 
         // TODO decomment after the "Groups" model is enabled
         /// <summary>
@@ -117,7 +117,7 @@ namespace WasteProducts.Logic.Common.Models.Users
                 this.PasswordHash == other.PasswordHash &&
                 this.PhoneNumber == other.PhoneNumber &&
                 this.PhoneNumberConfirmed == other.PhoneNumberConfirmed &&
-                this.Products == other.Products &&
+                this.ProductDescriptions == other.ProductDescriptions &&
                 this.Roles == other.Roles &&
                 this.SecurityStamp == other.SecurityStamp &&
                 this.TwoFactorEnabled == other.TwoFactorEnabled &&

@@ -109,7 +109,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                                                   Include(u => u.Claims).
                                                   Include(u => u.Logins).
                                                   Include(u => u.Friends).
-                                                  Include(u => u.Products).
+                                                  Include(u => u.ProductDescriptions).
                                                   Where(u => userIds.Contains(u.Id));
 
             return result.ToArray();

@@ -59,6 +59,31 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         Task AddFriendAsync(string userId, string friendId);
 
         /// <summary>
+        /// Deletes a specific friend from the specific user's friend list.
+        /// </summary>
+        /// <param name="userId">From the list of friends of UserDB with Id = userID the UserDB with Id = deletingFriendId will be deleted.</param>
+        /// <param name="deletingFriendId">Specific friend's Id to delete from the user's friend list.</param>
+        Task DeleteFriendAsync(string userID, string deletingFriendId);
+
+        /// <summary>
+        /// Adds product with specific ID to the user's list of products.
+        /// </summary>
+        /// <param name="userId">ID of user who wants to add the specific product to his/her list of products.</param>
+        /// <param name="productId">ID of specific product to add to the user's list of products.</param>
+        /// <param name="rating">Rating from 0 to 10 of this product given by the user.</param>
+        /// <param name="description">Textual description of the product given by the user.</param>
+        /// <returns>Boolean represents whether operation succeed or not.</returns>
+        Task<bool> AddProductAsync(string userId, string productId, int rating, string description);
+
+        /// <summary>
+        /// Deletess product with specific ID to the user's list of products.
+        /// </summary>
+        /// <param name="userId">ID of user who wants to remove the specific product from his/her list of products.</param>
+        /// <param name="productId">ID of specific product to remove from the user's list of products.</param>
+        /// <returns>Boolean represents whether operation succeed or not.</returns>
+        Task<bool> DeleteProductAsync(string userId, string productId);
+
+        /// <summary>
         /// Deletes the record of the specific user.
         /// </summary>
         /// <param name="userId">ID of the specific user to delete.</param>
@@ -87,13 +112,6 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="login">Specific login to remove from the user.</param>
         /// <returns></returns>
         Task RemoveLoginAsync(UserDB user, UserLoginDB login);
-
-        /// <summary>
-        /// Deletes a specific friend from the specific user's friend list.
-        /// </summary>
-        /// <param name="userId">From the list of friends of UserDB with Id = userID the UserDB with Id = deletingFriendId will be deleted.</param>
-        /// <param name="deletingFriendId">Specific friend's Id to delete from the user's friend list.</param>
-        Task DeleteFriendAsync(string userID, string deletingFriendId);
 
         /// <summary>
         /// Returns first registered user matches the predicate or null if there is no matches.

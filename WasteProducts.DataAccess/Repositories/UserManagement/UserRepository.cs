@@ -6,6 +6,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Contexts;
@@ -44,10 +45,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         ~UserRepository()
         {
-            if (!_disposed)
-            {
-                Dispose();
-            }
+            Dispose();
         }
 
         public void Dispose()
@@ -56,6 +54,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             {
                 _manager?.Dispose();
                 _disposed = true;
+                GC.SuppressFinalize(this);
             }
         }
 
@@ -122,6 +121,67 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             await _db.SaveChangesAsync();
         }
 
+        public async Task DeleteFriendAsync(string userId, string deletingFriendId)
+        {
+            UserDB user = _db.Users.Include(p => p.Friends).First(u => u.Id == userId);
+            UserDB friend = _db.Users.First(u => u.Id == deletingFriendId);
+
+            user.Friends.Remove(friend);
+
+            user.Modified = DateTime.UtcNow;
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task<bool> AddProductAsync(string userId, string productId, int rating, string description)
+        {
+            return await Task.Run(() =>
+            {
+                _db.Configuration.LazyLoadingEnabled = false;
+                UserDB user = null;
+                ProductDB product = null;
+                try
+                {
+                    user = _db.Users.Include(u => u.ProductDescriptions).First(u => u.Id == userId);
+                    product = _db.Products.FirstOrDefault(p => p.Id == productId);
+                }
+                catch (InvalidOperationException)
+                {
+                    return false;
+                }
+                var userProdDescr = new UserProductDescriptionDB()
+                {
+                    User = user,
+                    Product = product,
+                    Rating = rating,
+                    Description = description,
+                    Created = DateTime.UtcNow
+                };
+                _db.UserProductDescriptions.Add(userProdDescr);
+                _db.SaveChanges();
+                return true;
+            });
+        }
+
+        public async Task<bool> DeleteProductAsync(string userId, string productId)
+        {
+            return await Task.Run(() =>
+            {
+                UserProductDescriptionDB description = null;
+                try
+                {
+                    description = _db.UserProductDescriptions.First(d => d.User.Id == userId && d.Product.Id == productId);
+                }
+                catch (InvalidOperationException)
+                {
+                    return false;
+                }
+                var entry = _db.Entry(description);
+                entry.State = EntityState.Deleted;
+                _db.SaveChanges();
+                return true;
+            });
+        }
+
         public async Task DeleteAsync(string userId)
         {
             await Task.Run(async () =>
@@ -175,17 +235,6 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             }
         }
 
-        public async Task DeleteFriendAsync(string userId, string deletingFriendId)
-        {
-            UserDB user = _db.Users.Include(p => p.Friends).First(u => u.Id == userId);
-            UserDB friend = _db.Users.First(u => u.Id == deletingFriendId);
-
-            user.Friends.Remove(friend);
-
-            user.Modified = DateTime.UtcNow;
-            await _db.SaveChangesAsync();
-        }
-
         public UserDB Select(string email, string password, bool lazyInitiation = true)
         {
             return (Select(user => user.Email == email && user.PasswordHash == password, lazyInitiation, getRoles: false)).user;
@@ -209,7 +258,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                     Include(u => u.Claims).
                     Include(u => u.Logins).
                     Include(u => u.Friends).
-                    Include(u => u.Products).
+                    Include(u => u.ProductDescriptions).
                     FirstOrDefault(u => u.Email == email);
 
             if (user != null && _manager.CheckPassword(user, password))
@@ -249,7 +298,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                     Include(u => u.Claims).
                     Include(u => u.Logins).
                     Include(u => u.Friends).
-                    Include(u => u.Products).
+                    Include(u => u.ProductDescriptions).
                     Where(predicate);
             }
         }
@@ -319,14 +368,13 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             }
             else
             {
-                // TODO expand with groups when it will be available
                 _db.Configuration.LazyLoadingEnabled = lazyInitiation;
 
                 result.user = _db.Users.Include(u => u.Roles).
                     Include(u => u.Claims).
                     Include(u => u.Logins).
                     Include(u => u.Friends).
-                    Include(u => u.Products).
+                    Include(u => u.ProductDescriptions.Select(p => p.Product)).
                     FirstOrDefault(predicate);
             }
 
