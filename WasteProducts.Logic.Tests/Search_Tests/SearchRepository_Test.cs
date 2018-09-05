@@ -455,7 +455,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         //Test for context. It will be deleted
         public class TestContext : WasteContext
         {
-            public TestContext(ISearchRepository repo) : base(repo)
+            public TestContext(ISearchRepository repo) : base("UserIntegrTest", repo)
             {
 
             }
@@ -479,6 +479,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             var productFromRepo = sut.GetById<ProductDB>("1");
 
             Assert.AreNotEqual(null, productFromRepo);
+            Assert.AreEqual("1", productFromRepo.Id);
         }
 
         ////not passed. Need Product mapper
