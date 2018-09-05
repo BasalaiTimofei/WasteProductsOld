@@ -31,7 +31,7 @@ namespace WasteProducts.DataAccess
 
             Bind<IProductRepository>().ToMethod(c =>
             {
-                var db = new WasteContext("name=ConStrByServer");
+                var db = new WasteContext("name=ConStrByServer", Kernel.Get<ISearchRepository>());
                 return new ProductRepository(db);
             })
             .Named("UserIntegrTest");

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -8,6 +9,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Users;
+using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Contexts;
 
@@ -24,8 +26,9 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         private bool _disposed;
 
         public UserRepository()
-        {
-            _db = new WasteContext();
+        {            
+            //TODO: Injection
+            _db = new WasteContext(new InjectorModule().Kernel.Get<ISearchRepository>());
             _store = new UserStore<UserDB>(_db)
             {
                 DisposeContext = true
@@ -35,7 +38,8 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public UserRepository(string nameOrConnectionString)
         {
-            _db = new WasteContext(nameOrConnectionString);
+            //TODO: Injection
+            _db = new WasteContext(nameOrConnectionString, new InjectorModule().Kernel.Get<ISearchRepository>());
             _store = new UserStore<UserDB>(_db)
             {
                 DisposeContext = true

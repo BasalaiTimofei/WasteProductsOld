@@ -8,6 +8,7 @@ using WasteProducts.DataAccess.Common.Exceptions;
 using System.Collections.ObjectModel;
 using WasteProducts.DataAccess.Contexts;
 using WasteProducts.DataAccess.Common.Models.Products;
+using Ninject;
 
 namespace WasteProducts.Logic.Tests.Search_Tests
 {
@@ -271,7 +272,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         {
             sut = new LuceneSearchRepository(true);
             ProductDB product = new ProductDB();
-            product.Id = 1;
+            product.Id = "1";
             product.Name = "Test product";
             product.Description = "Test product description";
             product.Category = new CategoryDB();
@@ -453,7 +454,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         //Test for context. It will be deleted
         public class TestContext : WasteContext
         {            
-            public TestContext(): base()
+            public TestContext(): base(new DataAccess.InjectorModule().Kernel.Get<ISearchRepository>())
             {                
             }
 
@@ -468,7 +469,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         {
             sut = new LuceneSearchRepository(true);
             TestContext context = new TestContext();
-            ProductDB product = new ProductDB() { Id = 1, Name = "Title", Description = "Description" };
+            ProductDB product = new ProductDB() { Id = "1", Name = "Title", Description = "Description" };
             context.Products.Add(product);
 
             context.DetectAndSaveChanges(System.Data.Entity.EntityState.Added, new List<Type>() { typeof(ProductDB) });                        
@@ -485,7 +486,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             sut = new LuceneSearchRepository(true);
             TestContext context = new TestContext();
             CategoryDB category = new CategoryDB() { Id = 1, Name = "Category name", Description = "Category description" };
-            ProductDB product = new ProductDB() { Id = 1, Name = "Title", Description = "Description", Category = category };
+            ProductDB product = new ProductDB() { Id = "1", Name = "Title", Description = "Description", Category = category };
             
             context.Products.Add(product);
 
