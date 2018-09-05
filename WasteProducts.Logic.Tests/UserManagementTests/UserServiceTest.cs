@@ -43,7 +43,18 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             _mailServiceMock = new Mock<IMailService>();
             _userRepoMock = new Mock<IUserRepository>();
             _userServiceMock = new Mock<IUserService>();
-            _userService = new UserService(_mailServiceMock.Object, _userRepoMock.Object);
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<UserProfile>();
+                cfg.AddProfile<UserClaimProfile>();
+                cfg.AddProfile<UserLoginProfile>();
+                cfg.AddProfile<Mappings.UserMappings.ProductProfile>();
+                cfg.AddProfile<UserProductDescriptionProfile>();
+            });
+            var mapper = new Mapper(config);
+
+            _userService = new UserService(_userRepoMock.Object, mapper, _mailServiceMock.Object);
         }
 
         [TearDown]

@@ -4,30 +4,17 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Security.Claims;
-using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Repositories.UserManagement;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services;
-using WasteProducts.Logic.Common.Services.MailService;
 using WasteProducts.Logic.Common.Services.UserService;
-using WasteProducts.Logic.Services;
-using WasteProducts.Logic.Services.MailService;
-using WasteProducts.Logic.Services.UserService;
 
 namespace WasteProducts.Logic.Tests.UserManagementTests
 {
     [TestFixture]
     public class UserServiceIntegrationTests
     {
-        private static readonly string _nameOrConnectionString;
-
-        private IUserRepository _userRepo;
-
-        private IUserRoleRepository _roleRepo;
-
-        private IMailService _mailService;
-
         private IUserService _userService;
 
         private IUserRoleService _roleService;
@@ -37,16 +24,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         private readonly List<string> _usersIds = new List<string>();
 
         private readonly List<string> _productIds = new List<string>();
-
-        static UserServiceIntegrationTests()
-        {
-            AppSettingsReader asr = new AppSettingsReader();
-
-            _nameOrConnectionString = (string)asr.GetValue("NameOrConnectionStringUserIntegralTestDB", typeof(string));
-
-            StandardKernel kernel = new StandardKernel();
-            kernel.Load(new DataAccess.InjectorModule(), new Logic.InjectorModule());
-        }
 
         ~UserServiceIntegrationTests()
         {
@@ -59,16 +36,20 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         {
             _kernel = new StandardKernel();
             _kernel.Load(new DataAccess.InjectorModule(), new Logic.InjectorModule());
+
+            using (var userRepo = _kernel.Get<IUserRepository>("UserIntegrTest"))
+            {
+                // не делал метода в интерфейсе ради безопасности,
+                // надо знать, что лишь после приведения появляется такой метод.
+                ((UserRepository)userRepo).RecreateTestDatabase();
+            }
         }
 
         [SetUp]
         public void SetUp()
         {
-            _userRepo = new UserRepository(_nameOrConnectionString);
-            _roleRepo = new UserRoleRepository(_nameOrConnectionString);
-            _mailService = new MailService(null, "somevalidemail@mail.ru", null);
-            _userService = new UserService(_mailService, _userRepo);
-            _roleService = new UserRoleService(_roleRepo);
+            _userService = _kernel.Get<IUserService>("UserIntegrTest");
+            _roleService = _kernel.Get<IUserRoleService>("UserIntegrTest");
         }
 
         [TearDown]
@@ -82,8 +63,6 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public void UserIntegrTest_00AddingUsers()
         {
-            ((UserRepository)_userRepo).RecreateTestDatabase();
-
             User user1 = _userService.RegisterAsync("test49someemail@gmail.com", "Sergei", "qwerty1", "qwerty1").GetAwaiter().GetResult();
             User user2 = _userService.RegisterAsync("test50someemail@gmail.com", "Anton", "qwerty2", "qwerty2").GetAwaiter().GetResult();
             User user3 = _userService.RegisterAsync("test51someemail@gmail.com", "Alexander", "qwerty3", "qwerty3").GetAwaiter().GetResult();

@@ -24,19 +24,33 @@ namespace WasteProducts.DataAccess
                 return;
 
             Bind<WasteContext>().ToSelf().InTransientScope(); ; // TODO : replace with IDbContext in all repositories
+            Bind<WasteContext>().ToMethod(ctx => new WasteContext("name=UserIntegrTest")).Named("UserIntegrTest");
 
             Bind<IDbContext>().ToMethod(context => context.Kernel.Get<WasteContext>());
             
             Bind<IUserRepository>().To<UserRepository>();
-
-            Bind<IProductRepository>().ToMethod(c =>
+            Bind<IUserRepository>().ToMethod(ctx =>
             {
-                var db = new WasteContext("name=ConStrByServer");
-                return new ProductRepository(db);
+                var context = ctx.Kernel.Get<WasteContext>("UserIntegrTest");
+                return new UserRepository(context);
             })
             .Named("UserIntegrTest");
 
             Bind<IUserRoleRepository>().To<UserRoleRepository>();
+            Bind<IUserRoleRepository>().ToMethod(ctx =>
+            {
+                var context = ctx.Kernel.Get<WasteContext>("UserIntegrTest");
+                return new UserRoleRepository(context);
+            })
+            .Named("UserIntegrTest");
+
+            Bind<IProductRepository>().To<ProductRepository>();
+            Bind<IProductRepository>().ToMethod(ctx =>
+            {
+                var context = ctx.Kernel.Get<WasteContext>("UserIntegrTest");
+                return new ProductRepository(context);
+            })
+            .Named("UserIntegrTest");
 
             Bind<ISearchRepository>().To<LuceneSearchRepository>().InSingletonScope();
         }
