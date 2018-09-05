@@ -36,7 +36,7 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         [HttpPost]
-        [Route("add")]
+        [Route("add-product")]
         public IHttpActionResult AddProduct(string name)
         {
             if (String.IsNullOrEmpty(name))
@@ -55,7 +55,7 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         [HttpPost]
-        [Route("add")]
+        [Route("add-product")]
         public IHttpActionResult AddProduct(Barcode barcode)
         {
             if (!ModelState.IsValid)
@@ -74,7 +74,7 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         [HttpDelete]
-        [Route("delete")]
+        [Route("delete-product")]
         public IHttpActionResult DeleteProduct(string name)
         {
             if (String.IsNullOrEmpty(name))
@@ -93,7 +93,7 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         [HttpDelete]
-        [Route("delete")]
+        [Route("delete-product")]
         public IHttpActionResult DeleteProduct(Barcode barcode)
         {
             if (!ModelState.IsValid)
@@ -104,6 +104,44 @@ namespace WasteProducts.Web.Controllers.Api
             if (_productService.DeleteByBarcode(barcode))
             {
                 return Content(HttpStatusCode.OK, "Product was successfully deleted");
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPut]
+        [Route("add-category")]
+        public IHttpActionResult AddCategory(Product product, Category category)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            if (_productService.AddCategory(product, category))
+            {
+                return Ok(product);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpDelete]
+        [Route("delete-category")]
+        public IHttpActionResult RemoveCategory(Product product, Category category)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            if (_productService.RemoveCategory(product, category))
+            {
+                return Ok(product);
             }
             else
             {
