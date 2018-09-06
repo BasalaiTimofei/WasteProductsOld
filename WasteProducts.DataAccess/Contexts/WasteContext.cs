@@ -13,7 +13,7 @@ using WasteProducts.DataAccess.ModelConfigurations.UserManagement;
 namespace WasteProducts.DataAccess.Contexts
 {
     [DbConfigurationType(typeof(MsSqlConfiguration))]
-    public class WasteContext : IdentityDbContext<UserDB, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>, IDatabase
+    public class WasteContext : IdentityDbContext<UserDB, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>
     {
         public WasteContext()
         {
@@ -71,24 +71,5 @@ namespace WasteProducts.DataAccess.Contexts
         public IDbSet<GroupUserDB> GroupUserDBs { get; set; }
         public IDbSet<GroupCommentDB> GroupCommentDBs { get; set; }
         public IDbSet<GroupProductDB> GroupProductDBs { get; set; }
-
-
-
-
-        /// <inheritdoc />
-        public Action<string> Log
-        {
-            get => Database.Log;
-            set => Database.Log = value;
-        }
-
-        /// <inheritdoc />
-        public bool IsDbExists => Database.Exists();
-
-        /// <inheritdoc />
-        public bool IsDbCompatibleWithModel => Database.CompatibleWithModel(false);
-
-        /// <inheritdoc />
-        public bool DeleteDb() => Database.Delete();
     }
 }
