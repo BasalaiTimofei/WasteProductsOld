@@ -145,7 +145,6 @@ namespace WasteProducts.Logic.Services
             _repository.Optimize();
         }
 
-
         public IEnumerable<Product> SearchProduct(SearchQuery query)
         {
             var productDbList = Search<ProductDB>(query);
@@ -158,18 +157,17 @@ namespace WasteProducts.Logic.Services
                 cfg.AddProfile(new Mappings.SearchProfile());                
             });
 
-            var _mapper = (new Mapper(config)).DefaultContext.Mapper;
+            var mapper = (new Mapper(config)).DefaultContext.Mapper;
 
             foreach (var productDb in productDbList)
             {
-                result.Add(_mapper.Map<Product>(productDb));
+                result.Add(mapper.Map<Product>(productDb));
             }
 
             return result;
         }
 
         //TODO: implement async methods later if necessary
-
         public Task<IEnumerable<TEntity>> SearchAsync<TEntity>(SearchQuery query)
         {
             throw new NotImplementedException();
@@ -187,6 +185,5 @@ namespace WasteProducts.Logic.Services
                 throw new ArgumentException("Incorrect query.");
             }
         }
-
     }
 }
