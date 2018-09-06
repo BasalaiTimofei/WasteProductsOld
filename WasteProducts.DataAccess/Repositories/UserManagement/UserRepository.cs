@@ -28,13 +28,10 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         public UserRepository()
         {
             //TODO: Injection
-            //Код ниже был вставлен исключительно для того, что бы собирался проект. Измените его так, как нужно
             StandardKernel kernel = new StandardKernel();
             kernel.Load(new DataAccess.InjectorModule());
             _context = new WasteContext(kernel.Get<ISearchRepository>());
-            //
 
-            //_context = new WasteContext();
             _store = new UserStore<UserDB>(_context)
             {
                 DisposeContext = true
@@ -44,14 +41,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public UserRepository(WasteContext context)
         {
-            //TODO: Injection
-            //Код ниже был вставлен исключительно для того, что бы собирался проект. Измените его так, как нужно
-            StandardKernel kernel = new StandardKernel();
-            kernel.Load(new DataAccess.InjectorModule());
-            _context = new WasteContext(kernel.Get<ISearchRepository>());
-            //
-
-            //_context = context;
+            _context = context;
             _store = new UserStore<UserDB>(_context)
             {
                 DisposeContext = true

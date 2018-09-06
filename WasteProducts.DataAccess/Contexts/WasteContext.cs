@@ -18,7 +18,7 @@ namespace WasteProducts.DataAccess.Contexts
     [DbConfigurationType(typeof(MsSqlConfiguration))]
     public class WasteContext : IdentityDbContext<UserDB, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>, IDbContext
     {
-        private ISearchRepository _searchRepository { get; }
+        private ISearchRepository _searchRepository { get; }        
 
         public WasteContext(ISearchRepository searchRepository)
         {

@@ -27,10 +27,9 @@ namespace WasteProducts.DataAccess
 
             //TODO: Injection
             Bind<WasteContext>().ToMethod(ctx => new WasteContext("name=UserIntegrTest", 
-                Kernel.Get<ISearchRepository>())).Named("UserIntegrTest");
-            //
+                Kernel.Get<ISearchRepository>())).Named("UserIntegrTest");            
 
-            //Bind<WasteContext>().ToMethod(ctx => new WasteContext("name=UserIntegrTest");
+            //Bind<WasteContext>().ToMethod(ctx => new WasteContext("name=UserIntegrTest")).Named("UserIntegrTest");
             Bind<IDbContext>().ToMethod(context => context.Kernel.Get<WasteContext>());
             
             Bind<IUserRepository>().To<UserRepository>();
