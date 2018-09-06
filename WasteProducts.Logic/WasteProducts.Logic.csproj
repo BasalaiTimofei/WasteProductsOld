@@ -119,6 +119,11 @@
     <Compile Include="Services\CategoryService.cs" />
     <Compile Include="Services\Diagnostic\DbSeedService.cs" />
     <Compile Include="Services\Diagnostic\DbManagementService.cs" />
+    <Compile Include="Services\Groups\GroupCommentService.cs" />
+    <Compile Include="Services\Groups\GroupUserService.cs" />
+    <Compile Include="Services\Groups\GroupProductService.cs" />
+    <Compile Include="Services\Groups\GroupBoardService .cs" />
+    <Compile Include="Services\Groups\GroupService.cs" />
     <Compile Include="Services\LuceneSearchService.cs" />
     <Compile Include="Services\ProductService.cs" />
     <Compile Include="Services\MailService\MailFactory.cs" />
@@ -149,8 +154,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\Groups\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

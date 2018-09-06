@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-namespace WasteProducts.Logic.Common.Services
+namespace WasteProducts.Logic.Common.Services.Groups
 {
     /// <summary>
     /// Board administration service
@@ -8,22 +9,38 @@ namespace WasteProducts.Logic.Common.Services
     public interface IGroupBoardService
     {
         /// <summary>
-        /// Create - create new board
+        /// Create new board
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
-        void Create<T>(T item);
+        void Create<T>(T item, string userId) where T : class;
+
         /// <summary>
-        /// Update - add or corect information on board
+        /// Add or corect information on board
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
-        void Update<T>(T item);
+        void Update<T>(T item, string userId) where T : class;
+
         /// <summary>
-        /// Delete - delete board
+        /// Board delete
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
-        void Delete<T>(T item);
+        void Delete<T>(T item, string userId) where T : class;
+
+        /// <summary>
+        /// Search board by id
+        /// </summary>
+        /// <typeparam name="T">Object</typeparam>
+        /// <param name="id">Primary key</param>
+        T FindById<T>(Guid id) where T : class;
+
+        /// <summary>
+        /// Search board by name
+        /// </summary>
+        /// <typeparam name="T">Object</typeparam>
+        /// <param name="id">Board name</param>
+        T FindByName<T>(string name) where T : class;
     }
 }

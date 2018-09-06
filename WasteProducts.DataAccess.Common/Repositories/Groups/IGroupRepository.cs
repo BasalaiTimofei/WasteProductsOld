@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WasteProducts.DataAccess.Common.Repositories
+namespace WasteProducts.DataAccess.Common.Repositories.Groups
 {
     /// <summary>
     /// Group repository
@@ -36,14 +36,14 @@ namespace WasteProducts.DataAccess.Common.Repositories
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="id">Primary key object</param>
-        void Delete<T>(int id) where T : class;
+        void Delete<T>(Guid id) where T : class;
         /// <summary>
         /// Get - getting object from db
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="id">Primary key object</param>
         /// <returns>Object</returns>
-        T Get<T>(int id) where T : class;
+        T Get<T>(Guid id) where T : class;
         /// <summary>
         /// GetAll - returns all objects
         /// </summary>

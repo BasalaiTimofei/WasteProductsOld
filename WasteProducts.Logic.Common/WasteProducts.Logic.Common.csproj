@@ -91,8 +91,8 @@
     <Compile Include="Models\Groups\GroupProduct.cs" />
     <Compile Include="Models\Groups\GroupComment.cs" />
     <Compile Include="Models\Groups\GroupUser.cs" />
-    <Compile Include="Services\Groups\IGroupDataService.cs" />
-    <Compile Include="Services\Groups\IGroupUserManagerService.cs" />
+    <Compile Include="Services\Groups\IGroupCommentService.cs" />
+    <Compile Include="Services\Groups\IGroupUserService.cs" />
     <Compile Include="Services\Groups\IGroupProductService.cs" />
     <Compile Include="Services\Groups\IGroupBoardService.cs" />
     <Compile Include="Services\Groups\IGroupService.cs" />

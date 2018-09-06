@@ -11,10 +11,8 @@ namespace WasteProducts.Logic.Mappings.Groups
             CreateMap<Group, GroupDB>()
                 .ForMember(x => x.Created, y => y.Ignore())
                 .ForMember(x => x.Deleted, y => y.Ignore())
-                .ForMember(x => x.Admin, y => y.Ignore())
                 .ForMember(x => x.Modified, y => y.Ignore())
                 .ForMember(x => x.IsDeleted, y => y.Ignore())
-                .ForMember(x => x.GroupUsers, y => y.Ignore())
                 .ReverseMap();
         }
     }

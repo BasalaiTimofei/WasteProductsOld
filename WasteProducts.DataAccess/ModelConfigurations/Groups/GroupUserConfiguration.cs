@@ -1,4 +1,5 @@
-﻿using System.Data.Entity.ModelConfiguration;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity.ModelConfiguration;
 using WasteProducts.DataAccess.Common.Models.Groups;
 
 namespace WasteProducts.DataAccess.ModelConfigurations
@@ -9,10 +10,13 @@ namespace WasteProducts.DataAccess.ModelConfigurations
         {
             ToTable("GroupUser");
 
-            HasKey<int>(x => x.Id);
+            HasKey(x => x.Id);
+            Property(x => x.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             Property(x => x.IsInvited).IsOptional();
             Property(x => x.RigtToCreateBoards).IsOptional();
             Property(x => x.Modified).IsOptional();
+            Property(x => x.GroupId).IsRequired();
+            Property(x => x.UserId).IsRequired();
         }
 
     }
