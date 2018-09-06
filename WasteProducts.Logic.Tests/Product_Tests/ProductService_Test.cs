@@ -65,15 +65,15 @@ namespace WasteProducts.Logic.Tests.Product_Tests
                 cfg.CreateMap<Product, ProductDB>()
                     .ForMember(m => m.Created,
                         opt => opt.MapFrom(p => p.Name != null ? DateTime.UtcNow : default(DateTime)))
-                    .ForMember(m => m.Modified, opt => opt.UseValue((DateTime?) null))
+                    .ForMember(m => m.Modified, opt => opt.UseValue((DateTime?)null))
                     .ForMember(m => m.Barcode, opt => opt.Ignore())
                     .ReverseMap();
                 cfg.AddProfile<CategoryProfile>();
             });
 
-             mapper = new Mapper(mapConfig);
+            mapper = new Mapper(mapConfig);
 
-             mockProductRepository = new Mock<IProductRepository>();
+            mockProductRepository = new Mock<IProductRepository>();
 
             category = new Category
             {
@@ -83,7 +83,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             };
 
             product = new Product { Id = (new Guid()).ToString(), Name = "Some name" };
-            productDB = new ProductDB {Id = (new Guid()).ToString(), Name = "Some name"};
+            productDB = new ProductDB { Id = (new Guid()).ToString(), Name = "Some name" };
         }
 
         [Test]

@@ -55,7 +55,7 @@ namespace WasteProducts.Logic.Services
                 p => string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
                 out var products)) return false;
 
-            var newProduct = new Product {Id = new Guid().ToString(), Barcode = barcode, Name = barcode.ProductName};
+            var newProduct = new Product { Id = new Guid().ToString(), Barcode = barcode, Name = barcode.ProductName };
             _productRepository.Add(_mapper.Map<ProductDB>(newProduct));
 
             return true;
@@ -242,10 +242,14 @@ namespace WasteProducts.Logic.Services
                     string.Equals(p.Id, product.Id, StringComparison.Ordinal),
                 out var products)) return;
 
-            var productFromDB = products.ToList().First();
-            if (productFromDB.AvgRating == null) productFromDB.AvgRating = 0d;
-            productFromDB.AvgRating = (productFromDB.AvgRating * productFromDB.RateCount + rating) / ++productFromDB.RateCount;
-            _productRepository.Update(productFromDB);
+            var list = (from prod in products select prod.AvgRating).Average();
+            //if (list == null) list = 0d;
+            //_productRepository.Update(prod);
+
+            //var productFromDB = products.ToList().First();
+            //if (productFromDB.AvgRating == null) productFromDB.AvgRating = 0d;
+            //productFromDB.AvgRating = (productFromDB.AvgRating * productFromDB.RateCount + rating) / ++productFromDB.RateCount;
+            //_productRepository.Update(productFromDB);
         }
 
         /// <summary>
@@ -313,7 +317,7 @@ namespace WasteProducts.Logic.Services
             productFromDB.Description = description;
             _productRepository.Update(productFromDB);
         }
-     
+
         private bool IsProductsInDB(Predicate<ProductDB> conditionPredicate, out IEnumerable<ProductDB> products)
         {
             products = _productRepository.SelectWhere(conditionPredicate);
