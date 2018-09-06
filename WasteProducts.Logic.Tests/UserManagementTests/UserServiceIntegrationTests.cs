@@ -37,7 +37,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             _kernel = new StandardKernel();
             _kernel.Load(new DataAccess.InjectorModule(), new Logic.InjectorModule());
 
-            using (var userRepo = _kernel.Get<IUserRepository>("UserIntegrTest"))
+            using (var userRepo = _kernel.Get<IUserRepository>())
             {
                 // не делал метода в интерфейсе ради безопасности,
                 // надо знать, что лишь после приведения появляется такой метод.
@@ -54,8 +54,8 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [SetUp]
         public void SetUp()
         {
-            _userService = _kernel.Get<IUserService>("UserIntegrTest");
-            _roleService = _kernel.Get<IUserRoleService>("UserIntegrTest");
+            _userService = _kernel.Get<IUserService>();
+            _roleService = _kernel.Get<IUserRoleService>();
         }
 
         [TearDown]
@@ -414,7 +414,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         {
             string productName = "Waste product";
 
-            using (var prodService = _kernel.Get<IProductService>("UserIntegrTest"))
+            using (var prodService = _kernel.Get<IProductService>())
             {
                 prodService.AddByName(productName);
                 var product = prodService.GetByNameAsync(productName).GetAwaiter().GetResult();
