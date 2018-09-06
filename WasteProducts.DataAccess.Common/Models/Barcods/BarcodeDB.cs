@@ -16,11 +16,6 @@ namespace WasteProducts.DataAccess.Common.Models.Barcods
         public string Code { get; set; }
 
         /// <summary>
-        /// Barcode type.
-        /// </summary>
-        public string Type { get; set; }
-
-        /// <summary>
         /// Product name.
         /// </summary>
         public string ProductName { get; set; }
@@ -39,11 +34,6 @@ namespace WasteProducts.DataAccess.Common.Models.Barcods
         /// Product weight.
         /// </summary>
         public double Weight { get; set; }
-
-        /// <summary>
-        /// User ID of the sending photo.
-        /// </summary>
-        public int UserID { get; set; }
 
         /// <summary>
         /// Date of record creation in DB.
