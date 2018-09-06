@@ -26,7 +26,7 @@ namespace WasteProducts.Logic.Services.UserService
 
         private bool _disposed;
 
-        public UserService(IUserRepository userRepo, [Named("UserService")] IMapper mapper, IMailService mailService)
+        public UserService(IUserRepository userRepo, IMapper mapper, IMailService mailService)
         {
             _userRepo = userRepo;
             _mapper = mapper;
