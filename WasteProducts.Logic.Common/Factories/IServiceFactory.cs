@@ -7,7 +7,7 @@ namespace WasteProducts.Logic.Common.Factories
     /// <summary>
     /// Proxy Ninject factory interface for services
     /// </summary>
-    public interface IDbServiceFactory
+    public interface IServiceFactory
     {
         /// <summary>
         /// Gets ISearchService from Ioc container 

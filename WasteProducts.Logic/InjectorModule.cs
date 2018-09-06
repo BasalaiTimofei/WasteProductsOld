@@ -25,11 +25,13 @@ namespace WasteProducts.Logic
             if(Kernel is null)
                 return;
 
-            Bind<IDbServiceFactory>().ToFactory();
+            Bind<IServiceFactory>().ToFactory();
 
             Bind<IDbSeedService>().To<DbSeedService>();
 
-            Bind<IDbManagementService>().To<DbManagementService>();
+            Bind<IDbService>().To<DbService>();
+
+            Bind<ITestModelsService>().To<TestModelsService>();
 
             Bind<IUserService>().To<UserService>();
 

@@ -23,8 +23,10 @@ namespace WasteProducts.DataAccess
             if (Kernel is null)
                 return;
 
-            Bind<WasteContext, IDatabase>().To<WasteContext>().InTransientScope();
-            
+            Bind<WasteContext>().ToSelf().InTransientScope();
+
+            Bind<IDatabase>().To<Database>().InTransientScope();
+
             Bind<IUserRepository>().To<UserRepository>();
 
             Bind<IProductRepository>().ToMethod(c =>
