@@ -151,38 +151,24 @@ namespace WasteProducts.Logic.Services
             var productDbList = Search<ProductDB>(query);
 
             //TODO: map all values in productDbList to Product
-            List<Product> result = new List<Product>();
+            List<Product> result = new List<Product>();            
 
             var config = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<Product, ProductDB>()
-                    .ForMember(m => m.Created, opt => opt.Ignore())
-                    .ForMember(m => m.Modified, opt => opt.Ignore())
-                    .ReverseMap();
-
-                cfg.CreateMap<Barcode, BarcodeDB>()
-                    .ForMember(m => m.Created, opt => opt.Ignore())
-                    .ForMember(m => m.Modified, opt => opt.Ignore())
-                    .ReverseMap();
-
-                cfg.CreateMap<Category, CategoryDB>()
-                    .ForMember(m => m.Id, opt => opt.Ignore())
-                    .ForMember(m => m.Marked, opt => opt.Ignore())
-                    .ForMember(m => m.Products, opt => opt.Ignore())
-                    .ReverseMap();
+                cfg.AddProfile(new Mappings.SearchProfile());                
             });
 
-            var mapper = config.CreateMapper();
+            var _mapper = (new Mapper(config)).DefaultContext.Mapper;
 
             foreach (var productDb in productDbList)
             {
-                result.Add(mapper.Map<Product>(productDb));
+                result.Add(_mapper.Map<Product>(productDb));
             }
 
             return result;
         }
 
-        //todo: implement async methods later if necessary
+        //TODO: implement async methods later if necessary
 
         public Task<IEnumerable<TEntity>> SearchAsync<TEntity>(SearchQuery query)
         {
