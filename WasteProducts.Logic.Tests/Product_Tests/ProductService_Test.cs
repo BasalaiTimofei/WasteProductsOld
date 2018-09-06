@@ -30,6 +30,8 @@ namespace WasteProducts.Logic.Tests.Product_Tests
     [TestFixture]
     class ProductService_Test
     {
+        private const string productName = "Some name";
+
         private Barcode barcode;
         private BarcodeDB barcodeDB;
         private Product product;
@@ -85,6 +87,80 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
+        public void Add_InsertsNewProduct_Returns_True()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.Add(product);
+
+            Assert.That(result, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void Add_DoesNotInsertNewProduct_Returns_False()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.Add(product);
+
+            Assert.That(result, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void Add_DoesNotInsertNullProduct_Returns_False()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.Add(null);
+
+            Assert.That(result, Is.EqualTo(false));
+        }
+
+        [Test]
+        public void Add_InsertsNewProduct_CallsMethod_AddOfRepository()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.Add(product);
+
+            mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Once);
+        }
+
+        [Test]
+        public void Add_DoesNotInsertNewProduct_DoesNotCallMethod_AddOfRepository()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.Add(product);
+
+            mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Never);
+        }
+
+        [Test]
+        public void Add_DoesNotInsertNullProduct_DoesNotCallMethod_AddOfRepository()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            productService.Add(null);
+
+            mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Never);
+        }
+
+        [Test]
         public void AddByBarcode_InsertsNewProduct_Returns_True()
         {
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
@@ -110,7 +186,6 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        //TODO Проверить чисто на null
         public void AddByBarcore_BarcodeIsNotNull()
         {
             var productService = new ProductService(mockProductRepository.Object, mapper);
@@ -152,7 +227,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
                 .Returns(selectedList);
 
             var productService = new ProductService(mockProductRepository.Object, mapper);
-            var result = productService.AddByName(It.IsAny<string>());
+            var result = productService.AddByName(productName);
 
             Assert.That(result, Is.EqualTo(true));
         }
@@ -188,7 +263,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
                 .Returns(selectedList);
 
             var productService = new ProductService(mockProductRepository.Object, mapper);
-            productService.AddByName(It.IsAny<string>());
+            productService.AddByName(productName);
 
             mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Once);
         }
@@ -254,6 +329,98 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             productService.AddCategory(product, category);
 
             mockProductRepository.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Never);
+        }
+
+        [Test]
+        public void GetById_GetsId_Returns_Product()
+        {
+            var id = new Guid().ToString();
+            mockProductRepository.Setup(repo => repo.GetById(id))
+                .Returns(productDB);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.GetById(id);
+
+            Assert.That(result, Is.InstanceOf(typeof(Product)));
+        }
+
+        [Test]
+        public void GetById_GetsId_Returns_Null()
+        {
+            var id = new Guid().ToString();
+            mockProductRepository.Setup(repo => repo.GetById(id))
+                .Returns(productDB);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.GetById(null);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void GetByBarcode_GetsBarcode_Returns_Product()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.GetByBarcode(barcode);
+
+            Assert.That(result, Is.InstanceOf(typeof(Product)));
+        }
+
+        [Test]
+        public void GetByBarcode_GetsBarcode_Returns_null()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.GetByBarcode(null);
+
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void GetAll_GetsNothing_Returns_GenericEnumerableCollection()
+        {
+            selectedList.Add(productDB);
+            selectedList.Add(new ProductDB { Id = new Guid().ToString(), Name = "New Some Name" });
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.GetAll();
+
+            Assert.That(result, Is.InstanceOf<IEnumerable<Product>>());
+        }
+
+        [Test]
+        public void GetByName_GetProductName_Returns_Product()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.GetByName(productName);
+
+            Assert.That(result, Is.InstanceOf(typeof(Product)));
+        }
+
+        [Test]
+        public void GetByName_GetsProductName_Returns_null()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            var productService = new ProductService(mockProductRepository.Object, mapper);
+            var result = productService.GetByName(null);
+
+            Assert.That(result, Is.Null);
         }
 
         [Test]

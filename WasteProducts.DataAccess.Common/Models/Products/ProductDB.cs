@@ -103,5 +103,18 @@ namespace WasteProducts.DataAccess.Common.Models.Products
             var hashCode = Id.GetHashCode();
             return hashCode;
         }
+
+        /// <summary>
+        /// The hash code for this ProductDB
+        /// </summary>
+        /// <returns>A hash code for the current object</returns>
+        public override int GetHashCode()
+        {
+            var hashCode = Id.GetHashCode();
+            hashCode = 31 * hashCode + Name.GetHashCode();
+
+            return hashCode;
+        }
+
     }
 }
