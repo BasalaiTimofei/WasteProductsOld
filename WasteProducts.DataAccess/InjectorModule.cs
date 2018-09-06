@@ -24,8 +24,13 @@ namespace WasteProducts.DataAccess
                 return;
 
             Bind<WasteContext>().ToSelf().InTransientScope(); ; // TODO : replace with IDbContext in all repositories
-            Bind<WasteContext>().ToMethod(ctx => new WasteContext("name=UserIntegrTest", Kernel.Get<ISearchRepository>())).Named("UserIntegrTest");
 
+            //TODO: Injection
+            Bind<WasteContext>().ToMethod(ctx => new WasteContext("name=UserIntegrTest", 
+                Kernel.Get<ISearchRepository>())).Named("UserIntegrTest");
+            //
+
+            //Bind<WasteContext>().ToMethod(ctx => new WasteContext("name=UserIntegrTest");
             Bind<IDbContext>().ToMethod(context => context.Kernel.Get<WasteContext>());
             
             Bind<IUserRepository>().To<UserRepository>();

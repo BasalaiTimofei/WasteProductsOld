@@ -22,11 +22,12 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public UserRoleRepository()
         {
-
             //TODO: Injection
+            //Код ниже был вставлен исключительно для того, что бы собирался проект. Измените его так, как нужно
             StandardKernel kernel = new StandardKernel();
             kernel.Load(new DataAccess.InjectorModule());
             _context = new WasteContext(kernel.Get<ISearchRepository>());
+            //
 
             //_context = new WasteContext();
             _store = new RoleStore<IdentityRole>(_context)
@@ -38,9 +39,11 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         public UserRoleRepository(WasteContext context)
         {
             //TODO: Injection
+            //Код ниже был вставлен исключительно для того, что бы собирался проект. Измените его так, как нужно
             StandardKernel kernel = new StandardKernel();
             kernel.Load(new DataAccess.InjectorModule());
             _context = new WasteContext(kernel.Get<ISearchRepository>());
+            //
 
             //_context = context;
             _store = new RoleStore<IdentityRole>(_context)
