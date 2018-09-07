@@ -76,6 +76,7 @@ namespace WasteProducts.Logic.Common.Services
         /// <summary>
         /// Tries to delete the product by barcode and returns whether the deletion is successful or not
         /// </summary>
+        /// 
         /// <param name="barcode">Barcode of the product to be deleted</param>
         /// <returns>Boolean represents whether the deletion is successful or not</returns>
         bool DeleteByBarcode(Barcode barcode);

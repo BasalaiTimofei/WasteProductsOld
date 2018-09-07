@@ -241,15 +241,12 @@ namespace WasteProducts.Logic.Services
             if (!IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.Ordinal),
                 out var products)) return;
+            
+            var productFromDB = products.ToList().First();
+            if (productFromDB.AvgRating == null) productFromDB.AvgRating = 0d;
 
-            var list = (from prod in products select prod.AvgRating).Average();
-            //if (list == null) list = 0d;
-            //_productRepository.Update(prod);
-
-            //var productFromDB = products.ToList().First();
-            //if (productFromDB.AvgRating == null) productFromDB.AvgRating = 0d;
-            //productFromDB.AvgRating = (productFromDB.AvgRating * productFromDB.RateCount + rating) / ++productFromDB.RateCount;
-            //_productRepository.Update(productFromDB);
+            productFromDB.AvgRating = (productFromDB.AvgRating * productFromDB.RateCount + rating) / ++productFromDB.RateCount;
+            _productRepository.Update(productFromDB);
         }
 
         /// <summary>
