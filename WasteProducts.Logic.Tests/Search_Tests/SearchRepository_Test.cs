@@ -460,7 +460,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             }
 
-            public void DetectAndSaveChanges(System.Data.Entity.EntityState state, IEnumerable<Type> types)
+            public new void DetectAndSaveChanges(System.Data.Entity.EntityState state, IEnumerable<Type> types)
             {
                 base.DetectAndSaveChanges(state, types);
             }

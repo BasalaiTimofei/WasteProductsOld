@@ -140,6 +140,8 @@
     <Compile Include="Services\TestService.cs" />
     <Compile Include="Services\UserService\UserRoleService.cs" />
     <Compile Include="Services\UserService\UserService.cs" />
+    <Compile Include="Validators\Search\BoostedSearchQueryValidator.cs" />
+    <Compile Include="Validators\Search\SearchQueryValidator.cs" />
     <Compile Include="Validators\TestValidator.cs" />
     <Compile Include="Validators\Groups\GroupValidation.cs" />
   </ItemGroup>
