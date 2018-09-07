@@ -1,17 +1,24 @@
 ﻿using System.Threading.Tasks;
+using WasteProducts.Logic.Common.Attributes;
 
 namespace WasteProducts.Logic.Common.Services.Diagnostic
 {
     /// <summary>
     /// Service, that seeds database with permanent and test entries.
     /// </summary>
+    [Trace]
     public interface IDbSeedService
     {
         /// <summary>
-        /// Seeds to database through services.
+        /// Seeds base data to database
         /// </summary>
-        /// <param name="seedTestData">If <c>true</c> database will seeded with test data.</param>
-        /// <returns>Return bool if seeding was finished successful</returns>
-        Task<bool> SeedAsync(bool seedTestData = false);
+        /// <returns>Task</returns>
+        Task SeedBaseDataAsync();
+
+        /// <summary>
+        /// Seeds test data to database
+        /// </summary>
+        /// <returns>Task</returns>
+        Task SeedTestDataAsync();
     }
 }

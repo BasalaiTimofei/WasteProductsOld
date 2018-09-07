@@ -110,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contexts\Config\MsSqlConfiguration.cs" />
+    <Compile Include="Contexts\Database.cs" />
     <Compile Include="Contexts\Security\IdentityContext.cs" />
     <Compile Include="Contexts\WasteContext.cs" />
     <Compile Include="InjectorModule.cs" />

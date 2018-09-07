@@ -455,7 +455,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         //Test for context. It will be deleted
         public class TestContext : WasteContext
         {
-            public TestContext(ISearchRepository repo) : base("UserIntegrTest", repo)
+            public TestContext(ISearchRepository repo) : base(repo)
             {
 
             }
