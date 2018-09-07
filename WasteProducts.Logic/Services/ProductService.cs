@@ -220,15 +220,17 @@ namespace WasteProducts.Logic.Services
         /// </summary>
         /// <param name="product">The specific product to set price</param>
         /// <param name="price">The price of the specific product</param>
-        public void SetPrice(Product product, decimal price)
+        public bool SetPrice(Product product, decimal price)
         {
             if (price <= 0M || !IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.Ordinal),
-                out var products)) return;
+                out var products)) return false;
 
             var productFromDB = products.ToList().First();
             productFromDB.Price = price;
             _productRepository.Update(productFromDB);
+
+            return true;
         }
 
         /// <summary>
@@ -236,50 +238,56 @@ namespace WasteProducts.Logic.Services
         /// </summary>
         /// <param name="product">The product that the user wants to rate</param>
         /// <param name="rating">Own user rating</param>
-        public void Rate(Product product, int rating)
+        public bool Rate(Product product, int rating)
         {
             if (!IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.Ordinal),
-                out var products)) return;
+                out var products)) return false;
 
             var productFromDB = products.ToList().First();
             if (productFromDB.AvgRating == null) productFromDB.AvgRating = 0d;
             productFromDB.AvgRating = (productFromDB.AvgRating * productFromDB.RateCount + rating) / ++productFromDB.RateCount;
             _productRepository.Update(productFromDB);
+
+            return true;
         }
 
         /// <summary>
         /// Hides product for display in product lists
         /// </summary>
         /// <param name="product">The specific product to hide</param>
-        public void Hide(Product product)
+        public bool Hide(Product product)
         {
             if (!IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.Ordinal),
-                out var products)) return;
+                out var products)) return false;
 
             var productFromDB = products.ToList().First();
-            if (productFromDB.IsHidden) return;
+            if (productFromDB.IsHidden) return true;
 
             productFromDB.IsHidden = product.IsHidden = true;
             _productRepository.Update(productFromDB);
+
+            return true;
         }
 
         /// <summary>
         /// Reveal product for display in product lists
         /// </summary>
         /// <param name="product">The specific product to reveal</param>
-        public void Reveal(Product product)
+        public bool Reveal(Product product)
         {
             if (!IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.Ordinal),
-                out var products)) return;
+                out var products)) return false;
 
             var productFromDB = products.ToList().First();
-            if (!productFromDB.IsHidden) return;
+            if (!productFromDB.IsHidden) return true;
 
             productFromDB.IsHidden = false;
             _productRepository.Update(productFromDB);
+
+            return true;
         }
 
         /// <summary>
@@ -303,15 +311,17 @@ namespace WasteProducts.Logic.Services
         /// </summary>
         /// <param name="product">The specific product to set description</param>
         /// <param name="description">The description of the specific product</param>
-        public void SetDescription(Product product, string description)
+        public bool SetDescription(Product product, string description)
         {
             if (description == null || !IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.Ordinal),
-                out var products)) return;
+                out var products)) return false ;
 
             var productFromDB = products.ToList().First();
             productFromDB.Description = description;
             _productRepository.Update(productFromDB);
+
+            return true;
         }
      
         private bool IsProductsInDB(Predicate<ProductDB> conditionPredicate, out IEnumerable<ProductDB> products)

@@ -108,26 +108,26 @@ namespace WasteProducts.Logic.Common.Services
         /// </summary>
         /// <param name="product">The specific product to set price</param>
         /// <param name="price">The price of the specific product</param>
-        void SetPrice(Product product, decimal price);
+        bool SetPrice(Product product, decimal price);
 
         /// <summary>
         /// Allows the user to rate the specific product
         /// </summary>
         /// <param name="product">The product that the user wants to rate</param>
         /// <param name="rating">Own user rating</param>
-        void Rate(Product product, int rating);
+        bool Rate(Product product, int rating);
 
         /// <summary>
         /// Hides product for display in product lists
         /// </summary>
         /// <param name="product">The specific product to hide</param>
-        void Hide(Product product);
+        bool Hide(Product product);
 
         /// <summary>
         /// Reveal product for display in product lists
         /// </summary>
         /// <param name="product">The specific product to reveal</param>
-        void Reveal(Product product);
+        bool Reveal(Product product);
 
         /// <summary>
         /// Checks whether a specific product is hidden or not
@@ -141,6 +141,6 @@ namespace WasteProducts.Logic.Common.Services
         /// </summary>
         /// <param name="product">The specific product to set description</param>
         /// <param name="description">The description of the specific product</param>
-        void SetDescription(Product product, string description);
+        bool SetDescription(Product product, string description);
     }
 }
