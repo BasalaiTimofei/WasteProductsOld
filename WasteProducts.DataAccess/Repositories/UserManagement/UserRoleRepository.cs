@@ -7,6 +7,7 @@ using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Contexts;
 using System.Data.Entity;
+using Microsoft.AspNet.Identity;
 
 namespace WasteProducts.DataAccess.Repositories.UserManagement
 {
@@ -15,6 +16,8 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         private readonly WasteContext _context;
 
         private readonly RoleStore<IdentityRole> _store;
+
+        private readonly RoleManager<IdentityRole> _manager;
 
         private bool _disposed;
 
@@ -25,6 +28,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             {
                 DisposeContext = true
             };
+            _manager = new RoleManager<IdentityRole>(_store);
         }
 
         public UserRoleRepository(WasteContext context)
@@ -34,6 +38,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             {
                 DisposeContext = true
             };
+            _manager = new RoleManager<IdentityRole>(_store);
         }
 
         ~UserRoleRepository()
@@ -48,8 +53,9 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         {
             if (!_disposed)
             {
-                _store?.Dispose();
+                _manager?.Dispose();
                 _disposed = true;
+                GC.SuppressFinalize(this);
             }
         }
 
@@ -57,28 +63,26 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         {
             IdentityRole identityRole = new IdentityRole(role.Name) { Id = Guid.NewGuid().ToString() };
 
-            await _store.CreateAsync(identityRole);
-            await _context.SaveChangesAsync();
+            await _manager.CreateAsync(identityRole);
         }
 
         public async Task DeleteAsync(UserRoleDB role)
         {
-            IdentityRole identityRole = await _store.FindByIdAsync(role.Id);
+            IdentityRole identityRole = await _manager.FindByIdAsync(role.Id);
 
-            await _store.DeleteAsync(identityRole);
-            await _context.SaveChangesAsync();
+            await _manager.DeleteAsync(identityRole);
         }
 
         public async Task<UserRoleDB> FindByIdAsync(string roleId)
         {
-            IdentityRole ir = await _store.FindByIdAsync(roleId);
+            IdentityRole ir = await _manager.FindByIdAsync(roleId);
             UserRoleDB result = new UserRoleDB() { Id = ir.Id, Name = ir.Name };
             return result;
         }
 
         public async Task<UserRoleDB> FindByNameAsync(string roleName)
         {
-            IdentityRole ir = await _store.FindByNameAsync(roleName);
+            IdentityRole ir = await _manager.FindByNameAsync(roleName);
             if (ir == null)
             {
                 return null;
@@ -89,15 +93,14 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task UpdateRoleNameAsync(UserRoleDB role)
         {
-            IdentityRole ir = await _store.FindByIdAsync(role.Id);
+            IdentityRole ir = await _manager.FindByIdAsync(role.Id);
             ir.Name = role.Name;
-            await _store.UpdateAsync(ir);
-            await _context.SaveChangesAsync();
+            await _manager.UpdateAsync(ir);
         }
 
         public async Task<IEnumerable<UserDB>> GetRoleUsers(UserRoleDB role)
         {
-            IdentityRole ir = await _store.FindByIdAsync(role.Id);
+            IdentityRole ir = await _manager.FindByIdAsync(role.Id);
             List<string> userIds = new List<string>();
 
             foreach (IdentityUserRole iur in ir.Users)

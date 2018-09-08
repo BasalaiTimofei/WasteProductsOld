@@ -33,9 +33,9 @@ namespace WasteProducts.Web.Controllers.Api
 
         //GET api/user
         //todo async
-        public List<User> Get()
+        public async Task<IEnumerable<User>> Get()
         {
-            return _userService.GetAllUsersInfo();
+            return await _userService.GetAllUsersAsync();
         }
 
         // GET api/user/5
@@ -59,7 +59,7 @@ namespace WasteProducts.Web.Controllers.Api
         [Route("api/User/Login")]
         public async Task<User> LogIn(string id, string password)
         {
-            return await _userService.LogInAsync(id, password);
+            return await _userService.LogInByEmailAsync(id, password);
         }
 
         // DELETE api/user/5
@@ -76,10 +76,10 @@ namespace WasteProducts.Web.Controllers.Api
         // POST api/User/Register
         [Route("api/User/Register")]
         [HttpPost]
-        public async Task<User> Register([FromBody] string email, [FromBody] string userName, [FromBody] string password)
+        public async Task Register([FromBody] string email, [FromBody] string userName, [FromBody] string password)
         {
             //todo get from JSON, not User instance
-            return await _userService.RegisterAsync(email, userName, password);
+            await _userService.RegisterAsync(email, userName, password);
         }
 
 
@@ -160,9 +160,9 @@ namespace WasteProducts.Web.Controllers.Api
         // POST api/User/Roles
         [Route("api/User/Roles")]
         [HttpPost]
-        public async Task<IList<string>> GetRoles([FromBody]User user)
+        public async Task<IList<string>> GetRoles([FromBody] string userId)
         {
-            return await _userService.GetRolesAsync(user);
+            return await _userService.GetRolesAsync(userId);
         }
 
         // DELETE api/User/Roles

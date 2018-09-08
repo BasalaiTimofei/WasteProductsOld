@@ -66,136 +66,136 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             _userService = null;
         }
 
-        [Test]
-        public void UserServiceTest_01_RegisterAsync_Password_and_Confirmation_Doesnt_Match_Returns_Null()
-        {
-            // arrange
-            var validEmail = "validEmail@gmail.com";
-            _mailServiceMock.Setup(a => a.IsValidEmail(validEmail)).Returns(true);
-            var password = "password";
-            var userNameValid = "validUserName";
-            User expected = null;
+        //[Test]
+        //public void UserServiceTest_01_RegisterAsync_Password_and_Confirmation_Doesnt_Match_Returns_Null()
+        //{
+        //    // arrange
+        //    var validEmail = "validEmail@gmail.com";
+        //    _mailServiceMock.Setup(a => a.IsValidEmail(validEmail)).Returns(true);
+        //    var password = "password";
+        //    var userNameValid = "validUserName";
+        //    User expected = null;
 
-            // act
-            var actual = _userService.RegisterAsync(validEmail, userNameValid, password).GetAwaiter().GetResult();
+        //    // act
+        //    var actual = _userService.RegisterAsync(validEmail, userNameValid, password).GetAwaiter().GetResult();
 
-            // assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void UserServiceTest_02_RegisterAsync_Email_Is_Not_Valid_Returns_Null()
-        {
-            // arrange
-            var invalidEmail = "invalidEmail@gmail.com";
-            _mailServiceMock.Setup(a => a.IsValidEmail(invalidEmail)).Returns(false);
-            var password = "password";
-            var userNameValid = "validUserName";
-            User expected = null;
-
-            // act
-            var actual = _userService.RegisterAsync(invalidEmail, userNameValid, password).GetAwaiter().GetResult();
-
-            // assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        [Test]
-        public void UserServiceTest_03_LogInAsync_Not_Existing_Email_Returns_Null()
-        {
-            // arrange
-            var invalidEmail = "invalidEmail@gmail.com";
-            var password = "password";
-            UserDB userDB = new UserDB
-            {
-                Email = "validEmail@gmail.com",
-                PasswordHash = "password"
-            };
-            IList<string> roles = new List<string>();
-
-            (UserDB, IList<string>) tuple = (null, roles);
-
-            _userRepoMock.Setup(a => a.
-            SelectWithRoles(It.IsAny<Func<UserDB, bool>>(),
-                It.IsAny<bool>())).Returns(tuple);
-
-            // act
-            var actual = _userService.LogInAsync(invalidEmail, password, true).GetAwaiter().GetResult();
-
-            // assert
-            Assert.IsNull(actual);
-        }
+        //    // assert
+        //    Assert.AreEqual(expected, actual);
+        //}
 
         //[Test]
-        public void UserServiceTest_04_PasswordRequestAsync_Not_Existing_Email_Dont_Send_Email()
-        {
-            // arrange
-            var invalidEmail = "incorrectEmail";
-            _userRepoMock.Setup(b => b.Select(It.Is<string>(c => 
-            c == invalidEmail), It.IsAny<bool>())).Returns((UserDB)null);
+        //public void UserServiceTest_02_RegisterAsync_Email_Is_Not_Valid_Returns_Null()
+        //{
+        //    // arrange
+        //    var invalidEmail = "invalidEmail@gmail.com";
+        //    _mailServiceMock.Setup(a => a.IsValidEmail(invalidEmail)).Returns(false);
+        //    var password = "password";
+        //    var userNameValid = "validUserName";
+        //    User expected = null;
 
-            _mailServiceMock.Setup(a => a.SendAsync(It.Is<string>(c => 
-            c == invalidEmail), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
+        //    // act
+        //    var actual = _userService.RegisterAsync(invalidEmail, userNameValid, password).GetAwaiter().GetResult();
 
-            //act
-            _userService.ResetPasswordAsync(invalidEmail).GetAwaiter().GetResult();
-
-            //assert
-            _userRepoMock.Verify(m => m.Select(It.Is<string>(c => 
-            c == invalidEmail), It.IsAny<bool>()), Times.Once());
-
-            _mailServiceMock.Verify(m => m.SendAsync(It.Is<string>(c => 
-            c == invalidEmail), It.IsAny<string>(), It.IsAny<string>()), 
-            Times.Never());
-        }
+        //    // assert
+        //    Assert.AreEqual(expected, actual);
+        //}
 
         //[Test]
-        public void UserServiceTest_05_PasswordRequest_Existing_Email_Sends_Email_Once()
-        {
-            // arrange
-            var existingEmail = "existingEmail";
-            UserDB userDB = new UserDB
-            {
-                PasswordHash = "passwordHash"
-            };
+        //public void UserServiceTest_03_LogInAsync_Not_Existing_Email_Returns_Null()
+        //{
+        //    // arrange
+        //    var invalidEmail = "invalidEmail@gmail.com";
+        //    var password = "password";
+        //    UserDB userDB = new UserDB
+        //    {
+        //        Email = "validEmail@gmail.com",
+        //        PasswordHash = "password"
+        //    };
+        //    IList<string> roles = new List<string>();
 
-            _userRepoMock.Setup(b => b.Select(It.Is<string>(c =>
-            c == existingEmail), It.IsAny<bool>())).Returns(userDB);
+        //    (UserDB, IList<string>) tuple = (null, roles);
 
-            _mailServiceMock.Setup(a => a.SendAsync(It.Is<string>(c =>
-            c == existingEmail), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
+        //    _userRepoMock.Setup(a => a.
+        //    SelectWithRoles(It.IsAny<Func<UserDB, bool>>(),
+        //        It.IsAny<bool>())).Returns(tuple);
 
-            // act
-            _userService.ResetPasswordAsync(existingEmail).GetAwaiter().GetResult();
+        //    // act
+        //    var actual = _userService.LogInAsync(invalidEmail, password, true).GetAwaiter().GetResult();
 
-            // assert
-            _userRepoMock.Verify(m => m.Select(It.Is<string>(c =>
-            c == existingEmail), It.IsAny<bool>()), Times.Once());
+        //    // assert
+        //    Assert.IsNull(actual);
+        //}
 
-            _mailServiceMock.Verify(m => m.SendAsync(It.Is<string>(c =>
-            c == existingEmail), It.IsAny<string>(), It.IsAny<string>()),
-            Times.Once());
-        }
+        ////[Test]
+        //public void UserServiceTest_04_PasswordRequestAsync_Not_Existing_Email_Dont_Send_Email()
+        //{
+        //    // arrange
+        //    var invalidEmail = "incorrectEmail";
+        //    _userRepoMock.Setup(b => b.Select(It.Is<string>(c => 
+        //    c == invalidEmail), It.IsAny<bool>())).Returns((UserDB)null);
 
-        [Test] 
-        public void UserServiceTest_06_GetRolesAsync_Existing_User_Returns()
-        {
-            // arrange
-            IList<string> expected = new List<string>() {"1", "2" };
+        //    _mailServiceMock.Setup(a => a.SendAsync(It.Is<string>(c => 
+        //    c == invalidEmail), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
 
-            _userRepoMock.Setup(a =>
-            a.GetRolesAsync(It.IsAny<UserDB>()))
-            .Returns(Task.FromResult((expected)));
-            User user = new User();
+        //    //act
+        //    _userService.ResetPasswordAsync(invalidEmail).GetAwaiter().GetResult();
 
-            // act
-            var actual = _userService.GetRolesAsync(user)
-                .GetAwaiter().GetResult();
+        //    //assert
+        //    _userRepoMock.Verify(m => m.Select(It.Is<string>(c => 
+        //    c == invalidEmail), It.IsAny<bool>()), Times.Once());
 
-            // arrange
-            Assert.AreEqual(expected.Count, actual.Count);
-            Assert.AreEqual(expected[0], actual[0]);
-            Assert.AreEqual(expected[1], actual[1]);
-        }
+        //    _mailServiceMock.Verify(m => m.SendAsync(It.Is<string>(c => 
+        //    c == invalidEmail), It.IsAny<string>(), It.IsAny<string>()), 
+        //    Times.Never());
+        //}
+
+        ////[Test]
+        //public void UserServiceTest_05_PasswordRequest_Existing_Email_Sends_Email_Once()
+        //{
+        //    // arrange
+        //    var existingEmail = "existingEmail";
+        //    UserDB userDB = new UserDB
+        //    {
+        //        PasswordHash = "passwordHash"
+        //    };
+
+        //    _userRepoMock.Setup(b => b.Select(It.Is<string>(c =>
+        //    c == existingEmail), It.IsAny<bool>())).Returns(userDB);
+
+        //    _mailServiceMock.Setup(a => a.SendAsync(It.Is<string>(c =>
+        //    c == existingEmail), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
+
+        //    // act
+        //    _userService.ResetPasswordAsync(existingEmail).GetAwaiter().GetResult();
+
+        //    // assert
+        //    _userRepoMock.Verify(m => m.Select(It.Is<string>(c =>
+        //    c == existingEmail), It.IsAny<bool>()), Times.Once());
+
+        //    _mailServiceMock.Verify(m => m.SendAsync(It.Is<string>(c =>
+        //    c == existingEmail), It.IsAny<string>(), It.IsAny<string>()),
+        //    Times.Once());
+        //}
+
+        //[Test] 
+        //public void UserServiceTest_06_GetRolesAsync_Existing_User_Returns()
+        //{
+        //    // arrange
+        //    IList<string> expected = new List<string>() {"1", "2" };
+
+        //    _userRepoMock.Setup(a =>
+        //    a.GetRolesAsync(It.IsAny<UserDB>()))
+        //    .Returns(Task.FromResult((expected)));
+        //    User user = new User();
+
+        //    // act
+        //    var actual = _userService.GetRolesAsync(user)
+        //        .GetAwaiter().GetResult();
+
+        //    // arrange
+        //    Assert.AreEqual(expected.Count, actual.Count);
+        //    Assert.AreEqual(expected[0], actual[0]);
+        //    Assert.AreEqual(expected[1], actual[1]);
+        //}
     }
 }

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Users;
@@ -18,6 +20,22 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="password">Password of the new user.</param>
         /// <returns></returns>
         Task AddAsync(UserDB user, string password);
+
+        /// <summary>
+        /// Return a user with the specified username and password or null if there is no match.
+        /// </summary>
+        /// <param name="userId">User's ID.</param>
+        /// <param name="password">User's password.</param>
+        /// <returns>Specific user with this ID and password.</returns>
+        Task<UserDB> FindByNameAndPasswordAsync(string userName, string password);
+
+        /// <summary>
+        /// Return a user with the specified email and password or null if there is no match.
+        /// </summary>
+        /// <param name="email">User's Email.</param>
+        /// <param name="password">User's password.</param>
+        /// <returns>Specific user with this ID and password.</returns>
+        Task<UserDB> FindByEmailAndPasswordAsync(string email, string password);
 
         /// <summary>
         /// Checks if email wasn't used in registering any user. Returns true if not.
@@ -114,63 +132,40 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         Task RemoveLoginAsync(string userId, UserLoginDB login);
 
         /// <summary>
-        /// Returns first registered user matches the predicate or null if there is no matches.
+        /// Use this method to select any users from DB by any select rule.
         /// </summary>
-        /// <param name="predicate">Filter for the users.</param>
-        /// <param name="lazyInitiation">True if you don't want to initiate navigation properties, otherwise, false.</param>
-        /// <returns>The first registered user matches the predicate or null if there is no matches.</returns>
-        UserDB Select(Func<UserDB, bool> predicate, bool lazyInitiation = true);
+        /// <param name="initiateNavigationalprops">Specifies whether navigational properties will be included or no.</param>
+        /// <returns>IQueryable of DB users.</returns>
+        IQueryable<UserDB> GetSelector(bool initiateNavigationalProps);
 
         /// <summary>
-        /// Returns a registered user by its email.
+        /// Use this method to select any user by by any select rule.
         /// </summary>
-        /// <param name="email">Email of the requested user.</param>
-        /// <returns></returns>
-        UserDB Select(string email, bool lazyInitiation = true);
-
-        /// <summary>
-        /// Returns a registered user by its email and password.
-        /// </summary>
-        /// <param name="email">Email of the requested user.</param>
-        /// <param name="password">Password of the requested user.</param>
-        /// <returns>User with the specific email and password.</returns>
-        UserDB Select(string email, string password, bool lazyInitiation = true);
-
-        /// <summary>
-        /// Returns specific registered user with its roles.
-        /// </summary>
-        /// <param name="email">Email of the registered user.</param>
-        /// <param name="password">Password of the registered user.</param>
-        /// <returns>Tuple with item1 as User, item2 as IList of its roles.</returns>
-        (UserDB, IList<string>) Select(string email, string password);
-
-        /// <summary>
-        /// Returns first registered user matches the predicate with user's roles (or two nulls if there is no matches).
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <param name="lazyInitiation"></param>
-        /// <returns></returns>
-        (UserDB user, IList<string> roles) SelectWithRoles(Func<UserDB, bool> predicate, bool lazyInitiation = true);
-
-        /// <summary>
-        /// Returns all registered users in an enumerable.
-        /// </summary>
-        /// <returns>All the registered users.</returns>
-        List<UserDB> SelectAll();
-
-        /// <summary>
-        /// Returns the users filtered by the predicate.
-        /// </summary>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        IEnumerable<UserDB> SelectRange(Func<UserDB, bool> predicate, bool lazyInitiation = true);
+        /// <param name="predicate">Rule for selecting a user. First match will be returned.</param>
+        /// <param name="initiateNavigationalProps">Specifies whether navigational properties will be included or no.</param>
+        /// <returns>DB User entity.</returns>
+        Task<UserDB> GetAsync(Func<UserDB, bool> predicate, bool initiateNavigationalProps);
 
         /// <summary>
         /// Get the names of the roles a user is a member of.
         /// </summary>
-        /// <param name="user">Method will return roles of this user.</param>
+        /// <param name="userId">Method will return roles of this user.</param>
         /// <returns></returns>
-        Task<IList<string>> GetRolesAsync(UserDB user);
+        Task<IList<string>> GetRolesAsync(string userId);
+
+        /// <summary>
+        /// Get a users's claims
+        /// </summary>
+        /// <param name="userId">User's ID.</param>
+        /// <returns>User's claims.</returns>
+        Task<IList<Claim>> GetClaimsAsync(string userId);
+
+        /// <summary>
+        /// Gets the logins for a user.
+        /// </summary>
+        /// <param name="userId">User's ID.</param>
+        /// <returns>User's logins.</returns>
+        Task<IList<UserLoginDB>> GetLoginsAsync(string userId);
 
         /// <summary>
         /// Resets password of a user.

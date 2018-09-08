@@ -46,20 +46,5 @@ namespace WasteProducts.Logic.Common.Models.Users
         /// PhoneNumber for the user.
         /// </summary>
         public virtual string PhoneNumber { get; set; }
-
-        /// <summary>
-        /// All user roles.
-        /// </summary>
-        public virtual ICollection<string> Roles { get; set; }
-         
-        /// <summary>
-        /// All user claims.
-        /// </summary>
-        public virtual ICollection<Claim> Claims { get; set; }
-
-        /// <summary>
-        /// All user logins.
-        /// </summary>
-        public virtual ICollection<UserLogin> Logins { get; set; }
     }
 }

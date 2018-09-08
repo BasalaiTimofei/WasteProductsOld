@@ -17,8 +17,7 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// </summary>
         /// <param name="email">Email of the new user.</param>
         /// <param name="password">Password of the new user.</param>
-        /// <returns>Registered User (null if registration failed).</returns>
-        Task<User> RegisterAsync(string email, string userName, string password);
+        Task RegisterAsync(string email, string userName, string password);
 
         /// <summary>
         /// Tries to login as a user with the specific email and password.
@@ -26,7 +25,15 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// <param name="email">Email of the logging in user.</param>
         /// <param name="password">Password of the logging in user.</param>
         /// <returns>Logged in user.</returns>
-        Task<User> LogInAsync(string email, string password, bool getRoles = true);
+        Task<User> LogInByEmailAsync(string email, string password);
+
+        /// <summary>
+        /// Tries to login as a user with the specific user name and password.
+        /// </summary>
+        /// <param name="userName">Name of the logging in user.</param>
+        /// <param name="password">Password of the logging in user.</param>
+        /// <returns>Logged in user.</returns>
+        Task<User> LogInByNameAsync(string userName, string password);
 
         /// <summary>
         /// Tries to reset a password of the specific user to the new password and returns whether resetting succeed or not.
@@ -49,7 +56,7 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// Gets info about all Users in the database.
         /// </summary>
         /// <returns>List of all Users in dataase.</returns>
-        List<User> GetAllUsersInfo();
+        Task<IEnumerable<User>> GetAllUsersAsync();
 
         /// <summary>
         /// Requests a User by its id. User is returned without PasswordHash.
@@ -57,6 +64,27 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// <param name="id">Id of requested User.</param>
         /// <returns>Instance of User that has requested Id. Returns WITHOUT PasswordHash.</returns>
         Task<User> GetUserInfo(string id);
+
+        /// <summary>
+        /// Get the names of the roles a user is a member of.
+        /// </summary>
+        /// <param name="userId">Method will return roles of user with this ID.</param>
+        /// <returns>IList of roles of user with the specific ID.</returns>
+        Task<IList<string>> GetRolesAsync(string userId);
+
+        /// <summary>
+        /// Get a users's claims
+        /// </summary>
+        /// <param name="userId">User's ID.</param>
+        /// <returns>User's claims.</returns>
+        Task<IList<Claim>> GetClaimsAsync(string userId);
+
+        /// <summary>
+        /// Gets the logins for a user.
+        /// </summary>
+        /// <param name="userId">User's ID.</param>
+        /// <returns>User's logins.</returns>
+        Task<IList<UserLogin>> GetLoginsAsync(string userId);
 
         /// <summary>
         /// Updates the specific user in the Database. You can't update email, Id, UserName and Password by this method.
@@ -112,13 +140,6 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// <param name="productId">Specific product's ID to delete from the user's list of products.</param>
         /// <returns>Boolean represents whether operation succeed or no.</returns>
         Task<bool> DeleteProductAsync(string userId, string productId);
-
-        /// <summary>
-        /// Get the names of the roles a user is a member of.
-        /// </summary>
-        /// <param name="user">Method will return roles of this user.</param>
-        /// <returns></returns>
-        Task<IList<string>> GetRolesAsync(User user);
 
         /// <summary>
         /// Add a user to a role.
