@@ -192,9 +192,9 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             return result;
         }
 
-        public async Task ResetPasswordAsync(UserDB user, string newPassword, string oldPassword)
+        public async Task ChangePasswordAsync(string userId, string newPassword, string oldPassword)
         {
-            await _manager.ChangePasswordAsync(user.Id, oldPassword, newPassword);
+            await _manager.ChangePasswordAsync(userId, oldPassword, newPassword);
         }
 
         public async Task UpdateAsync(UserDB user)

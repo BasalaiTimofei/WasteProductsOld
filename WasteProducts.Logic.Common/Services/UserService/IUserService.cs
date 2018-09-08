@@ -38,12 +38,11 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// <summary>
         /// Tries to reset a password of the specific user to the new password and returns whether resetting succeed or not.
         /// </summary>
-        /// <param name="user">The specific user to change its password.</param>
+        /// <param name="userId">ID of user to change its password.</param>
         /// <param name="oldPassword">Old password of the specific user.</param>
         /// <param name="newPassword">New password of the specific user.</param>
-        /// <param name="newPasswordConfirmation">Confirmation of the new password, must be the same as the newPassword.</param>
         /// <returns>Boolean representing whether resetting password succeed or not.</returns>
-        Task<bool> ResetPasswordAsync(User user, string oldPassword, string newPassword, string newPasswordConfirmation);
+        Task<bool> ChangePasswordAsync(string userId, string oldPassword, string newPassword);
 
         /// <summary>
         /// Requests an email with the password of the user registered to this email.

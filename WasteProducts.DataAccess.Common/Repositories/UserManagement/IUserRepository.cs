@@ -38,16 +38,9 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         Task<UserDB> FindByEmailAndPasswordAsync(string email, string password);
 
         /// <summary>
-        /// Checks if email wasn't used in registering any user. Returns true if not.
-        /// </summary>
-        /// <param name="email"></param>
-        /// <returns></returns>
-        Task<bool> IsEmailAvailableAsync(string email);
-
-        /// <summary>
         /// Add a claim to a user.
         /// </summary>
-        /// <param name="user">Specific claim will be added to the user.</param>
+        /// <param name="userId">Specific claim will be added to the user with this Id.</param>
         /// <param name="claim">Specific claim to add to the user.</param>
         /// <returns></returns>
         Task AddClaimAsync(string userId, Claim claim);
@@ -55,7 +48,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <summary>
         ///  Add a login to the user.
         /// </summary>
-        /// <param name="user">Specific login will be added to the user.</param>
+        /// <param name="userId">Specific login will be added to the user with this Id.</param>
         /// <param name="login">Specific login to add to the user.</param>
         /// <returns></returns>
         Task AddLoginAsync(string userId, UserLoginDB login);
@@ -63,43 +56,10 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <summary>
         /// Add a user to a role.
         /// </summary>
-        /// <param name="user">User will be added to this specific role.</param>
+        /// <param name="userId">User with this ID will be added to this specific role.</param>
         /// <param name="roleName">Name of the specific role to add to the user.</param>
         /// <returns></returns>
         Task AddToRoleAsync(string userId, string roleName);
-
-        /// <summary>
-        /// Adds user with id = friendId to the list of friends of user with Id = userId.
-        /// </summary>
-        /// <param name="userId">Id of user which friend list will be expanded.</param>
-        /// <param name="friendId">Id of a new friend of the user with Id = userId</param>
-        /// <returns></returns>
-        Task AddFriendAsync(string userId, string friendId);
-
-        /// <summary>
-        /// Deletes a specific friend from the specific user's friend list.
-        /// </summary>
-        /// <param name="userId">From the list of friends of UserDB with Id = userID the UserDB with Id = deletingFriendId will be deleted.</param>
-        /// <param name="deletingFriendId">Specific friend's Id to delete from the user's friend list.</param>
-        Task DeleteFriendAsync(string userID, string deletingFriendId);
-
-        /// <summary>
-        /// Adds product with specific ID to the user's list of products.
-        /// </summary>
-        /// <param name="userId">ID of user who wants to add the specific product to his/her list of products.</param>
-        /// <param name="productId">ID of specific product to add to the user's list of products.</param>
-        /// <param name="rating">Rating from 0 to 10 of this product given by the user.</param>
-        /// <param name="description">Textual description of the product given by the user.</param>
-        /// <returns>Boolean represents whether operation succeed or not.</returns>
-        Task<bool> AddProductAsync(string userId, string productId, int rating, string description);
-
-        /// <summary>
-        /// Deletess product with specific ID to the user's list of products.
-        /// </summary>
-        /// <param name="userId">ID of user who wants to remove the specific product from his/her list of products.</param>
-        /// <param name="productId">ID of specific product to remove from the user's list of products.</param>
-        /// <returns>Boolean represents whether operation succeed or not.</returns>
-        Task<bool> DeleteProductAsync(string userId, string productId);
 
         /// <summary>
         /// Deletes the record of the specific user.
@@ -108,9 +68,16 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         Task DeleteAsync(string userId);
 
         /// <summary>
+        /// Checks if email wasn't used in registering any user. Returns true if not.
+        /// </summary>
+        /// <param name="email">Checking email.</param>
+        /// <returns></returns>
+        Task<bool> IsEmailAvailableAsync(string email);
+
+        /// <summary>
         /// Remove a claim from a user.
         /// </summary>
-        /// <param name="user">Specific claim will be removed from the user.</param>
+        /// <param name="userId">Specific claim will be removed from the user.</param>
         /// <param name="claim">Specific claim to remove from the user.</param>
         /// <returns></returns>
         Task RemoveClaimAsync(string userId, Claim claim);
@@ -118,7 +85,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <summary>
         /// Remove a user from a role.
         /// </summary>
-        /// <param name="user">User will be removed from this specific role.</param>
+        /// <param name="userId">The specific role will be removed from the user with this ID.</param>
         /// <param name="roleName">Name of the specific role to remove from the user.</param>
         /// <returns></returns>
         Task RemoveFromRoleAsync(string userId, string roleName);
@@ -126,7 +93,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <summary>
         /// Remove a login from a user.
         /// </summary>
-        /// <param name="user">Specific login will be removed from the user.</param>
+        /// <param name="userId">Specific login will be removed from the user with this ID.</param>
         /// <param name="login">Specific login to remove from the user.</param>
         /// <returns></returns>
         Task RemoveLoginAsync(string userId, UserLoginDB login);
@@ -173,7 +140,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="user">Password of this user will be reset.</param>
         /// <param name="newPassword">New password for a user.</param>
         /// <returns></returns>
-        Task ResetPasswordAsync(UserDB user, string newPassword, string oldPassword);
+        Task ChangePasswordAsync(string userId, string newPassword, string oldPassword);
 
         /// <summary>
         /// Updates the record of the specific user.
@@ -196,5 +163,38 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="newUserName">New unique UserName</param>
         /// <returns></returns>
         Task<bool> UpdateUserNameAsync(UserDB user, string newUserName);
+
+        /// <summary>
+        /// Adds user with id = friendId to the list of friends of user with Id = userId.
+        /// </summary>
+        /// <param name="userId">Id of user which friend list will be expanded.</param>
+        /// <param name="friendId">Id of a new friend of the user with Id = userId</param>
+        /// <returns></returns>
+        Task AddFriendAsync(string userId, string friendId);
+
+        /// <summary>
+        /// Deletes a specific friend from the specific user's friend list.
+        /// </summary>
+        /// <param name="userId">From the list of friends of UserDB with Id = userID the UserDB with Id = deletingFriendId will be deleted.</param>
+        /// <param name="deletingFriendId">Specific friend's Id to delete from the user's friend list.</param>
+        Task DeleteFriendAsync(string userID, string deletingFriendId);
+
+        /// <summary>
+        /// Adds product with specific ID to the user's list of products.
+        /// </summary>
+        /// <param name="userId">ID of user who wants to add the specific product to his/her list of products.</param>
+        /// <param name="productId">ID of specific product to add to the user's list of products.</param>
+        /// <param name="rating">Rating from 0 to 10 of this product given by the user.</param>
+        /// <param name="description">Textual description of the product given by the user.</param>
+        /// <returns>Boolean represents whether operation succeed or not.</returns>
+        Task<bool> AddProductAsync(string userId, string productId, int rating, string description);
+
+        /// <summary>
+        /// Deletess product with specific ID to the user's list of products.
+        /// </summary>
+        /// <param name="userId">ID of user who wants to remove the specific product from his/her list of products.</param>
+        /// <param name="productId">ID of specific product to remove from the user's list of products.</param>
+        /// <returns>Boolean represents whether operation succeed or not.</returns>
+        Task<bool> DeleteProductAsync(string userId, string productId);
     }
 }

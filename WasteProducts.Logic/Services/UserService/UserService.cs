@@ -100,16 +100,16 @@ namespace WasteProducts.Logic.Services.UserService
             });
         }
 
-        public async Task<bool> ResetPasswordAsync(User user, string oldPassword, string newPassword, string newPasswordConfirmation)
+        public async Task<bool> ChangePasswordAsync(string userId, string oldPassword, string newPassword)
         {
+            if (userId == null || oldPassword == null || newPassword == null)
+            {
+                return false;
+            }
+
             return await Task.Run(async () =>
             {
-                if (newPassword != newPasswordConfirmation)
-                {
-                    return false;
-                }
-
-                await _userRepo.ResetPasswordAsync(MapTo<UserDB>(user), newPassword, oldPassword);
+                await _userRepo.ChangePasswordAsync(userId, newPassword, oldPassword);
                 return true;
             });
         }

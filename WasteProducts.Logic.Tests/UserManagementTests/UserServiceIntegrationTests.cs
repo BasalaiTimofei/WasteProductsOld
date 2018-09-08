@@ -1,7 +1,6 @@
 ﻿using Ninject;
 using NUnit.Framework;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Security.Claims;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
@@ -355,11 +354,11 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         {
             User user = _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             user.PhoneNumber = "3334455";
-            _userService.ResetPasswordAsync(user, "qwerty1", "New password", "New password").GetAwaiter().GetResult();
+            _userService.ChangePasswordAsync(user.Id, "qwerty1", "New password").GetAwaiter().GetResult();
 
             user = _userService.LogInByEmailAsync("test49someemail@gmail.com", "New password").GetAwaiter().GetResult();
             Assert.AreNotEqual("3334455", user.PhoneNumber);
-            _userService.ResetPasswordAsync(user, "New password", "qwerty1", "qwerty1").GetAwaiter().GetResult();
+            _userService.ChangePasswordAsync(user.Id, "New password", "qwerty1").GetAwaiter().GetResult();
         }
 
         // тестируем добавление друзей
