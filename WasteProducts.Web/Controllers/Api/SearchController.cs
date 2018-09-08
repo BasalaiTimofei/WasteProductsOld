@@ -104,16 +104,9 @@ namespace WasteProducts.Web.Controllers.Api
         public IEnumerable<Product> GetProductsBoostedFields(BoostedSearchQuery query)
         {
 
-            //Add product for testing purposes
-            //Product product = new Product();
-            //product.Name = "Название тестового продукта";
-            //product.Description = "Описание тестового продукта";
-            //_searchService.AddToSearchIndex<Product>(product);
-
             HttpResponseMessage response;
             if (ModelState.IsValid)
             {
-                //return _searchService.Search<Product>(query);
                 return _searchService.SearchProduct(query);
             }
             else
@@ -135,17 +128,11 @@ namespace WasteProducts.Web.Controllers.Api
         [Route("products/custom/fields")]
         public IEnumerable<Product> GetProducts(SearchQuery query)
         {
-            //Add product for testing purposes
-            //Product product = new Product();
-            //product.Name = "Название тестового продукта";
-            //product.Description = "Описание тестового продукта";
-            //_searchService.AddToSearchIndex<Product>(product);
 
             HttpResponseMessage response;
 
             if (ModelState.IsValid)
             {
-                //return _searchService.Search<Product>(query);
                 return _searchService.SearchProduct(query);
             }
             else
