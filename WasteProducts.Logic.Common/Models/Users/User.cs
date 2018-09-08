@@ -12,6 +12,32 @@ namespace WasteProducts.Logic.Common.Models.Users
     public class User
     {
         /// <summary>
+        /// Unique key for the user.
+        /// </summary>
+        public virtual string Id { get; set; }
+
+        /// <summary>
+        /// Unique username.
+        /// </summary>
+        public virtual string UserName { get; set; }
+
+        /// <summary>
+        /// List of Users which belong to group of friends related to current User.
+        /// </summary>
+        public virtual IList<User> Friends { get; set; }
+
+        /// <summary>
+        /// List of products added and described by the user.
+        /// </summary>
+        public virtual IList<UserProductDescription> ProductDescriptions { get; set; }
+
+        // TODO decomment after the "Groups" model is enabled
+        /// <summary>
+        /// List of all Groups to which current User is assigned.
+        /// </summary>
+        //public virtual List<Group> GroupMembership { get; set; }
+
+        /// <summary>
         /// Email of the user.
         /// </summary>
         public virtual string Email { get; set; }
@@ -65,7 +91,7 @@ namespace WasteProducts.Logic.Common.Models.Users
         /// All user roles.
         /// </summary>
         public virtual ICollection<string> Roles { get; set; }
-
+         
         /// <summary>
         /// All user claims.
         /// </summary>
@@ -75,53 +101,5 @@ namespace WasteProducts.Logic.Common.Models.Users
         /// All user logins.
         /// </summary>
         public virtual ICollection<UserLogin> Logins { get; set; }
-
-        /// <summary>
-        /// Unique key for the user.
-        /// </summary>
-        public virtual string Id { get; set; }
-
-        /// <summary>
-        /// Unique username.
-        /// </summary>
-        public virtual string UserName { get; set; }
-
-        /// <summary>
-        /// List of Users which belong to group of friends related to current User.
-        /// </summary>
-        public virtual IList<User> Friends { get; set; }
-
-        /// <summary>
-        /// List of products added and described by the user.
-        /// </summary>
-        public virtual IList<UserProductDescription> ProductDescriptions { get; set; }
-
-        // TODO decomment after the "Groups" model is enabled
-        /// <summary>
-        /// List of all Groups to which current User is assigned.
-        /// </summary>
-        //public virtual List<Group> GroupMembership { get; set; }
-
-        public override bool Equals(object obj)
-        {
-            return obj is User other &&
-                this.Id == other.Id &&
-                this.AccessFailedCount == other.AccessFailedCount &&
-                this.Claims == other.Claims &&
-                this.Email == other.Email &&
-                this.EmailConfirmed == other.EmailConfirmed &&
-                this.Friends == other.Friends &&
-                this.LockoutEnabled == other.LockoutEnabled &&
-                this.LockoutEndDateUtc == other.LockoutEndDateUtc &&
-                this.Logins == other.Logins &&
-                this.PasswordHash == other.PasswordHash &&
-                this.PhoneNumber == other.PhoneNumber &&
-                this.PhoneNumberConfirmed == other.PhoneNumberConfirmed &&
-                this.ProductDescriptions == other.ProductDescriptions &&
-                this.Roles == other.Roles &&
-                this.SecurityStamp == other.SecurityStamp &&
-                this.TwoFactorEnabled == other.TwoFactorEnabled &&
-                this.UserName == other.UserName;
-        }
     }
 }
