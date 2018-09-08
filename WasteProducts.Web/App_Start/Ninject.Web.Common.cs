@@ -66,7 +66,6 @@ namespace WasteProducts.Web.App_Start
                 RegisterLoggers(kernel);
                 RegisterFiltres(kernel);
                 RegisterServices(kernel);
-                RegisterInterceptors(kernel);
 
                 return kernel;
             }
@@ -112,17 +111,6 @@ namespace WasteProducts.Web.App_Start
         {
             kernel.Load("WasteProducts.DataAccess.dll");
             kernel.Load("WasteProducts.Logic.dll");
-        }
-
-        /// <summary>
-        /// Register your interceptors here!
-        /// </summary>
-        /// <param name="kernel">The kernel.</param>
-        private static void RegisterInterceptors(IKernel kernel)
-        {
-            //kernel.Bind<SearchControllerInterceptor>().ToSelf();
-            //var binding = kernel.Bind<SearchController>().ToSelf();
-            //binding.Intercept().With<SearchControllerInterceptor>();
         }
     }
 }

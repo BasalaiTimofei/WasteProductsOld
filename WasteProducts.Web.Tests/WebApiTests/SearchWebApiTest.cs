@@ -55,25 +55,5 @@ namespace WasteProducts.Web.Tests.WebApiTests
             //SearchQuery query = new SearchQuery().SetQueryString("Test").AddField("Name").AddField("Description");
             //var result = service.Search<Product>(query);
         }
-
-        [Test]
-        public void SearchControllerTestGetProductWithCustomFields()
-        {
-            Mock<ILogger> _mockLogger = new Mock<ILogger>();
-            LuceneSearchRepository repo = new LuceneSearchRepository(true);
-            LuceneSearchService service = new LuceneSearchService(repo);
-            SearchController sut = new SearchController(_mockLogger.Object, service);
-
-            service.AddToSearchIndex<ProductDB>(products);
-
-            string[] fields = new string[] {"Description"};
-
-
-            var result = sut.GetProducts("test", fields);
-            Assert.AreEqual(expected: 5, actual: result.ToArray().Length);
-
-            result = sut.GetProducts("unique", fields);
-            Assert.AreEqual(expected: 0, actual: result.ToArray().Length);
-        }
     }
 }
