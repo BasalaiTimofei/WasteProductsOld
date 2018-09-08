@@ -66,10 +66,9 @@ namespace WasteProducts.Web.Controllers.Api
         //todo can we user controller methods in controller methods?
         [Route("{id:string}")]
         [HttpDelete]
-        public async Task Delete(string id)
+        public async Task Delete(string userId)
         {
-            var user = await Get(id);
-            await _userService.DeleteUserAsync(user);
+            await _userService.DeleteUserAsync(userId);
         }
 
 
@@ -144,16 +143,16 @@ namespace WasteProducts.Web.Controllers.Api
         //PUT api/User/Products
         [Route("api/User/Product")]
         [HttpPut]
-        public async Task AddProduct([FromBody]User user, [FromBody]Product product)
+        public async Task AddProduct([FromBody]string userId, [FromBody]string productId, [FromBody]int rating, [FromBody]string description)
         {
-            await _userService.AddProductAsync(user, product);
+            await _userService.AddProductAsync(userId, productId, rating, description);
         }
 
         //POST api/User/Products/Delete
         [Route("api/User/Products/Delete")]
-        public async Task DeleteProduct([FromBody]User user, [FromBody]Product product)
+        public async Task DeleteProduct([FromBody]string userId, [FromBody]string productId)
         {
-            await _userService.DeleteProductAsync(user, product);
+            await _userService.DeleteProductAsync(userId, productId);
         }
 
 
