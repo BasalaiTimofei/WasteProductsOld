@@ -41,9 +41,15 @@ namespace WasteProducts.Logic.Common.Models.Search
                         foreach (var boost in boosts)
                         {
                             var fieldNameBoost = boost.Split(new char[] { ':' });
-                            string fieldName = fieldNameBoost[0];
-                            float fieldBoost = float.Parse(fieldNameBoost[1], CultureInfo.InvariantCulture);
-                            result.AddField(fieldName, fieldBoost);
+                            if (fieldNameBoost.Length == 2)
+                            {
+                                float fieldBoost = float.Parse(fieldNameBoost[1], CultureInfo.InvariantCulture);
+                                result.AddField(fieldNameBoost[0], fieldBoost);
+                            }
+                            else
+                            {
+                                result.AddField(fieldNameBoost[0], 1.0f);
+                            }
                         }
                     }
                     return result;

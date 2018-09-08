@@ -37,11 +37,11 @@ namespace WasteProducts.Logic.Services
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="query">SearchQuery object containing query information</param>
         /// <returns></returns>
-        public IEnumerable<TEntity> Search<TEntity>(SearchQuery query) where TEntity : class
+        /*public IEnumerable<TEntity> Search<TEntity>(SearchQuery query) where TEntity : class
         {
             CheckQuery(query);
             return _repository.GetAll<TEntity>(query.Query, query.SearchableFields, MaxResultCount);
-        }
+        }*/
 
         /// <summary>
         /// Performs search in repository
@@ -55,7 +55,7 @@ namespace WasteProducts.Logic.Services
             return _repository.GetAll<TEntity>(query.Query, query.SearchableFields, query.BoostValues, MaxResultCount);
         }
 
-        public IEnumerable<TEntity> SearchDefault<TEntity>(SearchQuery query)
+        public IEnumerable<TEntity> SearchDefault<TEntity>(BoostedSearchQuery query)
         {
             throw new NotImplementedException();
         }
@@ -145,7 +145,7 @@ namespace WasteProducts.Logic.Services
             _repository.Optimize();
         }
 
-        public IEnumerable<Product> SearchProduct(SearchQuery query)
+        public IEnumerable<Product> SearchProduct(BoostedSearchQuery query)
         {
             var productDbList = Search<ProductDB>(query);
 
@@ -168,17 +168,17 @@ namespace WasteProducts.Logic.Services
         }
 
         //TODO: implement async methods later if necessary
-        public Task<IEnumerable<TEntity>> SearchAsync<TEntity>(SearchQuery query)
+        public Task<IEnumerable<TEntity>> SearchAsync<TEntity>(BoostedSearchQuery query)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<TEntity>> SearchDefaultAsync<TEntity>(SearchQuery query)
+        public Task<IEnumerable<TEntity>> SearchDefaultAsync<TEntity>(BoostedSearchQuery query)
         {
             throw new NotImplementedException();
         }
 
-        private void CheckQuery(SearchQuery query)
+        private void CheckQuery(BoostedSearchQuery query)
         {
             if (String.IsNullOrEmpty(query.Query) || query.SearchableFields.Count == 0)
             {

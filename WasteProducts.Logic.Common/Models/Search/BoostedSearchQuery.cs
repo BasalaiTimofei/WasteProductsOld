@@ -8,8 +8,23 @@ namespace WasteProducts.Logic.Common.Models.Search
     /// <summary>
     /// Implements SearchQuery class with term's boosts values
     /// </summary>
-    public class BoostedSearchQuery : SearchQuery
+    public class BoostedSearchQuery
     {
+        public string Query { get; set; }
+
+        private List<string> _SearchableFields;
+
+        /// <summary>
+        /// The list of fields (model properties) to look through
+        /// </summary>
+        public ReadOnlyCollection<string> SearchableFields
+        {
+            get
+            {
+                return _SearchableFields.AsReadOnly();
+            }
+        }
+
         /// <summary>
         /// Dictionary with boost values for searchable fields
         /// </summary>
@@ -22,30 +37,33 @@ namespace WasteProducts.Logic.Common.Models.Search
         }
         private Dictionary<string, float> _BoostValues { get; }
 
-        public BoostedSearchQuery() : base()
+        public BoostedSearchQuery()
         {
             _BoostValues = new Dictionary<string, float>();
+            _SearchableFields = new List<string>();
         }
 
-        public BoostedSearchQuery(string query) : base(query)
+        public BoostedSearchQuery(string query)
         {
+            Query = query;
             _BoostValues = new Dictionary<string, float>();
+            _SearchableFields = new List<string>();
         }
 
-        public new BoostedSearchQuery SetQueryString(string query)
+        public BoostedSearchQuery SetQueryString(string query)
         {
             Query = query;
             return this;
         }
 
-        public override SearchQuery AddField(string field)
+        public BoostedSearchQuery AddField(string field)
         {
             return AddField(field, 1.0f);
         }
 
         public BoostedSearchQuery AddField(string field, float boostValue)
         {
-            base.AddField(field);
+            _SearchableFields.Add(field);
             _BoostValues.Add(field, boostValue);
             return this;
         }

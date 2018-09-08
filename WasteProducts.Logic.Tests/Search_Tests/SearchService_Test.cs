@@ -8,6 +8,7 @@ using WasteProducts.Logic.Services;
 using System.Linq;
 using WasteProducts.Logic.Common.Services;
 using AutoMapper;
+using WasteProducts.Logic.Common.Models.Search;
 
 namespace WasteProducts.Logic.Tests.Search_Tests
 {
@@ -41,7 +42,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         {
             mockRepo.Setup(x => x.GetAll<TestUser>(It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<int>())).Returns(users);
 
-            var query = new SearchQuery();
+            var query = new BoostedSearchQuery();
             Assert.Throws<ArgumentException>(() => sut.Search<TestUser>(query));
         }
 
@@ -50,7 +51,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         {
             mockRepo.Setup(x => x.GetAll<TestUser>(It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<int>())).Returns(users);
 
-            var query = new SearchQuery();            
+            var query = new BoostedSearchQuery();            
 
             Assert.Throws<ArgumentException>(() => sut.Search<TestUser>(query));
         }
