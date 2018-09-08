@@ -73,15 +73,11 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             var validEmail = "validEmail@gmail.com";
             _mailServiceMock.Setup(a => a.IsValidEmail(validEmail)).Returns(true);
             var password = "password";
-            var passwordConfirmationDoesntMatch = "doesn't match";
             var userNameValid = "validUserName";
             User expected = null;
 
             // act
-            var actual = _userService.RegisterAsync(validEmail, 
-                userNameValid, password, 
-                passwordConfirmationDoesntMatch)
-                .GetAwaiter().GetResult();
+            var actual = _userService.RegisterAsync(validEmail, userNameValid, password).GetAwaiter().GetResult();
 
             // assert
             Assert.AreEqual(expected, actual);
@@ -94,112 +90,27 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             var invalidEmail = "invalidEmail@gmail.com";
             _mailServiceMock.Setup(a => a.IsValidEmail(invalidEmail)).Returns(false);
             var password = "password";
-            var passwordConfirmationMatch = "password";
             var userNameValid = "validUserName";
             User expected = null;
 
             // act
-            var actual = _userService.RegisterAsync(invalidEmail,
-                userNameValid, password, passwordConfirmationMatch)
-                .GetAwaiter().GetResult();
+            var actual = _userService.RegisterAsync(invalidEmail, userNameValid, password).GetAwaiter().GetResult();
 
             // assert
             Assert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void UserServiceTest_03_RegisterAsync_Confirmation_and_Email_Invalid_Returns_Null()
+        public void UserServiceTest_03_LogInAsync_Not_Existing_Email_Returns_Null()
         {
             // arrange
             var invalidEmail = "invalidEmail@gmail.com";
-            _mailServiceMock.Setup(a => a.IsValidEmail(invalidEmail)).Returns(false);
             var password = "password";
-            var passwordConfirmationDoesntMatch = "doesn't match";
-            var userNameValid = "validUserName";
-            User expected = null;
-
-            // act
-            var actual = _userService.RegisterAsync(invalidEmail,
-                userNameValid, password, passwordConfirmationDoesntMatch)
-                .GetAwaiter().GetResult();
-
-            // assert
-            Assert.AreEqual(expected, actual);
-        }
-
-        //[Test]
-        public void UserServiceTest_04_RegisterAsync_Successful_Register_Returns_Task_User()
-        {
-            // arrange
-            var validEmail = "validEmail@gmail.com";
-            _mailServiceMock.Setup(a => a.IsValidEmail(validEmail)).Returns(true);
-            var password = "password";
-            var passwordConfirmationMatch = "password";
-            var userNameValid = "validUserName";
-            var expectedEmail = validEmail;
-            var expectedPassword = password;
-            var expectedUserName = userNameValid;
-
-            User expectedUser = new User()
+            UserDB userDB = new UserDB
             {
-                Email = expectedEmail,
-                //PasswordHash = expectedPassword,
-                UserName = expectedUserName,
-                //AccessFailedCount = 0,
-                Claims = new List<System.Security.Claims.Claim>(),
-                //EmailConfirmed = false,
-                Friends = new List<User>(),
-                //LockoutEnabled = false,
-                //LockoutEndDateUtc = null,
-                Logins = new List<UserLogin>(),
-                PhoneNumber = null,
-                //PhoneNumberConfirmed = false,
-                ProductDescriptions = new List<UserProductDescription>(),
-                Roles = new List<string>(),
-                //SecurityStamp = null,
-                //TwoFactorEnabled = false
+                Email = "validEmail@gmail.com",
+                PasswordHash = "password"
             };
-
-            _userRepoMock.Setup(a => a.AddAsync(It.IsAny<UserDB>(), It.IsAny<string>())).Returns(Task.CompletedTask);
-            _userRepoMock.Setup(b => b.Select(It.Is<string>(c => c == validEmail),
-                It.IsAny<bool>())).Returns(_mapper.Map<UserDB>(expectedUser));
-
-            // act
-            var actualUser = _userService.RegisterAsync(validEmail,
-                userNameValid, password, passwordConfirmationMatch)
-                .GetAwaiter().GetResult();
-
-            // assert
-            //Assert.AreEqual(expectedUser.AccessFailedCount, actualUser.AccessFailedCount);
-            Assert.AreEqual(expectedUser.Claims, actualUser.Claims);
-            //Assert.AreEqual(expectedUser.EmailConfirmed, actualUser.EmailConfirmed);
-            Assert.AreEqual(expectedUser.Friends, actualUser.Friends);
-            Assert.AreEqual(expectedUser.Id, actualUser.Id);
-            //Assert.AreEqual(expectedUser.LockoutEnabled, actualUser.LockoutEnabled);
-            //Assert.AreEqual(expectedUser.LockoutEndDateUtc, actualUser.LockoutEndDateUtc);
-            Assert.AreEqual(expectedUser.Logins, actualUser.Logins);
-            //Assert.AreEqual(expectedUser.PasswordHash, actualUser.PasswordHash);
-            Assert.AreEqual(expectedUser.Email, actualUser.Email);
-            Assert.AreEqual(expectedUser.PhoneNumber, actualUser.PhoneNumber);
-           // Assert.AreEqual(expectedUser.PhoneNumberConfirmed, actualUser.PhoneNumberConfirmed);
-            Assert.AreEqual(expectedUser.ProductDescriptions, actualUser.ProductDescriptions);
-            Assert.AreEqual(expectedUser.Roles, actualUser.Roles);
-            //Assert.AreEqual(expectedUser.SecurityStamp, actualUser.SecurityStamp);
-            //Assert.AreEqual(expectedUser.TwoFactorEnabled, actualUser.TwoFactorEnabled);
-            Assert.AreEqual(expectedUser.UserName, actualUser.UserName);
-            _userRepoMock.Verify(m => m.Select(It.Is<string>(c => c == validEmail),
-                It.IsAny<bool>()), Times.Once());
-        }
-
-        [Test]
-        public void UserServiceTest_05_LogInAsync_Not_Existing_Email_Returns_Null()
-        {
-            // arrange
-            var invalidEmail = "invalidEmail@gmail.com";
-            var password = "password";
-            UserDB userDB = new UserDB();
-            userDB.Email = "validEmail@gmail.com";
-            userDB.PasswordHash = "password";
             IList<string> roles = new List<string>();
 
             (UserDB, IList<string>) tuple = (null, roles);
@@ -215,9 +126,8 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             Assert.IsNull(actual);
         }
 
-        // TODO переделать тесты 06 и 07 после того, как тестируемый метод будет переделан
         //[Test]
-        public void UserServiceTest_06_PasswordRequestAsync_Not_Existing_Email_Dont_Send_Email()
+        public void UserServiceTest_04_PasswordRequestAsync_Not_Existing_Email_Dont_Send_Email()
         {
             // arrange
             var invalidEmail = "incorrectEmail";
@@ -240,12 +150,14 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         }
 
         //[Test]
-        public void UserServiceTest_07_PasswordRequest_Existing_Email_Sends_Email_Once()
+        public void UserServiceTest_05_PasswordRequest_Existing_Email_Sends_Email_Once()
         {
             // arrange
             var existingEmail = "existingEmail";
-            UserDB userDB = new UserDB();
-            userDB.PasswordHash = "passwordHash";
+            UserDB userDB = new UserDB
+            {
+                PasswordHash = "passwordHash"
+            };
 
             _userRepoMock.Setup(b => b.Select(It.Is<string>(c =>
             c == existingEmail), It.IsAny<bool>())).Returns(userDB);
@@ -266,7 +178,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         }
 
         [Test] 
-        public void UserServiceTest_08_GetRolesAsync_Existing_User_Returns()
+        public void UserServiceTest_06_GetRolesAsync_Existing_User_Returns()
         {
             // arrange
             IList<string> expected = new List<string>() {"1", "2" };

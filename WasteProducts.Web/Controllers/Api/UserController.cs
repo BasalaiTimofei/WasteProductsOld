@@ -76,10 +76,10 @@ namespace WasteProducts.Web.Controllers.Api
         // POST api/User/Register
         [Route("api/User/Register")]
         [HttpPost]
-        public async Task<User> Register([FromBody]User value)
+        public async Task<User> Register([FromBody] string email, [FromBody] string userName, [FromBody] string password)
         {
             //todo get from JSON, not User instance
-            return await _userService.RegisterAsync(value.Email, value.UserName, value.PasswordHash, value.PasswordHash);
+            return await _userService.RegisterAsync(email, userName, password);
         }
 
 
@@ -167,17 +167,17 @@ namespace WasteProducts.Web.Controllers.Api
 
         // DELETE api/User/Roles
         [Route("api/User/Roles")]
-        public async Task RemoveFromRole([FromBody]User user, [FromBody]string role)
+        public async Task RemoveFromRole([FromBody] string userId, [FromBody]string role)
         {
-            await _userService.RemoveFromRoleAsync(user, role);
+            await _userService.RemoveFromRoleAsync(userId, role);
         }
 
         // PUT api/User/Roles
         [Route("api/User/Roles")]
         [HttpPut]
-        public async Task AddToRole([FromBody]User user, [FromBody]string roleName)
+        public async Task AddToRole([FromBody] string userId, [FromBody]string roleName)
         {
-            await _userService.AddToRoleAsync(user, roleName);
+            await _userService.AddToRoleAsync(userId, roleName);
         }
 
 
@@ -185,34 +185,34 @@ namespace WasteProducts.Web.Controllers.Api
         //DELETE api/User/Claims
         [Route("api/User/Claims")]
         [HttpDelete]
-        public async Task RemoveClaim([FromBody]User user, [FromBody]Claim claim)
+        public async Task RemoveClaim([FromBody] string userId, [FromBody]Claim claim)
         {
-            await _userService.RemoveClaimAsync(user, claim);
+            await _userService.RemoveClaimAsync(userId, claim);
         }
 
         // PUT api/User/Claims
         [Route("api/User/Claims")]
         [HttpPut]
-        public async Task AddClaim([FromBody]User user, [FromBody]Claim claim)
+        public async Task AddClaim([FromBody] string userId, [FromBody]Claim claim)
         {
-            await _userService.AddClaimAsync(user, claim);
+            await _userService.AddClaimAsync(userId, claim);
         }
 
 
 
         // PUT api/User/Logins
         [Route("api/User/Logins")]
-        public async Task AddLogin([FromBody]User user, [FromBody]UserLogin userLogin)
+        public async Task AddLogin([FromBody] string userId, [FromBody]UserLogin userLogin)
         {
-            await _userService.AddLoginAsync(user, userLogin);
+            await _userService.AddLoginAsync(userId, userLogin);
         }
 
         //DELETE api/User/Logins
         [Route("api/User/Logins")]
         [HttpDelete]
-        public async Task RemoveLogin([FromBody]User user, [FromBody]UserLogin userLogin)
+        public async Task RemoveLogin([FromBody] string userId, [FromBody]UserLogin userLogin)
         {
-            await _userService.RemoveLoginAsync(user, userLogin);
+            await _userService.RemoveLoginAsync(userId, userLogin);
         }
     }
 }

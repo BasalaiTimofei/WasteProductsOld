@@ -69,9 +69,9 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public void UserIntegrTest_00AddingUsers()
         {
-            User user1 = _userService.RegisterAsync("test49someemail@gmail.com", "Sergei", "qwerty1", "qwerty1").GetAwaiter().GetResult();
-            User user2 = _userService.RegisterAsync("test50someemail@gmail.com", "Anton", "qwerty2", "qwerty2").GetAwaiter().GetResult();
-            User user3 = _userService.RegisterAsync("test51someemail@gmail.com", "Alexander", "qwerty3", "qwerty3").GetAwaiter().GetResult();
+            User user1 = _userService.RegisterAsync("test49someemail@gmail.com", "Sergei", "qwerty1").GetAwaiter().GetResult();
+            User user2 = _userService.RegisterAsync("test50someemail@gmail.com", "Anton", "qwerty2").GetAwaiter().GetResult();
+            User user3 = _userService.RegisterAsync("test51someemail@gmail.com", "Alexander", "qwerty3").GetAwaiter().GetResult();
 
             Assert.AreEqual("test49someemail@gmail.com", user1.Email);
             Assert.AreEqual("Anton", user2.UserName);
@@ -86,7 +86,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public void UserIntegrTest_01AddingUserWithIncorrectEmail()
         {
-            User user = _userService.RegisterAsync("Incorrect email", "NewLogin", "qwerty", "qwerty").GetAwaiter().GetResult();
+            User user = _userService.RegisterAsync("Incorrect email", "NewLogin", "qwerty").GetAwaiter().GetResult();
             Assert.IsNull(user);
 
             user = _userService.LogInAsync("Incorrect email", "qwerty").GetAwaiter().GetResult();
@@ -97,7 +97,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public void UserIntegrTest_02AddingUserWithAlreadyRegisteredEmail()
         {
-            User user = _userService.RegisterAsync("test49someemail@gmail.com", "NewLogin", "qwerty", "qwerty").GetAwaiter().GetResult();
+            User user = _userService.RegisterAsync("test49someemail@gmail.com", "NewLogin", "qwerty").GetAwaiter().GetResult();
             Assert.IsNull(user);
 
             user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty").GetAwaiter().GetResult();
@@ -108,7 +108,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public void UserIntegrTest_03AddingUserWithAlreadyRegisteredNickName()
         {
-            User user = _userService.RegisterAsync("test100someemail@gmail.com", "Sergei", "qwerty", "qwerty").GetAwaiter().GetResult();
+            User user = _userService.RegisterAsync("test100someemail@gmail.com", "Sergei", "qwerty").GetAwaiter().GetResult();
             Assert.IsNull(user);
 
             user = _userService.LogInAsync("test100someemail@gmail.com", "qwerty").GetAwaiter().GetResult();
@@ -119,15 +119,13 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public void UserIntegrTest_04RegisteringUserWithNullArguements()
         {
-            User user1 = _userService.RegisterAsync(null, "Sergei1", "qwert1", "qwert1").GetAwaiter().GetResult();
-            User user2 = _userService.RegisterAsync("test101someemail@gmail.com", null, "qwert2", "qwert2").GetAwaiter().GetResult();
-            User user3 = _userService.RegisterAsync("test102someemail@gmail.com", "Sergei3", null, "qwert3").GetAwaiter().GetResult();
-            User user4 = _userService.RegisterAsync("test103someemail@gmail.com", "Sergei4", "qwert4", null).GetAwaiter().GetResult();
+            User user1 = _userService.RegisterAsync(null, "Sergei1", "qwert1").GetAwaiter().GetResult();
+            User user2 = _userService.RegisterAsync("test101someemail@gmail.com", null, "qwert2").GetAwaiter().GetResult();
+            User user3 = _userService.RegisterAsync("test102someemail@gmail.com", "Sergei3", null).GetAwaiter().GetResult();
 
             Assert.IsNull(user1);
             Assert.IsNull(user2);
             Assert.IsNull(user3);
-            Assert.IsNull(user4);
         }
 
         // проверяем запрос юзера по правильным емейлу и паролю (должно вернуть соответствующего юзера)

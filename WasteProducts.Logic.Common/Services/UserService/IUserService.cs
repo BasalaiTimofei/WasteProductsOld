@@ -17,9 +17,8 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// </summary>
         /// <param name="email">Email of the new user.</param>
         /// <param name="password">Password of the new user.</param>
-        /// <param name="passwordConfirmation">Confirmation of the password, must be the same as the password.</param>
         /// <returns>Registered User (null if registration failed).</returns>
-        Task<User> RegisterAsync(string email, string userName, string password, string passwordConfirmation);
+        Task<User> RegisterAsync(string email, string userName, string password);
 
         /// <summary>
         /// Tries to login as a user with the specific email and password.
