@@ -69,8 +69,8 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task AddAsync(UserDB user, string password)
         {
-                user.Created = DateTime.UtcNow;
-                await _manager.CreateAsync(user, password);
+            user.Created = DateTime.UtcNow;
+            await _manager.CreateAsync(user, password);
         }
 
         public async Task<bool> IsEmailAvailableAsync(string email)
@@ -78,65 +78,75 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             return !(await _context.Users.AnyAsync(u => u.Email == email));
         }
 
-        public async Task AddClaimAsync(UserDB user, Claim claim)
+        public async Task AddClaimAsync(string userId, Claim claim)
         {
-            await _store.AddClaimAsync(user, claim);
+            await _manager.AddClaimAsync(userId, claim);
 
-            user.Modified = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
+            //await _store.AddClaimAsync(user, claim);
+
+            //user.Modified = DateTime.UtcNow;
+            //await _context.SaveChangesAsync();
         }
 
-        public async Task AddLoginAsync(UserDB user, UserLoginDB login)
+        public async Task AddLoginAsync(string userId, UserLoginDB login)
         {
-            UserLoginInfo loginInfo = new UserLoginInfo(login.LoginProvider, login.ProviderKey);
+            var userLoginInfo = new UserLoginInfo(login.LoginProvider, login.ProviderKey);
+            await _manager.AddLoginAsync(userId, userLoginInfo);
 
-            using (var userStore = new UserStore<UserDB>(_context))
-            {
-                await userStore.AddLoginAsync(user, loginInfo);
+            //UserLoginInfo loginInfo = new UserLoginInfo(login.LoginProvider, login.ProviderKey);
 
-                user.Modified = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
-            }
+            //using (var userStore = new UserStore<UserDB>(_context))
+            //{
+            //    await userStore.AddLoginAsync(user, loginInfo);
+
+            //    user.Modified = DateTime.UtcNow;
+            //    await _context.SaveChangesAsync();
+            //}
         }
 
-        public async Task AddToRoleAsync(UserDB user, string roleName)
+        public async Task AddToRoleAsync(string userId, string roleName)
         {
-            using (var userStore = new UserStore<UserDB>(_context))
-            {
-                await userStore.AddToRoleAsync(user, roleName);
+            await _manager.AddToRoleAsync(userId, roleName);
 
-                user.Modified = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
-            }
+            //using (var userStore = new UserStore<UserDB>(_context))
+            //{
+            //    await userStore.AddToRoleAsync(user, roleName);
+
+            //    user.Modified = DateTime.UtcNow;
+            //    await _context.SaveChangesAsync();
+            //}
         }
 
         public async Task AddFriendAsync(string userId, string friendId)
         {
-            UserDB user = _context.Users.Include(p => p.Friends).First(u => u.Id == userId);
-            UserDB friend = _context.Users.First(u => u.Id == friendId);
+            UserDB user = _context.Users.Include(p => p.Friends).FirstOrDefault(u => u.Id == userId);
+            UserDB friend = _context.Users.FirstOrDefault(u => u.Id == friendId);
 
-            user.Friends.Add(friend);
-
-            user.Modified = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
+            if(user != null && friend != null)
+            {
+                user.Friends.Add(friend);
+                user.Modified = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task DeleteFriendAsync(string userId, string deletingFriendId)
         {
-            UserDB user = _context.Users.Include(p => p.Friends).First(u => u.Id == userId);
-            UserDB friend = _context.Users.First(u => u.Id == deletingFriendId);
+            UserDB user = _context.Users.Include(p => p.Friends).FirstOrDefault(u => u.Id == userId);
+            UserDB friend = _context.Users.FirstOrDefault(u => u.Id == deletingFriendId);
 
-            user.Friends.Remove(friend);
-
-            user.Modified = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
+            if (user != null && friend != null)
+            {
+                user.Friends.Remove(friend);
+                user.Modified = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<bool> AddProductAsync(string userId, string productId, int rating, string description)
         {
             return await Task.Run(() =>
             {
-                _context.Configuration.LazyLoadingEnabled = false;
                 UserDB user = null;
                 ProductDB product = null;
                 try
@@ -184,55 +194,24 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task DeleteAsync(string userId)
         {
-            await Task.Run(async () =>
-            {
-                var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-                var entry = _context.Entry(user);
-                entry.State = EntityState.Deleted;
-                await _context.SaveChangesAsync();
-            });
+            var user = await _manager.FindByIdAsync(userId);
+            await _manager.DeleteAsync(user);
         }
 
-        public async Task RemoveClaimAsync(UserDB user, Claim claim)
+        public async Task RemoveClaimAsync(string userId, Claim claim)
         {
-            var userInDB = _context.Users.Include(u => u.Claims).FirstOrDefault(u => u.Email == user.Email);
-
-            var claimToDelete = userInDB.Claims.FirstOrDefault(c => c.UserId == userInDB.Id &&
-                                                                    c.ClaimType == claim.Type &&
-                                                                    c.ClaimValue == claim.Value);
-
-            if (claimToDelete != null)
-            {
-                _context.Entry(claimToDelete).State = EntityState.Deleted;
-                user.Modified = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
-            }
+            await _manager.RemoveClaimAsync(userId, claim);
         }
 
-        public async Task RemoveFromRoleAsync(UserDB user, string roleName)
+        public async Task RemoveFromRoleAsync(string userId, string roleName)
         {
-            using (var userStore = new UserStore<UserDB>(_context))
-            {
-                await userStore.RemoveFromRoleAsync(user, roleName);
-                user.Modified = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
-            }
+            await _manager.RemoveFromRoleAsync(userId, roleName);
         }
 
-        public async Task RemoveLoginAsync(UserDB user, UserLoginDB login)
+        public async Task RemoveLoginAsync(string userId, UserLoginDB login)
         {
-            var userInDB = _context.Users.Include(u => u.Logins).FirstOrDefault(u => u.Email == user.Email);
-
-            var loginToDelete = userInDB.Logins.FirstOrDefault(c => c.UserId == userInDB.Id &&
-                                                                    c.LoginProvider == login.LoginProvider &&
-                                                                    c.ProviderKey == login.ProviderKey);
-
-            if (loginToDelete != null)
-            {
-                _context.Entry(loginToDelete).State = EntityState.Deleted;
-                user.Modified = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
-            }
+            var userLoginInfo = new UserLoginInfo(login.LoginProvider, login.ProviderKey);
+            await _manager.RemoveLoginAsync(userId, userLoginInfo);
         }
 
         public UserDB Select(string email, string password, bool lazyInitiation = true)

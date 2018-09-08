@@ -143,21 +143,21 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             User expectedUser = new User()
             {
                 Email = expectedEmail,
-                PasswordHash = expectedPassword,
+                //PasswordHash = expectedPassword,
                 UserName = expectedUserName,
-                AccessFailedCount = 0,
+                //AccessFailedCount = 0,
                 Claims = new List<System.Security.Claims.Claim>(),
-                EmailConfirmed = false,
+                //EmailConfirmed = false,
                 Friends = new List<User>(),
-                LockoutEnabled = false,
-                LockoutEndDateUtc = null,
+                //LockoutEnabled = false,
+                //LockoutEndDateUtc = null,
                 Logins = new List<UserLogin>(),
                 PhoneNumber = null,
-                PhoneNumberConfirmed = false,
+                //PhoneNumberConfirmed = false,
                 ProductDescriptions = new List<UserProductDescription>(),
                 Roles = new List<string>(),
-                SecurityStamp = null,
-                TwoFactorEnabled = false
+                //SecurityStamp = null,
+                //TwoFactorEnabled = false
             };
 
             _userRepoMock.Setup(a => a.AddAsync(It.IsAny<UserDB>(), It.IsAny<string>())).Returns(Task.CompletedTask);
@@ -170,22 +170,22 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
                 .GetAwaiter().GetResult();
 
             // assert
-            Assert.AreEqual(expectedUser.AccessFailedCount, actualUser.AccessFailedCount);
+            //Assert.AreEqual(expectedUser.AccessFailedCount, actualUser.AccessFailedCount);
             Assert.AreEqual(expectedUser.Claims, actualUser.Claims);
-            Assert.AreEqual(expectedUser.EmailConfirmed, actualUser.EmailConfirmed);
+            //Assert.AreEqual(expectedUser.EmailConfirmed, actualUser.EmailConfirmed);
             Assert.AreEqual(expectedUser.Friends, actualUser.Friends);
             Assert.AreEqual(expectedUser.Id, actualUser.Id);
-            Assert.AreEqual(expectedUser.LockoutEnabled, actualUser.LockoutEnabled);
-            Assert.AreEqual(expectedUser.LockoutEndDateUtc, actualUser.LockoutEndDateUtc);
+            //Assert.AreEqual(expectedUser.LockoutEnabled, actualUser.LockoutEnabled);
+            //Assert.AreEqual(expectedUser.LockoutEndDateUtc, actualUser.LockoutEndDateUtc);
             Assert.AreEqual(expectedUser.Logins, actualUser.Logins);
-            Assert.AreEqual(expectedUser.PasswordHash, actualUser.PasswordHash);
+            //Assert.AreEqual(expectedUser.PasswordHash, actualUser.PasswordHash);
             Assert.AreEqual(expectedUser.Email, actualUser.Email);
             Assert.AreEqual(expectedUser.PhoneNumber, actualUser.PhoneNumber);
-            Assert.AreEqual(expectedUser.PhoneNumberConfirmed, actualUser.PhoneNumberConfirmed);
+           // Assert.AreEqual(expectedUser.PhoneNumberConfirmed, actualUser.PhoneNumberConfirmed);
             Assert.AreEqual(expectedUser.ProductDescriptions, actualUser.ProductDescriptions);
             Assert.AreEqual(expectedUser.Roles, actualUser.Roles);
-            Assert.AreEqual(expectedUser.SecurityStamp, actualUser.SecurityStamp);
-            Assert.AreEqual(expectedUser.TwoFactorEnabled, actualUser.TwoFactorEnabled);
+            //Assert.AreEqual(expectedUser.SecurityStamp, actualUser.SecurityStamp);
+            //Assert.AreEqual(expectedUser.TwoFactorEnabled, actualUser.TwoFactorEnabled);
             Assert.AreEqual(expectedUser.UserName, actualUser.UserName);
             _userRepoMock.Verify(m => m.Select(It.Is<string>(c => c == validEmail),
                 It.IsAny<bool>()), Times.Once());

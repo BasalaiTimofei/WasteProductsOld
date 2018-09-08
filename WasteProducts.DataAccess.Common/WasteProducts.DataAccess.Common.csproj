@@ -61,7 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Context\IDbContext.cs" />
+    <Compile Include="Context\IDatabase.cs" />
     <Compile Include="Models\DonationManagment\AddressDB.cs" />
     <Compile Include="Models\DonationManagment\DonationDB.cs" />
     <Compile Include="Exceptions\LuceneSearchRepositoryException.cs" />

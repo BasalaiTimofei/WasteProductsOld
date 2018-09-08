@@ -15,16 +15,16 @@ namespace WasteProducts.Web.Areas.Administration.Controllers.Api
     [RoutePrefix("api/Administration/Database")]
     public class DatabaseController : BaseApiController
     {
-        private readonly IDbManagementService _dbManagementService;
+        private readonly IDbService _dbService;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="dbManagementService">Database management service</param>
+        /// <param name="dbService">Database management service</param>
         /// <param name="logger">NLog logger</param>
-        public DatabaseController(IDbManagementService dbManagementService, ILogger logger) : base(logger)
+        public DatabaseController(IDbService dbService, ILogger logger) : base(logger)
         {
-            _dbManagementService = dbManagementService;
+            _dbService = dbService;
         }
 
         /// <summary>
@@ -34,12 +34,15 @@ namespace WasteProducts.Web.Areas.Administration.Controllers.Api
         [HttpGet]
         [Route("")]
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Returns Db status object", typeof(DatabaseStatus), nameof(DatabaseStatus), "application/json")]
+        [SwaggerResponse(HttpStatusCode.OK, "Returns database status", typeof(DatabaseStatus), nameof(DatabaseStatus), "application/json")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized request.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Exceptions during the process.")]
         public async Task<IHttpActionResult> Get()
         {
-            using (_dbManagementService)
+            using (_dbService)
             {
-                return Ok(await _dbManagementService.GetStatus());
+                var status = await Task.FromResult(_dbService.GetStatus()).ConfigureAwait(true);
+                return Ok(status);
             }
         }
 
@@ -49,12 +52,19 @@ namespace WasteProducts.Web.Areas.Administration.Controllers.Api
         /// <returns>DatabaseResult</returns>
         [HttpPost]
         [Route("")]
-        [SwaggerResponse(HttpStatusCode.Created, "Returns result of create action with Db", typeof(DatabaseResult), nameof(DatabaseResult), "application/json")]
-        public async Task<IHttpActionResult> Post()
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.Created, "Database was successfully created and seeded.")]
+        [SwaggerResponse(HttpStatusCode.Conflict, "Database already exists.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized request.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Exceptions during the creation of a database or seeding process.")]
+        public async Task<IHttpActionResult> Post(bool seedTestData)
         {
-            using (_dbManagementService)
+            using (_dbService)
             {
-                return Created("Database server",await _dbManagementService.CreateAsync());
+                if (await _dbService.CreateAndSeedAsync(seedTestData).ConfigureAwait(true))
+                    return StatusCode(HttpStatusCode.Created);
+
+                return Conflict();
             }
         }
 
@@ -65,29 +75,18 @@ namespace WasteProducts.Web.Areas.Administration.Controllers.Api
         [HttpDelete]
         [Route("")]
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Returns result of delete action with Db", typeof(DatabaseResult), nameof(DatabaseResult), "application/json")]
+        [SwaggerResponse(HttpStatusCode.OK, "Database was successfully deleted")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Database don't exist or was exceptions in the deleting process")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized request.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Exceptions during the database deletion process.")]
         public async Task<IHttpActionResult> Delete()
         {
-            using (_dbManagementService)
+            using (_dbService)
             {
-                return Ok(await _dbManagementService.DeleteAsync());
-            }
-        }
+                if (await Task.FromResult(_dbService.Delete()).ConfigureAwait(true))
+                    return Ok();
 
-        /// <summary>
-        /// Seeds database if database not exist
-        /// </summary>
-        /// <param name="seedTestData">If <c>true</c> also will be seeded test data.</param>
-        /// <returns>DatabaseResult</returns>
-        [HttpPut]
-        [Route("")]
-        [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Returns result of seed action with Db", typeof(DatabaseResult), nameof(DatabaseResult), "application/json")]
-        public async Task<IHttpActionResult> Put(bool seedTestData)
-        {
-            using (_dbManagementService)
-            {
-                return Ok(await _dbManagementService.SeedAsync(seedTestData));
+                return NotFound();
             }
         }
     }
