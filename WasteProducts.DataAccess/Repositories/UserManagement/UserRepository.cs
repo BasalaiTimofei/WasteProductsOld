@@ -81,40 +81,17 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         public async Task AddClaimAsync(string userId, Claim claim)
         {
             await _manager.AddClaimAsync(userId, claim);
-
-            //await _store.AddClaimAsync(user, claim);
-
-            //user.Modified = DateTime.UtcNow;
-            //await _context.SaveChangesAsync();
         }
 
         public async Task AddLoginAsync(string userId, UserLoginDB login)
         {
             var userLoginInfo = new UserLoginInfo(login.LoginProvider, login.ProviderKey);
             await _manager.AddLoginAsync(userId, userLoginInfo);
-
-            //UserLoginInfo loginInfo = new UserLoginInfo(login.LoginProvider, login.ProviderKey);
-
-            //using (var userStore = new UserStore<UserDB>(_context))
-            //{
-            //    await userStore.AddLoginAsync(user, loginInfo);
-
-            //    user.Modified = DateTime.UtcNow;
-            //    await _context.SaveChangesAsync();
-            //}
         }
 
         public async Task AddToRoleAsync(string userId, string roleName)
         {
             await _manager.AddToRoleAsync(userId, roleName);
-
-            //using (var userStore = new UserStore<UserDB>(_context))
-            //{
-            //    await userStore.AddToRoleAsync(user, roleName);
-
-            //    user.Modified = DateTime.UtcNow;
-            //    await _context.SaveChangesAsync();
-            //}
         }
 
         public async Task AddFriendAsync(string userId, string friendId)
