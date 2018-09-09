@@ -460,7 +460,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             }
 
-            public new void DetectAndSaveChanges(System.Data.Entity.EntityState state, IEnumerable<Type> types)
+            public new void DetectAndSaveChanges(System.Data.Entity.EntityState state, params Type[] types)
             {
                 base.DetectAndSaveChanges(state, types);
             }
@@ -474,7 +474,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             ProductDB product = new ProductDB() { Id = "1", Name = "Title", Description = "Description" };
             context.Products.Add(product);
 
-            context.DetectAndSaveChanges(System.Data.Entity.EntityState.Added, new List<Type>() { typeof(ProductDB) });                        
+            context.DetectAndSaveChanges(System.Data.Entity.EntityState.Added, typeof(ProductDB));                        
 
             var productFromRepo = sut.GetById<ProductDB>("1");
 

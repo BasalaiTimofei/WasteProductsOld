@@ -25,20 +25,6 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         private bool _disposed;
 
-        public UserRepository()
-        {
-            //TODO: Injection
-            StandardKernel kernel = new StandardKernel();
-            kernel.Load(new DataAccess.InjectorModule());
-            _context = new WasteContext(kernel.Get<ISearchRepository>());
-
-            _store = new UserStore<UserDB>(_context)
-            {
-                DisposeContext = true
-            };
-            _manager = new UserManager<UserDB>(_store);
-        }
-
         public UserRepository(WasteContext context)
         {
             _context = context;

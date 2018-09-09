@@ -87,13 +87,11 @@ namespace WasteProducts.DataAccess.Contexts
         }
 
         /// <summary>
-        /// Save changes to Lucene search repository. Runs 3 method with different params (Entity.State)
+        /// Save changes to Lucene search repository.
         /// </summary>
         private void SaveChangesToSearchRepository()
         {
-            DetectAndSaveChanges(EntityState.Added, new List<Type> { typeof(ProductDB) });
-            DetectAndSaveChanges(EntityState.Modified, new List<Type> { typeof(ProductDB) });
-            DetectAndSaveChanges(EntityState.Deleted, new List<Type> { typeof(ProductDB) });            
+            DetectAndSaveChanges(EntityState.Added | EntityState.Modified | EntityState.Deleted, typeof(ProductDB));          
         }
 
         /// <summary>
@@ -101,25 +99,29 @@ namespace WasteProducts.DataAccess.Contexts
         /// </summary>
         /// <param name="state">EntityState that needed to detect and save</param>
         /// <param name="types">Object type that needed to detect and save</param>
-        protected void DetectAndSaveChanges(EntityState state, IEnumerable<Type> types)
+        protected void DetectAndSaveChanges(EntityState state, params Type[] types)
         {            
-            this.Configuration.AutoDetectChangesEnabled = false;
+            //this.Configuration.AutoDetectChangesEnabled = false;
 
             var changedList = this.ChangeTracker.Entries()
                 .Where(x => x.State == state)
                 .Select(x => x.Entity).ToList();
 
-            this.Configuration.AutoDetectChangesEnabled = true;
+            //this.Configuration.AutoDetectChangesEnabled = true;
 
             foreach (var item in changedList)
             {
                 if (types.Contains(item.GetType()))
-                {                    
-                    if (state == EntityState.Added)
-                        _searchRepository.Insert(item);
-                    else if (state == EntityState.Modified)
-                        _searchRepository.Update(item);
-                    else _searchRepository.Delete(item);
+                {
+                    switch (state)
+                    {
+                        case EntityState.Added:
+                            _searchRepository.Insert(item); break;
+                        case EntityState.Modified:
+                            _searchRepository.Update(item); break;
+                        case EntityState.Deleted:
+                            _searchRepository.Delete(item); break;
+                    }
                 }
             }
         }
