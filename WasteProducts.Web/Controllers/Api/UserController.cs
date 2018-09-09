@@ -15,7 +15,7 @@ namespace WasteProducts.Web.Controllers.Api
     /// <summary>
     /// API controller for user management.
     /// </summary>
-    [RoutePrefix("UserService")]
+    [RoutePrefix("api/user")]
     public class UserController : BaseApiController
     {
         private readonly IUserService _userService;
@@ -38,7 +38,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// Gets all users of the WasteProducts.
         /// </summary>
         /// <returns>IEnumerable of all the users.</returns>
-        [Route("api/User/get")]
+        [HttpGet, Route("")]
         public async Task<IEnumerable<User>> GetUsers()
         {
             return await _userService.GetAllUsersAsync();
@@ -50,7 +50,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// </summary>
         /// <param name="id">Id of a user.</param>
         /// <returns>User with the specific ID or null if there is no matches.</returns>
-        [Route("{id:string}")]
+        [HttpGet, Route("{id}")]
         public async Task<User> GetUserById(string id)
         {
             //todo validation
@@ -63,8 +63,8 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="email">Email of the user.</param>
         /// <param name="password">Password of the user.</param>
         /// <returns>User with the specific email and password or null if there is no matches.</returns>
-        [Route("api/User/LoginByEmail")]
-        public async Task<User> GetUserByEmailAndPassword([FromBody] string email, [FromBody] string password)
+        [HttpGet, Route("LoginByEmail/{email}_{password}")]
+        public async Task<User> GetUserByEmailAndPassword(string email, string password)
         {
             return await _userService.LogInByEmailAsync(email, password);
         }
@@ -72,13 +72,13 @@ namespace WasteProducts.Web.Controllers.Api
         /// <summary>
         /// Gets user by its name and password.
         /// </summary>
-        /// <param name="userName">User's name.</param>
+        /// <param name="username">User's name.</param>
         /// <param name="password">Password of the user.</param>
         /// <returns>User with the specific email and password or null if there is no matches.</returns>
-        [Route("api/User/LoginByUserName")]
-        public async Task<User> GetUserByNameAndPassword([FromBody] string userName, [FromBody] string password)
+        [HttpGet, Route("LoginByUserName/{username}_{password}")]
+        public async Task<User> GetUserByNameAndPassword(string username, string password)
         {
-            return await _userService.LogInByNameAsync(userName, password);
+            return await _userService.LogInByNameAsync(username, password);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// </summary>
         /// <param name="userId">ID of the user.</param>
         /// <returns>IList of roles of the user.</returns>
-        [Route("api/User/Roles/{id:string}")]
+        [HttpGet, Route("Roles/{id:string}")]
         public async Task<IList<string>> GetRoles(string userId)
         {
             return await _userService.GetRolesAsync(userId);
@@ -97,7 +97,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// </summary>
         /// <param name="userId">ID of the user.</param>
         /// <returns>IList of claims of the user.</returns>
-        [Route("api/User/Claims/{id:string}")]
+        [HttpGet, Route("Claims/{id:string}")]
         public async Task<IList<Claim>> GetClaims(string userId)
         {
             return await _userService.GetClaimsAsync(userId);
@@ -108,7 +108,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// </summary>
         /// <param name="userId">ID of the user.</param>
         /// <returns>IList of logins of the user.</returns>
-        [Route("api/User/Logins/{id:string}")]
+        [HttpGet, Route("Logins/{id:string}")]
         public async Task<IList<UserLogin>> GetLogins(string userId)
         {
             return await _userService.GetLoginsAsync(userId);
@@ -122,7 +122,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="userName">NickName of the user. Should be unique for the application.</param>
         /// <param name="password">Password of the user</param>
         /// <returns></returns>
-        [HttpPost, Route("api/User")]
+        [HttpPost, Route("register")]
         public async Task Register([FromBody] string email, [FromBody] string userName, [FromBody] string password)
         {
             //todo get from JSON, not User instance
@@ -162,7 +162,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="oldPassword">Old password of the user.</param>
         /// <param name="newPassword">New password of the user.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/user/changepassword")]
+        [HttpPut, Route("changepassword")]
         public async Task<bool> ChangePassword([FromBody] string userId, [FromBody] string oldPassword, [FromBody] string newPassword)
         {
             return await _userService.ChangePasswordAsync(userId, oldPassword, newPassword);
@@ -174,7 +174,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// </summary>
         /// <param name="email">Email of the user forgotten its password.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/ResetPassword")]
+        [HttpPut, Route("ResetPassword")]
         public async Task ResetPassword(string email)
         {
             await _userService.ResetPasswordAsync(email);
@@ -187,7 +187,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="userId">ID of the user changing its email.</param>
         /// <param name="newEmail">New email of the user.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/UpdateEmail")]
+        [HttpPut, Route("UpdateEmail")]
         public async Task<bool> UpdateEmail([FromBody] string userId, [FromBody] string newEmail)
         {
             return await _userService.UpdateEmailAsync(userId, newEmail);
@@ -200,7 +200,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="userId">ID of the user changing its user name.</param>
         /// <param name="newUserName">A new user name for the user.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/UpdateUserName")]
+        [HttpPut, Route("UpdateUserName")]
         public async Task<bool> UpdateUserName([FromBody] string userId, [FromBody] string newUserName)
         {
             return await _userService.UpdateUserNameAsync(userId, newUserName);
@@ -213,7 +213,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="userId">ID of the user looking for a new friend.</param>
         /// <param name="newFriendId">ID of a new friend of the user.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/AddFriend")]
+        [HttpPut, Route("AddFriend")]
         public async Task AddFriend([FromBody] string userId, [FromBody] string newFriendId)
         {
             await _userService.AddFriendAsync(userId, newFriendId);
@@ -226,7 +226,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="userId">ID of the user wanting to delete a friend from its friendlist.</param>
         /// <param name="friendId">ID of deleting friend.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/UserDeleteFriend")]
+        [HttpPut, Route("DeleteFriend")]
         public async Task DeleteFriend([FromBody]string userId, [FromBody] string friendId)
         {
             await _userService.DeleteFriendAsync(userId, friendId);
@@ -241,7 +241,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="rating">Rating from 0 to 10 of this product.</param>
         /// <param name="description">User's own description of the product.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/AddProduct")]
+        [HttpPut, Route("AddProduct")]
         public async Task AddProduct([FromBody]string userId, [FromBody]string productId, [FromBody]int rating, [FromBody]string description)
         {
             await _userService.AddProductAsync(userId, productId, rating, description);
@@ -254,7 +254,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="userId">ID of the user deleting the product from its list of products.</param>
         /// <param name="productId">ID of the deleting product.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/DeleteProduct")]
+        [HttpPut, Route("DeleteProduct")]
         public async Task DeleteProduct([FromBody]string userId, [FromBody]string productId)
         {
             await _userService.DeleteProductAsync(userId, productId);
@@ -266,7 +266,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="userId">ID of the user.</param>
         /// <param name="roleName">Name of the role.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/AddToRole")]
+        [HttpPut, Route("AddToRole")]
         public async Task AddToRole([FromBody] string userId, [FromBody]string roleName)
         {
             await _userService.AddToRoleAsync(userId, roleName);
@@ -278,7 +278,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="userId">ID of the user.</param>
         /// <param name="roleName">Name of the role.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/RemoveFromRole")]
+        [HttpPut, Route("RemoveFromRole")]
         public async Task RemoveFromRole([FromBody] string userId, [FromBody]string roleName)
         {
             await _userService.RemoveFromRoleAsync(userId, roleName);
@@ -290,7 +290,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="userId">ID of the user.</param>
         /// <param name="claim">Claim to add to the user.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/AddClaim")]
+        [HttpPut, Route("AddClaim")]
         public async Task AddClaim([FromBody] string userId, [FromBody]Claim claim)
         {
             await _userService.AddClaimAsync(userId, claim);
@@ -302,7 +302,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="userId">ID of the user.</param>
         /// <param name="claim">Claim to remove from the user.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/RemoveClaim")]
+        [HttpPut, Route("RemoveClaim")]
         public async Task RemoveClaim([FromBody] string userId, [FromBody]Claim claim)
         {
             await _userService.RemoveClaimAsync(userId, claim);
@@ -314,7 +314,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="userId">ID of the user.</param>
         /// <param name="userLogin">Login to add to the user.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/AddLogin")]
+        [HttpPut, Route("AddLogin")]
         public async Task AddLogin([FromBody] string userId, [FromBody]UserLogin userLogin)
         {
             await _userService.AddLoginAsync(userId, userLogin);
@@ -326,7 +326,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="userId">ID of the user.</param>
         /// <param name="userLogin">Login to remove from the user.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/RemoveLogin")]
+        [HttpPut, Route("RemoveLogin")]
         public async Task RemoveLogin([FromBody] string userId, [FromBody]UserLogin userLogin)
         {
             await _userService.RemoveLoginAsync(userId, userLogin);
