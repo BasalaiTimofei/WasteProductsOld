@@ -26,7 +26,7 @@ namespace WasteProducts.Logic.Services.UserService
 
         private bool _disposed;
 
-        public UserService(IUserRepository userRepo, [Named("UserService")] IMapper mapper, IMailService mailService)
+        public UserService(IUserRepository userRepo, IMapper mapper, IMailService mailService)
         {
             _userRepo = userRepo;
             _mapper = mapper;
@@ -130,7 +130,7 @@ namespace WasteProducts.Logic.Services.UserService
             {
                 var userDB = _userRepo.Select(a => a.Id == id, true);
                 var user = MapTo<User>(userDB);
-                user.PasswordHash = "";
+                //user.PasswordHash = "";
                 return user;
             }
             );
@@ -209,41 +209,34 @@ namespace WasteProducts.Logic.Services.UserService
             return await _userRepo.GetRolesAsync(userDB);
         }
 
-        public async Task AddToRoleAsync(User user, string roleName)
+        public async Task AddToRoleAsync(string userId, string roleName)
         {
-            await _userRepo.AddToRoleAsync(MapTo<UserDB>(user), roleName);
-            user.Roles.Add(roleName);
+            await _userRepo.AddToRoleAsync(userId, roleName);
         }
 
-        public async Task AddClaimAsync(User user, Claim claim)
+        public async Task AddClaimAsync(string userId, Claim claim)
         {
-            await _userRepo.AddClaimAsync(MapTo<UserDB>(user), claim);
-            user.Claims.Add(claim);
+            await _userRepo.AddClaimAsync(userId, claim);
         }
 
-        public async Task AddLoginAsync(User user, UserLogin login)
+        public async Task AddLoginAsync(string userId, UserLogin login)
         {
-            await _userRepo.AddLoginAsync(MapTo<UserDB>(user), MapTo<UserLoginInfo>(login));
-            user.Logins?.Add(login);
+            await _userRepo.AddLoginAsync(userId, MapTo<UserLoginInfo>(login));
         }
 
-        public async Task RemoveFromRoleAsync(User user, string roleName)
+        public async Task RemoveFromRoleAsync(string userId, string roleName)
         {
-            await _userRepo.RemoveFromRoleAsync(MapTo<UserDB>(user), roleName);
-            await _userRepo.RemoveFromRoleAsync(MapTo<UserDB>(user), roleName);
-            user.Roles?.Remove(roleName);
+            await _userRepo.RemoveFromRoleAsync(userId, roleName);
         }
 
-        public async Task RemoveClaimAsync(User user, Claim claim)
+        public async Task RemoveClaimAsync(string userId, Claim claim)
         {
-            await _userRepo.RemoveClaimAsync(MapTo<UserDB>(user), claim);
-            user.Claims?.Remove(claim);
+            await _userRepo.RemoveClaimAsync(userId, claim);
         }
 
-        public async Task RemoveLoginAsync(User user, UserLogin login)
+        public async Task RemoveLoginAsync(string userId, UserLogin login)
         {
-            await _userRepo.RemoveLoginAsync(MapTo<UserDB>(user), MapTo<UserLoginInfo>(login));
-            user.Logins?.Remove(login);
+            await _userRepo.RemoveLoginAsync(userId, MapTo<UserLoginInfo>(login));
         }
 
         public async Task DeleteUserAsync(string userId)

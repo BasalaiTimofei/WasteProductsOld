@@ -5,15 +5,21 @@ using WasteProducts.Web.Utils.Logging;
 
 namespace WasteProducts.Web.Filters
 {
+    /// <inheritdoc />
     public class MvcUnhandledExceptionFilter : ElmahHandleErrorAttribute
     {
         private readonly ILogger _logger;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="logger">NLog logger</param>
         public MvcUnhandledExceptionFilter(ILogger logger)
         {
             _logger = logger;
         }
 
+        /// <inheritdoc />
         public override void OnException(ExceptionContext context)
         {
             //NLog logging

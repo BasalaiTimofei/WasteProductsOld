@@ -32,7 +32,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="user">Specific claim will be added to the user.</param>
         /// <param name="claim">Specific claim to add to the user.</param>
         /// <returns></returns>
-        Task AddClaimAsync(UserDB user, Claim claim);
+        Task AddClaimAsync(string userId, Claim claim);
 
         /// <summary>
         ///  Add a login to the user.
@@ -40,7 +40,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="user">Specific login will be added to the user.</param>
         /// <param name="login">Specific login to add to the user.</param>
         /// <returns></returns>
-        Task AddLoginAsync(UserDB user, UserLoginDB login);
+        Task AddLoginAsync(string userId, UserLoginDB login);
 
         /// <summary>
         /// Add a user to a role.
@@ -48,7 +48,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="user">User will be added to this specific role.</param>
         /// <param name="roleName">Name of the specific role to add to the user.</param>
         /// <returns></returns>
-        Task AddToRoleAsync(UserDB user, string roleName);
+        Task AddToRoleAsync(string userId, string roleName);
 
         /// <summary>
         /// Adds user with id = friendId to the list of friends of user with Id = userId.
@@ -95,7 +95,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="user">Specific claim will be removed from the user.</param>
         /// <param name="claim">Specific claim to remove from the user.</param>
         /// <returns></returns>
-        Task RemoveClaimAsync(UserDB user, Claim claim);
+        Task RemoveClaimAsync(string userId, Claim claim);
 
         /// <summary>
         /// Remove a user from a role.
@@ -103,7 +103,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="user">User will be removed from this specific role.</param>
         /// <param name="roleName">Name of the specific role to remove from the user.</param>
         /// <returns></returns>
-        Task RemoveFromRoleAsync(UserDB user, string roleName);
+        Task RemoveFromRoleAsync(string userId, string roleName);
 
         /// <summary>
         /// Remove a login from a user.
@@ -111,7 +111,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="user">Specific login will be removed from the user.</param>
         /// <param name="login">Specific login to remove from the user.</param>
         /// <returns></returns>
-        Task RemoveLoginAsync(UserDB user, UserLoginDB login);
+        Task RemoveLoginAsync(string userId, UserLoginDB login);
 
         /// <summary>
         /// Returns first registered user matches the predicate or null if there is no matches.
@@ -136,6 +136,12 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <returns>User with the specific email and password.</returns>
         UserDB Select(string email, string password, bool lazyInitiation = true);
 
+        /// <summary>
+        /// Returns specific registered user with its roles.
+        /// </summary>
+        /// <param name="email">Email of the registered user.</param>
+        /// <param name="password">Password of the registered user.</param>
+        /// <returns>Tuple with item1 as User, item2 as IList of its roles.</returns>
         (UserDB, IList<string>) Select(string email, string password);
 
         /// <summary>
