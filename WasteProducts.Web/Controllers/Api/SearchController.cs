@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using WasteProducts.Logic.Common.Models;
@@ -43,7 +44,7 @@ namespace WasteProducts.Web.Controllers.Api
         [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
         //[SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty")]
         [Route("products/default")]
-        public IEnumerable<Product> GetProductsDefaultFields([FromUri]string query)
+        public async Task<IEnumerable<Product>> GetProductsDefaultFields([FromUri]string query)
         {
             if (String.IsNullOrEmpty(query))
             {
@@ -56,7 +57,7 @@ namespace WasteProducts.Web.Controllers.Api
                 searchQuery.Query = query;
 
                 //return _searchService.Search<Product>(searchQuery);
-                return _searchService.SearchProduct(searchQuery);
+                return await Task.FromResult(_searchService.SearchProduct(searchQuery));
             }
         }
 
@@ -71,14 +72,14 @@ namespace WasteProducts.Web.Controllers.Api
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
         [Route("products/custom")]
-        public IEnumerable<Product> GetProducts(BoostedSearchQuery query)
+        public async Task<IEnumerable<Product>> GetProducts(BoostedSearchQuery query)
         {
 
             HttpResponseMessage response;
 
             if (ModelState.IsValid)
             {
-                return _searchService.SearchProduct(query);
+                return await Task.FromResult(_searchService.SearchProduct(query));
             }
             else
             {

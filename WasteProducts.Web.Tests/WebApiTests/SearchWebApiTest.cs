@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using WasteProducts.DataAccess.Repositories;
 using WasteProducts.Logic.Services;
 using WasteProducts.Web.Controllers.Api;
 using NLog;
-using WasteProducts.Logic.Common.Models.Products;
-using WasteProducts.DataAccess.Common;
-using AutoMapper;
 using WasteProducts.DataAccess.Common.Models.Products;
 
 namespace WasteProducts.Web.Tests.WebApiTests
@@ -34,7 +31,7 @@ namespace WasteProducts.Web.Tests.WebApiTests
         }
 
         [Test]
-        public void SearchControllerTestGetProductWithDefaultFields()
+        public async Task SearchControllerTestGetProductWithDefaultFields()
         {
             Mock<ILogger> _mockLogger = new Mock<ILogger>();
             LuceneSearchRepository repo = new LuceneSearchRepository(true);
@@ -43,17 +40,15 @@ namespace WasteProducts.Web.Tests.WebApiTests
 
             service.AddToSearchIndex<ProductDB>(products);
 
-            var result = sut.GetProductsDefaultFields("test");
+            var result = await sut.GetProductsDefaultFields("test");
             Assert.AreEqual(expected: 5, actual: result.ToArray().Length);
 
-            result = sut.GetProductsDefaultFields("unique");
+            result = await sut.GetProductsDefaultFields("unique");
             Assert.AreEqual(expected: 1, actual: result.ToArray().Length);
 
-            result = sut.GetProductsDefaultFields("lorem");
+            result = await sut.GetProductsDefaultFields("lorem");
             Assert.AreEqual(expected: 0, actual: result.ToArray().Length);
 
-            //SearchQuery query = new SearchQuery().SetQueryString("Test").AddField("Name").AddField("Description");
-            //var result = service.Search<Product>(query);
         }
     }
 }
