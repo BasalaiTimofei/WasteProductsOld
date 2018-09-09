@@ -86,7 +86,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// </summary>
         /// <param name="userId">ID of the user.</param>
         /// <returns>IList of roles of the user.</returns>
-        [HttpGet, Route("Roles/{id:string}")]
+        [HttpGet, Route("api/User/Roles/{id}")]
         public async Task<IList<string>> GetRoles(string userId)
         {
             return await _userService.GetRolesAsync(userId);
@@ -97,7 +97,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// </summary>
         /// <param name="userId">ID of the user.</param>
         /// <returns>IList of claims of the user.</returns>
-        [HttpGet, Route("Claims/{id:string}")]
+        [HttpGet, Route("api/User/Claims/{id}")]
         public async Task<IList<Claim>> GetClaims(string userId)
         {
             return await _userService.GetClaimsAsync(userId);
@@ -108,7 +108,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// </summary>
         /// <param name="userId">ID of the user.</param>
         /// <returns>IList of logins of the user.</returns>
-        [HttpGet, Route("Logins/{id:string}")]
+        [HttpGet, Route("api/User/Logins/{id}")]
         public async Task<IList<UserLogin>> GetLogins(string userId)
         {
             return await _userService.GetLoginsAsync(userId);
@@ -135,7 +135,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// </summary>
         /// <param name="userId">Id of the deleting user.</param>
         /// <returns></returns>
-        [HttpDelete, Route("{id:string}")]
+        [HttpDelete, Route("{id}")]
         public async Task Delete(string userId)
         {
             await _userService.DeleteUserAsync(userId);
@@ -148,7 +148,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="id">ID of the updating user.</param>
         /// <param name="user">User to update.</param>
         /// <returns></returns>
-        [HttpPut, Route("{id:string}")]
+        [HttpPut, Route("{id}")]
         public async Task Update(string id, [FromBody] User user)
         {
             await _userService.UpdateAsync(user);
