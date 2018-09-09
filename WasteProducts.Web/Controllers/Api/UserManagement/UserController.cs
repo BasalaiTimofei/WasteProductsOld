@@ -9,6 +9,7 @@ using NLog;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.UserService;
+using WasteProducts.Web.Models;
 
 namespace WasteProducts.Web.Controllers.Api.UserManagement
 {
@@ -123,10 +124,10 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <param name="password">Password of the user</param>
         /// <returns></returns>
         [HttpPost, Route("register")]
-        public async Task Register([FromBody] string email, [FromBody] string userName, [FromBody] string password)
+        public async Task Register([FromBody] UserAPI user)
         {
             //todo get from JSON, not User instance
-            await _userService.RegisterAsync(email, userName, password);
+            await _userService.RegisterAsync(user.Email, user.UserName, user.Password);
         }
 
         // DELETE api/user/5
