@@ -174,34 +174,19 @@ namespace WasteProducts.Logic.Services.UserService
             return result;
         }
 
-        public async Task<bool> UpdateUserNameAsync(User user, string newUserName)
+        public async Task<bool> UpdateUserNameAsync(string userId, string newUserName)
         {
-            bool result = await _userRepo.UpdateUserNameAsync(MapTo<UserDB>(user), newUserName);
-            if (result)
-            {
-                user.UserName = newUserName;
-            }
-            return result;
+            return await _userRepo.UpdateUserNameAsync(userId, newUserName);
         }
 
-        public async Task AddFriendAsync(User user, User newFriend)
+        public async Task AddFriendAsync(string userId, string newFriendId)
         {
-            if (!user.Friends.Contains(newFriend))
-            {
-                user.Friends.Add(newFriend);
-                await _userRepo.AddFriendAsync(user.Id, newFriend.Id);
-            }
+            await _userRepo.AddFriendAsync(userId, newFriendId);
         }
 
-        public async Task DeleteFriendAsync(User user, User deletingFriend)
+        public async Task DeleteFriendAsync(string userId, string deletingFriendId)
         {
-            User delFriend = user.Friends.FirstOrDefault(u => u.Id == deletingFriend.Id);
-
-            if (delFriend != null)
-            {
-                user.Friends.Remove(delFriend);
-                await _userRepo.DeleteFriendAsync(user.Id, deletingFriend.Id);
-            }
+            await _userRepo.DeleteFriendAsync(userId, deletingFriendId);
         }
 
         public async Task<bool> AddProductAsync(string userId, string productId, int rating, string description)

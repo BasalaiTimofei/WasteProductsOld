@@ -103,24 +103,24 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// <summary>
         /// Updates user's UserName. You cannot update UserName if newUserName is already used by another user.
         /// </summary>
-        /// <param name="user">User wanting to update its UserName.</param>
+        /// <param name="userId">Id of the user wanting to update its UserName.</param>
         /// <param name="newUserName">New unique UserName to update user's UserName.</param>
         /// <returns></returns>
-        Task<bool> UpdateUserNameAsync(User user, string newUserName);
+        Task<bool> UpdateUserNameAsync(string userId, string newUserName);
 
         /// <summary>
         /// Adds a specific new friend to the specific user's friend list.
         /// </summary>
-        /// <param name="user">List of friends of this user will be expanded by the newFriend user.</param>
-        /// <param name="newFriend">New friend to add to the user's friend list.</param>
-        Task AddFriendAsync(User user, User newFriend);
+        /// <param name="userId">List of friends of the user with this ID will be expanded by the newFriend user.</param>
+        /// <param name="newFriend">ID of the new friend to add to the user's friend list.</param>
+        Task AddFriendAsync(string userId, string newFriendId);
 
         /// <summary>
         /// Deletes a specific friend from the specific user's friend list.
         /// </summary>
-        /// <param name="user">From the list of friends of this user the deletingFriend user will be deleted.</param>
-        /// <param name="deletingFriend">Specific friend to delete from the user's friend list.</param>
-        Task DeleteFriendAsync(User user, User deletingFriend);
+        /// <param name="userId">From the list of friends of the user with this ID the deletingFriend user will be deleted.</param>
+        /// <param name="deletingFriendId">ID of the specific friend to delete from the user's friend list.</param>
+        Task DeleteFriendAsync(string userId, string deletingFriendId);
 
         /// <summary>
         /// Adds specific new product to the specific user's list of products.

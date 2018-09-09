@@ -149,6 +149,12 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         // POST api/user/updateemail
+        /// <summary>
+        /// Updates email of the user to the new email.
+        /// </summary>
+        /// <param name="userId">ID of the user changing its email.</param>
+        /// <param name="newEmail">New email of the user.</param>
+        /// <returns></returns>
         [HttpPut, Route("api/User/UpdateEmail")]
         public async Task<bool> UpdateEmail([FromBody] string userId, [FromBody] string newEmail)
         {
@@ -156,27 +162,53 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         //POST api/user/UpdateUserName
+        /// <summary>
+        /// Updates user name of the user with the specific ID.
+        /// </summary>
+        /// <param name="userId">ID of the user changing its user name.</param>
+        /// <param name="newUserName">A new user name for the user.</param>
+        /// <returns></returns>
         [HttpPut, Route("api/User/UpdateUserName")]
-        public async Task<bool> UpdateUserName([FromBody]User user, [FromBody]string newUserName)
+        public async Task<bool> UpdateUserName([FromBody] string userId, [FromBody] string newUserName)
         {
-            return await _userService.UpdateUserNameAsync(user, newUserName);
+            return await _userService.UpdateUserNameAsync(userId, newUserName);
         }
 
         // PUT api/User/Friends
-        [HttpPut, Route("api/User/Friends")]
-        public async Task AddFriend([FromBody]User user, [FromBody]User newFriend)
+        /// <summary>
+        /// Adds a new friend to the friendlist of the user with the specific ID.
+        /// </summary>
+        /// <param name="userId">ID of the user looking for a new friend.</param>
+        /// <param name="newFriendId">ID of a new friend of the user.</param>
+        /// <returns></returns>
+        [HttpPut, Route("api/User/Friends/add")]
+        public async Task AddFriend([FromBody] string userId, [FromBody] string newFriendId)
         {
-            await _userService.AddFriendAsync(user, newFriend);
+            await _userService.AddFriendAsync(userId, newFriendId);
         }
 
         //POST api/User/Friends
+        /// <summary>
+        /// Deletes a friend with the specific friendId ID from the friendlist of the user with the userId ID.
+        /// </summary>
+        /// <param name="userId">ID of the user wanting to delete a friend from its friendlist.</param>
+        /// <param name="friendId">ID of deleting friend.</param>
+        /// <returns></returns>
         [HttpPut, Route("api/User/Friends/delete")]
-        public async Task DeleteFriend([FromBody]User user, [FromBody]User friend)
+        public async Task DeleteFriend([FromBody]string userId, [FromBody] string friendId)
         {
-            await _userService.DeleteFriendAsync(user, friend);
+            await _userService.DeleteFriendAsync(userId, friendId);
         }
 
         //PUT api/User/Products
+        /// <summary>
+        /// Adds product with its rating and description to the user's list of products.
+        /// </summary>
+        /// <param name="userId">ID of the user adding the product to its product list.</param>
+        /// <param name="productId">ID of the adding product.</param>
+        /// <param name="rating">Rating from 0 to 10 of this product.</param>
+        /// <param name="description">User's own description of the product.</param>
+        /// <returns></returns>
         [HttpPut, Route("api/User/Product")]
         public async Task AddProduct([FromBody]string userId, [FromBody]string productId, [FromBody]int rating, [FromBody]string description)
         {
@@ -184,6 +216,12 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         //POST api/User/Products/Delete
+        /// <summary>
+        /// Deletes product from the user's list of products.
+        /// </summary>
+        /// <param name="userId">ID of the user deleting the product from its list of products.</param>
+        /// <param name="productId">ID of the deleting product.</param>
+        /// <returns></returns>
         [HttpPut, Route("api/User/Products/Delete")]
         public async Task DeleteProduct([FromBody]string userId, [FromBody]string productId)
         {
@@ -191,6 +229,11 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         // POST api/User/Roles
+        /// <summary>
+        /// Gets all the roles of the user.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <returns></returns>
         [HttpGet, Route("api/User/Roles")]
         public async Task<IList<string>> GetRoles([FromBody] string userId)
         {
@@ -198,6 +241,12 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         // PUT api/User/Roles
+        /// <summary>
+        /// Adds a user with the specific ID to the role.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <param name="roleName">Name of the role.</param>
+        /// <returns></returns>
         [HttpPut, Route("api/User/Roles")]
         public async Task AddToRole([FromBody] string userId, [FromBody]string roleName)
         {
@@ -205,13 +254,25 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         // DELETE api/User/Roles
+        /// <summary>
+        /// Removes a user with the specific ID from the role.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <param name="roleName">Name of the role.</param>
+        /// <returns></returns>
         [HttpPut, Route("api/User/Roles")]
-        public async Task RemoveFromRole([FromBody] string userId, [FromBody]string role)
+        public async Task RemoveFromRole([FromBody] string userId, [FromBody]string roleName)
         {
-            await _userService.RemoveFromRoleAsync(userId, role);
+            await _userService.RemoveFromRoleAsync(userId, roleName);
         }
 
         // PUT api/User/Claims
+        /// <summary>
+        /// Adds a claim to the user.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <param name="claim">Claim to add to the user.</param>
+        /// <returns></returns>
         [HttpPut, Route("api/User/Claims")]
         public async Task AddClaim([FromBody] string userId, [FromBody]Claim claim)
         {
@@ -219,6 +280,12 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         //DELETE api/User/Claims
+        /// <summary>
+        /// Removes a claim from the user.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <param name="claim">Claim to remove from the user.</param>
+        /// <returns></returns>
         [HttpPut, Route("api/User/Claims")]
         public async Task RemoveClaim([FromBody] string userId, [FromBody]Claim claim)
         {
@@ -226,6 +293,12 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         // PUT api/User/Logins
+        /// <summary>
+        /// Adds a login to the user.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <param name="userLogin">Login to add to the user.</param>
+        /// <returns></returns>
         [HttpPut, Route("api/User/Logins")]
         public async Task AddLogin([FromBody] string userId, [FromBody]UserLogin userLogin)
         {
@@ -233,6 +306,12 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         //DELETE api/User/Logins
+        /// <summary>
+        /// Removes a login to the user.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <param name="userLogin">Login to remove from the user.</param>
+        /// <returns></returns>
         [HttpPut, Route("api/User/Logins")]
         public async Task RemoveLogin([FromBody] string userId, [FromBody]UserLogin userLogin)
         {

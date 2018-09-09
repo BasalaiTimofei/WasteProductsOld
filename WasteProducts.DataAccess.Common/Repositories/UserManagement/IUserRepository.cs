@@ -159,10 +159,10 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <summary>
         /// Updates user's UserName if it isn't used by another user. Returns true if UserName was successfully updated.
         /// </summary>
-        /// <param name="user">User wanting to update its UserName.</param>
+        /// <param name="userId">ID of the user wanting to update its UserName.</param>
         /// <param name="newUserName">New unique UserName</param>
         /// <returns></returns>
-        Task<bool> UpdateUserNameAsync(UserDB user, string newUserName);
+        Task<bool> UpdateUserNameAsync(string userId, string newUserName);
 
         /// <summary>
         /// Adds user with id = friendId to the list of friends of user with Id = userId.

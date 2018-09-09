@@ -216,7 +216,9 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             User user = _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual("Sergei", user.UserName);
 
-            bool result = _userService.UpdateUserNameAsync(user, "Anton").GetAwaiter().GetResult();
+            bool result = _userService.UpdateUserNameAsync(user.Id, "Anton").GetAwaiter().GetResult();
+
+            user = _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
 
             Assert.IsFalse(result);
             Assert.AreEqual("Sergei", user.UserName);
@@ -371,10 +373,8 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             User user2 = _userService.LogInByEmailAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
             User user3 = _userService.LogInByEmailAsync("test51someemail@gmail.com", "qwerty3").GetAwaiter().GetResult();
 
-            _userService.AddFriendAsync(user, user2).GetAwaiter().GetResult();
-            _userService.AddFriendAsync(user, user3).GetAwaiter().GetResult();
-
-            Assert.AreEqual(2, user.Friends.Count);
+            _userService.AddFriendAsync(user.Id, user2.Id).GetAwaiter().GetResult();
+            _userService.AddFriendAsync(user.Id, user3.Id).GetAwaiter().GetResult();
 
             user = _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual(2, user.Friends.Count);
@@ -390,9 +390,8 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             User user2 = _userService.LogInByEmailAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
             User user3 = _userService.LogInByEmailAsync("test51someemail@gmail.com", "qwerty3").GetAwaiter().GetResult();
 
-            _userService.DeleteFriendAsync(user, user2).GetAwaiter().GetResult();
-            _userService.DeleteFriendAsync(user, user3).GetAwaiter().GetResult();
-            Assert.AreEqual(0, user.Friends.Count);
+            _userService.DeleteFriendAsync(user.Id, user2.Id).GetAwaiter().GetResult();
+            _userService.DeleteFriendAsync(user.Id, user3.Id).GetAwaiter().GetResult();
 
             user = _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual(0, user.Friends.Count);

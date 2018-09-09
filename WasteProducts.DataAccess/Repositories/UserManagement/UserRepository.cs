@@ -229,15 +229,23 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             return false;
         }
 
-        public async Task<bool> UpdateUserNameAsync(UserDB user, string newUserName)
+        public async Task<bool> UpdateUserNameAsync(string userId, string newUserName)
         {
             bool userNameAvailable = !(await _context.Users.AnyAsync(u => u.UserName == newUserName));
+
             if (userNameAvailable)
             {
+                var user = _manager.FindById(userId);
+
                 user.Modified = DateTime.UtcNow;
-                _context.Users.Attach(user);
+                user.UserName = newUserName;
+
                 var entry = _context.Entry(user);
+
+                entry.State = EntityState.Unchanged;
                 entry.Property(u => u.UserName).IsModified = true;
+                entry.Property(u => u.Modified).IsModified = true;
+
                 await _context.SaveChangesAsync();
             }
             return userNameAvailable;
