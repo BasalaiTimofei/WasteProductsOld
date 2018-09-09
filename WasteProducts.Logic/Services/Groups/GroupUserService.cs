@@ -20,11 +20,19 @@ namespace WasteProducts.Logic.Services.Groups
             _mapper = mapper;
         }
 
-        public void SendInvite<T>(T item) where T : class
+        public void SendInvite<T>(T item, string adminId) where T : class
         {
             var result = _mapper.Map<GroupUserDB>(item);
+
+            var modelGroupDB = _dataBase.Find<GroupDB>(
+                x => x.Id == result.GroupId
+                && x.AdminId == adminId);
+            if (modelGroupDB != null)
+                return;
+
             var model = _dataBase.Find<GroupUserDB>(
-                x => x.UserId == result.UserId&& x.GroupId == result.GroupId).First();
+                x => x.UserId == result.UserId
+                && x.GroupId == result.GroupId).First();
 
             result.IsInvited = 0;
             result.Modified = DateTime.UtcNow;
@@ -44,13 +52,20 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public void DismissUser<T>(T item) where T : class
+        public void DismissUser<T>(T item, string adminId) where T : class
         {
             var result = _mapper.Map<GroupUserDB>(item);
+
+            var modelGroupDB = _dataBase.Find<GroupDB>(
+                x => x.Id == result.GroupId
+                && x.AdminId == adminId);
+            if (modelGroupDB != null)
+                return;
+
             var model = _dataBase.Find<GroupUserDB>(
                 x => x.UserId == result.UserId
-                && x.IsInvited == 1).First();
-
+                && x.IsInvited == 1
+                && x.GroupId == result.GroupId).First();
             if (model == null)
                 return;
 
@@ -61,13 +76,14 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public void EnteredUser<T>(T item) where T : class
+        public void Enter<T>(T item) where T : class
         {
             var result = _mapper.Map<GroupUserDB>(item);
+
             var model = _dataBase.Find<GroupUserDB>(
                 x => x.UserId == result.UserId
-                && x.IsInvited == 0).First();
-
+                && x.IsInvited == 0
+                && x.GroupId == result.GroupId).First();
             if (model == null)
                 return;
 
@@ -78,17 +94,38 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public IEnumerable<T> FindInvites<T>(string userId) where T : class
+        public void Leave<T>(T item) where T : class
         {
-            var model = _dataBase.Find<GroupUserDB>(x => x.UserId == userId && x.IsInvited == 0);
+            var result = _mapper.Map<GroupUserDB>(item);
+
+            var model = _dataBase.Find<GroupUserDB>(
+                x => x.UserId == result.UserId
+                && x.IsInvited == 1
+                && x.GroupId == result.GroupId).First();
+            if (model == null)
+                return;
+
+            model.IsInvited = 2;
+            model.Modified = DateTime.UtcNow;
+
+            _dataBase.Update(model);
+            _dataBase.Save();
+        }
+
+        public IEnumerable<T> FindReceivedInvites<T>(string userId) where T : class
+        {
+            var model = _dataBase.Find<GroupUserDB>(
+                x => x.UserId == userId 
+                && x.IsInvited == 0);
             var result = _mapper.Map<IEnumerable<T>>(model);
 
             return result;
         }
 
-        public IEnumerable<T> FindSendInvites<T>(Guid id) where T : class
+        public IEnumerable<T> FindUsersByGroupId<T>(Guid groupId) where T : class
         {
-            var model = _dataBase.Find<GroupUserDB>(x => x.GroupId == id);
+            var model = _dataBase.Find<GroupUserDB>(
+                x => x.GroupId == groupId);
             var result = _mapper.Map<IEnumerable<T>>(model);
 
             return result;

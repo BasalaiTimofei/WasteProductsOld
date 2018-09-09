@@ -13,42 +13,36 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
-        void Create<T>(T item, string userId) where T : class;
+        void Create<T>(T item) where T : class;
 
         /// <summary>
         /// Add or corect information in group
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
-        void Update<T>(T item, string userId) where T : class;
+        void Update<T>(T item) where T : class;
 
         /// <summary>
         /// Group delete
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Primary key</param>
-        void Delete<T>(T item, string userId);
+        void Delete<T>(T item);
 
         /// <summary>
         /// Search group by id
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="id">primary key</param>
-        T FindById<T>(Guid id) where T : class;
+        T FindById<T>(Guid groupId) where T : class;
 
         /// <summary>
         /// Search group by name
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="id">Group name</param>
-        T FindByName<T>(string name) where T : class;
+        T FindByAdmin<T>(string userId) where T : class;
 
-        /// <summary>
-        /// Search group by id
-        /// </summary>
-        /// <typeparam name="T">Object</typeparam>
-        /// <param name="groupId">Primary key</param>
-        /// <returns></returns>
-        T IncludeById<T>(Guid groupId) where T : class;
+        IEnumerable<T> GetIds<T>(string userId) where T : class;
     }
 }

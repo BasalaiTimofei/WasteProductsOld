@@ -13,21 +13,21 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
-        void Create<T>(T item, string userId) where T : class;
+        void Create<T>(T item, string userId, Guid groupId) where T : class;
 
         /// <summary>
         /// Add or corect information on board
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
-        void Update<T>(T item, string userId) where T : class;
+        void Update<T>(T item, string userId, Guid groupId) where T : class;
 
         /// <summary>
-        /// Board delete
+        /// Product delete
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
-        void Delete<T>(T item, string userId) where T : class;
+        void Delete<T>(T item, string userId, Guid groupId) where T : class;
 
         /// <summary>
         /// Search board by id

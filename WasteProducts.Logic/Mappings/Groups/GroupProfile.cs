@@ -12,7 +12,7 @@ namespace WasteProducts.Logic.Mappings.Groups
                 .ForMember(x => x.Created, y => y.Ignore())
                 .ForMember(x => x.Deleted, y => y.Ignore())
                 .ForMember(x => x.Modified, y => y.Ignore())
-                .ForMember(x => x.IsDeleted, y => y.Ignore())
+                .ForMember(x => x.IsNotDeleted, y => y.Ignore())
                 .ReverseMap();
         }
     }

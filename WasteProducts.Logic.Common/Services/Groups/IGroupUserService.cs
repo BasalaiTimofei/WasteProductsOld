@@ -8,14 +8,16 @@ namespace WasteProducts.Logic.Common.Services.Groups
     /// </summary>
     public interface IGroupUserService
     {
-        void SendInvite<T>(T item) where T : class;
+        void SendInvite<T>(T item, string adminId) where T : class;
 
-        void DismissUser<T>(T item) where T : class;
+        void DismissUser<T>(T item, string adminId) where T : class;
 
-        void EnteredUser<T>(T item) where T : class;
+        void Enter<T>(T item) where T : class;
 
-        IEnumerable<T> FindInvites<T>(string userId) where T : class;
+        void Leave<T>(T item) where T : class;
 
-        IEnumerable<T> FindSendInvites<T>(Guid id) where T : class;
+        IEnumerable<T> FindReceivedInvites<T>(string userId) where T : class;
+
+        IEnumerable<T> FindUsersByGroupId<T>(Guid groupId) where T : class;
     }
 }

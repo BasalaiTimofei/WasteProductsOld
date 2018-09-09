@@ -19,9 +19,18 @@ namespace WasteProducts.Logic.Services.Groups
             _mapper = mapper;
         }
 
-        public void Create<T>(T item, string userId) where T : class
+        public void Create<T>(T item, string userId, Guid groupId) where T : class
         {
             var result = _mapper.Map<GroupProductDB>(item);
+
+            var modelUser = _dataBase.Find<GroupUserDB>(
+                x=>x.UserId == userId
+                && x.GroupId == groupId);
+            var modelBoard = _dataBase.Find<GroupBoardDB>(
+                x => x.Id == result.GroupBoardId
+                && x.GroupId == groupId);
+            if (modelUser == null && modelBoard == null)
+                return;
 
             result.Modified = DateTime.UtcNow;
 
@@ -29,10 +38,23 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public void Update<T>(T item, string userId) where T : class
+        public void Update<T>(T item, string userId, Guid groupId) where T : class
         {
             var result = _mapper.Map<GroupProductDB>(item);
-            var model = _dataBase.Get<GroupProductDB>(result.Id);
+
+            var modelUser = _dataBase.Find<GroupUserDB>(
+                x => x.UserId == userId
+                && x.GroupId == groupId);
+            var modelBoard = _dataBase.Find<GroupBoardDB>(
+                x => x.Id == result.GroupBoardId
+                && x.GroupId == groupId);
+            if (modelUser == null && modelBoard == null)
+                return;
+
+            var model = _dataBase.Find<GroupProductDB>(
+                x=>x.Id == result.Id).First();
+            if (model == null)
+                return;
 
             model.ProductId = result.ProductId;
             model.Information = result.Information;
@@ -42,9 +64,18 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public void Delete<T>(T item, string userId) where T : class
+        public void Delete<T>(T item, string userId, Guid groupId) where T : class
         {
             var result = _mapper.Map<GroupProductDB>(item);
+
+            var modelUser = _dataBase.Find<GroupUserDB>(
+                x => x.UserId == userId
+                && x.GroupId == groupId);
+            var modelBoard = _dataBase.Find<GroupBoardDB>(
+                x => x.Id == result.GroupBoardId
+                && x.GroupId == groupId);
+            if (modelUser == null && modelBoard == null)
+                return;
 
             _dataBase.Delete<GroupProductDB>(result.Id);
             _dataBase.Save();

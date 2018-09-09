@@ -17,7 +17,7 @@ namespace WasteProducts.DataAccess.ModelConfigurations
             Property(x => x.Created).IsOptional();
             Property(x => x.Deleted).IsOptional();
             Property(x => x.Modified).IsOptional();
-            Property(x => x.IsDeleted).IsOptional();
+            Property(x => x.IsNotDeleted).IsOptional();
 
             HasMany(x => x.GroupBoards)
                 .WithRequired(y => y.Group)
