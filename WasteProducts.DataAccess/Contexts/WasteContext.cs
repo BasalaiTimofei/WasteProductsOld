@@ -95,7 +95,7 @@ namespace WasteProducts.DataAccess.Contexts
         /// </summary>
         private void SaveChangesToSearchRepository()
         {
-            DetectAndSaveChanges(typeof(ProductDB), typeof(UserDB));
+            DetectAndSaveChanges(typeof(ProductDB), typeof(CategoryDB), typeof(GroupDB), typeof(UserDB));
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -7,7 +8,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Search
     /// <summary>
     /// This interface provides CRUD methods for search repository
     /// </summary>
-    public interface ISearchRepository
+    public interface ISearchRepository : IDisposable
     {
         /// <summary>
         /// Returns object by keyField

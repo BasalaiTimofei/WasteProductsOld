@@ -13,7 +13,6 @@ using Lucene.Net.Index;
 using Lucene.Net.Search;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Exceptions;
-using Lucene.Net.Analysis.Standard;
 using System.Web.Configuration;
 using Lucene.Net.Analysis.Ru;
 using Lucene.Net.QueryParsers.Classic;
@@ -23,7 +22,7 @@ namespace WasteProducts.DataAccess.Repositories
     /// <summary>
     /// Implementation of ISearchRepository with Lucene
     /// </summary>
-    public class LuceneSearchRepository : ISearchRepository, IDisposable
+    public class LuceneSearchRepository : ISearchRepository
     {
         public const LuceneVersion MATCH_LUCENE_VERSION = LuceneVersion.LUCENE_48;
         public string IndexPath { get; private set; }
@@ -390,30 +389,34 @@ namespace WasteProducts.DataAccess.Repositories
         #endregion
 
         #region IDisposable Support
-        private bool disposed = false;
+        private bool _isDisposed = false;
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    _writer.Commit();
-                    _writer.Dispose();
-                    _directory.Dispose();
-                    _analyzer.Dispose();
-                }
-
-                disposed = true;
-            }
-        }
-
+        /// <inheritdoc />
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_isDisposed)
+            {
+                if (disposing) { }
+
+                _writer.Commit();
+                _writer.Dispose();
+                _directory.Dispose();
+                _analyzer.Dispose();
+
+                _isDisposed = true;
+            }
+        }
+
+        ~LuceneSearchRepository()
+        {
+            Dispose(false);
+        }
         #endregion
     }
 }
