@@ -130,7 +130,17 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// <param name="rating">Rating from 0 to 10 of this product given by the user.</param>
         /// <param name="description">Textual description of the product given by the user.</param>
         /// <returns>Boolean represents whether operation succeed or no.</returns>
-        Task<bool> AddProductAsync(string userId, string productId, int rating, string description);
+        Task<bool> AddProductAsync(string userId, string productId, int? rating, string description);
+
+        /// <summary>
+        /// Updates rating and description of the product with the specific ID in the user's product list.
+        /// </summary>
+        /// <param name="userId">ID of the user updating its product description.</param>
+        /// <param name="productId">ID of the product.</param>
+        /// <param name="rating">New rating of the product.</param>
+        /// <param name="description">New description of the product.</param>
+        /// <returns>Boolean represents whether operation succeed or not.</returns>
+        Task<bool> UpdateProductDescriptionAsync(string userId, string productId, int? rating, string description);
 
         /// <summary>
         /// Deletes specific product from the specific user's list of products.

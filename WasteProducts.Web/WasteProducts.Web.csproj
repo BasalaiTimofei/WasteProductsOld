@@ -443,7 +443,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Administration\Models\" />
     <Folder Include="Areas\Administration\Views\Shared\" />
-    <Folder Include="Controllers\Api\UserManagement\SwaggerDemoProviders\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WasteProducts.Logic.Common\WasteProducts.Logic.Common.csproj">
