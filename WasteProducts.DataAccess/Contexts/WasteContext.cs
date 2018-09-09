@@ -9,6 +9,7 @@ using WasteProducts.DataAccess.Contexts.Config;
 using System.Linq;
 using System.Collections.Generic;
 using System;
+using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.ModelConfigurations;
@@ -86,6 +87,13 @@ namespace WasteProducts.DataAccess.Contexts
             return base.SaveChanges();
         }
 
+        public override async Task<int> SaveChangesAsync()
+        {
+            SaveChangesToSearchRepository();
+            int result = await base.SaveChangesAsync();
+            return result;
+        }
+
         /// <summary>
         /// Save changes to Lucene search repository.
         /// </summary>
@@ -100,28 +108,20 @@ namespace WasteProducts.DataAccess.Contexts
         /// <param name="state">EntityState that needed to detect and save</param>
         /// <param name="types">Object type that needed to detect and save</param>
         protected void DetectAndSaveChanges(EntityState state, params Type[] types)
-        {            
-            //this.Configuration.AutoDetectChangesEnabled = false;
-
-            var changedList = this.ChangeTracker.Entries()
-                .Where(x => x.State == state)
-                .Select(x => x.Entity).ToList();
-
-            //this.Configuration.AutoDetectChangesEnabled = true;
-
-            foreach (var item in changedList)
+        {
+            foreach (var entry in ChangeTracker.Entries())
             {
-                if (types.Contains(item.GetType()))
+                if (!types.Contains(entry.Entity.GetType()))
+                    continue;
+
+                switch (entry.State)
                 {
-                    switch (state)
-                    {
-                        case EntityState.Added:
-                            _searchRepository.Insert(item); break;
-                        case EntityState.Modified:
-                            _searchRepository.Update(item); break;
-                        case EntityState.Deleted:
-                            _searchRepository.Delete(item); break;
-                    }
+                    case EntityState.Added:
+                        _searchRepository.Insert(entry.Entity); break;
+                    case EntityState.Modified:
+                        _searchRepository.Update(entry.Entity); break;
+                    case EntityState.Deleted:
+                        _searchRepository.Delete(entry.Entity); break;
                 }
             }
         }
