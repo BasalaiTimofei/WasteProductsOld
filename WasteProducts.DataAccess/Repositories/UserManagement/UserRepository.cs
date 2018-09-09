@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -8,6 +9,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Users;
+using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Contexts;
 
@@ -22,16 +24,6 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         private readonly UserManager<UserDB> _manager;
 
         private bool _disposed;
-
-        public UserRepository()
-        {
-            _context = new WasteContext();
-            _store = new UserStore<UserDB>(_context)
-            {
-                DisposeContext = true
-            };
-            _manager = new UserManager<UserDB>(_store);
-        }
 
         public UserRepository(WasteContext context)
         {

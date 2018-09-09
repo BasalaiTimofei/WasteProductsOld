@@ -1,6 +1,8 @@
 ﻿using System;
 using AutoMapper;
+using FluentValidation;
 using Ninject.Extensions.Factory;
+using Ninject.Extensions.Interception.Infrastructure.Language;
 using Ninject.Modules;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.Logic.Common.Factories;
@@ -9,11 +11,13 @@ using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Services.Diagnostic;
 using WasteProducts.Logic.Common.Services.MailService;
 using WasteProducts.Logic.Common.Services.UserService;
+using WasteProducts.Logic.Interceptors;
 using WasteProducts.Logic.Services;
 using WasteProducts.Logic.Services.MailService;
 using WasteProducts.Logic.Services.UserService;
 using WasteProducts.Logic.Mappings;
 using WasteProducts.Logic.Mappings.UserMappings;
+using WasteProducts.Logic.Validators.Search;
 
 namespace WasteProducts.Logic
 {
@@ -35,7 +39,8 @@ namespace WasteProducts.Logic
             // user services
             BindUserServices();
 
-            Bind<ISearchService>().To<LuceneSearchService>();
+            Bind<IValidator>().To<BoostedSearchQueryValidator>().WhenInjectedExactlyInto<SearchServiceInterceptor>();
+            Bind<ISearchService>().To<LuceneSearchService>().Intercept().With<SearchServiceInterceptor>();
 
             Bind<IProductService>().To<ProductService>();
         }

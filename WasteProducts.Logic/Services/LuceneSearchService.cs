@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using WasteProducts.DataAccess.Common.Models.Barcods;
+using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.Logic.Common.Models;
+using WasteProducts.Logic.Common.Models.Barcods;
+using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Search;
 using WasteProducts.Logic.Common.Services;
 
@@ -15,9 +20,11 @@ namespace WasteProducts.Logic.Services
     /// </summary>
     public class LuceneSearchService : ISearchService
     {
-        private ISearchRepository _repository;
+
         public const int DEFAULT_MAX_LUCENE_RESULTS = 1000;
         public int MaxResultCount { get; set; } = DEFAULT_MAX_LUCENE_RESULTS;
+
+        private ISearchRepository _repository;
 
         public LuceneSearchService(ISearchRepository repository)
         {
@@ -30,11 +37,11 @@ namespace WasteProducts.Logic.Services
         /// <typeparam name="TEntity"></typeparam>
         /// <param name="query">SearchQuery object containing query information</param>
         /// <returns></returns>
-        public IEnumerable<TEntity> Search<TEntity>(SearchQuery query) where TEntity : class
+        /*public IEnumerable<TEntity> Search<TEntity>(SearchQuery query) where TEntity : class
         {
             CheckQuery(query);
             return _repository.GetAll<TEntity>(query.Query, query.SearchableFields, MaxResultCount);
-        }
+        }*/
 
         /// <summary>
         /// Performs search in repository
@@ -48,7 +55,7 @@ namespace WasteProducts.Logic.Services
             return _repository.GetAll<TEntity>(query.Query, query.SearchableFields, query.BoostValues, MaxResultCount);
         }
 
-        public IEnumerable<TEntity> SearchDefault<TEntity>(SearchQuery query)
+        public IEnumerable<TEntity> SearchDefault<TEntity>(BoostedSearchQuery query)
         {
             throw new NotImplementedException();
         }
@@ -138,25 +145,45 @@ namespace WasteProducts.Logic.Services
             _repository.Optimize();
         }
 
-        //todo: implement async methods later if necessary
+        public IEnumerable<Product> SearchProduct(BoostedSearchQuery query)
+        {
+            var productDbList = Search<ProductDB>(query);
 
-        public Task<IEnumerable<TEntity>> SearchAsync<TEntity>(SearchQuery query)
+            //TODO: map all values in productDbList to Product
+            List<Product> result = new List<Product>();            
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new Mappings.SearchProfile());                
+            });
+
+            var mapper = (new Mapper(config)).DefaultContext.Mapper;
+
+            foreach (var productDb in productDbList)
+            {
+                result.Add(mapper.Map<Product>(productDb));
+            }
+
+            return result;
+        }
+
+        //TODO: implement async methods later if necessary
+        public Task<IEnumerable<TEntity>> SearchAsync<TEntity>(BoostedSearchQuery query)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<TEntity>> SearchDefaultAsync<TEntity>(SearchQuery query)
+        public Task<IEnumerable<TEntity>> SearchDefaultAsync<TEntity>(BoostedSearchQuery query)
         {
             throw new NotImplementedException();
         }
 
-        private void CheckQuery(SearchQuery query)
+        private void CheckQuery(BoostedSearchQuery query)
         {
             if (String.IsNullOrEmpty(query.Query) || query.SearchableFields.Count == 0)
             {
                 throw new ArgumentException("Incorrect query.");
             }
         }
-
     }
 }
