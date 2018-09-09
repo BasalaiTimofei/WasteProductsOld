@@ -23,7 +23,7 @@ namespace WasteProducts.Logic.Services
 
         private bool _disposed;
 
-        public ProductService(IProductRepository productRepository, [Named("ProductService")] IMapper mapper)
+        public ProductService(IProductRepository productRepository, IMapper mapper)
         {
             _productRepository = productRepository;
             _mapper = mapper;

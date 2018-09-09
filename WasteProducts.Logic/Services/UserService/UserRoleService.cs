@@ -17,7 +17,7 @@ namespace WasteProducts.Logic.Services.UserService
 
         private bool _disposed;
 
-        public UserRoleService(IUserRoleRepository roleRepo, [Named("UserRoleService")] IMapper mapper)
+        public UserRoleService(IUserRoleRepository roleRepo, IMapper mapper)
         {
             _roleRepo = roleRepo;
             _mapper = mapper;
