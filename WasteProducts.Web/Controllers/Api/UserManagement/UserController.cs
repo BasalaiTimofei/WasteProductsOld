@@ -243,9 +243,23 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <param name="description">User's own description of the product.</param>
         /// <returns></returns>
         [HttpPut, Route("AddProduct")]
-        public async Task AddProduct([FromBody]string userId, [FromBody]string productId, [FromBody]int rating, [FromBody]string description)
+        public async Task AddProduct([FromBody]string userId, [FromBody]string productId, [FromBody]int? rating, [FromBody]string description)
         {
             await _userService.AddProductAsync(userId, productId, rating, description);
+        }
+
+        /// <summary>
+        /// Updates rating and description of the product with the specific ID in the user's product list.
+        /// </summary>
+        /// <param name="userId">ID of the user updating its product description.</param>
+        /// <param name="productId">ID of the product.</param>
+        /// <param name="rating">New rating of the product. Set null if you don't wan't to change the rating.</param>
+        /// <param name="description">New description of the product. Set null if you don't wan't to change the description.</param>
+        /// <returns>Boolean represents whether operation succeed or not.</returns>
+        [HttpPut, Route("UpdateProductProduct")]
+        public async Task UpdateProductDescription(string userId, string productId, int? rating, string description)
+        {
+            await _userService.UpdateProductDescriptionAsync(userId, productId, rating, description);
         }
 
         //POST api/User/Products/Delete

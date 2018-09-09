@@ -189,7 +189,7 @@ namespace WasteProducts.Logic.Services.UserService
             await _userRepo.DeleteFriendAsync(userId, deletingFriendId);
         }
 
-        public async Task<bool> AddProductAsync(string userId, string productId, int rating, string description)
+        public async Task<bool> AddProductAsync(string userId, string productId, int? rating, string description)
         {
             if (userId == null || productId == null || rating > 10 || rating < 0)
             {
@@ -197,6 +197,16 @@ namespace WasteProducts.Logic.Services.UserService
             }
 
             return await _userRepo.AddProductAsync(userId, productId, rating, description);
+        }
+
+        public async Task<bool> UpdateProductDescriptionAsync(string userId, string productId, int? rating, string description)
+        {
+            if (userId == null || productId == null || rating > 10 || rating < 0)
+            {
+                return false;
+            }
+
+            return await _userRepo.UpdateProductDescriptionAsync(userId, productId, rating, description);
         }
 
         public async Task<bool> DeleteProductAsync(string userId, string productId)

@@ -278,7 +278,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             }
         }
 
-        public async Task<bool> AddProductAsync(string userId, string productId, int rating, string description)
+        public async Task<bool> AddProductAsync(string userId, string productId, int? rating, string description)
         {
             return await Task.Run(() =>
             {
@@ -307,6 +307,23 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             });
         }
 
+        public async Task<bool> UpdateProductDescriptionAsync(string userId, string productId, int? rating, string description)
+        {
+            return await Task.Run(async () =>
+            {
+                UserProductDescriptionDB descr = _context.UserProductDescriptions.FirstOrDefault(d => d.UserId == userId && d.ProductId == productId);
+                if (descr == null)
+                {
+                    return false;
+                }
+                descr.Rating = (int)rating;
+                descr.Description = description;
+
+                await _context.SaveChangesAsync();
+                return true;
+            });
+        }
+
         public async Task<bool> DeleteProductAsync(string userId, string productId)
         {
             return await Task.Run(() =>
@@ -326,7 +343,5 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 return true;
             });
         }
-
-        
     }
 }
