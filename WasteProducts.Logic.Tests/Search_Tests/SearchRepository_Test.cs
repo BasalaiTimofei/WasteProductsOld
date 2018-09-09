@@ -17,7 +17,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string Composition { get; set; }
     }
 
     public class TestUser
@@ -44,11 +44,11 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             products = new List<TestProduct>
             {
-                new TestProduct { Id=1, Name = "Product1 Name1", Description = "Product1 Description1"},
-                new TestProduct { Id=2, Name = "Product2 Name2", Description = "Product2 Description2"},
-                new TestProduct { Id=3, Name = "Product3 Name3", Description = "Product3 Description3"},
-                new TestProduct { Id=4, Name = "Product4 Name4", Description = "Product4 Description4"},
-                new TestProduct { Id=5, Name = "Product5 Name5", Description = "Product5 Description5"}
+                new TestProduct { Id=1, Name = "Product1 Name1", Composition = "Product1 Composition1"},
+                new TestProduct { Id=2, Name = "Product2 Name2", Composition = "Product2 Composition2"},
+                new TestProduct { Id=3, Name = "Product3 Name3", Composition = "Product3 Composition3"},
+                new TestProduct { Id=4, Name = "Product4 Name4", Composition = "Product4 Composition4"},
+                new TestProduct { Id=5, Name = "Product5 Name5", Composition = "Product5 Composition5"}
             };
 
         }
@@ -399,10 +399,10 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             {
                 sut.Insert<TestProduct>(product);
             }
-            var result = sut.GetAll<TestProduct>("product", new string[] { "Name", "Description" }, 1000);
+            var result = sut.GetAll<TestProduct>("product", new string[] { "Name", "Composition" }, 1000);
             Assert.AreEqual(expected: 5, actual: result.Count());
 
-            result = sut.GetAll<TestProduct>("product1", new string[] { "Name", "Description" }, 1000);
+            result = sut.GetAll<TestProduct>("product1", new string[] { "Name", "Composition" }, 1000);
             Assert.AreEqual(expected: 1, actual: result.Count());
         }
 
@@ -414,10 +414,10 @@ namespace WasteProducts.Logic.Tests.Search_Tests
                 sut.Insert<TestProduct>(product);
             }
 
-            var result = sut.GetAll<TestProduct>("word1", new string[] { "Name", "Decription" }, 1000);
+            var result = sut.GetAll<TestProduct>("word1", new string[] { "Name", "Composition" }, 1000);
             Assert.AreEqual(expected: 0, actual: result.Count());
 
-            result = sut.GetAll<TestProduct>("name1", new string[] { "Decription" }, 1000);
+            result = sut.GetAll<TestProduct>("name1", new string[] { "Composition" }, 1000);
             Assert.AreEqual(expected: 0, actual: result.Count());
         }
 
@@ -431,19 +431,19 @@ namespace WasteProducts.Logic.Tests.Search_Tests
                 sut.Insert<TestProduct>(product);
             }
 
-            var result = sut.GetAll<TestProduct>("name1 word1 word2 word3", new string[] { "Name", "Decription" }, 1000);
+            var result = sut.GetAll<TestProduct>("name1 word1 word2 word3", new string[] { "Name", "Composition" }, 1000);
             Assert.AreEqual(expected: 1, actual: result.Count());
 
-            result = sut.GetAll<TestProduct>("word1 word2 NamE1 word3", new string[] { "Name", "Decription" }, 1000);
+            result = sut.GetAll<TestProduct>("word1 word2 NamE1 word3", new string[] { "Name", "Composition" }, 1000);
             Assert.AreEqual(expected: 1, actual: result.Count());
 
-            result = sut.GetAll<TestProduct>("word1 description1", new string[] { "Name", "Description" }, 1000);
+            result = sut.GetAll<TestProduct>("word1 composition1", new string[] { "Name", "Composition" }, 1000);
             Assert.AreEqual(expected: 1, actual: result.Count());
 
-            result = sut.GetAll<TestProduct>("name1 description2", new string[] { "Name", "Description" }, 1000);
+            result = sut.GetAll<TestProduct>("name1 composition2", new string[] { "Name", "Composition" }, 1000);
             Assert.AreEqual(expected: 2, actual: result.Count());
 
-            result = sut.GetAll<TestProduct>("Word1 Word2 NamE1 DescriptioN1 NamE2 ProducT2 Word3 Word4", new string[] { "Description" }, 1000);
+            result = sut.GetAll<TestProduct>("Word1 Word2 NamE1 CompostionN1 NamE2 ProducT2 Word3 Word4", new string[] { "Composition" }, 1000);
             Assert.AreEqual(expected: 2, actual: result.Count());
         }
 
@@ -472,8 +472,8 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             var boostValues = new Dictionary<string, float>();
             boostValues.Add("Name", 1.0f);
-            boostValues.Add("Description", 1.0f);
-            var result = sut.GetAll<TestProduct>("product", new string[] { "Name", "Description" }, new ReadOnlyDictionary<string, float>(boostValues), 1000);
+            boostValues.Add("Composition", 1.0f);
+            var result = sut.GetAll<TestProduct>("product", new string[] { "Name", "Composition" }, new ReadOnlyDictionary<string, float>(boostValues), 1000);
             Assert.AreEqual(expected: 5, actual: result.Count());
         }
 

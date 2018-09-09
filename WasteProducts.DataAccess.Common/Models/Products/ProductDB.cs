@@ -41,21 +41,6 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         public virtual BarcodeDB Barcode { get; set; }
 
         /// <summary>
-        /// Defines the average Product rating based on user ratings.
-        /// </summary>
-        public double? AvgRating { get; set; }
-
-        /// <summary>
-        /// Defines the price of the Product.
-        /// </summary>
-        public decimal Price { get; set; }
-
-        /// <summary>
-        /// Defines the number of users who have rated the Product. Is used to determine the property "AvgRating".
-        /// </summary>
-        public int RateCount { get; set; }
-
-        /// <summary>
         /// User descriptions of this product.
         /// </summary>
         public virtual ICollection<UserProductDescriptionDB> UserDescriptions { get; set; }
@@ -63,7 +48,7 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         /// <summary>
         /// Defines the Product description
         /// </summary>
-        public string Description { get; set; }
+        public string Composition { get; set; }
 
         /// <summary>
         /// Defines whether the Product is in the "hidden" state
@@ -84,14 +69,11 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         {
             return obj is ProductDB other &&
                    this.Name == other.Name &&
-                   this.AvgRating == other.AvgRating &&
                    this.Id == other.Id &&
                    this.Created == other.Created &&
                    this.Modified == other.Modified &&
                    this.Category == other.Category &&
-                   this.Barcode == other.Barcode &&
-                   this.Price == other.Price &&
-                   this.RateCount == other.RateCount;
+                   this.Barcode == other.Barcode;
         }
 
         /// <summary>

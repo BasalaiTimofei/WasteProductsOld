@@ -44,8 +44,7 @@ namespace WasteProducts.Logic.Services
         {
             return new Faker<Product>()
                 .RuleFor(product => product.Name, faker => barcode.ProductName)
-                .RuleFor(product => product.Description, faker => $"Product made from {faker.Commerce.ProductMaterial()}")
-                .RuleFor(product => product.Price, faker => decimal.Parse(faker.Commerce.Price()))
+                .RuleFor(product => product.Composition, faker => $"Product made from {faker.Commerce.ProductMaterial()}")
 
                 .RuleFor(product => product.Barcode, faker => barcode)
                 .RuleFor(product => product.Category, faker => category)

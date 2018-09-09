@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Ninject;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.Logic.Common.Models.Barcods;
@@ -216,39 +215,6 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
-        /// Sets the price of the specific product
-        /// </summary>
-        /// <param name="product">The specific product to set price</param>
-        /// <param name="price">The price of the specific product</param>
-        public void SetPrice(Product product, decimal price)
-        {
-            if (price <= 0M || !IsProductsInDB(p =>
-                    string.Equals(p.Id, product.Id, StringComparison.Ordinal),
-                out var products)) return;
-
-            var productFromDB = products.ToList().First();
-            productFromDB.Price = price;
-            _productRepository.Update(productFromDB);
-        }
-
-        /// <summary>
-        /// Allows the user to rate the specific product
-        /// </summary>
-        /// <param name="product">The product that the user wants to rate</param>
-        /// <param name="rating">Own user rating</param>
-        public void Rate(Product product, int rating)
-        {
-            if (!IsProductsInDB(p =>
-                    string.Equals(p.Id, product.Id, StringComparison.Ordinal),
-                out var products)) return;
-
-            var productFromDB = products.ToList().First();
-            if (productFromDB.AvgRating == null) productFromDB.AvgRating = 0d;
-            productFromDB.AvgRating = (productFromDB.AvgRating * productFromDB.RateCount + rating) / ++productFromDB.RateCount;
-            _productRepository.Update(productFromDB);
-        }
-
-        /// <summary>
         /// Hides product for display in product lists
         /// </summary>
         /// <param name="product">The specific product to hide</param>
@@ -302,15 +268,15 @@ namespace WasteProducts.Logic.Services
         /// Sets the description of the specific product
         /// </summary>
         /// <param name="product">The specific product to set description</param>
-        /// <param name="description">The description of the specific product</param>
-        public void SetDescription(Product product, string description)
+        /// <param name="composition">The description of the specific product</param>
+        public void SetComposition(Product product, string composition)
         {
-            if (description == null || !IsProductsInDB(p =>
+            if (composition == null || !IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.Ordinal),
                 out var products)) return;
 
             var productFromDB = products.ToList().First();
-            productFromDB.Description = description;
+            productFromDB.Composition = composition;
             _productRepository.Update(productFromDB);
         }
      

@@ -107,7 +107,7 @@ namespace WasteProducts.Web.Controllers.Api
             //Add product for testing purposes
             Product product = new Product();
             product.Name = "Test product name";
-            product.Description = "Test product description";
+            product.Composition = "Test product composition";
             _searchService.AddToSearchIndex<Product>(product);
 
             HttpResponseMessage response;
@@ -138,7 +138,7 @@ namespace WasteProducts.Web.Controllers.Api
             //Add product for testing purposes
             Product product = new Product();
             product.Name = "Test product name";
-            product.Description = "Test product description";
+            product.Composition = "Test product composition";
             _searchService.AddToSearchIndex<Product>(product);
 
             HttpResponseMessage response;
