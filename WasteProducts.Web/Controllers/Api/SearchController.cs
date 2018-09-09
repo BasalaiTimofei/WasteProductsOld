@@ -69,10 +69,10 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpGet, Route("products/custom")]
         public Task<IEnumerable<Product>> GetProducts(BoostedSearchQuery query)
         {
-            if (!ModelState.IsValid)
-            {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
+            //}
 
             return Task.FromResult(_searchService.SearchProduct(query));
         }
