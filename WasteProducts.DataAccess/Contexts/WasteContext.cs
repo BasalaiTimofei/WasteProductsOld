@@ -2,13 +2,10 @@
 using System.Data.Entity;
 using System.Diagnostics;
 using Microsoft.AspNet.Identity.EntityFramework;
-using WasteProducts.DataAccess.Common.Context;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Contexts.Config;
 using System.Linq;
-using System.Collections.Generic;
-using System;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Models.Groups;
