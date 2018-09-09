@@ -81,6 +81,39 @@ namespace WasteProducts.Web.Controllers.Api
             return await _userService.LogInByNameAsync(userName, password);
         }
 
+        /// <summary>
+        /// Gets all the roles of the user.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <returns>IList of roles of the user.</returns>
+        [Route("api/User/Roles/{id:string}")]
+        public async Task<IList<string>> GetRoles(string userId)
+        {
+            return await _userService.GetRolesAsync(userId);
+        }
+
+        /// <summary>
+        /// Gets all claims of a user with the specific ID.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <returns>IList of claims of the user.</returns>
+        [Route("api/User/Claims/{id:string}")]
+        public async Task<IList<Claim>> GetClaims(string userId)
+        {
+            return await _userService.GetClaimsAsync(userId);
+        }
+
+        /// <summary>
+        /// Gets all logins of a user with the specific ID.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <returns>IList of logins of the user.</returns>
+        [Route("api/User/Logins/{id:string}")]
+        public async Task<IList<UserLogin>> GetLogins(string userId)
+        {
+            return await _userService.GetLoginsAsync(userId);
+        }
+
         // POST api/User
         /// <summary>
         /// Registers a new user with the specific email, name and password.
@@ -115,8 +148,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="id">ID of the updating user.</param>
         /// <param name="user">User to update.</param>
         /// <returns></returns>
-        [Route("{id:string}")]
-        [HttpPut]
+        [HttpPut, Route("{id:string}")]
         public async Task Update(string id, [FromBody] User user)
         {
             await _userService.UpdateAsync(user);
@@ -228,91 +260,75 @@ namespace WasteProducts.Web.Controllers.Api
             await _userService.DeleteProductAsync(userId, productId);
         }
 
-        // POST api/User/Roles
-        /// <summary>
-        /// Gets all the roles of the user.
-        /// </summary>
-        /// <param name="userId">ID of the user.</param>
-        /// <returns></returns>
-        [HttpGet, Route("api/User/Roles")]
-        public async Task<IList<string>> GetRoles([FromBody] string userId)
-        {
-            return await _userService.GetRolesAsync(userId);
-        }
+        
 
-        // PUT api/User/Roles
         /// <summary>
         /// Adds a user with the specific ID to the role.
         /// </summary>
         /// <param name="userId">ID of the user.</param>
         /// <param name="roleName">Name of the role.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/Roles")]
+        [HttpPut, Route("api/User/AddToRole")]
         public async Task AddToRole([FromBody] string userId, [FromBody]string roleName)
         {
             await _userService.AddToRoleAsync(userId, roleName);
         }
 
-        // DELETE api/User/Roles
         /// <summary>
         /// Removes a user with the specific ID from the role.
         /// </summary>
         /// <param name="userId">ID of the user.</param>
         /// <param name="roleName">Name of the role.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/Roles")]
+        [HttpPut, Route("api/User/RemoveFromRole")]
         public async Task RemoveFromRole([FromBody] string userId, [FromBody]string roleName)
         {
             await _userService.RemoveFromRoleAsync(userId, roleName);
         }
 
-        // PUT api/User/Claims
         /// <summary>
         /// Adds a claim to the user.
         /// </summary>
         /// <param name="userId">ID of the user.</param>
         /// <param name="claim">Claim to add to the user.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/Claims")]
+        [HttpPut, Route("api/User/AddClaim")]
         public async Task AddClaim([FromBody] string userId, [FromBody]Claim claim)
         {
             await _userService.AddClaimAsync(userId, claim);
         }
 
-        //DELETE api/User/Claims
         /// <summary>
         /// Removes a claim from the user.
         /// </summary>
         /// <param name="userId">ID of the user.</param>
         /// <param name="claim">Claim to remove from the user.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/Claims")]
+        [HttpPut, Route("api/User/RemoveClaim")]
         public async Task RemoveClaim([FromBody] string userId, [FromBody]Claim claim)
         {
             await _userService.RemoveClaimAsync(userId, claim);
         }
 
-        // PUT api/User/Logins
         /// <summary>
         /// Adds a login to the user.
         /// </summary>
         /// <param name="userId">ID of the user.</param>
         /// <param name="userLogin">Login to add to the user.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/Logins")]
+        [HttpPut, Route("api/User/AddLogin")]
         public async Task AddLogin([FromBody] string userId, [FromBody]UserLogin userLogin)
         {
             await _userService.AddLoginAsync(userId, userLogin);
         }
 
-        //DELETE api/User/Logins
         /// <summary>
         /// Removes a login to the user.
         /// </summary>
         /// <param name="userId">ID of the user.</param>
         /// <param name="userLogin">Login to remove from the user.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/Logins")]
+        [HttpPut, Route("api/User/RemoveLogin")]
         public async Task RemoveLogin([FromBody] string userId, [FromBody]UserLogin userLogin)
         {
             await _userService.RemoveLoginAsync(userId, userLogin);
