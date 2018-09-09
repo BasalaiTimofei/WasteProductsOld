@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using WasteProducts.Logic.Common.Models.Groups;
 
 namespace WasteProducts.Logic.Common.Services.Groups
 {
@@ -27,7 +28,7 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Primary key</param>
-        void Delete<T>(T item);
+        void Delete<T>(T item) where T : class;
 
         /// <summary>
         /// Search group by id

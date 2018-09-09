@@ -62,7 +62,7 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public void Delete<T>(T item)
+        public void Delete<T>(T item) where T : class
         {
             var result = _mapper.Map<GroupDB>(item);
 
@@ -125,7 +125,7 @@ namespace WasteProducts.Logic.Services.Groups
         {
             var model = _dataBase.Find<GroupUserDB>(
                     x => x.UserId == userId && x.IsInvited == 1)
-                    .Select(y=> new GroupDB { Id=y.GroupId });
+                    .Select(y=> new Group { Id=y.GroupId });
             var result = _mapper.Map<IEnumerable<T>>(model);
 
             return result;
