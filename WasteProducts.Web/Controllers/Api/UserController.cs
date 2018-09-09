@@ -72,13 +72,13 @@ namespace WasteProducts.Web.Controllers.Api
         /// <summary>
         /// Gets user by its name and password.
         /// </summary>
-        /// <param name="username">User's name.</param>
+        /// <param name="userName">User's name.</param>
         /// <param name="password">Password of the user.</param>
         /// <returns>User with the specific email and password or null if there is no matches.</returns>
-        [HttpGet, Route("LoginByUserName/{username}_{password}")]
-        public async Task<User> GetUserByNameAndPassword(string username, string password)
+        [HttpGet, Route("LoginByUserName/{userName}_{password}")]
+        public async Task<User> GetUserByNameAndPassword(string userName, string password)
         {
-            return await _userService.LogInByNameAsync(username, password);
+            return await _userService.LogInByNameAsync(userName, password);
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// </summary>
         /// <param name="userId">ID of the user.</param>
         /// <returns>IList of roles of the user.</returns>
-        [HttpGet, Route("api/User/Roles/{id}")]
+        [HttpGet, Route("Roles/{iserId}")]
         public async Task<IList<string>> GetRoles(string userId)
         {
             return await _userService.GetRolesAsync(userId);
@@ -97,7 +97,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// </summary>
         /// <param name="userId">ID of the user.</param>
         /// <returns>IList of claims of the user.</returns>
-        [HttpGet, Route("api/User/Claims/{id}")]
+        [HttpGet, Route("Claims/{iserId}")]
         public async Task<IList<Claim>> GetClaims(string userId)
         {
             return await _userService.GetClaimsAsync(userId);
@@ -108,7 +108,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// </summary>
         /// <param name="userId">ID of the user.</param>
         /// <returns>IList of logins of the user.</returns>
-        [HttpGet, Route("api/User/Logins/{id}")]
+        [HttpGet, Route("Logins/{userId}")]
         public async Task<IList<UserLogin>> GetLogins(string userId)
         {
             return await _userService.GetLoginsAsync(userId);
@@ -133,12 +133,12 @@ namespace WasteProducts.Web.Controllers.Api
         /// <summary>
         /// Deletes user from the application.
         /// </summary>
-        /// <param name="userId">Id of the deleting user.</param>
+        /// <param name="id">Id of the deleting user.</param>
         /// <returns></returns>
         [HttpDelete, Route("{id}")]
-        public async Task Delete(string userId)
+        public async Task Delete(string id)
         {
-            await _userService.DeleteUserAsync(userId);
+            await _userService.DeleteUserAsync(id);
         }
 
         // PUT api/user/5
@@ -162,7 +162,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="oldPassword">Old password of the user.</param>
         /// <param name="newPassword">New password of the user.</param>
         /// <returns></returns>
-        [HttpPut, Route("changepassword")]
+        [HttpPut, Route("changePassword")]
         public async Task<bool> ChangePassword([FromBody] string userId, [FromBody] string oldPassword, [FromBody] string newPassword)
         {
             return await _userService.ChangePasswordAsync(userId, oldPassword, newPassword);
@@ -175,7 +175,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="email">Email of the user forgotten its password.</param>
         /// <returns></returns>
         [HttpPut, Route("ResetPassword")]
-        public async Task ResetPassword(string email)
+        public async Task ResetPassword([FromBody] string email)
         {
             await _userService.ResetPasswordAsync(email);
         }
