@@ -62,7 +62,7 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// </summary>
         /// <param name="id">Id of requested User.</param>
         /// <returns>Instance of User that has requested Id. Returns WITHOUT PasswordHash.</returns>
-        Task<User> GetUserInfo(string id);
+        Task<User> GetUserAsync(string id);
 
         /// <summary>
         /// Get the names of the roles a user is a member of.

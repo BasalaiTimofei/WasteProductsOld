@@ -131,7 +131,7 @@ namespace WasteProducts.Logic.Services.UserService
             });
         }
 
-        public async Task<User> GetUserInfo(string id)
+        public async Task<User> GetUserAsync(string id)
         {
             return await Task.Run(async () =>
             {

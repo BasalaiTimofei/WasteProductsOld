@@ -12,10 +12,14 @@ using WasteProducts.Logic.Common.Services.UserService;
 
 namespace WasteProducts.Web.Controllers.Api
 {
+    /// <summary>
+    /// API controller for user management.
+    /// </summary>
     [RoutePrefix("UserService")]
     public class UserController : BaseApiController
     {
         private readonly IUserService _userService;
+
         private readonly ILogger _logger;
 
         /// <summary>
@@ -29,187 +33,207 @@ namespace WasteProducts.Web.Controllers.Api
             _logger = logger;
         }
 
-
-
         //GET api/user
-        //todo async
-        public async Task<IEnumerable<User>> Get()
+        /// <summary>
+        /// Gets all users of the WasteProducts.
+        /// </summary>
+        /// <returns>IEnumerable of all the users.</returns>
+        [Route("api/User/get")]
+        public async Task<IEnumerable<User>> GetUsers()
         {
             return await _userService.GetAllUsersAsync();
         }
 
         // GET api/user/5
+        /// <summary>
+        /// Gets user by its ID.
+        /// </summary>
+        /// <param name="id">Id of a user.</param>
+        /// <returns>User with the specific ID or null if there is no matches.</returns>
         [Route("{id:string}")]
-        public async Task<User> Get(string id)
+        public async Task<User> GetUserById(string id)
         {
             //todo validation
-            return await _userService.GetUserInfo(id);
+            return await _userService.GetUserAsync(id);
         }
 
-        // PUT api/user/5
-        [Route("{id:string}")]
-        [HttpPut]
-        public async Task Update(string id, [FromBody]User user)
+        /// <summary>
+        /// Gets user by its email and password.
+        /// </summary>
+        /// <param name="email">Email of the user.</param>
+        /// <param name="password">Password of the user.</param>
+        /// <returns>User with the specific email and password or null if there is no matches.</returns>
+        [Route("api/User/LoginByEmail")]
+        public async Task<User> GetUserByEmailAndPassword([FromBody] string email, [FromBody] string password)
         {
-            await _userService.UpdateAsync(user);
+            return await _userService.LogInByEmailAsync(email, password);
         }
 
-        // POST api/user
-        [HttpPost]
-        [Route("api/User/Login")]
-        public async Task<User> LogIn(string id, string password)
+        /// <summary>
+        /// Gets user by its name and password.
+        /// </summary>
+        /// <param name="userName">User's name.</param>
+        /// <param name="password">Password of the user.</param>
+        /// <returns>User with the specific email and password or null if there is no matches.</returns>
+        [Route("api/User/LoginByUserName")]
+        public async Task<User> GetUserByNameAndPassword([FromBody] string userName, [FromBody] string password)
         {
-            return await _userService.LogInByEmailAsync(id, password);
+            return await _userService.LogInByNameAsync(userName, password);
         }
 
-        // DELETE api/user/5
-        //todo can we user controller methods in controller methods?
-        [Route("{id:string}")]
-        [HttpDelete]
-        public async Task Delete(string userId)
-        {
-            await _userService.DeleteUserAsync(userId);
-        }
-
-
-
-        // POST api/User/Register
-        [Route("api/User/Register")]
-        [HttpPost]
+        // POST api/User
+        /// <summary>
+        /// Registers a new user with the specific email, name and password.
+        /// </summary>
+        /// <param name="email">Email of the user. Should be unique for the application.</param>
+        /// <param name="userName">NickName of the user. Should be unique for the application.</param>
+        /// <param name="password">Password of the user</param>
+        /// <returns></returns>
+        [HttpPost, Route("api/User")]
         public async Task Register([FromBody] string email, [FromBody] string userName, [FromBody] string password)
         {
             //todo get from JSON, not User instance
             await _userService.RegisterAsync(email, userName, password);
         }
 
-
-
-        // POST api/user/resetpassword
-        [Route("api/User/ResetPassword")]
-        [HttpPut]
-        public async Task<bool> ResetPassword([FromBody]User user, string oldPassword, string newPassword, string newPasswordConfirmation)
+        // DELETE api/user/5
+        /// <summary>
+        /// Deletes user from the application.
+        /// </summary>
+        /// <param name="userId">Id of the deleting user.</param>
+        /// <returns></returns>
+        [HttpDelete, Route("{id:string}")]
+        public async Task Delete(string userId)
         {
-            return await _userService.ResetPasswordAsync(user, oldPassword, newPassword, newPasswordConfirmation);
+            await _userService.DeleteUserAsync(userId);
+        }
+
+        // PUT api/user/5
+        /// <summary>
+        /// Updates user with the specific ID.
+        /// </summary>
+        /// <param name="id">ID of the updating user.</param>
+        /// <param name="user">User to update.</param>
+        /// <returns></returns>
+        [Route("{id:string}")]
+        [HttpPut]
+        public async Task Update(string id, [FromBody] User user)
+        {
+            await _userService.UpdateAsync(user);
         }
 
         // POST api/user/resetpassword
-        [Route("api/User/ResetPassword")]
-        [HttpPut]
+        /// <summary>
+        /// Changes old password of the user with the specific ID to the new password.
+        /// </summary>
+        /// <param name="userId">ID of the user changing password.</param>
+        /// <param name="oldPassword">Old password of the user.</param>
+        /// <param name="newPassword">New password of the user.</param>
+        /// <returns></returns>
+        [HttpPut, Route("api/user/changepassword")]
+        public async Task<bool> ChangePassword([FromBody] string userId, [FromBody] string oldPassword, [FromBody] string newPassword)
+        {
+            return await _userService.ChangePasswordAsync(userId, oldPassword, newPassword);
+        }
+
+        // POST api/user/resetpassword
+        /// <summary>
+        /// Asks for the email with a hyperlink which will reset password of the user with this email.
+        /// </summary>
+        /// <param name="email">Email of the user forgotten its password.</param>
+        /// <returns></returns>
+        [HttpPut, Route("api/User/ResetPassword")]
         public async Task ResetPassword(string email)
         {
             await _userService.ResetPasswordAsync(email);
         }
 
-
-
         // POST api/user/updateemail
-        [Route("api/User/UpdateEmail")]
-        [HttpPost]
-        public async Task<bool> UpdateEmail([FromBody]User user, [FromBody]string newEmail)
+        [HttpPut, Route("api/User/UpdateEmail")]
+        public async Task<bool> UpdateEmail([FromBody] string userId, [FromBody] string newEmail)
         {
-            return await _userService.UpdateEmailAsync(user.Id, newEmail);
+            return await _userService.UpdateEmailAsync(userId, newEmail);
         }
 
-
-
         //POST api/user/UpdateUserName
-        [Route("api/User/UpdateUserName")]
-        [HttpPost]
+        [HttpPut, Route("api/User/UpdateUserName")]
         public async Task<bool> UpdateUserName([FromBody]User user, [FromBody]string newUserName)
         {
             return await _userService.UpdateUserNameAsync(user, newUserName);
         }
 
-
-
         // PUT api/User/Friends
-        [Route("api/User/Friends")]
-        [HttpPut]
+        [HttpPut, Route("api/User/Friends")]
         public async Task AddFriend([FromBody]User user, [FromBody]User newFriend)
         {
             await _userService.AddFriendAsync(user, newFriend);
         }
 
         //POST api/User/Friends
-        [Route("api/User/Friends/delete")]
-        [HttpPost]
+        [HttpPut, Route("api/User/Friends/delete")]
         public async Task DeleteFriend([FromBody]User user, [FromBody]User friend)
         {
             await _userService.DeleteFriendAsync(user, friend);
         }
 
-
-
         //PUT api/User/Products
-        [Route("api/User/Product")]
-        [HttpPut]
+        [HttpPut, Route("api/User/Product")]
         public async Task AddProduct([FromBody]string userId, [FromBody]string productId, [FromBody]int rating, [FromBody]string description)
         {
             await _userService.AddProductAsync(userId, productId, rating, description);
         }
 
         //POST api/User/Products/Delete
-        [Route("api/User/Products/Delete")]
+        [HttpPut, Route("api/User/Products/Delete")]
         public async Task DeleteProduct([FromBody]string userId, [FromBody]string productId)
         {
             await _userService.DeleteProductAsync(userId, productId);
         }
 
-
-
         // POST api/User/Roles
-        [Route("api/User/Roles")]
-        [HttpPost]
+        [HttpGet, Route("api/User/Roles")]
         public async Task<IList<string>> GetRoles([FromBody] string userId)
         {
             return await _userService.GetRolesAsync(userId);
         }
 
-        // DELETE api/User/Roles
-        [Route("api/User/Roles")]
-        public async Task RemoveFromRole([FromBody] string userId, [FromBody]string role)
-        {
-            await _userService.RemoveFromRoleAsync(userId, role);
-        }
-
         // PUT api/User/Roles
-        [Route("api/User/Roles")]
-        [HttpPut]
+        [HttpPut, Route("api/User/Roles")]
         public async Task AddToRole([FromBody] string userId, [FromBody]string roleName)
         {
             await _userService.AddToRoleAsync(userId, roleName);
         }
 
-
-
-        //DELETE api/User/Claims
-        [Route("api/User/Claims")]
-        [HttpDelete]
-        public async Task RemoveClaim([FromBody] string userId, [FromBody]Claim claim)
+        // DELETE api/User/Roles
+        [HttpPut, Route("api/User/Roles")]
+        public async Task RemoveFromRole([FromBody] string userId, [FromBody]string role)
         {
-            await _userService.RemoveClaimAsync(userId, claim);
+            await _userService.RemoveFromRoleAsync(userId, role);
         }
 
         // PUT api/User/Claims
-        [Route("api/User/Claims")]
-        [HttpPut]
+        [HttpPut, Route("api/User/Claims")]
         public async Task AddClaim([FromBody] string userId, [FromBody]Claim claim)
         {
             await _userService.AddClaimAsync(userId, claim);
         }
 
-
+        //DELETE api/User/Claims
+        [HttpPut, Route("api/User/Claims")]
+        public async Task RemoveClaim([FromBody] string userId, [FromBody]Claim claim)
+        {
+            await _userService.RemoveClaimAsync(userId, claim);
+        }
 
         // PUT api/User/Logins
-        [Route("api/User/Logins")]
+        [HttpPut, Route("api/User/Logins")]
         public async Task AddLogin([FromBody] string userId, [FromBody]UserLogin userLogin)
         {
             await _userService.AddLoginAsync(userId, userLogin);
         }
 
         //DELETE api/User/Logins
-        [Route("api/User/Logins")]
-        [HttpDelete]
+        [HttpPut, Route("api/User/Logins")]
         public async Task RemoveLogin([FromBody] string userId, [FromBody]UserLogin userLogin)
         {
             await _userService.RemoveLoginAsync(userId, userLogin);
