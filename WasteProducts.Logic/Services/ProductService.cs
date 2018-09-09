@@ -13,7 +13,7 @@ using WasteProducts.Logic.Common.Services;
 namespace WasteProducts.Logic.Services
 {
     /// <summary>
-    /// Implementation of IProductService
+    /// Implementation of IProductService.
     /// </summary>
     public class ProductService : IProductService
     {
@@ -28,10 +28,10 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
-        /// Tries to add a new product and returns whether the addition is successful or not
+        /// Tries to add a new product and returns whether the addition is successful or not.
         /// </summary>
-        /// <param name="product">The product to be added</param>
-        /// <returns>Boolean represents whether the addition is successful or not</returns>
+        /// <param name="product">The product to be added.</param>
+        /// <returns>Boolean represents whether the addition is successful or not.</returns>
         public bool Add(Product product)
         {
             if (IsProductsInDB(p =>
@@ -45,10 +45,10 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
-        /// Tries to add a new product by barcode and returns whether the addition is successful or not
+        /// Tries to add a new product by barcode and returns whether the addition is successful or not.
         /// </summary>
-        /// <param name="barcode">Barcode of the product to be added</param>
-        /// <returns>Boolean represents whether the addition is successful or not</returns>
+        /// <param name="barcode">Barcode of the product to be added.</param>
+        /// <returns>Boolean represents whether the addition is successful or not.</returns>
         public bool AddByBarcode(Barcode barcode)
         {
             if (IsProductsInDB(
@@ -62,10 +62,10 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
-        /// Tries to add a new product by name and returns whether the addition is successful or not
+        /// Tries to add a new product by name and returns whether the addition is successful or not.
         /// </summary>
-        /// <param name="name">The name of the product to be added</param>
-        /// <returns>Boolean represents whether the addition is successful or not</returns>
+        /// <param name="name">The name of the product to be added.</param>
+        /// <returns>Boolean represents whether the addition is successful or not.</returns>
         public bool AddByName(string name)
         {
             var product = new Product { Name = name };
@@ -74,20 +74,20 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
-        /// Gets the product by its id
+        /// Gets the product by its id.
         /// </summary>
-        /// <param name="id">The id of the product</param>
-        /// <returns>The product with the specific id</returns>
+        /// <param name="id">The id of the product.</param>
+        /// <returns>The product with the specific id.</returns>
         public Product GetById(string id)
         {
             return _mapper.Map<Product>(_productRepository.GetById(id));
         }
 
         /// <summary>
-        /// Gets the product by its barcode
+        /// Gets the product by its barcode.
         /// </summary>
-        /// <param name="barcode">The barcode of the product</param>
-        /// <returns>The product with the specific barcode</returns>
+        /// <param name="barcode">The barcode of the product.</param>
+        /// <returns>The product with the specific barcode.</returns>
         public Product GetByBarcode(Barcode barcode)
         {
             return _mapper.Map<Product>(_productRepository.SelectWhere(p =>
@@ -95,9 +95,9 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
-        /// Gets all products
+        /// Gets all products.
         /// </summary>
-        /// <returns>All product in the application</returns>
+        /// <returns>All product in the application.</returns>
         public IEnumerable<Product> GetAll()
         {
             return _mapper.Map<IEnumerable<Product>>(_productRepository.SelectAll());
@@ -127,18 +127,18 @@ namespace WasteProducts.Logic.Services
         /// <summary>
         /// Gets products by a category.
         /// </summary>
-        /// <param name="name">Name of the product.</param>
-        /// <returns>Product with the specific name.</returns>
+        /// <param name="category">Category whose products are to be listed</param>
+        /// <returns>Product collection of the specific category.</returns>
         public IEnumerable<Product> GetByCategory(Category category)
         {
             return _mapper.Map<IEnumerable<Product>>(_productRepository.SelectByCategory(_mapper.Map<CategoryDB>(category)));
         }
 
         /// <summary>
-        /// Tries to delete the product by barcode and returns whether the deletion is successful or not
+        /// Tries to delete the product by barcode and returns whether the deletion is successful or not.
         /// </summary>
-        /// <param name="barcode">Barcode of the product to be deleted</param>
-        /// <returns>Boolean represents whether the deletion is successful or not</returns>
+        /// <param name="barcode">Barcode of the product to be deleted.</param>
+        /// <returns>Boolean represents whether the deletion is successful or not.</returns>
         public bool DeleteByBarcode(Barcode barcode)
         {
             if (!IsProductsInDB(
@@ -152,10 +152,10 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
-        /// Tries to delete the product by name and returns whether the deletion is successful or not
+        /// Tries to delete the product by name and returns whether the deletion is successful or not.
         /// </summary>
-        /// <param name="name">The name of the product to be deleted</param>
-        /// <returns>Boolean represents whether the deletion is successful or not</returns>
+        /// <param name="name">The name of the product to be deleted.</param>
+        /// <returns>Boolean represents whether the deletion is successful or not.</returns>
         public bool DeleteByName(string name)
         {
             if (!IsProductsInDB(p =>
@@ -169,11 +169,11 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
-        /// Tries to add the category by specific category and returns whether the addition is successful or not
+        /// Tries to add the category and returns whether the addition is successful or not.
         /// </summary>
-        /// <param name="product">The specific product to add category</param>
-        /// <param name="category">The specific category to be added</param>
-        /// <returns>Boolean represents whether the addition is successful or not</returns>
+        /// <param name="product">The specific product to add category.</param>
+        /// <param name="category">The specific category to be added.</param>
+        /// <returns>Boolean represents whether the addition is successful or not.</returns>
         public bool AddCategory(Product product, Category category)
         {
             if (!IsProductsInDB(p =>
@@ -188,11 +188,11 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
-        /// Tries to remove the category by specific category and returns whether the removal is successful or not
+        /// Tries to remove the category by specific category and returns whether the removal is successful or not.
         /// </summary>
-        /// <param name="product">The specific product to remove category</param>
+        /// <param name="product">The specific product to remove category.</param>
         /// <param name="category">The specific category to be removed</param>
-        /// <returns>Boolean represents whether the removal is successful or not</returns>
+        /// <returns>Boolean represents whether the removal is successful or not.</returns>
         public bool RemoveCategory(Product product, Category category)
         {
             if (!IsProductsInDB(p =>
@@ -209,9 +209,10 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
-        /// Hides product for display in product lists
+        /// Hides product for display in product lists.
         /// </summary>
-        /// <param name="product">The specific product to hide</param>
+        /// <param name="product">The specific product to hide.</param>
+        /// <returns>Boolean represents whether the hiding is successful or not.</returns>
         public bool Hide(Product product)
         {
             if (!IsProductsInDB(p =>
@@ -228,9 +229,10 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
-        /// Reveal product for display in product lists
+        /// Reveal product for display in product lists.
         /// </summary>
-        /// <param name="product">The specific product to reveal</param>
+        /// <param name="product">The specific product to reveal.</param>
+        /// <returns>Boolean represents whether the revealing is successful or not.</returns>
         public bool Reveal(Product product)
         {
             if (!IsProductsInDB(p =>
@@ -247,10 +249,10 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
-        /// Checks whether a specific product is hidden or not
+        /// Checks if the specific product is hidden.
         /// </summary>
-        /// <param name="product">Checked specific product</param>
-        /// <returns>Boolean represents whether the product is in the hidden state</returns>
+        /// <param name="product">The specific product under checking.</param>
+        /// <returns>Boolean represents whether the product is in the hidden state.</returns>
         public bool? IsHidden(Product product)
         {
             if (!IsProductsInDB(p =>

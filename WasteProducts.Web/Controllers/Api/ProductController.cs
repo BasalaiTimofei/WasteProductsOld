@@ -12,6 +12,9 @@ using WasteProducts.Logic.Common.Services;
 
 namespace WasteProducts.Web.Controllers.Api
 {
+    /// <summary>
+    /// Controller that performs actions on products and gives the client the corresponding response.
+    /// </summary>
     [RoutePrefix("api/product")]
     public class ProductController : BaseApiController
     {
@@ -21,7 +24,12 @@ namespace WasteProducts.Web.Controllers.Api
         {
             _productService = productService;
         }
-        
+
+        /// <summary>
+        /// Gets product by its name.
+        /// </summary>
+        /// <param name="name">The name of the product.</param>
+        /// <returns>Product with the specific name.</returns>
         [HttpGet]
         [Route("get")]
         public IHttpActionResult GetProduct([FromBody]string name)
@@ -37,6 +45,11 @@ namespace WasteProducts.Web.Controllers.Api
             return Ok(product);
         }
 
+        /// <summary>
+        /// Gets products by a category.
+        /// </summary>
+        /// <param name="category">Category whose products are to be listed.</param>
+        /// <returns>Product collection of the specific category.</returns>
         [HttpGet]
         [Route("get")]
         public IHttpActionResult GetProducts([FromBody]Category category)
@@ -53,6 +66,11 @@ namespace WasteProducts.Web.Controllers.Api
             return Ok(products);
         }
 
+        /// <summary>
+        /// Tries to add a new product by name and returns whether the addition is successful or not.
+        /// </summary>
+        /// <param name="name">The name of the product to be added.</param>
+        /// <returns>Represents whether the addition is successful or not.</returns>
         [HttpPost]
         [Route("add-product")]
         public IHttpActionResult AddProduct([FromBody]string name)
@@ -72,6 +90,11 @@ namespace WasteProducts.Web.Controllers.Api
             }
         }
 
+        /// <summary>
+        /// Tries to add a new product by barcode and returns whether the addition is successful or not.
+        /// </summary>
+        /// <param name="barcode">Barcode of the product to be added.</param>
+        /// <returns>Boolean represents whether the addition is successful or not.</returns>
         [HttpPost]
         [Route("add-product")]
         public IHttpActionResult AddProduct([FromBody]Barcode barcode)
@@ -88,6 +111,11 @@ namespace WasteProducts.Web.Controllers.Api
             }
         }
 
+        /// <summary>
+        /// Tries to delete the product by name and returns whether the deletion is successful or not.
+        /// </summary>
+        /// <param name="name">The name of the product to be deleted.</param>
+        /// <returns>Represents whether the deletion is successful or not.</returns>
         [HttpDelete]
         [Route("delete-product")]
         public IHttpActionResult DeleteProduct([FromBody]string name)
@@ -107,6 +135,11 @@ namespace WasteProducts.Web.Controllers.Api
             }
         }
 
+        /// <summary>
+        /// Tries to delete the product by barcode and returns whether the deletion is successful or not.
+        /// </summary>
+        /// <param name="barcode">Barcode of the product to be deleted.</param>
+        /// <returns>Represents whether the deletion is successful or not.</returns>
         [HttpDelete]
         [Route("delete-product")]
         public IHttpActionResult DeleteProduct([FromBody]Barcode barcode)
@@ -123,6 +156,12 @@ namespace WasteProducts.Web.Controllers.Api
             }
         }
 
+        /// <summary>
+        /// Tries to add the specific category and returns whether the addition is successful or not.
+        /// </summary>
+        /// <param name="product">The specific product to add category.</param>
+        /// <param name="category">The specific category to be added.</param>
+        /// <returns>Represents the product with added category or "Not Found" in case of failure.</returns>
         [HttpPut]
         [Route("add-category")]
         public IHttpActionResult AddCategory([FromBody]Product product, [FromBody]Category category)
@@ -139,6 +178,12 @@ namespace WasteProducts.Web.Controllers.Api
             }
         }
 
+        /// <summary>
+        /// Tries to remove the specific category and returns whether the removal is successful or not.
+        /// </summary>
+        /// <param name="product">The specific product to remove category.</param>
+        /// <param name="category">The specific category to be removed.</param>
+        /// <returns>Represents the product with deleted category or "Not Found" in case of failure.</returns>
         [HttpDelete]
         [Route("delete-category")]
         public IHttpActionResult RemoveCategory([FromBody]Product product, [FromBody]Category category)
@@ -155,6 +200,11 @@ namespace WasteProducts.Web.Controllers.Api
             }
         }
 
+        /// <summary>
+        /// Hides product for display in product lists.
+        /// </summary>
+        /// <param name="product">The specific product to hide.</param>
+        /// <returns>Represents whether the hiding is successful or not.</returns>
         [HttpPatch]
         [Route("hide")]
         public IHttpActionResult Hide([FromBody]Product product)
@@ -171,6 +221,11 @@ namespace WasteProducts.Web.Controllers.Api
             }
         }
 
+        /// <summary>
+        /// Reveal product for display in product lists.
+        /// </summary>
+        /// <param name="product">The specific product to reveal.</param>
+        /// <returns>Represents whether the revealing is successful or not.</returns>
         [HttpPatch]
         [Route("reveal")]
         public IHttpActionResult Reveal([FromBody]Product product)
@@ -187,6 +242,11 @@ namespace WasteProducts.Web.Controllers.Api
             }
         }
 
+        /// <summary>
+        /// Checks if the specific product is hidden.
+        /// </summary>
+        /// <param name="product">The specific product under checking.</param>
+        /// <returns>Represents if the product is in the hidden or revealed state.</returns>
         [HttpGet]
         [Route("is-hidden")]
         public IHttpActionResult IsHidden([FromBody]Product product)
