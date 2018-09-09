@@ -17,7 +17,7 @@ namespace WasteProducts.DataAccess.Contexts
     [DbConfigurationType(typeof(MsSqlConfiguration))]
     public class WasteContext : IdentityDbContext<UserDB, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>
     {
-        private ISearchRepository _searchRepository { get; }        
+        private readonly ISearchRepository _searchRepository;    
 
         public WasteContext(ISearchRepository searchRepository)
         {
@@ -84,10 +84,10 @@ namespace WasteProducts.DataAccess.Contexts
             return base.SaveChanges();
         }
 
-        public override async Task<int> SaveChangesAsync()
+        public override Task<int> SaveChangesAsync()
         {
             SaveChangesToSearchRepository();
-            return await base.SaveChangesAsync();
+            return base.SaveChangesAsync();
         }
 
         /// <summary>
@@ -95,13 +95,12 @@ namespace WasteProducts.DataAccess.Contexts
         /// </summary>
         private void SaveChangesToSearchRepository()
         {
-            DetectAndSaveChanges(typeof(ProductDB));          
+            DetectAndSaveChanges(typeof(ProductDB), typeof(UserDB));
         }
 
         /// <summary>
         /// Detectes changes and save it to Lucene using LuceneSearchRepository
         /// </summary>
-        /// <param name="state">EntityState that needed to detect and save</param>
         /// <param name="types">Object type that needed to detect and save</param>
         protected void DetectAndSaveChanges(params Type[] types)
         {

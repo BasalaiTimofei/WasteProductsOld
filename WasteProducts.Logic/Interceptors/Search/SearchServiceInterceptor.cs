@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using FluentValidation;
-using Ninject;
+﻿using FluentValidation;
 using Ninject.Extensions.Interception;
-using WasteProducts.Logic.Common.Models.Search;
 
-namespace WasteProducts.Logic
+namespace WasteProducts.Logic.Interceptors
 {
     public class SearchServiceInterceptor : IInterceptor
     {
@@ -18,14 +12,7 @@ namespace WasteProducts.Logic
         }
         public void Intercept(IInvocation invocation)
         {
-            try
-            {
-                invocation.Proceed();
-            }
-            catch (Exception exception)
-            {
-                throw;
-            }
+            invocation.Proceed();
         }
     }
 }
