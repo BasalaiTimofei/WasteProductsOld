@@ -87,8 +87,7 @@ namespace WasteProducts.DataAccess.Contexts
         public override async Task<int> SaveChangesAsync()
         {
             SaveChangesToSearchRepository();
-            int result = await base.SaveChangesAsync();
-            return result;
+            return await base.SaveChangesAsync();
         }
 
         /// <summary>
@@ -96,7 +95,7 @@ namespace WasteProducts.DataAccess.Contexts
         /// </summary>
         private void SaveChangesToSearchRepository()
         {
-            DetectAndSaveChanges(EntityState.Added | EntityState.Modified | EntityState.Deleted, typeof(ProductDB));          
+            DetectAndSaveChanges(typeof(ProductDB));          
         }
 
         /// <summary>
@@ -104,7 +103,7 @@ namespace WasteProducts.DataAccess.Contexts
         /// </summary>
         /// <param name="state">EntityState that needed to detect and save</param>
         /// <param name="types">Object type that needed to detect and save</param>
-        protected void DetectAndSaveChanges(EntityState state, params Type[] types)
+        protected void DetectAndSaveChanges(params Type[] types)
         {
             foreach (var entry in ChangeTracker.Entries())
             {
