@@ -389,7 +389,7 @@
     <Compile Include="Controllers\Api\BaseApiController.cs" />
     <Compile Include="Controllers\Api\ErrorController.cs" />
     <Compile Include="Controllers\Api\SearchController.cs" />
-    <Compile Include="Controllers\Api\UserController.cs" />
+    <Compile Include="Controllers\Api\UserManagement\UserController.cs" />
     <Compile Include="Controllers\Mvc\BaseMvcController.cs" />
     <Compile Include="Controllers\Mvc\ErrorController.cs" />
     <Compile Include="Controllers\Mvc\HomeController.cs" />
@@ -437,6 +437,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Administration\Models\" />
     <Folder Include="Areas\Administration\Views\Shared\" />
+    <Folder Include="Controllers\Api\UserManagement\SwaggerDemoProviders\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>

@@ -10,7 +10,7 @@ using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.UserService;
 
-namespace WasteProducts.Web.Controllers.Api
+namespace WasteProducts.Web.Controllers.Api.UserManagement
 {
     /// <summary>
     /// API controller for user management.
