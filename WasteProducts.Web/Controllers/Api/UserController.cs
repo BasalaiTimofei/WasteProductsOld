@@ -193,7 +193,7 @@ namespace WasteProducts.Web.Controllers.Api
             return await _userService.UpdateEmailAsync(userId, newEmail);
         }
 
-        //POST api/user/UpdateUserName
+        //PUT api/user/UpdateUserName
         /// <summary>
         /// Updates user name of the user with the specific ID.
         /// </summary>
@@ -213,20 +213,20 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="userId">ID of the user looking for a new friend.</param>
         /// <param name="newFriendId">ID of a new friend of the user.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/Friends/add")]
+        [HttpPut, Route("api/User/AddFriend")]
         public async Task AddFriend([FromBody] string userId, [FromBody] string newFriendId)
         {
             await _userService.AddFriendAsync(userId, newFriendId);
         }
 
-        //POST api/User/Friends
+        //PUT api/User/Friends
         /// <summary>
         /// Deletes a friend with the specific friendId ID from the friendlist of the user with the userId ID.
         /// </summary>
         /// <param name="userId">ID of the user wanting to delete a friend from its friendlist.</param>
         /// <param name="friendId">ID of deleting friend.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/Friends/delete")]
+        [HttpPut, Route("api/UserDeleteFriend")]
         public async Task DeleteFriend([FromBody]string userId, [FromBody] string friendId)
         {
             await _userService.DeleteFriendAsync(userId, friendId);
@@ -241,7 +241,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="rating">Rating from 0 to 10 of this product.</param>
         /// <param name="description">User's own description of the product.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/Product")]
+        [HttpPut, Route("api/User/AddProduct")]
         public async Task AddProduct([FromBody]string userId, [FromBody]string productId, [FromBody]int rating, [FromBody]string description)
         {
             await _userService.AddProductAsync(userId, productId, rating, description);
@@ -254,13 +254,11 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="userId">ID of the user deleting the product from its list of products.</param>
         /// <param name="productId">ID of the deleting product.</param>
         /// <returns></returns>
-        [HttpPut, Route("api/User/Products/Delete")]
+        [HttpPut, Route("api/User/DeleteProduct")]
         public async Task DeleteProduct([FromBody]string userId, [FromBody]string productId)
         {
             await _userService.DeleteProductAsync(userId, productId);
         }
-
-        
 
         /// <summary>
         /// Adds a user with the specific ID to the role.
