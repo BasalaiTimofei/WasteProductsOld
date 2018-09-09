@@ -104,20 +104,6 @@ namespace WasteProducts.Logic.Common.Services
         bool RemoveCategory(Product product, Category category);
 
         /// <summary>
-        /// Sets the price of the specific product
-        /// </summary>
-        /// <param name="product">The specific product to set price</param>
-        /// <param name="price">The price of the specific product</param>
-        bool SetPrice(Product product, decimal price);
-
-        /// <summary>
-        /// Allows the user to rate the specific product
-        /// </summary>
-        /// <param name="product">The product that the user wants to rate</param>
-        /// <param name="rating">Own user rating</param>
-        bool Rate(Product product, int rating);
-
-        /// <summary>
         /// Hides product for display in product lists
         /// </summary>
         /// <param name="product">The specific product to hide</param>
@@ -134,13 +120,6 @@ namespace WasteProducts.Logic.Common.Services
         /// </summary>
         /// <param name="product">Checked specific product</param>
         /// <returns>Boolean represents whether the product is in the hidden state</returns>
-        bool IsHidden(Product product);
-
-        /// <summary>
-        /// Sets the description of the specific product
-        /// </summary>
-        /// <param name="product">The specific product to set description</param>
-        /// <param name="description">The description of the specific product</param>
-        bool SetDescription(Product product, string description);
+        bool? IsHidden(Product product);
     }
 }

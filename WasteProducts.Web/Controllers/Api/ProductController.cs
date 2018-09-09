@@ -24,8 +24,10 @@ namespace WasteProducts.Web.Controllers.Api
         
         [HttpGet]
         [Route("get")]
-        public IHttpActionResult GetProduct(string name)
+        public IHttpActionResult GetProduct([FromBody]string name)
         {
+            if (String.IsNullOrEmpty(name)) return BadRequest();
+
             Product product = _productService.GetByNameAsync(name).Result;
             if (product == null)
             {
@@ -37,8 +39,10 @@ namespace WasteProducts.Web.Controllers.Api
 
         [HttpGet]
         [Route("get")]
-        public IHttpActionResult GetProducts(Category category)
+        public IHttpActionResult GetProducts([FromBody]Category category)
         {
+            if (category == null) return BadRequest();
+
             IEnumerable<Product> products = _productService.GetByCategory(category);
 
             if (products == null)
@@ -51,7 +55,7 @@ namespace WasteProducts.Web.Controllers.Api
 
         [HttpPost]
         [Route("add-product")]
-        public IHttpActionResult AddProduct(string name)
+        public IHttpActionResult AddProduct([FromBody]string name)
         {
             if (String.IsNullOrEmpty(name))
             {
@@ -70,12 +74,9 @@ namespace WasteProducts.Web.Controllers.Api
 
         [HttpPost]
         [Route("add-product")]
-        public IHttpActionResult AddProduct(Barcode barcode)
+        public IHttpActionResult AddProduct([FromBody]Barcode barcode)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
+            if (barcode == null) return BadRequest();
 
             if (_productService.AddByBarcode(barcode))
             {
@@ -89,7 +90,7 @@ namespace WasteProducts.Web.Controllers.Api
 
         [HttpDelete]
         [Route("delete-product")]
-        public IHttpActionResult DeleteProduct(string name)
+        public IHttpActionResult DeleteProduct([FromBody]string name)
         {
             if (String.IsNullOrEmpty(name))
             {
@@ -108,12 +109,9 @@ namespace WasteProducts.Web.Controllers.Api
 
         [HttpDelete]
         [Route("delete-product")]
-        public IHttpActionResult DeleteProduct(Barcode barcode)
+        public IHttpActionResult DeleteProduct([FromBody]Barcode barcode)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
+            if (barcode == null) return BadRequest();
 
             if (_productService.DeleteByBarcode(barcode))
             {
@@ -127,12 +125,9 @@ namespace WasteProducts.Web.Controllers.Api
 
         [HttpPut]
         [Route("add-category")]
-        public IHttpActionResult AddCategory(Product product, Category category)
+        public IHttpActionResult AddCategory([FromBody]Product product, [FromBody]Category category)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
+            if (product == null || category == null) return BadRequest();
 
             if (_productService.AddCategory(product, category))
             {
@@ -146,12 +141,9 @@ namespace WasteProducts.Web.Controllers.Api
 
         [HttpDelete]
         [Route("delete-category")]
-        public IHttpActionResult RemoveCategory(Product product, Category category)
+        public IHttpActionResult RemoveCategory([FromBody]Product product, [FromBody]Category category)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
+            if (product == null || category == null) return BadRequest();
 
             if (_productService.RemoveCategory(product, category))
             {
@@ -163,48 +155,12 @@ namespace WasteProducts.Web.Controllers.Api
             }
         }
 
-        [HttpPut]
-        [Route("set-price")]
-        public IHttpActionResult SetPrice(Product product, decimal price)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            if (_productService.SetPrice(product, price))
-            {
-                return GetProduct(product.Name);
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-
-        [HttpPut]
-        [Route("rate")]
-        public IHttpActionResult Rate(Product product, int rating)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
-            if (_productService.Rate(product, rating))
-            {
-                return GetProduct(product.Name);
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
-
-        [HttpPut]
+        [HttpPatch]
         [Route("hide")]
-        public IHttpActionResult Hide(Product product)
+        public IHttpActionResult Hide([FromBody]Product product)
         {
+            if (product == null) return BadRequest();
+
             if (_productService.Hide(product))
             {
                 return Content(HttpStatusCode.OK, "Product is hidden for you now");
@@ -215,10 +171,12 @@ namespace WasteProducts.Web.Controllers.Api
             }
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("reveal")]
-        public IHttpActionResult Reveal(Product product)
+        public IHttpActionResult Reveal([FromBody]Product product)
         {
+            if (product == null) return BadRequest();
+
             if (_productService.Reveal(product))
             {
                 return Content(HttpStatusCode.OK, "Product is revealed for you now");
@@ -231,16 +189,15 @@ namespace WasteProducts.Web.Controllers.Api
 
         [HttpGet]
         [Route("is-hidden")]
-        public IHttpActionResult IsHidden(Product product)
+        public IHttpActionResult IsHidden([FromBody]Product product)
         {
-            if (_productService.IsHidden(product))
-            {
-                return Content(HttpStatusCode.OK, "Your product is in the hidden state");
-            }
-            else
-            {
-                return NotFound();
-            }
+            if (product == null) return BadRequest();
+
+            var result = _productService.IsHidden(product);
+            if (result == null) return NotFound();
+
+            if (result == true) return Content(HttpStatusCode.OK, "Product is hidden");
+            else return Content(HttpStatusCode.OK, "Product is revealed");
         }
     }
 }
