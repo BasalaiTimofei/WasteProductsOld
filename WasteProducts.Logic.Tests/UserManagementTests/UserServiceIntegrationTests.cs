@@ -244,14 +244,11 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             User user2 = _userService.LogInAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
             User user3 = _userService.LogInAsync("test51someemail@gmail.com", "qwerty3").GetAwaiter().GetResult();
 
-            _userService.AddToRoleAsync(user1, "Simple user").GetAwaiter().GetResult();
-            _userService.AddToRoleAsync(user2, "Simple user").GetAwaiter().GetResult();
-            _userService.AddToRoleAsync(user3, "Simple user").GetAwaiter().GetResult();
-
-            Assert.AreEqual("Simple user", user1.Roles.FirstOrDefault());
+            _userService.AddToRoleAsync(user1.Id, "Simple user").GetAwaiter().GetResult();
+            _userService.AddToRoleAsync(user2.Id, "Simple user").GetAwaiter().GetResult();
+            _userService.AddToRoleAsync(user3.Id, "Simple user").GetAwaiter().GetResult();
 
             user1 = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-
             Assert.AreEqual("Simple user", user1.Roles.FirstOrDefault());
         }
 
@@ -272,8 +269,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual(user.Roles.FirstOrDefault(), "Simple user");
 
-            _userService.RemoveFromRoleAsync(user, "Simple user").GetAwaiter().GetResult();
-            Assert.IsNull(user.Roles.FirstOrDefault());
+            _userService.RemoveFromRoleAsync(user.Id, "Simple user").GetAwaiter().GetResult();
 
             user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.IsNull(user.Roles.FirstOrDefault());
@@ -286,13 +282,10 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             var claim = new Claim("SomeType", "SomeValue");
 
-            _userService.AddClaimAsync(user, claim).GetAwaiter().GetResult();
-            var userClaim = user.Claims.FirstOrDefault();
-            Assert.AreEqual(userClaim.Type, claim.Type);
-            Assert.AreEqual(userClaim.Value, claim.Value);
+            _userService.AddClaimAsync(user.Id, claim).GetAwaiter().GetResult();
 
             user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            userClaim = user.Claims.FirstOrDefault();
+            var userClaim = user.Claims.FirstOrDefault();
             Assert.AreEqual(userClaim.Type, claim.Type);
             Assert.AreEqual(userClaim.Value, claim.Value);
         }
@@ -304,8 +297,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual(user.Claims.Count, 1);
 
-            _userService.RemoveClaimAsync(user, user.Claims.FirstOrDefault()).GetAwaiter().GetResult();
-            Assert.AreEqual(user.Claims.Count, 0);
+            _userService.RemoveClaimAsync(user.Id, user.Claims.FirstOrDefault()).GetAwaiter().GetResult();
 
             user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual(user.Claims.Count, 0);
@@ -318,12 +310,10 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             var login = new UserLogin { LoginProvider = "SomeLoginProvider", ProviderKey = "SomeProviderKey" };
 
-            _userService.AddLoginAsync(user, login).GetAwaiter().GetResult();
-            var userLogin = user.Logins.FirstOrDefault();
-            Assert.AreEqual(login, userLogin);
+            _userService.AddLoginAsync(user.Id, login).GetAwaiter().GetResult();
 
             user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            userLogin = user.Logins.FirstOrDefault();
+            var userLogin = user.Logins.FirstOrDefault();
             Assert.AreEqual(login, userLogin);
         }
 
@@ -335,8 +325,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             var login = new UserLogin { LoginProvider = "SomeLoginProvider", ProviderKey = "SomeProviderKey" };
 
             Assert.AreEqual(user.Logins.Count, 1);
-            _userService.RemoveLoginAsync(user, login).GetAwaiter().GetResult();
-            Assert.AreEqual(user.Logins.Count, 0);
+            _userService.RemoveLoginAsync(user.Id, login).GetAwaiter().GetResult();
 
             user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             Assert.AreEqual(user.Logins.Count, 0);
