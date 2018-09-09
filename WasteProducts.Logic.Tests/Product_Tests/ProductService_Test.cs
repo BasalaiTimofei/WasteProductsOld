@@ -112,15 +112,13 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void Add_DoesNotInsertNullProduct_Returns_False()
+        public void Add_DoesNotInsertNullProduct_Throws_NullReferenceException()
         {
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(selectedList);
 
             var productService = new ProductService(mockProductRepository.Object, mapper);
-            var result = productService.Add(null);
-
-            Assert.That(result, Is.EqualTo(false));
+            Assert.Throws<NullReferenceException>(() => productService.Add(null));
         }
 
         [Test]
@@ -155,7 +153,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
                 .Returns(selectedList);
 
             var productService = new ProductService(mockProductRepository.Object, mapper);
-            productService.Add(null);
+            Assert.Throws<NullReferenceException>(() => productService.Add(null));
 
             mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Never);
         }
@@ -370,18 +368,6 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             Assert.That(result, Is.InstanceOf(typeof(Product)));
         }
 
-        [Test]
-        public void GetByBarcode_GetsBarcode_Returns_null()
-        {
-            selectedList.Add(productDB);
-            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(selectedList);
-
-            var productService = new ProductService(mockProductRepository.Object, mapper);
-            var result = productService.GetByBarcode(null);
-
-            Assert.That(result, Is.Null);
-        }
 
         [Test]
         public void GetAll_GetsNothing_Returns_GenericEnumerableCollection()
@@ -408,32 +394,6 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             var result = productService.GetByName(productName);
 
             Assert.That(result, Is.InstanceOf(typeof(Product)));
-        }
-
-        [Test]
-        public void GetByName_GetsProductName_Returns_null()
-        {
-            selectedList.Add(productDB);
-            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(selectedList);
-
-            var productService = new ProductService(mockProductRepository.Object, mapper);
-            var result = productService.GetByName(null);
-
-            Assert.That(result, Is.Null);
-        }
-
-        [Test]
-        public void DeleteByBarcode_DeletesProduct_Returns_True()
-        {
-            selectedList.Add(productDB);
-            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(selectedList);
-
-            var productService = new ProductService(mockProductRepository.Object, mapper);
-            var result = productService.DeleteByBarcode(barcode);
-
-            Assert.That(result, Is.EqualTo(true));
         }
 
         [Test]
@@ -622,31 +582,6 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             Assert.That(result, Is.EqualTo(false));
         }
-
-        [Test]
-        public void IsHidden_PassesNull_Returns_False()
-        {
-            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(selectedList);
-
-            var productService = new ProductService(mockProductRepository.Object, mapper);
-            var result = productService.IsHidden(null);
-
-            Assert.That(result, Is.EqualTo(false));
-        }
-
-        [Test]
-        public void IsHidden_PassesProductWichDoesNotExistInDB_Returns_False()
-        {
-            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(selectedList);
-
-            var productService = new ProductService(mockProductRepository.Object, mapper);
-            var result = productService.IsHidden(product);
-
-            Assert.That(result, Is.EqualTo(false));
-        }
-
 
         [Test]
         public void RemoveCategory_Removed_ReturnsTrue()

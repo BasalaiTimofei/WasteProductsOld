@@ -44,11 +44,11 @@ namespace WasteProducts.Logic.Tests.Search_Tests
 
             products = new List<TestProduct>
             {
-                new TestProduct { Id=1, Name = "Product1 Name1", Composition = "Product1 Composition1"},
-                new TestProduct { Id=2, Name = "Product2 Name2", Composition = "Product2 Composition2"},
-                new TestProduct { Id=3, Name = "Product3 Name3", Composition = "Product3 Composition3"},
-                new TestProduct { Id=4, Name = "Product4 Name4", Composition = "Product4 Composition4"},
-                new TestProduct { Id=5, Name = "Product5 Name5", Composition = "Product5 Composition5"}
+                new TestProduct { Id="1", Name = "Product1 Name1", Composition = "Product1 Composition1"},
+                new TestProduct { Id="2", Name = "Product2 Name2", Composition = "Product2 Composition2"},
+                new TestProduct { Id="3", Name = "Product3 Name3", Composition = "Product3 Composition3"},
+                new TestProduct { Id="4", Name = "Product4 Name4", Composition = "Product4 Composition4"},
+                new TestProduct { Id="5", Name = "Product5 Name5", Composition = "Product5 Composition5"}
             };
 
         }

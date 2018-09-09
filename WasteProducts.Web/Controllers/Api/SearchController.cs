@@ -19,7 +19,7 @@ namespace WasteProducts.Web.Controllers.Api
     {
         private ISearchService _searchService { get; }
         public const string DEFAULT_PRODUCT_NAME_FIELD = "Name";
-        public const string DEFAULT_PRODUCT_DESCRIPTION_FIELD = "Description";
+        public const string DEFAULT_PRODUCT_COMPOSITION_FIELD = "Composition";
         public const string DEFAULT_PRODUCT_BARCODE_FIELD = "Barcode.Code";
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Performs full-text search by default fields "Name", "Description", "Barcode".
+        /// Performs full-text search by default fields "Name", "Composition", "Barcode".
         /// </summary>
         /// <param name="query">Query string</param>
         /// <returns>Product collection</returns>
@@ -50,7 +50,7 @@ namespace WasteProducts.Web.Controllers.Api
 
             BoostedSearchQuery searchQuery = new BoostedSearchQuery();
             searchQuery.AddField(DEFAULT_PRODUCT_NAME_FIELD, 1.0f)
-                .AddField(DEFAULT_PRODUCT_DESCRIPTION_FIELD, 1.0f)
+                .AddField(DEFAULT_PRODUCT_COMPOSITION_FIELD, 1.0f)
                 .AddField(DEFAULT_PRODUCT_BARCODE_FIELD, 1.0f);
             searchQuery.Query = query;
 
