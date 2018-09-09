@@ -241,7 +241,9 @@ namespace WasteProducts.Logic.Services
             if (!IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.Ordinal),
                 out var products)) return;
-            
+
+            //double? rateCount = (from x in products.AsParallel().ToList() select x.AvgRating).Average();
+
             var productFromDB = products.ToList().First();
             if (productFromDB.AvgRating == null) productFromDB.AvgRating = 0d;
 
