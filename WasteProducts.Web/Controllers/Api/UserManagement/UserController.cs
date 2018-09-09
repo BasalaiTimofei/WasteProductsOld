@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 using NLog;
-using WasteProducts.Logic.Common.Models.Products;
+using Swagger.Net.Annotations;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.UserService;
-using WasteProducts.Web.Models;
+using WasteProducts.Web.Models.Users;
 
 namespace WasteProducts.Web.Controllers.Api.UserManagement
 {
@@ -39,7 +38,14 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// Gets all users of the WasteProducts.
         /// </summary>
         /// <returns>IEnumerable of all the users.</returns>
+        
+        
         [HttpGet, Route("")]
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Users are found.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There are no Users.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception during the search.")]
         public async Task<IEnumerable<User>> GetUsers()
         {
             return await _userService.GetAllUsersAsync();
@@ -52,6 +58,11 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <param name="id">Id of a user.</param>
         /// <returns>User with the specific ID or null if there is no matches.</returns>
         [HttpGet, Route("{id}")]
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "User is found.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There are no User with such ID.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception during the search.")]
         public async Task<User> GetUserById(string id)
         {
             //todo validation
@@ -64,10 +75,16 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <param name="email">Email of the user.</param>
         /// <param name="password">Password of the user.</param>
         /// <returns>User with the specific email and password or null if there is no matches.</returns>
-        [HttpGet, Route("LoginByEmail/{email}_{password}")]
-        public async Task<User> GetUserByEmailAndPassword(string email, string password)
+        [HttpPost, Route("LoginByEmail")]
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "User was successfully logged in.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "Please provide correct Email and Password.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules.")]
+        [SwaggerResponse(HttpStatusCode.Conflict, "Already logged in.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception during the logging in.")]
+        public async Task<User> LoginByEmailAndPassword([FromBody]LoginUser user)
         {
-            return await _userService.LogInByEmailAsync(email, password);
+            return await _userService.LogInByEmailAsync(user.UserNameOREmail, user.Password);
         }
 
         /// <summary>
@@ -76,10 +93,16 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <param name="userName">User's name.</param>
         /// <param name="password">Password of the user.</param>
         /// <returns>User with the specific email and password or null if there is no matches.</returns>
-        [HttpGet, Route("LoginByUserName/{userName}_{password}")]
-        public async Task<User> GetUserByNameAndPassword(string userName, string password)
+        [HttpGet, Route("LoginByUserName")]
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "User was successfully logged in.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "Please provide correct UserName and Password.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules.")]
+        [SwaggerResponse(HttpStatusCode.Conflict, "Already logged in.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception during the logging in.")]
+        public async Task<User> LoginByNameAndPassword([FromBody]LoginUser user)
         {
-            return await _userService.LogInByNameAsync(userName, password);
+            return await _userService.LogInByNameAsync(user.UserNameOREmail, user.Password);
         }
 
         /// <summary>
@@ -119,14 +142,16 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <summary>
         /// Registers a new user with the specific email, name and password.
         /// </summary>
-        /// <param name="email">Email of the user. Should be unique for the application.</param>
-        /// <param name="userName">NickName of the user. Should be unique for the application.</param>
-        /// <param name="password">Password of the user</param>
+        /// <param name="user">User model that contains: Email, UserName and Password.</param>
         /// <returns></returns>
         [HttpPost, Route("register")]
-        public async Task Register([FromBody] UserAPI user)
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.Created, "User was successfully registered.")]
+        [SwaggerResponse(HttpStatusCode.Conflict, "Please provide unique UserName and Email.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception during the registration.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules.")]
+        public async Task Register([FromBody] RegisterUser user)
         {
-            //todo get from JSON, not User instance
             await _userService.RegisterAsync(user.Email, user.UserName, user.Password);
         }
 
@@ -137,23 +162,25 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <param name="id">Id of the deleting user.</param>
         /// <returns></returns>
         [HttpDelete, Route("{id}")]
-        public async Task Delete(string id)
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "User is deleted.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There is no such User.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception during the deletion.")]
+        public async Task Delete([FromUri] string id)
         {
             await _userService.DeleteUserAsync(id);
         }
 
         // PUT api/user/5
-        /// <summary>
-        /// Updates user with the specific ID.
-        /// </summary>
-        /// <param name="id">ID of the updating user.</param>
-        /// <param name="user">User to update.</param>
-        /// <returns></returns>
+        // TODO change update User to concrete updates
+        /*
         [HttpPut, Route("{id}")]
-        public async Task Update(string id, [FromBody] User user)
+        public async Task Update([FromUri] string id, [FromBody] User user)
         {
             await _userService.UpdateAsync(user);
         }
+        */
 
         // POST api/user/resetpassword
         /// <summary>
@@ -164,9 +191,15 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <param name="newPassword">New password of the user.</param>
         /// <returns></returns>
         [HttpPut, Route("changePassword")]
-        public async Task<bool> ChangePassword([FromBody] string userId, [FromBody] string oldPassword, [FromBody] string newPassword)
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Password is successfully changed.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There is no such User.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules. Old and new passwords should match.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception during the request.")]
+        public async Task<bool> ChangePassword([FromBody] ChangePassword user)
         {
-            return await _userService.ChangePasswordAsync(userId, oldPassword, newPassword);
+            return await _userService.ChangePasswordAsync(user.Id, user.OldPassword, user.NewPassword);
         }
 
         // POST api/user/resetpassword
@@ -176,6 +209,12 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <param name="email">Email of the user forgotten its password.</param>
         /// <returns></returns>
         [HttpPut, Route("ResetPassword")]
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Request is sent")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such Email.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception during the request.")]
         public async Task ResetPassword([FromBody] string email)
         {
             await _userService.ResetPasswordAsync(email);
@@ -185,80 +224,106 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <summary>
         /// Updates email of the user to the new email.
         /// </summary>
-        /// <param name="userId">ID of the user changing its email.</param>
-        /// <param name="newEmail">New email of the user.</param>
+        /// <param name="user">User model with two fields: string Id and string Email</param>
         /// <returns></returns>
         [HttpPut, Route("UpdateEmail")]
-        public async Task<bool> UpdateEmail([FromBody] string userId, [FromBody] string newEmail)
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Email is updated.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such Id.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception during the update.")]
+        public async Task<bool> UpdateEmail([FromBody] UpdateEmailORUserName user)
         {
-            return await _userService.UpdateEmailAsync(userId, newEmail);
+            return await _userService.UpdateEmailAsync(user.Id, user.EmailORUserName);
         }
 
         //PUT api/user/UpdateUserName
         /// <summary>
         /// Updates user name of the user with the specific ID.
         /// </summary>
-        /// <param name="userId">ID of the user changing its user name.</param>
-        /// <param name="newUserName">A new user name for the user.</param>
+        /// <param name="user"></param>
         /// <returns></returns>
         [HttpPut, Route("UpdateUserName")]
-        public async Task<bool> UpdateUserName([FromBody] string userId, [FromBody] string newUserName)
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "UserName is updated.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such Id.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception during the update.")]
+        public async Task<bool> UpdateUserName([FromBody] UpdateEmailORUserName user)
         {
-            return await _userService.UpdateUserNameAsync(userId, newUserName);
+            return await _userService.UpdateUserNameAsync(user.Id, user.EmailORUserName);
         }
 
         // PUT api/User/Friends
         /// <summary>
         /// Adds a new friend to the friendlist of the user with the specific ID.
         /// </summary>
-        /// <param name="userId">ID of the user looking for a new friend.</param>
-        /// <param name="newFriendId">ID of a new friend of the user.</param>
+        /// <param name="ids">Ids model contains: string UserId and FriendId</param>
         /// <returns></returns>
         [HttpPut, Route("AddFriend")]
-        public async Task AddFriend([FromBody] string userId, [FromBody] string newFriendId)
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Friend is added.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such Id.")]
+        [SwaggerResponse(HttpStatusCode.Conflict, "User already has got the Friend.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception during the request.")]
+        public async Task AddFriend([FromBody] DoubleIdModel ids)
         {
-            await _userService.AddFriendAsync(userId, newFriendId);
+            await _userService.AddFriendAsync(ids.Primary, ids.Secondary);
         }
 
         //PUT api/User/Friends
         /// <summary>
         /// Deletes a friend with the specific friendId ID from the friendlist of the user with the userId ID.
         /// </summary>
-        /// <param name="userId">ID of the user wanting to delete a friend from its friendlist.</param>
-        /// <param name="friendId">ID of deleting friend.</param>
+        /// <param name="ids">Ids model contains: string UserId and FriendId.</param>
         /// <returns></returns>
         [HttpPut, Route("DeleteFriend")]
-        public async Task DeleteFriend([FromBody]string userId, [FromBody] string friendId)
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Friend is removed.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There is no Friend with such Id.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception during the request.")]
+        public async Task DeleteFriend([FromBody] DoubleIdModel ids)
         {
-            await _userService.DeleteFriendAsync(userId, friendId);
+            await _userService.DeleteFriendAsync(ids.Primary, ids.Secondary);
         }
 
         //PUT api/User/Products
         /// <summary>
         /// Adds product with its rating and description to the user's list of products.
         /// </summary>
-        /// <param name="userId">ID of the user adding the product to its product list.</param>
-        /// <param name="productId">ID of the adding product.</param>
-        /// <param name="rating">Rating from 0 to 10 of this product.</param>
-        /// <param name="description">User's own description of the product.</param>
+        /// <param name="productRate">Product rate contains: string UserId, string ProductId, int Rating, string Description</param>
         /// <returns></returns>
         [HttpPut, Route("AddProduct")]
-        public async Task AddProduct([FromBody]string userId, [FromBody]string productId, [FromBody]int rating, [FromBody]string description)
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Friend is removed.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There is no User or Product with such Id.")]
+        [SwaggerResponse(HttpStatusCode.Conflict, "User already has got the ProductRate.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception during the request.")]
+        public async Task AddProduct([FromBody] ProductRate productRate)
         {
-            await _userService.AddProductAsync(userId, productId, rating, description);
+            await _userService.AddProductAsync(productRate.UserId, productRate.ProductId, productRate.Rating, productRate.Description);
         }
 
         //POST api/User/Products/Delete
         /// <summary>
         /// Deletes product from the user's list of products.
         /// </summary>
-        /// <param name="userId">ID of the user deleting the product from its list of products.</param>
-        /// <param name="productId">ID of the deleting product.</param>
+        /// <param name="ids">Ids model contains: string UserId and ProductRateId</param>
         /// <returns></returns>
         [HttpPut, Route("DeleteProduct")]
-        public async Task DeleteProduct([FromBody]string userId, [FromBody]string productId)
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Friend is removed.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There is no ProductRate with such Id.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception during the request.")]
+        public async Task DeleteProduct([FromBody]DoubleIdModel ids)
         {
-            await _userService.DeleteProductAsync(userId, productId);
+            await _userService.DeleteProductAsync(ids.Primary, ids.Secondary);
         }
 
         /// <summary>
