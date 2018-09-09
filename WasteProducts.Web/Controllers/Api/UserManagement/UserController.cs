@@ -274,13 +274,13 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             await _userService.AddFriendAsync(ids.Primary, ids.Secondary);
         }
 
-        //PUT api/User/Friends
+        //POST api/User/Friends
         /// <summary>
         /// Deletes a friend with the specific friendId ID from the friendlist of the user with the userId ID.
         /// </summary>
         /// <param name="ids">Ids model contains: string UserId and FriendId.</param>
         /// <returns></returns>
-        [HttpPut, Route("DeleteFriend")]
+        [HttpPost, Route("DeleteFriend")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Friend is removed.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no Friend with such Id.")]
@@ -291,7 +291,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             await _userService.DeleteFriendAsync(ids.Primary, ids.Secondary);
         }
 
-        //PUT api/User/Products
+        //PUT api/User/AddProduct
         /// <summary>
         /// Adds product with its rating and description to the user's list of products.
         /// </summary>
@@ -309,15 +309,33 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             await _userService.AddProductAsync(productRate.UserId, productRate.ProductId, productRate.Rating, productRate.Description);
         }
 
-        //POST api/User/Products/Delete
+        //POST api/User/UpdateProduct
+        /// <summary>
+        /// Updates Product Description of User.
+        /// </summary>
+        /// <param name="productRate">Contains: string UserId, string ProductId, int Rating, string Description</param>
+        /// <returns></returns>
+        [HttpPost, Route("UpdateProduct")]
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Feedback is modified.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There is no ProductRate with such Id.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Please stick to validation rules.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception during the request.")]
+        public async Task UpdateProduct([FromBody] ProductRate productRate)
+        {
+            await _userService.UpdateProductDescriptionAsync(productRate.UserId, productRate.ProductId, productRate.Rating, productRate.Description);
+        }
+
+        //POST api/User/DeleteProduct
         /// <summary>
         /// Deletes product from the user's list of products.
         /// </summary>
         /// <param name="ids">Ids model contains: string UserId and ProductRateId</param>
         /// <returns></returns>
-        [HttpPut, Route("DeleteProduct")]
+        [HttpPost, Route("DeleteProduct")]
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Friend is removed.")]
+        [SwaggerResponse(HttpStatusCode.OK, "Product is removed.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no ProductRate with such Id.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception during the request.")]
