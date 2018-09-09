@@ -143,7 +143,7 @@
     <Compile Include="Services\ProductService.cs" />
     <Compile Include="Services\MailService\MailFactory.cs" />
     <Compile Include="Services\MailService\MailService.cs" />
-    <Compile Include="Services\SearchServiceInterceptor.cs" />
+    <Compile Include="Validators\Search\SearchServiceInterceptor.cs" />
     <Compile Include="Services\TestService.cs" />
     <Compile Include="Services\UserService\UserRoleService.cs" />
     <Compile Include="Services\UserService\UserService.cs" />
