@@ -34,7 +34,7 @@ namespace WasteProducts.Logic.Services
         /// <returns>Boolean represents whether the addition is successful or not</returns>
         public bool Add(Product product)
         {
-            if (product == null || IsProductsInDB(p =>
+            if (IsProductsInDB(p =>
                     string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
                 out var products)) return false;
 
@@ -68,7 +68,6 @@ namespace WasteProducts.Logic.Services
         /// <returns>Boolean represents whether the addition is successful or not</returns>
         public bool AddByName(string name)
         {
-            if (name == null) return false;
             var product = new Product { Name = name };
 
             return Add(product);
@@ -81,7 +80,7 @@ namespace WasteProducts.Logic.Services
         /// <returns>The product with the specific id</returns>
         public Product GetById(string id)
         {
-            return id == null ? null : _mapper.Map<Product>(_productRepository.GetById(id));
+            return _mapper.Map<Product>(_productRepository.GetById(id));
         }
 
         /// <summary>
@@ -91,9 +90,7 @@ namespace WasteProducts.Logic.Services
         /// <returns>The product with the specific barcode</returns>
         public Product GetByBarcode(Barcode barcode)
         {
-            return barcode == null
-                ? null
-                : _mapper.Map<Product>(_productRepository.SelectWhere(p =>
+            return _mapper.Map<Product>(_productRepository.SelectWhere(p =>
                     string.Equals(p.Barcode.Code, barcode.Code, StringComparison.OrdinalIgnoreCase)).First());
         }
 
@@ -113,9 +110,7 @@ namespace WasteProducts.Logic.Services
         /// <returns>Product with the specific name.</returns>
         public Product GetByName(string name)
         {
-            return name == null
-                ? null
-                : _mapper.Map<Product>(_productRepository.SelectWhere(p =>
+            return _mapper.Map<Product>(_productRepository.SelectWhere(p =>
                     string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase)).First());
         }
 
@@ -126,7 +121,7 @@ namespace WasteProducts.Logic.Services
         /// <returns>Product with the specific name.</returns>
         public async Task<Product> GetByNameAsync(string name)
         {
-            return name == null ? null : _mapper.Map<Product>(await _productRepository.GetByNameAsync(name));
+            return _mapper.Map<Product>(await _productRepository.GetByNameAsync(name));
         }
 
         /// <summary>
@@ -136,9 +131,7 @@ namespace WasteProducts.Logic.Services
         /// <returns>Product with the specific name.</returns>
         public IEnumerable<Product> GetByCategory(Category category)
         {
-            return category == null
-                ? null
-                : _mapper.Map<IEnumerable<Product>>(_productRepository.SelectByCategory(_mapper.Map<CategoryDB>(category)));
+            return _mapper.Map<IEnumerable<Product>>(_productRepository.SelectByCategory(_mapper.Map<CategoryDB>(category)));
         }
 
         /// <summary>
@@ -216,73 +209,41 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
-        /// Sets the price of the specific product
-        /// </summary>
-        /// <param name="product">The specific product to set price</param>
-        /// <param name="price">The price of the specific product</param>
-        public void SetPrice(Product product, decimal price)
-        {
-            if (price <= 0M || !IsProductsInDB(p =>
-                    string.Equals(p.Id, product.Id, StringComparison.Ordinal),
-                out var products)) return;
-
-            var productFromDB = products.ToList().First();
-            productFromDB.Price = price;
-            _productRepository.Update(productFromDB);
-        }
-
-        /// <summary>
-        /// Allows the user to rate the specific product
-        /// </summary>
-        /// <param name="product">The product that the user wants to rate</param>
-        /// <param name="rating">Own user rating</param>
-        public void Rate(Product product, int rating)
-        {
-            if (!IsProductsInDB(p =>
-                    string.Equals(p.Id, product.Id, StringComparison.Ordinal),
-                out var products)) return;
-
-            //double? rateCount = (from x in products.AsParallel().ToList() select x.AvgRating).Average();
-
-            var productFromDB = products.ToList().First();
-            if (productFromDB.AvgRating == null) productFromDB.AvgRating = 0d;
-
-            productFromDB.AvgRating = (productFromDB.AvgRating * productFromDB.RateCount + rating) / ++productFromDB.RateCount;
-            _productRepository.Update(productFromDB);
-        }
-
-        /// <summary>
         /// Hides product for display in product lists
         /// </summary>
         /// <param name="product">The specific product to hide</param>
-        public void Hide(Product product)
+        public bool Hide(Product product)
         {
             if (!IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.Ordinal),
-                out var products)) return;
-
+                out var products)) return false;
+           
             var productFromDB = products.ToList().First();
-            if (productFromDB.IsHidden) return;
+            if (productFromDB.IsHidden) return true;
 
             productFromDB.IsHidden = product.IsHidden = true;
             _productRepository.Update(productFromDB);
+
+            return true;
         }
 
         /// <summary>
         /// Reveal product for display in product lists
         /// </summary>
         /// <param name="product">The specific product to reveal</param>
-        public void Reveal(Product product)
+        public bool Reveal(Product product)
         {
             if (!IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.Ordinal),
-                out var products)) return;
+                out var products)) return false;
 
             var productFromDB = products.ToList().First();
-            if (!productFromDB.IsHidden) return;
+            if (!productFromDB.IsHidden) return true;
 
             productFromDB.IsHidden = false;
             _productRepository.Update(productFromDB);
+
+            return true;
         }
 
         /// <summary>
@@ -290,31 +251,15 @@ namespace WasteProducts.Logic.Services
         /// </summary>
         /// <param name="product">Checked specific product</param>
         /// <returns>Boolean represents whether the product is in the hidden state</returns>
-        public bool IsHidden(Product product)
+        public bool? IsHidden(Product product)
         {
             if (!IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.Ordinal),
-                out var products)) return false;
-
+                out var products)) return null;
+            
             var productFromDB = products.ToList().First();
 
             return productFromDB.IsHidden;
-        }
-
-        /// <summary>
-        /// Sets the description of the specific product
-        /// </summary>
-        /// <param name="product">The specific product to set description</param>
-        /// <param name="description">The description of the specific product</param>
-        public void SetDescription(Product product, string description)
-        {
-            if (description == null || !IsProductsInDB(p =>
-                    string.Equals(p.Id, product.Id, StringComparison.Ordinal),
-                out var products)) return;
-
-            var productFromDB = products.ToList().First();
-            productFromDB.Description = description;
-            _productRepository.Update(productFromDB);
         }
 
         private bool IsProductsInDB(Predicate<ProductDB> conditionPredicate, out IEnumerable<ProductDB> products)

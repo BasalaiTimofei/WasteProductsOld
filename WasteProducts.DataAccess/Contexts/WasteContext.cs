@@ -32,8 +32,8 @@ namespace WasteProducts.DataAccess.Contexts
                 .HasMany(u => u.Friends)
                 .WithMany()
                 .Map(t => t.MapLeftKey("UserId")
-                           .MapRightKey("FriendId")
-                           .ToTable("UserFriends"));
+                    .MapRightKey("FriendId")
+                    .ToTable("UserFriends"));
 
             modelBuilder.Entity<ProductDB>()
                 .HasOptional(p => p.Barcode)
