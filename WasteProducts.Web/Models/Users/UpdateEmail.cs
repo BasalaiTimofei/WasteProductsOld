@@ -7,7 +7,7 @@ namespace WasteProducts.Web.Models.Users
 {
     public class UpdateEmailORUserName
     {
-        public string Id { get; set; }
+        public string UserId { get; set; }
 
         public string EmailORUserName { get; set; }
     }

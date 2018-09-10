@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNet.Identity;
-using Ninject;
 
 namespace WasteProducts.Logic.Services.UserService
 {

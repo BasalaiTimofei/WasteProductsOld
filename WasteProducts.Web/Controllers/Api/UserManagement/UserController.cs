@@ -72,8 +72,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <summary>
         /// Gets user by its email and password.
         /// </summary>
-        /// <param name="email">Email of the user.</param>
-        /// <param name="password">Password of the user.</param>
+        /// <param name="user">PLL model, contains UserNameOREmail (for this method it would be email), password (Password of the user).</param>
         /// <returns>User with the specific email and password or null if there is no matches.</returns>
         [HttpPost, Route("LoginByEmail")]
         [SwaggerResponseRemoveDefaults]
@@ -90,8 +89,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <summary>
         /// Gets user by its name and password.
         /// </summary>
-        /// <param name="userName">User's name.</param>
-        /// <param name="password">Password of the user.</param>
+        /// <param name="user">PLL model, contains UserNameOREmail (for this method it would be User's name), password (Password of the user).</param>
         /// <returns>User with the specific email and password or null if there is no matches.</returns>
         [HttpGet, Route("LoginByUserName")]
         [SwaggerResponseRemoveDefaults]
@@ -186,9 +184,10 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <summary>
         /// Changes old password of the user with the specific ID to the new password.
         /// </summary>
-        /// <param name="userId">ID of the user changing password.</param>
-        /// <param name="oldPassword">Old password of the user.</param>
-        /// <param name="newPassword">New password of the user.</param>
+        /// <param name="user">PLL model, contains
+        /// userId (ID of the user changing password.),
+        /// oldPassword (old password of the user.),
+        /// newPassword (new password of the user.).</param>
         /// <returns></returns>
         [HttpPut, Route("changePassword")]
         [SwaggerResponseRemoveDefaults]
@@ -224,7 +223,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <summary>
         /// Updates email of the user to the new email.
         /// </summary>
-        /// <param name="user">User model with two fields: string Id and string Email</param>
+        /// <param name="user">User model with two fields: string UserId and string Email</param>
         /// <returns></returns>
         [HttpPut, Route("UpdateEmail")]
         [SwaggerResponseRemoveDefaults]
@@ -235,7 +234,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception during the update.")]
         public async Task<bool> UpdateEmail([FromBody] UpdateEmailORUserName user)
         {
-            return await _userService.UpdateEmailAsync(user.Id, user.EmailORUserName);
+            return await _userService.UpdateEmailAsync(user.UserId, user.EmailORUserName);
         }
 
         //PUT api/user/UpdateUserName
@@ -253,7 +252,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception during the update.")]
         public async Task<bool> UpdateUserName([FromBody] UpdateEmailORUserName user)
         {
-            return await _userService.UpdateUserNameAsync(user.Id, user.EmailORUserName);
+            return await _userService.UpdateUserNameAsync(user.UserId, user.EmailORUserName);
         }
 
         // PUT api/User/Friends
