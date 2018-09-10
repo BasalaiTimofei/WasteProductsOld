@@ -82,11 +82,18 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         /// <returns>A hash code for the current object</returns>
         public override int GetHashCode()
         {
-            var hashCode = Id.GetHashCode();
-            hashCode = 31 * hashCode + Name.GetHashCode();
-
+            var hashCode = -1413941165;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Id);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Name);
+            hashCode = hashCode * -1521134295 + Created.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<DateTime?>.Default.GetHashCode(Modified);
+            hashCode = hashCode * -1521134295 + EqualityComparer<CategoryDB>.Default.GetHashCode(Category);
+            hashCode = hashCode * -1521134295 + EqualityComparer<BarcodeDB>.Default.GetHashCode(Barcode);
+            hashCode = hashCode * -1521134295 + EqualityComparer<ICollection<UserProductDescriptionDB>>.Default.GetHashCode(UserDescriptions);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Composition);
+            hashCode = hashCode * -1521134295 + IsHidden.GetHashCode();
+            hashCode = hashCode * -1521134295 + Marked.GetHashCode();
             return hashCode;
         }
-
     }
 }
