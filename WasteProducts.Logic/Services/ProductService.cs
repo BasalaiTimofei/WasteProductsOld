@@ -108,21 +108,17 @@ namespace WasteProducts.Logic.Services
         /// </summary>
         /// <param name="name">The name of the product.</param>
         /// <returns>Product with the specific name.</returns>
-        public Product GetByName(string name)
-        {
-            return _mapper.Map<Product>(_productRepository.SelectWhere(p =>
-                    string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase)).First());
-        }
+        public Product GetByName(string name) =>
+            _mapper.Map<Product>(_productRepository.SelectWhere(p =>
+            string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase)).First());
 
         /// <summary>
         /// Gets asynchronously product by its name.
         /// </summary>
         /// <param name="name">The name of the product.</param>
         /// <returns>Product with the specific name.</returns>
-        public async Task<Product> GetByNameAsync(string name)
-        {
-            return _mapper.Map<Product>(await _productRepository.GetByNameAsync(name));
-        }
+        public async Task<Product> GetByNameAsync(string name) =>
+            _mapper.Map<Product>(await _productRepository.GetByNameAsync(name));
 
         /// <summary>
         /// Gets products by a category.
@@ -147,6 +143,18 @@ namespace WasteProducts.Logic.Services
 
             var productFromDB = products.ToList().First();
             _productRepository.Delete(productFromDB);
+
+            return true;
+        }
+
+        public bool Update(Product product)
+        {
+            if (IsProductsInDB(p =>
+                    string.(p.Modified.Value, product.Name, StringComparison.CurrentCultureIgnoreCase),
+                out var products)) return false;
+
+            product.Id = new Guid().ToString();
+            _productRepository.Add(_mapper.Map<ProductDB>(product));
 
             return true;
         }
@@ -218,7 +226,7 @@ namespace WasteProducts.Logic.Services
             if (!IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.Ordinal),
                 out var products)) return false;
-           
+
             var productFromDB = products.ToList().First();
             if (productFromDB.IsHidden) return true;
 
@@ -258,7 +266,7 @@ namespace WasteProducts.Logic.Services
             if (!IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.Ordinal),
                 out var products)) return null;
-            
+
             var productFromDB = products.ToList().First();
 
             return productFromDB.IsHidden;
@@ -279,7 +287,7 @@ namespace WasteProducts.Logic.Services
             productFromDB.Composition = composition;
             _productRepository.Update(productFromDB);
         }
-     
+
         private bool IsProductsInDB(Predicate<ProductDB> conditionPredicate, out IEnumerable<ProductDB> products)
         {
             products = _productRepository.SelectWhere(conditionPredicate);
