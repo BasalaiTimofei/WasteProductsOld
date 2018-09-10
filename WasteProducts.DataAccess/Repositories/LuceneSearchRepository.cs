@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -9,24 +8,22 @@ using System.Threading.Tasks;
 using Lucene.Net.Analysis;
 using Lucene.Net.Store;
 using Lucene.Net.Util;
-using Lucene.Net.Analysis.Core;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.Search;
-using Lucene.Net.QueryParsers.Classic;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Exceptions;
-using Lucene.Net.Analysis.Standard;
 using System.Web.Configuration;
+using Lucene.Net.Analysis.Ru;
+using Lucene.Net.QueryParsers.Classic;
 
 namespace WasteProducts.DataAccess.Repositories
 {
     /// <summary>
     /// Implementation of ISearchRepository with Lucene
     /// </summary>
-    public class LuceneSearchRepository : ISearchRepository, IDisposable
+    public class LuceneSearchRepository : ISearchRepository
     {
-
         public const LuceneVersion MATCH_LUCENE_VERSION = LuceneVersion.LUCENE_48;
         public string IndexPath { get; private set; }
         public string IDField { get; private set; } = "Id";
@@ -34,14 +31,12 @@ namespace WasteProducts.DataAccess.Repositories
         private Lucene.Net.Store.Directory _directory;
         private Analyzer _analyzer;
         private IndexWriter _writer;
-        //private SearcherManager _searcherManager;
 
         /// <summary>
         /// Creates Lucene repository
         /// </summary>
         public LuceneSearchRepository()
         {
-
             string assemblyFilename = Assembly.GetAssembly(typeof(LuceneSearchRepository)).Location;
             string assemblyPath = Path.GetDirectoryName(assemblyFilename);
             string indexStoragePath = WebConfigurationManager.AppSettings["LuceneIndexStoragePath"]; ;
@@ -53,8 +48,9 @@ namespace WasteProducts.DataAccess.Repositories
             {
                 throw new LuceneSearchRepositoryException("Can't find Lucene index storage path settings.");
             }
-            //_analyzer = new WhitespaceAnalyzer(MATCH_LUCENE_VERSION);
-            _analyzer = new StandardAnalyzer(MATCH_LUCENE_VERSION);
+
+            _analyzer = new RussianAnalyzer(MATCH_LUCENE_VERSION);
+
             try
             {
                 _directory = FSDirectory.Open(IndexPath);
@@ -66,7 +62,6 @@ namespace WasteProducts.DataAccess.Repositories
                 {
                     IndexWriter.Unlock(_directory);
                 }
-                //_searcherManager = new SearcherManager(_writer, true, null);
                 _writer.Commit();
             }
             catch (Exception ex)
@@ -99,6 +94,11 @@ namespace WasteProducts.DataAccess.Repositories
             return ProceedQuery<TEntity>(queryGet);
         }
 
+        public TEntity GetById<TEntity>(string id) where TEntity : class
+        {
+            return Get<TEntity>(id, IDField);
+        }
+
         /// <summary>
         /// Returns entity from repository by field value
         /// </summary>
@@ -119,7 +119,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// <returns></returns>
         public IEnumerable<TEntity> GetAll<TEntity>() where TEntity  :class
         {           
-            Query queryGet = NumericRangeQuery.NewInt64Range(IDField, 0, Int32.MaxValue, true, true);
+            WildcardQuery queryGet = new WildcardQuery(new Term(IDField, "*"));
             return ProceedQueryList<TEntity>(queryGet, Int32.MaxValue);
         }
 
@@ -174,8 +174,8 @@ namespace WasteProducts.DataAccess.Repositories
         public void Update<TEntity>(TEntity obj) where TEntity : class 
         {
             System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty(IDField);
-            int id = (int)keyFieldInfo.GetValue(obj);
-            if (id>0)
+            string id = (string)keyFieldInfo.GetValue(obj);
+            if (!String.IsNullOrEmpty(id))
             {
                 if (GetById<TEntity>(id) != null)
                 {
@@ -196,12 +196,13 @@ namespace WasteProducts.DataAccess.Repositories
         /// <param name="obj"></param>
         public void Delete<TEntity>(TEntity obj) where TEntity : class
         {
-
             System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty(IDField);
-            int id = (int)keyFieldInfo.GetValue(obj);
-            if (id>0)
+            string id = (string)keyFieldInfo.GetValue(obj);
+            if (!String.IsNullOrEmpty(id))
             {
-                _writer.DeleteDocuments<TEntity>(NumericRangeQuery.NewInt64Range(IDField, id, id, true, true));
+                //_writer.DeleteDocuments<TEntity>(NumericRangeQuery.NewInt64Range(IDField, id, id, true, true));
+                Query query = new TermQuery(new Term(IDField, id));
+                _writer.DeleteDocuments<TEntity>(query);
                 _writer.Commit();
             }
             else
@@ -274,7 +275,6 @@ namespace WasteProducts.DataAccess.Repositories
                 }
                 catch(Exception ex)
                 {
-                    //_searcherManager.Release(searcher);
                     throw new LuceneSearchRepositoryException($"Can't proceed query. {ex.Message}", ex);
                 }
             }
@@ -306,7 +306,6 @@ namespace WasteProducts.DataAccess.Repositories
                 }
                 catch(Exception ex)
                 {
-                    //_searcherManager.Release(searcher);
                     throw new LuceneSearchRepositoryException($"Can't proceed query. {ex.Message}", ex);
                 }
             }
@@ -340,16 +339,20 @@ namespace WasteProducts.DataAccess.Repositories
                 throw new ArgumentException("Can't search with empty filelds.");
             }
             BooleanQuery booleanQuery = new BooleanQuery();
+
             var searchTerms = queryString.Split(' ');
             foreach (var term in searchTerms)
             {
                 foreach (var field in searchableFields)
                 {
                     WildcardQuery wildcardQuery = new WildcardQuery(new Term(field, $"{term}*"));
+                    QueryParser parser = new QueryParser(MATCH_LUCENE_VERSION, field, _analyzer);
+                    var query = parser.Parse(queryString);
                     if (boosts!=null)
                     {
-                        wildcardQuery.Boost = boosts[field];
+                        query.Boost = boosts[field];
                     }
+                    booleanQuery.Add(query, Occur.SHOULD);
                     booleanQuery.Add(wildcardQuery, Occur.SHOULD);
                 }
             }
@@ -386,42 +389,35 @@ namespace WasteProducts.DataAccess.Repositories
         #endregion
 
         #region IDisposable Support
-        private bool disposedValue = false;
+        private bool _isDisposed = false;
+
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_isDisposed)
             {
                 if (disposing)
                 {
-                    // TODO: dispose managed state (managed objects).
                     _writer.Commit();
                     _writer.Dispose();
                     _directory.Dispose();
                     _analyzer.Dispose();
                 }
 
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-                disposedValue = true;
+                _isDisposed = true;
             }
         }
 
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~LuceneSearchRepository() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
+        ~LuceneSearchRepository()
         {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
+            Dispose(false);
         }
-
         #endregion
     }
 }

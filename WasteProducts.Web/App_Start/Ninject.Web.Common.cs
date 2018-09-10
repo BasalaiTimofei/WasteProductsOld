@@ -1,3 +1,6 @@
+using WasteProducts.Web.Controllers.Api;
+using Ninject.Extensions.Interception.Infrastructure.Language;
+
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(WasteProducts.Web.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethod(typeof(WasteProducts.Web.App_Start.NinjectWebCommon), "Stop")]
 

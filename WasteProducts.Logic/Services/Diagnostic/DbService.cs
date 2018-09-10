@@ -98,9 +98,11 @@ namespace WasteProducts.Logic.Services
         {
             if (!_isDisposed)
             {
-                if (disposing) { }
-
-                _database.Dispose();
+                if (disposing)
+                {
+                    _database.Dispose();
+                }
+                
                 _isDisposed = true;
             }
         }

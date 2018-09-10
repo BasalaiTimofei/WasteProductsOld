@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models;
+using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Search;
 
 namespace WasteProducts.Logic.Common.Services
@@ -16,7 +17,7 @@ namespace WasteProducts.Logic.Common.Services
         /// <typeparam name="TEntity">Object model</typeparam>
         /// <param name="query">SearchQuery model</param>
         /// <returns>SearchResult model</returns>
-        IEnumerable<TEntity> Search<TEntity>(SearchQuery query) where TEntity : class;
+        //IEnumerable<TEntity> Search<TEntity>(SearchQuery query) where TEntity : class;
 
         /// <summary>
         /// This method provides ability to search by partial words. It replaces all dashes "-" in search requests, and adds "*" (star) after each word.
@@ -32,7 +33,7 @@ namespace WasteProducts.Logic.Common.Services
         /// <typeparam name="TEntity">Object model type</typeparam>
         /// <param name="query">SearchQuery model</param>
         /// <returns>SearchResult model</returns>
-        IEnumerable<TEntity> SearchDefault<TEntity>(SearchQuery query);
+        IEnumerable<TEntity> SearchDefault<TEntity>(BoostedSearchQuery query);
 
         /// <summary>
         /// This method provides ability to add object to search repository
@@ -86,17 +87,21 @@ namespace WasteProducts.Logic.Common.Services
         /// </summary>
         void OptimizeSearchIndex();
 
-        #region Async methods
+        /// <summary>
+        /// Return list of products by search query
+        /// </summary>
+        /// <param name="query">Search query</param>
+        /// <returns>List of products</returns>
+        IEnumerable<Product> SearchProduct(BoostedSearchQuery query);
+
         /// <summary>
         /// Async version of Search
         /// </summary>
-        Task<IEnumerable<TEntity>> SearchAsync<TEntity>(SearchQuery query);
+        Task<IEnumerable<TEntity>> SearchAsync<TEntity>(BoostedSearchQuery query);
 
         /// <summary>
         ///  Async version of SearchDefault
         /// </summary>
-        Task<IEnumerable<TEntity>> SearchDefaultAsync<TEntity>(SearchQuery query);
-
-        #endregion
+        Task<IEnumerable<TEntity>> SearchDefaultAsync<TEntity>(BoostedSearchQuery query);        
     }
 }
