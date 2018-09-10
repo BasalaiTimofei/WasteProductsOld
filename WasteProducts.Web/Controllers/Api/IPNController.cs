@@ -1,5 +1,6 @@
 ﻿using NLog;
 using Swagger.Net.Annotations;
+using System.Net;
 using System.Web.Http;
 using System.Web.Http.Results;
 using WasteProducts.Logic.Common.Services;
@@ -28,6 +29,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// Receives Instant Payment Notifications from PayPal.
         /// </summary>
         [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
         [HttpPost, Route("receive")]
         public OkResult Receive([FromUri]string query)
         {
