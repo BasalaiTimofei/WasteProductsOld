@@ -168,14 +168,9 @@ namespace WasteProducts.Logic.Services
         }
 
         //TODO: implement async methods later if necessary
-        public Task<IEnumerable<TEntity>> SearchAsync<TEntity>(BoostedSearchQuery query)
+        public Task<IEnumerable<Product>> SearchProductAsync(BoostedSearchQuery query)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<TEntity>> SearchDefaultAsync<TEntity>(BoostedSearchQuery query)
-        {
-            throw new NotImplementedException();
+            return Task.Run(() => SearchProduct(query));
         }
 
         private void CheckQuery(BoostedSearchQuery query)
