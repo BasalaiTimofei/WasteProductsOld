@@ -117,7 +117,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="UserManagementTests\UserServiceIntegrationTests.cs" />
-    <Compile Include="UserManagementTests\UserServiceTest.cs" />
     <Compile Include="Search_Tests\SearchRepository_Test.cs" />
     <Compile Include="Search_Tests\SearchService_Test.cs" />
   </ItemGroup>

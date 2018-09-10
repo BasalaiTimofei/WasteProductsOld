@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Users;
 
 namespace WasteProducts.Logic.Common.Services.UserService
