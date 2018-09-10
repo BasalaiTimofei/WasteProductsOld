@@ -1,14 +1,10 @@
 ﻿using NLog;
 using Swagger.Net.Annotations;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Http.ModelBinding;
-using WasteProducts.Logic.Common.Models;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Search;
 using WasteProducts.Logic.Common.Services;
@@ -23,134 +19,62 @@ namespace WasteProducts.Web.Controllers.Api
     {
         private ISearchService _searchService { get; }
         public const string DEFAULT_PRODUCT_NAME_FIELD = "Name";
-        public const string DEFAULT_PRODUCT_DESCRIPTION_FIELD = "Description";
-        public const string DEFAULT_PRODUCT_BARCODE_FIELD = "Barcode";
+        public const string DEFAULT_PRODUCT_COMPOSITION_FIELD = "Composition";
+        public const string DEFAULT_PRODUCT_BARCODE_FIELD = "Barcode.Code";
 
-        public SearchController(ILogger logger, ISearchService searchService) : base(logger)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="searchService">Search service</param>
+        /// <param name="logger">NLog logger</param>
+        public SearchController(ISearchService searchService, ILogger logger) : base(logger)
         {
             _searchService = searchService;
         }
 
-
         /// <summary>
-        /// Performs full-text search by default fields "Name", "Description", "Barcode".
+        /// Performs full-text search by default fields "Name", "Composition", "Barcode".
         /// </summary>
         /// <param name="query">Query string</param>
         /// <returns>Product collection</returns>
-        [HttpGet]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
-        //[SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty")]
-        [Route("products/default")]
-        public IEnumerable<Product> GetProductsDefaultFields([FromUri]string query)
+        [HttpGet, Route("products/default")]
+        public Task<IEnumerable<Product>> GetProductsDefaultFields([FromUri]string query)
         {
-            if (String.IsNullOrEmpty(query))
+            if (string.IsNullOrEmpty(query))
             {
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
             }
-            else
-            {
-                SearchQuery searchQuery = new SearchQuery();
-                searchQuery.AddField(DEFAULT_PRODUCT_NAME_FIELD).AddField(DEFAULT_PRODUCT_DESCRIPTION_FIELD).AddField(DEFAULT_PRODUCT_BARCODE_FIELD);
-                searchQuery.Query = query;
 
-                return _searchService.Search<Product>(searchQuery);
-            }
+            BoostedSearchQuery searchQuery = new BoostedSearchQuery();
+            searchQuery.AddField(DEFAULT_PRODUCT_NAME_FIELD, 1.0f)
+                .AddField(DEFAULT_PRODUCT_COMPOSITION_FIELD, 1.0f)
+                .AddField(DEFAULT_PRODUCT_BARCODE_FIELD, 1.0f);
+            searchQuery.Query = query;
+
+            return Task.FromResult(_searchService.SearchProduct(searchQuery));
         }
+
 
         /// <summary>
         /// Performs full-text in specified fields.
         /// </summary>
-        /// <param name="query">Query string</param>
-        /// <param name="fields">Searchable fields</param>
+        /// <param name="query">SearchQuery object converted from string "query;field1[:boost1],field2[:boost2],..."</param>
         /// <returns>Product collection</returns>
-        [HttpGet]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
-        //[SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty")]
-        [Route("products/custom")]
-        public IEnumerable<Product> GetProducts([FromUri]string query, [FromUri]string[] fields)
+        [HttpGet, Route("products/custom")]
+        public Task<IEnumerable<Product>> GetProducts(BoostedSearchQuery query)
         {
-            if (String.IsNullOrEmpty(query) || fields.Length == 0)
-            {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
-            }
-            else
-            {
-                SearchQuery searchQuery = new SearchQuery();
-                searchQuery.Query = query;
-                foreach (string field in fields)
-                {
-                    searchQuery.AddField(field);
-                }
-
-                return _searchService.Search<Product>(searchQuery);
-            }
-        }
-
-        /// <summary>
-        /// Performs full-text in specified fields with boost values for each field.
-        /// </summary>
-        /// <param name="query">BoostedSearchQuery object converted from string "query;field1:boost1,field2:boost2,..."</param>
-        /// <returns>Product collection</returns>
-        [HttpGet]
-        [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
-        //[SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty")]
-        [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
-        [Route("products/boosted")]
-        public IEnumerable<Product> GetProductsBoostedFields(BoostedSearchQuery query)
-        {
-
-            //Add product for testing purposes
-            Product product = new Product();
-            product.Name = "Test product name";
-            product.Description = "Test product description";
-            _searchService.AddToSearchIndex<Product>(product);
-
-            HttpResponseMessage response;
-            if (ModelState.IsValid)
-            {
-                return _searchService.Search<Product>(query);
-            }
-            else
+            if (!ModelState.IsValid)
             {
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
             }
 
-        }
-
-        /// <summary>
-        /// Performs full-text in specified fields.
-        /// </summary>
-        /// <param name="query">SearchQuery object converted from string "query;field1,field2,..."</param>
-        /// <returns>Product collection</returns>
-        [HttpGet]
-        [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
-        //[SwaggerResponse(HttpStatusCode.NoContent, "Search result collection is empty")]
-        [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
-        [Route("products/custom/fields")]
-        public IEnumerable<Product> GetProducts(SearchQuery query)
-        {
-            //Add product for testing purposes
-            Product product = new Product();
-            product.Name = "Test product name";
-            product.Description = "Test product description";
-            _searchService.AddToSearchIndex<Product>(product);
-
-            HttpResponseMessage response;
-
-            if (ModelState.IsValid)
-            {
-                return _searchService.Search<Product>(query);
-            }
-            else
-            {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
-            }
+            return Task.FromResult(_searchService.SearchProduct(query));
         }
     }
 }

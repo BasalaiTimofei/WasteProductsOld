@@ -7,6 +7,8 @@ using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Contexts;
 using System.Data.Entity;
+using WasteProducts.DataAccess.Common.Repositories.Search;
+using Ninject;
 
 namespace WasteProducts.DataAccess.Repositories.UserManagement
 {
@@ -20,7 +22,11 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public UserRoleRepository()
         {
-            _context = new WasteContext();
+            //TODO: Injection
+            StandardKernel kernel = new StandardKernel();
+            kernel.Load(new DataAccess.InjectorModule());
+            _context = new WasteContext(kernel.Get<ISearchRepository>());
+
             _store = new RoleStore<IdentityRole>(_context)
             {
                 DisposeContext = true

@@ -121,5 +121,12 @@ namespace WasteProducts.Logic.Common.Services
         /// <param name="product">Checked specific product.</param>
         /// <returns>Boolean represents whether the product is in the hidden state.</returns>
         bool? IsHidden(Product product);
+
+        /// <summary>
+        /// Sets the description of the specific product
+        /// </summary>
+        /// <param name="product">The specific product to set description</param>
+        /// <param name="Composition">The description of the specific product</param>
+        void SetComposition(Product product, string composition);
     }
 }

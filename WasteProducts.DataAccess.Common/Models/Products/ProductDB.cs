@@ -41,21 +41,6 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         public virtual BarcodeDB Barcode { get; set; }
 
         /// <summary>
-        /// Defines the average Product rating based on user ratings.
-        /// </summary>
-        public double? AvgRating { get; set; }
-
-        /// <summary>
-        /// Defines the price of the Product.
-        /// </summary>
-        public decimal Price { get; set; }
-
-        /// <summary>
-        /// Defines the number of users who have rated the Product. Is used to determine the property "AvgRating".
-        /// </summary>
-        public int RateCount { get; set; }
-
-        /// <summary>
         /// User descriptions of this product.
         /// </summary>
         public virtual ICollection<UserProductDescriptionDB> UserDescriptions { get; set; }
@@ -63,7 +48,7 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         /// <summary>
         /// Defines the Product description
         /// </summary>
-        public string Description { get; set; }
+        public string Composition { get; set; }
 
         /// <summary>
         /// Defines whether the Product is in the "hidden" state
@@ -83,25 +68,12 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         public override bool Equals(object obj)
         {
             return obj is ProductDB other &&
-                   Name == other.Name &&
-                   AvgRating == other.AvgRating &&
-                   Id == other.Id &&
-                   Created == other.Created &&
-                   Modified == other.Modified &&
-                   Category == other.Category &&
-                   Barcode == other.Barcode &&
-                   Price == other.Price &&
-                   RateCount == other.RateCount;
-        }
-
-        /// <summary>
-        /// The hash code for this ProductDB
-        /// </summary>
-        /// <returns>A hash code for the current object</returns>
-        public override int GetHashCode()
-        {
-            var hashCode = Id.GetHashCode();
-            return hashCode;
+                   this.Name == other.Name &&
+                   this.Id == other.Id &&
+                   this.Created == other.Created &&
+                   this.Modified == other.Modified &&
+                   this.Category == other.Category &&
+                   this.Barcode == other.Barcode;
         }
 
         /// <summary>

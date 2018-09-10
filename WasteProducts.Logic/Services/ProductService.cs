@@ -21,7 +21,7 @@ namespace WasteProducts.Logic.Services
         private readonly IMapper _mapper;
         private bool _disposed;
 
-        public ProductService(IProductRepository productRepository, [Named("ProductService")] IMapper mapper)
+        public ProductService(IProductRepository productRepository, IMapper mapper)
         {
             _productRepository = productRepository;
             _mapper = mapper;
@@ -264,6 +264,22 @@ namespace WasteProducts.Logic.Services
             return productFromDB.IsHidden;
         }
 
+        /// <summary>
+        /// Sets the description of the specific product.
+        /// </summary>
+        /// <param name="product">The specific product to set description.</param>
+        /// <param name="composition">The description of the specific product.</param>
+        public void SetComposition(Product product, string composition)
+        {
+            if (composition == null || !IsProductsInDB(p =>
+                    string.Equals(p.Id, product.Id, StringComparison.Ordinal),
+                out var products)) return;
+
+            var productFromDB = products.ToList().First();
+            productFromDB.Composition = composition;
+            _productRepository.Update(productFromDB);
+        }
+     
         private bool IsProductsInDB(Predicate<ProductDB> conditionPredicate, out IEnumerable<ProductDB> products)
         {
             products = _productRepository.SelectWhere(conditionPredicate);

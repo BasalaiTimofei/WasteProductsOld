@@ -1,10 +1,13 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Diagnostics;
 using Microsoft.AspNet.Identity.EntityFramework;
-using WasteProducts.DataAccess.Common.Context;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Contexts.Config;
+using System.Linq;
+using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.ModelConfigurations;
 using WasteProducts.DataAccess.ModelConfigurations.UserManagement;
@@ -12,15 +15,19 @@ using WasteProducts.DataAccess.ModelConfigurations.UserManagement;
 namespace WasteProducts.DataAccess.Contexts
 {
     [DbConfigurationType(typeof(MsSqlConfiguration))]
-    public class WasteContext : IdentityDbContext<UserDB, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>, IDbContext
+    public class WasteContext : IdentityDbContext<UserDB, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>
     {
-        public WasteContext()
+        private readonly ISearchRepository _searchRepository;    
+
+        public WasteContext(ISearchRepository searchRepository)
         {
+            _searchRepository = searchRepository;
             Database.Log = (s) => Debug.WriteLine(s);
         }
 
-        public WasteContext(string nameOrConnectionString) : base(nameOrConnectionString)
+        public WasteContext(string nameOrConnectionString, ISearchRepository searchRepository) : base(nameOrConnectionString)
         {
+            _searchRepository = searchRepository;
             Database.Log = (s) => Debug.WriteLine(s);
         }
 
@@ -70,5 +77,48 @@ namespace WasteProducts.DataAccess.Contexts
         public IDbSet<GroupUserDB> GroupUserDBs { get; set; }
         public IDbSet<GroupCommentDB> GroupCommentDBs { get; set; }
         public IDbSet<GroupProductDB> GroupProductDBs { get; set; }
+                
+        public override int SaveChanges()
+        {            
+            SaveChangesToSearchRepository();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync()
+        {
+            SaveChangesToSearchRepository();
+            return base.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Save changes to Lucene search repository.
+        /// </summary>
+        private void SaveChangesToSearchRepository()
+        {
+            DetectAndSaveChanges(typeof(ProductDB), typeof(CategoryDB), typeof(GroupDB), typeof(UserDB));
+        }
+
+        /// <summary>
+        /// Detectes changes and save it to Lucene using LuceneSearchRepository
+        /// </summary>
+        /// <param name="types">Object type that needed to detect and save</param>
+        protected void DetectAndSaveChanges(params Type[] types)
+        {
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                if (!types.Contains(entry.Entity.GetType()))
+                    continue;
+
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        _searchRepository.Insert(entry.Entity); break;
+                    case EntityState.Modified:
+                        _searchRepository.Update(entry.Entity); break;
+                    case EntityState.Deleted:
+                        _searchRepository.Delete(entry.Entity); break;
+                }
+            }
+        }
     }
 }
