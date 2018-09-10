@@ -13,7 +13,7 @@ namespace WasteProducts.Web.Controllers.Api
     [RoutePrefix("api/IPN")]
     public class IPNController : BaseApiController
     {
-        private IDonationService _donationService { get; }
+        private readonly IDonationService _donationService;
 
         /// <summary>
         /// Constructor
@@ -29,7 +29,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// Receives Instant Payment Notifications from PayPal.
         /// </summary>
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
+        [SwaggerResponse(HttpStatusCode.OK, "Instant Payment Notification from PayPal was received.")]
         [HttpPost, Route("receive")]
         public OkResult Receive([FromUri]string query)
         {
