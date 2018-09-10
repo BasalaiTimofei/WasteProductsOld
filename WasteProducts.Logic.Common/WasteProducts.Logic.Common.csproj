@@ -100,7 +100,7 @@
     <Compile Include="Services\Diagnostic\IDbService.cs" />
     <Compile Include="Services\Diagnostic\ITestModelsService.cs" />
     <Compile Include="Services\ICategoryService.cs" />
-    <Compile Include="Services\IDonationLogger.cs" />
+    <Compile Include="Services\IDonationService.cs" />
     <Compile Include="Services\IProductService.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\IBarcodeScanService.cs" />
