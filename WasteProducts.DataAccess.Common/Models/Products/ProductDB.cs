@@ -82,10 +82,7 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         /// <returns>A hash code for the current object</returns>
         public override int GetHashCode()
         {
-            var hashCode = Id.GetHashCode();
-            hashCode = 31 * hashCode + Name.GetHashCode();
-
-            return hashCode;
+            return 212122;
         }
 
     }
