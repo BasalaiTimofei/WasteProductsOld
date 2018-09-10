@@ -147,17 +147,17 @@ namespace WasteProducts.Logic.Services
             return true;
         }
 
-        public bool Update(Product product)
-        {
-            if (IsProductsInDB(p =>
-                    string.(p.Modified.Value, product.Name, StringComparison.CurrentCultureIgnoreCase),
-                out var products)) return false;
+        //public bool Update(Product product)
+        //{
+        //    if (IsProductsInDB(p =>
+        //            string.(p.Modified.Value, product.Name, StringComparison.CurrentCultureIgnoreCase),
+        //        out var products)) return false;
 
-            product.Id = new Guid().ToString();
-            _productRepository.Add(_mapper.Map<ProductDB>(product));
+        //    product.Id = new Guid().ToString();
+        //    _productRepository.Add(_mapper.Map<ProductDB>(product));
 
-            return true;
-        }
+        //    return true;
+        //}
 
         /// <summary>
         /// Tries to delete the product by name and returns whether the deletion is successful or not.
