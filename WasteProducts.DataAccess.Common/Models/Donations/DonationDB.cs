@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace WasteProducts.Logic.Common.Models.DonationManagment
+namespace WasteProducts.DataAccess.Common.Models.Donations
 {
-    public class Donation
+    public class DonationDB
     {
         /// <summary>
         /// Unique identifier for a specific donation.
@@ -31,8 +31,18 @@ namespace WasteProducts.Logic.Common.Models.DonationManagment
         public decimal Fee { get; set; }
 
         /// <summary>
+        /// Specifies the foreign key.
+        /// </summary>
+        public string DonorId { get; set; }
+
+        /// <summary>
         /// Specifies the donor.
         /// </summary>
-        public Donor Donor { get; set; }
+        public virtual DonorDB Donor { get; set; }
+
+        /// <summary>
+        /// Specifies the timestamp for creating of a specific donation in the database.
+        /// </summary>
+        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
     }
 }

@@ -114,9 +114,9 @@
     <Compile Include="Contexts\Security\IdentityContext.cs" />
     <Compile Include="Contexts\WasteContext.cs" />
     <Compile Include="InjectorModule.cs" />
-    <Compile Include="ModelConfigurations\DonationManagment\AddressEntityConfiguration.cs" />
-    <Compile Include="ModelConfigurations\DonationManagment\DonationEntityConfiguration.cs" />
-    <Compile Include="ModelConfigurations\DonationManagment\DonorEntityConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Donations\AddressEntityConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Donations\DonationEntityConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Donations\DonorEntityConfiguration.cs" />
     <Compile Include="ModelConfigurations\EntityConfiguration.cs" />
     <Compile Include="ModelConfigurations\Groups\GroupBoardConfiguration.cs" />
     <Compile Include="ModelConfigurations\Groups\GroupCommentConfiguration.cs" />

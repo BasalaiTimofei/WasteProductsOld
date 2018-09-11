@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using System;
-using WasteProducts.DataAccess.Common.Models.DonationManagment;
-using WasteProducts.Logic.Common.Models.DonationManagment;
+using WasteProducts.DataAccess.Common.Models.Donations;
+using WasteProducts.Logic.Common.Models.Donations;
 
-namespace WasteProducts.Logic.Mappings.DonationManagment
+namespace WasteProducts.Logic.Mappings.Donations
 {
     class DonorProfile : Profile
     {

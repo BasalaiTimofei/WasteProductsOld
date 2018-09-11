@@ -1,4 +1,4 @@
-﻿namespace WasteProducts.Logic.Common.Models.DonationManagment
+﻿namespace WasteProducts.Logic.Common.Models.Donations
 {
     public class Address
     {

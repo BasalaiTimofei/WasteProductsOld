@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WasteProducts.DataAccess.Common.Models.DonationManagment
+namespace WasteProducts.DataAccess.Common.Models.Donations
 {
     public class AddressDB
     {

@@ -1,4 +1,4 @@
-﻿using WasteProducts.Logic.Common.Models.DonationManagment;
+﻿using WasteProducts.Logic.Common.Models.Donations;
 
 namespace WasteProducts.Logic.Common.Services
 {
