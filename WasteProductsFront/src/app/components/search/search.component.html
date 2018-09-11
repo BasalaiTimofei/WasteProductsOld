@@ -1,14 +1,12 @@
 <h2>Search</h2>
 
 <div id="search-component">
-
   <div>
     <label>Search query:
-      <input #query />
+      <input [(ngTemplateOutlet)]="query" placeholder="Search query"/>
     </label>
-    <button (click)="search(query.value); query.value=''">
+    <button (click)="search(query); query=''">
       Search
     </button>
   </div>
-
 </div>

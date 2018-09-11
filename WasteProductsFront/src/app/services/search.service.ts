@@ -9,7 +9,7 @@ import { catchError, tap, map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class SearchService {
-
+  searchProducts: SearchProduct[];
   private URL_SEARCH = 'http://localhost:2189/api/search/products';  // URL to web api
 
   constructor( private http: HttpClient ) { }

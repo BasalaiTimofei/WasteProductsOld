@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { SearchComponent } from '../search/search.component';
 import { SearchProduct } from '../../models/SearchProduct.model';
+import { SearchService } from '../../services/search.service';
 
 @Component({
   selector: 'app-searchresult',
@@ -9,15 +9,16 @@ import { SearchProduct } from '../../models/SearchProduct.model';
 })
 export class SearchresultComponent implements OnInit {
   searchProducts: SearchProduct[] = [];
+  query: string;
 
-  constructor( private searchComponent: SearchComponent ) { }
+  constructor( private searchService: SearchService ) { }
 
   ngOnInit() {
-    this.getSearchProducts();
+    this.getSearchProductsFromService();
   }
 
-  getSearchProducts() {
-    this.searchProducts = this.searchComponent.getSearchProducts();
+  getSearchProductsFromService() {
+    // this.searchProducts = this.searchService.getSearchProducts();
   }
 
 }
