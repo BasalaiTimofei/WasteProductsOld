@@ -6,19 +6,14 @@ using System.Web;
 namespace WasteProducts.Web.Models.Users
 {
     /// <summary>
-    /// PLL model for registering a new user.
+    /// PLL model for logging in to the server.
     /// </summary>
-    public class RegisterUser
+    public class LoginByName
     {
         /// <summary>
-        /// Unique username of the user.
+        /// Name of the user.
         /// </summary>
         public string UserName { get; set; }
-
-        /// <summary>
-        /// Unique email of the user.
-        /// </summary>
-        public string Email { get; set; }
 
         /// <summary>
         /// Password of the user.

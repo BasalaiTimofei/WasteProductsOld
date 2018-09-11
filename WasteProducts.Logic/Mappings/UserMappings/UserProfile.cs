@@ -9,7 +9,7 @@ namespace WasteProducts.Logic.Mappings.UserMappings
     {
         public UserProfile()
         {
-            CreateMap<User, UserDB>().ReverseMap();
+            CreateMap<User, UserDAL>().ReverseMap();
         }
     }
 }

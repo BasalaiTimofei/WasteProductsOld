@@ -407,11 +407,10 @@
     </Compile>
     <Compile Include="Hubs\NotificationHub.cs" />
     <Compile Include="Models\Users\ChangePassword.cs" />
-    <Compile Include="Models\Users\DoubleIdModel.cs" />
-    <Compile Include="Models\Users\LoginUser.cs" />
-    <Compile Include="Models\Users\ProductRate.cs" />
+    <Compile Include="Models\Users\LoginByEmail.cs" />
+    <Compile Include="Models\Users\LoginByName.cs" />
+    <Compile Include="Models\Users\ProductDescriprion.cs" />
     <Compile Include="Models\Users\RegisterUser.cs" />
-    <Compile Include="Models\Users\UpdateEmail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\NinjectSignalRDependencyResolver.cs" />

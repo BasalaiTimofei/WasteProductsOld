@@ -5,12 +5,19 @@ using System.Web;
 
 namespace WasteProducts.Web.Models.Users
 {
+    /// <summary>
+    /// PLL model for changing password.
+    /// </summary>
     public class ChangePassword
     {
-        public string Id { get; set; }
-
+        /// <summary>
+        /// Old password of the user.
+        /// </summary>
         public string OldPassword { get; set; }
 
+        /// <summary>
+        /// New password of the user.
+        /// </summary>
         public string NewPassword { get; set; }
     }
 }
