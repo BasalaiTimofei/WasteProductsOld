@@ -67,8 +67,6 @@ namespace WasteProducts.Logic
                 new Mapper(new MapperConfiguration(cfg =>
                 {
                     cfg.AddProfile<UserProfile>();
-                    cfg.AddProfile<UserClaimProfile>();
-                    cfg.AddProfile<UserLoginProfile>();
                     cfg.AddProfile<Mappings.UserMappings.ProductProfile>();
                     cfg.AddProfile<UserProductDescriptionProfile>();
                 }))).WhenInjectedExactlyInto<UserService>();
@@ -77,8 +75,6 @@ namespace WasteProducts.Logic
                 new Mapper(new MapperConfiguration(cfg =>
                 {
                     cfg.AddProfile(new UserProfile());
-                    cfg.AddProfile(new UserClaimProfile());
-                    cfg.AddProfile(new UserLoginProfile());
                 }))).WhenInjectedExactlyInto<UserRoleService>();
 
             Bind<IMapper>().ToMethod(ctx =>

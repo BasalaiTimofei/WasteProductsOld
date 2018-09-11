@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -9,7 +9,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Users;
-using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Contexts;
 
@@ -23,9 +22,11 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         private readonly UserManager<UserDB> _manager;
 
+        private readonly IMapper _mapper;
+
         private bool _disposed;
 
-        public UserRepository(WasteContext context)
+        public UserRepository(WasteContext context, IMapper mapper)
         {
             _context = context;
             _store = new UserStore<UserDB>(_context)
@@ -33,6 +34,9 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 DisposeContext = true
             };
             _manager = new UserManager<UserDB>(_store);
+
+            _mapper = mapper;
+
         }
 
         public void Dispose()
@@ -66,17 +70,17 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             await _manager.CreateAsync(user, password);
         }
 
-        public async Task<UserDB> FindByNameAndPasswordAsync(string userName, string password)
+        public async Task<UserDAL> FindByNameAndPasswordAsync(string userName, string password)
         {
-            return await _manager.FindAsync(userName, password);
+            return MapTo<UserDAL>(await _manager.FindAsync(userName, password));
         }
 
-        public async Task<UserDB> FindByEmailAndPasswordAsync(string email, string password)
+        public async Task<UserDAL> FindByEmailAndPasswordAsync(string email, string password)
         {
             var user = await _manager.FindByEmailAsync(email);
             if (user != null && await _manager.CheckPasswordAsync(user, password))
             {
-                return user;
+                return MapTo<UserDAL>(user);
             }
             else
             {
@@ -127,38 +131,43 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             await _manager.RemoveLoginAsync(userId, userLoginInfo);
         }
 
-        public IQueryable<UserDB> GetSelector(bool initiateNavigationalProps)
+        public IEnumerable<UserDAL> GetAll(bool initiateNavigationalProps)
         {
             if (initiateNavigationalProps)
             {
-                return _context.Users;
+                return _mapper.Map<IEnumerable<UserDAL>>(_context.Users.ToList());
             }
             else
             {
-                return _context.Users.Include(u => u.Roles).
+                var subresult = _context.Users.Include(u => u.Roles).
                     Include(u => u.Claims).
                     Include(u => u.Logins).
                     Include(u => u.Friends).
-                    Include(u => u.ProductDescriptions.Select(p => p.Product));
+                    Include(u => u.ProductDescriptions.Select(p => p.Product)).ToList();
+
+                return _mapper.Map<IEnumerable<UserDAL>>(subresult);
             }
         }
 
-        public async Task<UserDB> GetAsync(Func<UserDB, bool> predicate, bool initiateNavigationalProps)
+        public async Task<UserDAL> GetAsync(string id, bool initiateNavigationalProps)
         {
             return await Task.Run(() =>
             {
                 if (initiateNavigationalProps)
                 {
-                    return _context.Users.FirstOrDefault(predicate);
+                    var subresult = _context.Users.FirstOrDefault(u => u.Id == id);
+                    return MapTo<UserDAL>(subresult);
                 }
                 else
                 {
-                    return _context.Users.Include(u => u.Roles).
+                    var subresult = _context.Users.Include(u => u.Roles).
                         Include(u => u.Claims).
                         Include(u => u.Logins).
                         Include(u => u.Friends).
                         Include(u => u.ProductDescriptions.Select(p => p.Product))
-                        .FirstOrDefault(predicate);
+                        .FirstOrDefault(u => u.Id == id);
+
+                    return MapTo<UserDAL>(subresult);
                 }
             });
         }
@@ -190,7 +199,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             await _manager.ChangePasswordAsync(userId, oldPassword, newPassword);
         }
 
-        public async Task UpdateAsync(UserDB user)
+        public async Task UpdateAsync(UserDAL user)
         {
             var userInDB = _context.Users.FirstOrDefault(u => u.Id == user.Id);
 
@@ -336,6 +345,16 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 return true;
             });
         }
+
+        private UserDB MapTo<T>(UserDAL user)
+            where T : UserDB
+            =>
+            _mapper.Map<UserDB>(user);
+
+        private UserDAL MapTo<T>(UserDB user)
+            where T : UserDAL
+            =>
+            _mapper.Map<UserDAL>(user);
 
         ~UserRepository()
         {

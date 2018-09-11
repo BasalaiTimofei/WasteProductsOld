@@ -27,7 +27,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="userId">User's ID.</param>
         /// <param name="password">User's password.</param>
         /// <returns>Specific user with this ID and password.</returns>
-        Task<UserDB> FindByNameAndPasswordAsync(string userName, string password);
+        Task<UserDAL> FindByNameAndPasswordAsync(string userName, string password);
 
         /// <summary>
         /// Return a user with the specified email and password or null if there is no match.
@@ -35,7 +35,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="email">User's Email.</param>
         /// <param name="password">User's password.</param>
         /// <returns>Specific user with this ID and password.</returns>
-        Task<UserDB> FindByEmailAndPasswordAsync(string email, string password);
+        Task<UserDAL> FindByEmailAndPasswordAsync(string email, string password);
 
         /// <summary>
         /// Add a claim to a user.
@@ -99,19 +99,19 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         Task RemoveLoginAsync(string userId, UserLoginDB login);
 
         /// <summary>
-        /// Use this method to select any users from DB by any select rule.
+        /// Gets all users from DB.
         /// </summary>
         /// <param name="initiateNavigationalprops">Specifies whether navigational properties will be included or no.</param>
-        /// <returns>IQueryable of DB users.</returns>
-        IQueryable<UserDB> GetSelector(bool initiateNavigationalProps);
+        /// <return>All users of the application.</returns>
+        IEnumerable<UserDAL> GetAll(bool initiateNavigationalProps);
 
         /// <summary>
-        /// Use this method to select any user by by any select rule.
+        /// Use this method to select user by its ID.
         /// </summary>
-        /// <param name="predicate">Rule for selecting a user. First match will be returned.</param>
+        /// <param name="id">ID of the user.</param>
         /// <param name="initiateNavigationalProps">Specifies whether navigational properties will be included or no.</param>
         /// <returns>DB User entity.</returns>
-        Task<UserDB> GetAsync(Func<UserDB, bool> predicate, bool initiateNavigationalProps);
+        Task<UserDAL> GetAsync(string id, bool initiateNavigationalProps);
 
         /// <summary>
         /// Get the names of the roles a user is a member of.
@@ -146,7 +146,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// Updates the record of the specific user.
         /// </summary>
         /// <param name="user">Specific user to update.</param>
-        Task UpdateAsync(UserDB user);
+        Task UpdateAsync(UserDAL user);
 
         /// <summary>
         /// Updates user's email if it isn't used by another user. Returns true if email was successfully updated.
@@ -175,7 +175,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <summary>
         /// Deletes a specific friend from the specific user's friend list.
         /// </summary>
-        /// <param name="userId">From the list of friends of UserDB with Id = userID the UserDB with Id = deletingFriendId will be deleted.</param>
+        /// <param name="userId">From the list of friends of User with Id = userID the User with Id = deletingFriendId will be deleted.</param>
         /// <param name="deletingFriendId">Specific friend's Id to delete from the user's friend list.</param>
         Task DeleteFriendAsync(string userID, string deletingFriendId);
 

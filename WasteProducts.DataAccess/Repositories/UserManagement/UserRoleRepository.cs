@@ -8,8 +8,6 @@ using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Contexts;
 using System.Data.Entity;
 using Microsoft.AspNet.Identity;
-using WasteProducts.DataAccess.Common.Repositories.Search;
-using Ninject;
 
 namespace WasteProducts.DataAccess.Repositories.UserManagement
 {

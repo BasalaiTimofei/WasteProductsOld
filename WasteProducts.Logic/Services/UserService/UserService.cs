@@ -9,7 +9,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Security.Claims;
-using Microsoft.AspNet.Identity;
 
 namespace WasteProducts.Logic.Services.UserService
 {
@@ -112,7 +111,7 @@ namespace WasteProducts.Logic.Services.UserService
         {
             return await Task.Run(() =>
             {
-                IEnumerable<UserDB> allUserDBs = _userRepo.GetSelector(true).ToList();
+                IEnumerable<UserDAL> allUserDBs = _userRepo.GetAll(true).ToList();
                 var allUsers = _mapper.Map<IEnumerable<User>>(allUserDBs);
                 return allUsers;
             });
@@ -122,7 +121,7 @@ namespace WasteProducts.Logic.Services.UserService
         {
             return await Task.Run(async () =>
             {
-                var userDB = await _userRepo.GetAsync(a => a.Id == id, true);
+                var userDB = await _userRepo.GetAsync(id, true);
                 var user = MapTo<User>(userDB);
                 return user;
             });
@@ -218,7 +217,7 @@ namespace WasteProducts.Logic.Services.UserService
 
         public async Task AddLoginAsync(string userId, UserLogin login)
         {
-            await _userRepo.AddLoginAsync(userId, MapTo<UserLoginInfo>(login));
+            await _userRepo.AddLoginAsync(userId, MapTo<UserLoginDB>(login));
         }
 
         public async Task RemoveFromRoleAsync(string userId, string roleName)
@@ -233,7 +232,7 @@ namespace WasteProducts.Logic.Services.UserService
 
         public async Task RemoveLoginAsync(string userId, UserLogin login)
         {
-            await _userRepo.RemoveLoginAsync(userId, MapTo<UserLoginInfo>(login));
+            await _userRepo.RemoveLoginAsync(userId, MapTo<UserLoginDB>(login));
         }
 
         public async Task DeleteUserAsync(string userId)
@@ -241,11 +240,11 @@ namespace WasteProducts.Logic.Services.UserService
             await _userRepo.DeleteAsync(userId);
         }
 
-        private UserDB MapTo<T>(User user)
+        private UserDAL MapTo<T>(User user)
             =>
-            _mapper.Map<UserDB>(user);
+            _mapper.Map<UserDAL>(user);
 
-        private User MapTo<T>(UserDB user)
+        private User MapTo<T>(UserDAL user)
             =>
             _mapper.Map<User>(user);
 

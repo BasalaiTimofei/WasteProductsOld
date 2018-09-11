@@ -5,7 +5,6 @@ using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Common.Models.Users;
 using AutoMapper;
-using Ninject;
 
 namespace WasteProducts.Logic.Services.UserService
 {
@@ -80,10 +79,7 @@ namespace WasteProducts.Logic.Services.UserService
 
         ~UserRoleService()
         {
-            if (!_disposed)
-            {
-                Dispose();
-            }
+            Dispose();
         }
     }
 }

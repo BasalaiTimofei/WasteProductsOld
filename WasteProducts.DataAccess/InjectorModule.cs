@@ -1,6 +1,8 @@
-﻿using Ninject;
+﻿using AutoMapper;
+using Ninject;
 using Ninject.Modules;
 using WasteProducts.DataAccess.Common.Context;
+using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
@@ -26,6 +28,14 @@ namespace WasteProducts.DataAccess
             Bind<IUserRoleRepository>().To<UserRoleRepository>();
             Bind<IProductRepository>().To<ProductRepository>();
             Bind<ISearchRepository>().To<LuceneSearchRepository>().InSingletonScope();
+
+            Bind<IMapper>().ToMethod(ctx =>
+            {
+                return new Mapper(new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<UserDB, UserDAL>().ReverseMap();
+                }));
+            }).WhenInjectedExactlyInto<UserRepository>();
         }
     }
 }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Data.Entity.Core;
-using System.Data.Entity.Validation;
 using System.Data.SqlClient;
 using System.Text;
 using System.Threading.Tasks;
