@@ -105,7 +105,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// </summary>
         /// <param name="id">ID of the user.</param>
         /// <returns>IList of roles of the user.</returns>
-        [HttpGet, Route("{id}/Roles")]
+        [HttpGet, Route("{id}/roles")]
         public async Task<IList<string>> GetRoles(string id)
         {
             return await _userService.GetRolesAsync(id);
@@ -116,7 +116,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// </summary>
         /// <param name="id">ID of the user.</param>
         /// <returns>IList of claims of the user.</returns>
-        [HttpGet, Route("{id}/Claims")]
+        [HttpGet, Route("{id}/claims")]
         public async Task<IList<Claim>> GetClaims(string id)
         {
             return await _userService.GetClaimsAsync(id);
@@ -127,7 +127,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// </summary>
         /// <param name="id">ID of the user.</param>
         /// <returns>IList of logins of the user.</returns>
-        [HttpGet, Route("{id}/Logins")]
+        [HttpGet, Route("{id}/logins")]
         public async Task<IList<UserLogin>> GetLogins(string id)
         {
             return await _userService.GetLoginsAsync(id);
