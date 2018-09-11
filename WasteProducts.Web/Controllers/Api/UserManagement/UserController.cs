@@ -158,7 +158,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <returns></returns>
         [HttpDelete, Route("{id}")]
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "User is deleted.")]
+        [SwaggerResponse(HttpStatusCode.NoContent, "User is deleted.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no such User.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the deletion.")]
@@ -194,7 +194,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <returns></returns>
         [HttpPut, Route("resetpassword")]
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Request is sent")]
+        [SwaggerResponse(HttpStatusCode.NoContent, "Request is sent")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such Email.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules.")]
@@ -251,7 +251,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <returns></returns>
         [HttpPut, Route("{userId}/addfriend/{friendId}")]
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Friend is added.")]
+        [SwaggerResponse(HttpStatusCode.NoContent, "Friend is added.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such Id.")]
         [SwaggerResponse(HttpStatusCode.Conflict, "User already has got the Friend.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
@@ -270,7 +270,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <returns></returns>
         [HttpPut, Route("{userId}/deletefriend/{friendId}")]
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Friend is removed.")]
+        [SwaggerResponse(HttpStatusCode.NoContent, "Friend is removed.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no Friend with such Id.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
@@ -289,7 +289,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <returns></returns>
         [HttpPut, Route("{userId}/addproduct/{productId}")]
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Product added and described.")]
+        [SwaggerResponse(HttpStatusCode.NoContent, "Product added and described.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no User or Product with such Id.")]
         [SwaggerResponse(HttpStatusCode.Conflict, "User already has got the ProductRate.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
@@ -308,7 +308,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <returns></returns>
         [HttpPut, Route("{userId}/updateproductdescription/{productId}")]
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Feedback is modified.")]
+        [SwaggerResponse(HttpStatusCode.NoContent, "Feedback is modified.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no ProductRate with such Id.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Please stick to validation rules.")]
@@ -326,7 +326,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <returns></returns>
         [HttpPut, Route("{userId}/deleteproduct/{productId}")]
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Product is removed.")]
+        [SwaggerResponse(HttpStatusCode.NoContent, "Product is removed.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no ProductRate with such Id.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
