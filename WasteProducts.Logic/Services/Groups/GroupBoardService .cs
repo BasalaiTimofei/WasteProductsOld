@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
+using WasteProducts.Logic.Common.Models.Groups;
 using WasteProducts.Logic.Common.Services.Groups;
 
 namespace WasteProducts.Logic.Services.Groups
@@ -18,14 +19,14 @@ namespace WasteProducts.Logic.Services.Groups
             _mapper = mapper;
         }
 
-        public void Create<T>(T item) where T : class
+        public void Create(GroupBoard item)
         {
             var result = _mapper.Map<GroupBoardDB>(item);
 
             var modelUser = _dataBase.Find<GroupUserDB>(
-                x => x.RigtToCreateBoards == true
+                x => x.RightToCreateBoards == true
                 && x.UserId == result.CreatorId
-                && x.GroupId == result.GroupId);
+                && x.GroupId == result.GroupId).FirstOrDefault();
             if (modelUser == null)
                 return;
 
@@ -38,16 +39,17 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public void Update<T>(T item) where T : class
+        public void Update(GroupBoard item)
         {
             var result = _mapper.Map<GroupBoardDB>(item);
-            var model = _dataBase.Get<GroupBoardDB>(result.Id);
+            var model = _dataBase.Find<GroupBoardDB>(
+                x => x.Id == result.Id).FirstOrDefault();
 
             var modelUser = _dataBase.Find<GroupUserDB>(
-                x => x.RigtToCreateBoards == true
+                x => x.RightToCreateBoards == true
                 && x.UserId == result.CreatorId
-                && x.GroupId == result.GroupId);
-            if (modelUser == null)
+                && x.GroupId == result.GroupId).FirstOrDefault();
+            if (modelUser == null || model == null)
                 return;
 
             model.Information = result.Information;
@@ -58,21 +60,18 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public void Delete<T>(T item) where T : class
+        public void Delete(GroupBoard item)
         {
             var result = _mapper.Map<GroupBoardDB>(item);
-
-            var modelUser = _dataBase.Find<GroupUserDB>(
-                x => x.RigtToCreateBoards == true
-                && x.UserId == result.CreatorId
-                && x.GroupId == result.GroupId);
-            if (modelUser == null)
-                return;
-
             var model = _dataBase.GetWithInclude<GroupBoardDB>(
                 x => x.Id == result.GroupId,
-                z => z.GroupProducts).First();
-            if (model == null)
+                z => z.GroupProducts).FirstOrDefault();
+
+            var modelUser = _dataBase.Find<GroupUserDB>(
+                x => x.RightToCreateBoards == true
+                && x.UserId == result.CreatorId
+                && x.GroupId == result.GroupId).FirstOrDefault();
+            if (model == null || modelUser == null)
                 return;
 
             model.IsNotDeleted = false;
@@ -80,17 +79,21 @@ namespace WasteProducts.Logic.Services.Groups
             model.Modified = DateTime.UtcNow;
             foreach (var groupProduct in model.GroupProducts)
             {
-                _dataBase.Delete<GroupProductDB>(groupProduct.Id);
+                _dataBase.Delete(groupProduct);
             }
 
             _dataBase.Update(model);
             _dataBase.Save();
         }
 
-        public T FindById<T>(Guid id) where T : class
+        public GroupBoard FindById(Guid id)
         {
-            var model = _dataBase.Find<GroupBoardDB>(x => x.Id == id).First();
-            var result = _mapper.Map<T>(model);
+            var model = _dataBase.Find<GroupBoardDB>(
+                x => x.Id == id).FirstOrDefault();
+            if (model == null)
+                return null;
+
+            var result = _mapper.Map<GroupBoard>(model);
 
             return result;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using WasteProducts.Logic.Common.Models.Groups;
 
 namespace WasteProducts.Logic.Common.Services.Groups
 {
@@ -11,29 +12,26 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// <summary>
         /// Create new board
         /// </summary>
-        /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
-        void Create<T>(T item) where T : class;
+        void Create(GroupBoard item);
 
         /// <summary>
         /// Add or corect information on board
         /// </summary>
-        /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
-        void Update<T>(T item) where T : class;
+        void Update(GroupBoard item);
 
         /// <summary>
         /// Board delete
         /// </summary>
-        /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
-        void Delete<T>(T item) where T : class;
+        void Delete(GroupBoard item);
 
         /// <summary>
         /// Search board by id
         /// </summary>
-        /// <typeparam name="T">Object</typeparam>
         /// <param name="id">Primary key</param>
-        T FindById<T>(Guid id) where T : class;
+        /// <return>Object</return>
+        GroupBoard FindById(Guid id);
     }
 }

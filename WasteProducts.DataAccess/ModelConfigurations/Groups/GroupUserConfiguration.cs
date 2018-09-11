@@ -13,7 +13,7 @@ namespace WasteProducts.DataAccess.ModelConfigurations
             HasKey(x => x.Id);
             Property(x => x.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             Property(x => x.IsInvited).IsOptional();
-            Property(x => x.RigtToCreateBoards).IsOptional();
+            Property(x => x.RightToCreateBoards).IsOptional();
             Property(x => x.Modified).IsOptional();
             Property(x => x.GroupId).IsRequired();
             Property(x => x.UserId).IsRequired();

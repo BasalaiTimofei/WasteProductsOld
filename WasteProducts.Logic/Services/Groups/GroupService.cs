@@ -20,11 +20,12 @@ namespace WasteProducts.Logic.Services.Groups
             _mapper = mapper;
         }
 
-        public void Create<T>(T item) where T : class
+        public void Create(Group item)
         {
             var result = _mapper.Map<GroupDB>(item);
 
-            var model = _dataBase.Find<GroupDB>(x => x.AdminId == result.AdminId);
+            var model = _dataBase.Find<GroupDB>(
+                x => x.AdminId == result.AdminId).FirstOrDefault();
             if (model != null)
                 return;
 
@@ -36,7 +37,7 @@ namespace WasteProducts.Logic.Services.Groups
             result.GroupUsers.Add(new GroupUserDB
             {
                 IsInvited = 1,
-                RigtToCreateBoards = true,
+                RightToCreateBoards = true,
                 Modified = DateTime.UtcNow,
             });
 
@@ -44,14 +45,14 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public void Update<T>(T item) where T : class
+        public void Update(Group item)
         {
             var result = _mapper.Map<GroupDB>(item);
 
             var model = _dataBase.Find<GroupDB>(
                 x => x.Id == result.Id
-                &&x.AdminId == result.AdminId).First();
-            if (model != null)
+                && x.AdminId == result.AdminId).FirstOrDefault();
+            if (model == null)
                 return;
 
             model.Information = result.Information;
@@ -62,15 +63,15 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public void Delete<T>(T item) where T : class
+        public void Delete(Group item)
         {
             var result = _mapper.Map<GroupDB>(item);
 
             var model = _dataBase.GetWithInclude<GroupDB>(
-                x => x.Id == result.Id, 
+                x => x.Id == result.Id,
                 a => a.AdminId == result.AdminId,
                 y => y.GroupBoards.Select(z => z.GroupProducts),
-                m => m.GroupUsers).First();
+                m => m.GroupUsers).FirstOrDefault();
             if (model == null)
                 return;
 
@@ -84,7 +85,7 @@ namespace WasteProducts.Logic.Services.Groups
                 groupBoard.Modified = DateTime.UtcNow;
                 foreach (var groupProduct in groupBoard.GroupProducts)
                 {
-                    _dataBase.Delete<GroupProductDB>(groupProduct.Id);
+                    _dataBase.Delete(groupProduct);
                 }
             }
             foreach (var groupUser in model.GroupUsers)
@@ -96,40 +97,34 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public T FindById<T>(Guid groupId) where T : class
+        public Group FindById(Guid groupId)
         {
             var model = _dataBase.GetWithInclude<GroupDB>(
                     x => x.Id == groupId,
                     y => y.GroupBoards.Select(z => z.GroupProducts),
                     k => k.GroupBoards.Select(e => e.GroupComments),
-                    m => m.GroupUsers).First();
+                    m => m.GroupUsers).FirstOrDefault();
+            if (model == null)
+                return null;
 
-            var result = _mapper.Map<T>(model);
+            var result = _mapper.Map<Group>(model);
 
             return result;
         }
 
-        public T FindByAdmin<T>(string userId) where T : class
+        public Group FindByAdmin(string userId)
         {
             var model = _dataBase.GetWithInclude<GroupDB>(
                     x => x.AdminId == userId,
                     y => y.GroupBoards.Select(z => z.GroupProducts),
                     k => k.GroupBoards.Select(e => e.GroupComments),
-                    m => m.GroupUsers).First();
-            var result = _mapper.Map<T>(model);
+                    m => m.GroupUsers).FirstOrDefault();
+            if (model == null)
+                return null;
+
+            var result = _mapper.Map<Group>(model);
 
             return result;
         }
-
-        public IEnumerable<T> GetIds<T>(string userId) where T : class
-        {
-            var model = _dataBase.Find<GroupUserDB>(
-                    x => x.UserId == userId && x.IsInvited == 1)
-                    .Select(y=> new Group { Id=y.GroupId });
-            var result = _mapper.Map<IEnumerable<T>>(model);
-
-            return result;
-        }
-
     }
 }

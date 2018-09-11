@@ -43,6 +43,11 @@ namespace WasteProducts.DataAccess.Repositories.Groups
                 _context.Set<T>().Remove(group);
         }
 
+        public void Delete<T>(T item) where T : class
+        {
+            _context.Entry(item).State = EntityState.Deleted;
+        }
+
         public T Get<T>(Guid id) where T : class
         {
             return _context.Set<T>().Find(id);

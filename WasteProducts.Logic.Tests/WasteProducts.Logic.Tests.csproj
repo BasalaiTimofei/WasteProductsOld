@@ -90,7 +90,10 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Groups\GroupServiceIntegralTests.cs" />
+    <Compile Include="Groups\GroupBoardServiceITests.cs" />
+    <Compile Include="Groups\GroupUserServiceITests.cs" />
+    <Compile Include="Groups\GroupProductServiceITests.cs" />
+    <Compile Include="Groups\GroupServiceITests.cs" />
     <Compile Include="Product_Tests\CategoryService_Test.cs" />
     <Compile Include="Product_Tests\ProductService_Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

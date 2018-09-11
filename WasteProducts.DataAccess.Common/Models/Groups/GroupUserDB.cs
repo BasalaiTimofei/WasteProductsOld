@@ -34,7 +34,7 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         /// true - can created boards;
         /// false - can't created boards
         /// </summary>
-        public virtual bool RigtToCreateBoards { get; set; }
+        public virtual bool RightToCreateBoards { get; set; }
 
         /// <summary>
         /// User action when administrator inviting

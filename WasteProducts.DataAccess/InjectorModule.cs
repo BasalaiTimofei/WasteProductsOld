@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 using Ninject;
 using Ninject.Modules;
 using WasteProducts.DataAccess.Common.Context;
+using WasteProducts.DataAccess.Common.Repositories.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Contexts;
 using WasteProducts.DataAccess.Repositories;
+using WasteProducts.DataAccess.Repositories.Groups;
 using WasteProducts.DataAccess.Repositories.UserManagement;
 
 
@@ -28,6 +30,8 @@ namespace WasteProducts.DataAccess
             Bind<IUserRepository>().To<UserRepository>();
             Bind<IUserRoleRepository>().To<UserRoleRepository>();
             Bind<ISearchRepository>().To<LuceneSearchRepository>().InSingletonScope();
+
+            Bind<IGroupRepository>().To<GroupRepository>();
         }
     }
 }
