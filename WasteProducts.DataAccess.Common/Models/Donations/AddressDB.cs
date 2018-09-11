@@ -53,6 +53,6 @@ namespace WasteProducts.DataAccess.Common.Models.Donations
         /// <summary>
         /// Specifies the timestamp for creating of a specific address in the database.
         /// </summary>
-        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+        public DateTime Created { get; set; } = DateTime.UtcNow;
     }
 }
