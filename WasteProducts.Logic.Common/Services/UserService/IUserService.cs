@@ -12,11 +12,22 @@ namespace WasteProducts.Logic.Common.Services.UserService
     public interface IUserService : IDisposable
     {
         /// <summary>
-        /// Tries to register a new user with a specific parameters.
+        /// Tries to register a new user with a specific parameters
+        /// and if succeed sends email with email confirmation token to confirm user's email.
         /// </summary>
         /// <param name="email">Email of the new user.</param>
+        /// <param name="userName">UserName of the new user.</param>
         /// <param name="password">Password of the new user.</param>
-        Task RegisterAsync(string email, string userName, string password);
+        /// <param name="path">Layout of the path to the ConfirmEmail API method.</param>
+        Task RegisterAsync(string email, string userName, string password, string path);
+
+        /// <summary>
+        /// Confirms user's email by the confirmation token given by RegisterAsync method.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <param name="token">Confirmation token.</param>
+        /// <returns>Boolean represents whether operation succeed or no.</returns>
+        Task<bool> ConfirmEmailAsync(string userId, string token);
 
         /// <summary>
         /// Tries to login as a user with the specific email and password.

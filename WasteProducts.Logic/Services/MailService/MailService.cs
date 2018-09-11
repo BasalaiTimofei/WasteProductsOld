@@ -11,7 +11,7 @@ namespace WasteProducts.Logic.Services.MailService
 
         private bool _disposed;
 
-        public MailService(SmtpClient smtpClient, string ourEmail, IMailFactory mailFactory)
+        public MailService(SmtpClient smtpClient, string ourEmail)
         {
             _smtpClient = smtpClient;
             if (!IsValidEmail(ourEmail))
@@ -19,20 +19,9 @@ namespace WasteProducts.Logic.Services.MailService
                 throw new FormatException("Arguement \"ourEmail\" in creating a new MailService inctance wasn't actually valid email.");
             }
             OurEmail = ourEmail;
-            MailFactory = mailFactory;
         }
-
-        public IMailFactory MailFactory { get; }
 
         public string OurEmail { get; set; }
-
-        ~MailService()
-        {
-            if (!_disposed)
-            {
-                Dispose();
-            }
-        }
 
         public void Dispose()
         {
@@ -59,24 +48,24 @@ namespace WasteProducts.Logic.Services.MailService
 
         public async Task SendAsync(string to, string subject, string body)
         {
-            await Task.Run(async () =>
+            MailMessage message = null;
+            try
             {
-                MailMessage message = null;
-                SmtpClient smtpClient = null;
-                try
-                {
-                    message = MailFactory.Create(OurEmail, to, subject, body);
-                    await smtpClient.SendMailAsync(message);
-                }
-                catch
-                {
-                }
-                finally
-                {
-                    message?.Dispose();
-                    smtpClient?.Dispose();
-                }
-            });
+                message = new MailMessage(OurEmail, to, subject, body);
+                await _smtpClient.SendMailAsync(message);
+            }
+            catch
+            {
+            }
+            finally
+            {
+                message?.Dispose();
+            }
+        }
+
+        ~MailService()
+        {
+            Dispose();
         }
     }
 }

@@ -13,13 +13,21 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
     public interface IUserRepository : IDisposable
     {
         /// <summary>
-        /// Adds new registered user in the repository.
+        /// Tries to add a new registered user to the database and if succeed returns email confirmation token needed to confirm user's email.
         /// </summary>
         /// <param name="email">Email of the new user.</param>
         /// <param name="userName">Name of the new user.</param>
         /// <param name="password">Password of the new user.</param>
-        /// <returns></returns>
-        Task AddAsync(string email, string userName, string password);
+        /// <returns>ID of the user and email confirmation token needed to confurm user's email.</returns>
+        Task<(string id, string token)> AddAsync(string email, string userName, string password);
+
+        /// <summary>
+        /// Confirms user's email by the confirmation token given by AddAsync method.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <param name="token">Confirmation token.</param>
+        /// <returns>Boolean represents whether operation succeed or no.</returns>
+        Task<bool> ConfirmEmailAsync(string userId, string token);
 
         /// <summary>
         /// Return a user with the specified username and password or null if there is no match.

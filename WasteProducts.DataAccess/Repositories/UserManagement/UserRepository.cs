@@ -58,16 +58,40 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             _context.Database.CreateIfNotExists();
         }
 
-        public async Task AddAsync(string email, string userName, string password)
+        public async Task<(string id, string token)> AddAsync(string email, string userName, string password)
         {
-            var user = new UserDB
+            return await Task.Run(() =>
             {
-                Id = Guid.NewGuid().ToString(),
-                Email = email,
-                UserName = userName,
-                Created = DateTime.UtcNow
-            };
-            await _manager.CreateAsync(user, password);
+                string id = Guid.NewGuid().ToString();
+
+                var user = new UserDB
+                {
+                    Id = id,
+                    Email = email,
+                    UserName = userName,
+                    Created = DateTime.UtcNow
+                };
+                _manager.Create(user, password);
+                _manager.UserTokenProvider = new EmailTokenProvider<UserDB>();
+                return (id, _manager.GenerateEmailConfirmationToken(id));
+            });
+        }
+
+        public async Task<bool> ConfirmEmailAsync(string userId, string token)
+        {
+            return await Task.Run(() =>
+            {
+                _manager.UserTokenProvider = new EmailTokenProvider<UserDB>();
+                _manager.ConfirmEmail(userId, token);
+                if (_manager.IsEmailConfirmed(userId))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            });
         }
 
         public async Task<UserDAL> FindByNameAndPasswordAsync(string userName, string password)

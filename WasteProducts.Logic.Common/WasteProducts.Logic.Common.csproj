@@ -114,7 +114,6 @@
     <Compile Include="Services\Groups\IGroupProductService.cs" />
     <Compile Include="Services\Groups\IGroupBoardService.cs" />
     <Compile Include="Services\Groups\IGroupService.cs" />
-    <Compile Include="Services\MailService\IMailFactory.cs" />
     <Compile Include="Services\MailService\IMailService.cs" />
     <Compile Include="Services\UserService\IUserRoleService.cs" />
     <Compile Include="Services\UserService\IUserService.cs" />

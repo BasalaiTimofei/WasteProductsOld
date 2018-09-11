@@ -129,7 +129,6 @@
     <Compile Include="Services\Diagnostic\TestModelsService.cs" />
     <Compile Include="Services\LuceneSearchService.cs" />
     <Compile Include="Services\ProductService.cs" />
-    <Compile Include="Services\MailService\MailFactory.cs" />
     <Compile Include="Services\MailService\MailService.cs" />
     <Compile Include="Interceptors\Search\SearchServiceInterceptor.cs" />
     <Compile Include="Services\TestService.cs" />

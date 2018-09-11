@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using NLog;
@@ -147,7 +148,9 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules.")]
         public async Task Register([FromBody] RegisterUser model)
         {
-            await _userService.RegisterAsync(model.Email, model.UserName, model.Password);
+            StringBuilder sb = new StringBuilder(Request.RequestUri.GetLeftPart(UriPartial.Authority));
+            sb.Append("/api/user/{0}/confirmemail/{1}");
+            await _userService.RegisterAsync(model.Email, model.UserName, model.Password, sb.ToString());
         }
 
         // DELETE api/user/5
@@ -167,6 +170,18 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             await _userService.DeleteUserAsync(id);
         }
 
+        /// <summary>
+        /// Confirms user's email by the confirmation token.
+        /// </summary>
+        /// <param name="id">ID of the user.</param>
+        /// <param name="token">Confirmation token.</param>
+        /// <returns>Boolean represents whether operation succeed or no.</returns>
+        [HttpGet, Route("{id}/confirmemail/{token}")]
+        public async Task<bool> ConfirmEmail([FromUri] string id, [FromUri] string token)
+        {
+            return await _userService.ConfirmEmailAsync(id, token);
+        }
+
         // POST api/user/resetpassword
         /// <summary>
         /// Changes old password of the user with the specific ID to the new password.
@@ -179,7 +194,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.OK, "Password is successfully changed.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no such User.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
-        [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules. Old and new passwords should match.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task<bool> ChangePassword([FromUri] string id, [FromBody] ChangePassword model)
         {

@@ -14,6 +14,10 @@ namespace WasteProducts.Logic.Services.UserService
 {
     public class UserService : IUserService
     {
+        private const string EmailConfirmHeader = "WasteProducts email confirmation";
+
+        private const string EmailConfirmBody = "На нашем сайте была оставлена заявка на регистрацию аккаунта, привязанного к этому емейлу. Если вы не регистрировались на нашем сайте, просим вас проигнорировать это письмо. Иначе, для того, чтобы завершить регистрацию, вы должны подтвердить свой email, перейдя по ссылке, указанной ниже. Ссылка для подтверждения email:\r\n{0}";
+
         private readonly IMailService _mailService;
 
         private readonly IUserRepository _userRepo;
@@ -40,20 +44,24 @@ namespace WasteProducts.Logic.Services.UserService
             }
         }
 
-        public async Task RegisterAsync(string email, string userName, string password)
+        public async Task RegisterAsync(string email, string userName, string password, string path)
         {
-            await Task.Run(async () =>
+            if (email == null ||
+            userName == null ||
+            password == null ||
+            !_mailService.IsValidEmail(email) ||
+            !(await _userRepo.IsEmailAvailableAsync(email)))
             {
-                if (email == null ||
-                userName == null ||
-                password == null || 
-                !_mailService.IsValidEmail(email) ||
-                !(await _userRepo.IsEmailAvailableAsync(email)))
-                {
-                    return;
-                }
-                await _userRepo.AddAsync(email, userName, password);
-            });
+                return;
+            }
+            var (id, token) = await _userRepo.AddAsync(email, userName, password);
+            var fullpath = string.Format(path, id, token);
+            await _mailService.SendAsync(email, EmailConfirmHeader, string.Format(EmailConfirmBody, fullpath));
+        }
+
+        public async Task<bool> ConfirmEmailAsync(string userId, string token)
+        {
+            return await _userRepo.ConfirmEmailAsync(userId, token);
         }
 
         public async Task<User> LogInByEmailAsync(string email, string password)

@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using FluentValidation;
+using Ninject;
 using Ninject.Extensions.Factory;
 using Ninject.Extensions.Interception.Infrastructure.Language;
 using Ninject.Modules;
@@ -18,6 +19,9 @@ using WasteProducts.Logic.Services.UserService;
 using WasteProducts.Logic.Mappings;
 using WasteProducts.Logic.Mappings.UserMappings;
 using WasteProducts.Logic.Validators.Search;
+using System.Configuration;
+using System.Net.Mail;
+using System.Net;
 
 namespace WasteProducts.Logic
 {
@@ -43,6 +47,8 @@ namespace WasteProducts.Logic
             Bind<ISearchService>().To<LuceneSearchService>().Intercept().With<SearchServiceInterceptor>();
 
             Bind<IProductService>().To<ProductService>();
+
+            Bind<AppSettingsReader>().ToSelf();
         }
 
         private void BindDatabaseServices()
@@ -54,8 +60,26 @@ namespace WasteProducts.Logic
 
         private void BindUserServices()
         {
-            //Bind<IMailService>().To<MailService>(); //TODO: тут сергей, выбирай сам
-            Bind<IMailService>().ToMethod(ctx => new MailService(null, "somevalidemail@mail.ru", null));
+            Bind<IMailService>().ToMethod(ctx =>
+            {
+                AppSettingsReader appSettingsReader = ctx.Kernel.Get<AppSettingsReader>();
+
+                string ourEmail = (string)appSettingsReader.GetValue("OurMailAddress", typeof(string));
+                string host = (string)appSettingsReader.GetValue("Host", typeof(string));
+                int port = (int)appSettingsReader.GetValue("Port", typeof(int));
+                SmtpDeliveryMethod method = (SmtpDeliveryMethod)appSettingsReader.GetValue("SMTPDeliveryMethod", typeof(int));
+                string ourMailPassword = (string)appSettingsReader.GetValue("OurMailPassword", typeof(string));
+                bool enableSsl = (bool)appSettingsReader.GetValue("EnableSSL", typeof(bool));
+
+                var client = new SmtpClient(host, port)
+                {
+                    DeliveryMethod = method,
+                    Credentials = new NetworkCredential(ourEmail, ourMailPassword),
+                    EnableSsl = enableSsl
+                };
+
+                return new MailService(client, ourEmail);
+            });
 
             Bind<IUserService>().To<UserService>();
             Bind<IUserRoleService>().To<UserRoleService>();
