@@ -55,8 +55,11 @@ namespace WasteProducts.Logic.Services.UserService
                 return;
             }
             var (id, token) = await _userRepo.AddAsync(email, userName, password);
-            var fullpath = string.Format(path, id, token);
-            await _mailService.SendAsync(email, EmailConfirmHeader, string.Format(EmailConfirmBody, fullpath));
+            if(path != null)
+            {
+                var fullpath = string.Format(path, id, token);
+                await _mailService.SendAsync(email, EmailConfirmHeader, string.Format(EmailConfirmBody, fullpath));
+            }
         }
 
         public async Task<bool> ConfirmEmailAsync(string userId, string token)

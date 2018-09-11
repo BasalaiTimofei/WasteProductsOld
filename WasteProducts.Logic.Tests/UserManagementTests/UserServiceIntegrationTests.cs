@@ -68,9 +68,9 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public void UserIntegrTest_00AddingUsers()
         {
-            _userService.RegisterAsync("test49someemail@gmail.com", "Sergei", "qwerty1").GetAwaiter().GetResult();
-            _userService.RegisterAsync("test50someemail@gmail.com", "Anton", "qwerty2").GetAwaiter().GetResult();
-            _userService.RegisterAsync("test51someemail@gmail.com", "Alexander", "qwerty3").GetAwaiter().GetResult();
+            _userService.RegisterAsync("test49someemail@gmail.com", "Sergei", "qwerty1", null).GetAwaiter().GetResult();
+            _userService.RegisterAsync("test50someemail@gmail.com", "Anton", "qwerty2", null).GetAwaiter().GetResult();
+            _userService.RegisterAsync("test51someemail@gmail.com", "Alexander", "qwerty3", null).GetAwaiter().GetResult();
 
             var user1 = _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
             var user2 = _userService.LogInByEmailAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
@@ -89,7 +89,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public void UserIntegrTest_01AddingUserWithIncorrectEmail()
         {
-            _userService.RegisterAsync("Incorrect email", "NewLogin", "qwerty").GetAwaiter().GetResult();
+            _userService.RegisterAsync("Incorrect email", "NewLogin", "qwerty", null).GetAwaiter().GetResult();
             User user = _userService.LogInByEmailAsync("Incorrect email", "qwerty").GetAwaiter().GetResult();
             Assert.IsNull(user);
 
@@ -101,7 +101,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public void UserIntegrTest_02AddingUserWithAlreadyRegisteredEmail()
         {
-            _userService.RegisterAsync("test49someemail@gmail.com", "NewLogin", "qwerty").GetAwaiter().GetResult();
+            _userService.RegisterAsync("test49someemail@gmail.com", "NewLogin", "qwerty", null).GetAwaiter().GetResult();
             User user = _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty").GetAwaiter().GetResult();
             Assert.IsNull(user);
 
@@ -113,7 +113,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public void UserIntegrTest_03AddingUserWithAlreadyRegisteredNickName()
         {
-            _userService.RegisterAsync("test100someemail@gmail.com", "Sergei", "qwerty").GetAwaiter().GetResult();
+            _userService.RegisterAsync("test100someemail@gmail.com", "Sergei", "qwerty", null).GetAwaiter().GetResult();
             User user = _userService.LogInByEmailAsync("test100someemail@gmail.com", "qwerty").GetAwaiter().GetResult();
             Assert.IsNull(user);
 
@@ -125,8 +125,8 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public void UserIntegrTest_04RegisteringUserWithNullArguements()
         {
-            _userService.RegisterAsync(null, "Sergei1", "qwert1").GetAwaiter().GetResult();
-            _userService.RegisterAsync("test101someemail@gmail.com", null, "qwert2").GetAwaiter().GetResult();
+            _userService.RegisterAsync(null, "Sergei1", "qwert1", null).GetAwaiter().GetResult();
+            _userService.RegisterAsync("test101someemail@gmail.com", null, "qwert2", null).GetAwaiter().GetResult();
 
             User user1 = _userService.LogInByNameAsync("Sergei1", "qwert1").GetAwaiter().GetResult();
             User user2 = _userService.LogInByEmailAsync("test101someemail@gmail.com", "qwert2").GetAwaiter().GetResult();

@@ -72,8 +72,15 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                     Created = DateTime.UtcNow
                 };
                 _manager.Create(user, password);
-                _manager.UserTokenProvider = new EmailTokenProvider<UserDB>();
-                return (id, _manager.GenerateEmailConfirmationToken(id));
+                if (_manager.FindById(id) != null)
+                {
+                    _manager.UserTokenProvider = new EmailTokenProvider<UserDB>();
+                    return (id, _manager.GenerateEmailConfirmationToken(id));
+                }
+                else
+                {
+                    return (null, null);
+                }
             });
         }
 
