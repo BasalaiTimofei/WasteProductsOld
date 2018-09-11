@@ -6,7 +6,7 @@ using WasteProducts.DataAccess.Common.Models.Products;
 namespace WasteProducts.DataAccess.Common.Models.Users
 {
     /// <summary>
-    /// DAL level model of user.
+    /// DataBase entity of user.
     /// </summary>
     public class UserDB : IdentityUser
     {
