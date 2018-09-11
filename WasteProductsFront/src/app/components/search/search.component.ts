@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { SearchService } from '../../services/search.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { SearchProduct } from '../../models/SearchProduct.model';
 
 @Component({
   selector: 'app-search',
@@ -6,10 +9,27 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
+  showError = false;
+  errorMessage: string;
 
-  constructor() { }
+  searchResult: SearchProduct[] = [];
+  query: string;
+
+  constructor(private searchService: SearchService) { }
 
   ngOnInit() {
+  }
+
+  ShowError(error: HttpErrorResponse) {
+  }
+
+  search(query: string): void {
+    this.searchService.getDefault(query)
+    .subscribe(data => this.searchResult = data);
+  }
+
+  getSearchProducts(): SearchProduct[] {
+    return this.searchResult;
   }
 
 }

@@ -23,7 +23,7 @@ export class SearchService {
   }
 
   getDefault(query: string): Observable<SearchProduct[]> {
-    return this.http.get<SearchProduct[]>(this.URL_SEARCH + '/test?query=' + query).pipe(
+    return this.http.get<SearchProduct[]>(this.URL_SEARCH + '/default?query=' + query).pipe(
       map(res => {
         const result: any = res;
         return result.map((item) => new SearchProduct(item.Id, item.Name, item.Description));

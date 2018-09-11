@@ -1,3 +1,14 @@
-<p>
-  search works!
-</p>
+<h2>Search</h2>
+
+<div id="search-component">
+
+  <div>
+    <label>Search query:
+      <input #query />
+    </label>
+    <button (click)="search(query.value); query.value=''">
+      Search
+    </button>
+  </div>
+
+</div>

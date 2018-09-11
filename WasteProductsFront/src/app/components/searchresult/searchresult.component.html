@@ -1,3 +1,10 @@
-<p>
-  searchresult works!
-</p>
+<div id="container">
+  <app-search></app-search>
+  <div *ngIf="searchProducts.length == 0">Not found</div>
+
+  <ul class="searchResult">
+    <li *ngFor="let result of searchProducts" >
+      <div>{{result.Id}}</div><div>{{result.Name}}</div><div>{{result.Description}}</div>
+    </li>
+  </ul>
+</div>
