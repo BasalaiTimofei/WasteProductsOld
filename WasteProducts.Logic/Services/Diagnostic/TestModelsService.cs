@@ -30,7 +30,6 @@ namespace WasteProducts.Logic.Services
         public User GenerateUser(string email = null, string userName = null)
         {
             return new Faker<User>()
-                .RuleFor(user => user.Email, faker => email ?? faker.Person.Email)
                 .RuleFor(user => user.UserName, faker => userName ?? faker.Person.UserName)
 
                 // TODO: Доделать

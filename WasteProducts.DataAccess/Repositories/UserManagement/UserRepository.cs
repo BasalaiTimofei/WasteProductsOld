@@ -35,11 +35,6 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             _manager = new UserManager<UserDB>(_store);
         }
 
-        ~UserRepository()
-        {
-            Dispose();
-        }
-
         public void Dispose()
         {
             if (!_disposed)
@@ -59,9 +54,15 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             _context.Database.CreateIfNotExists();
         }
 
-        public async Task AddAsync(UserDB user, string password)
+        public async Task AddAsync(string email, string userName, string password)
         {
-            user.Created = DateTime.UtcNow;
+            var user = new UserDB
+            {
+                Id = Guid.NewGuid().ToString(),
+                Email = email,
+                UserName = userName,
+                Created = DateTime.UtcNow
+            };
             await _manager.CreateAsync(user, password);
         }
 
@@ -334,6 +335,11 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 _context.SaveChanges();
                 return true;
             });
+        }
+
+        ~UserRepository()
+        {
+            Dispose();
         }
     }
 }

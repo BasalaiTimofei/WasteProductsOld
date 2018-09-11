@@ -23,20 +23,6 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         private bool _disposed;
 
-        public UserRoleRepository()
-        {
-            //TODO: Injection
-            StandardKernel kernel = new StandardKernel();
-            kernel.Load(new DataAccess.InjectorModule());
-            _context = new WasteContext(kernel.Get<ISearchRepository>());
-
-            _store = new RoleStore<IdentityRole>(_context)
-            {
-                DisposeContext = true
-            };
-            _manager = new RoleManager<IdentityRole>(_store);
-        }
-
         public UserRoleRepository(WasteContext context)
         {
             _context = context;
@@ -45,14 +31,6 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 DisposeContext = true
             };
             _manager = new RoleManager<IdentityRole>(_store);
-        }
-
-        ~UserRoleRepository()
-        {
-            if (!_disposed)
-            {
-                Dispose();
-            }
         }
 
         public void Dispose()
@@ -122,6 +100,14 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                                                   Where(u => userIds.Contains(u.Id));
 
             return result.ToArray();
+        }
+
+        ~UserRoleRepository()
+        {
+            if (!_disposed)
+            {
+                Dispose();
+            }
         }
     }
 }

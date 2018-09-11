@@ -41,10 +41,5 @@ namespace WasteProducts.Logic.Common.Models.Users
         /// Email of the user.
         /// </summary>
         public virtual string Email { get; set; }
-
-        /// <summary>
-        /// PhoneNumber for the user.
-        /// </summary>
-        public virtual string PhoneNumber { get; set; }
     }
 }

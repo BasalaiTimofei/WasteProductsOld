@@ -30,11 +30,6 @@ namespace WasteProducts.Logic.Services.UserService
             _mailService = mailService;
         }
 
-        ~UserService()
-        {
-            Dispose();
-        }
-
         public void Dispose()
         {
             if (!_disposed)
@@ -58,14 +53,7 @@ namespace WasteProducts.Logic.Services.UserService
                 {
                     return;
                 }
-                var registeringUser = new User()
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Email = email,
-                    UserName = userName
-                };
-                var userToAdd = MapTo<UserDB>(registeringUser);
-                await _userRepo.AddAsync(userToAdd, password);
+                await _userRepo.AddAsync(email, userName, password);
             });
         }
 
@@ -264,5 +252,10 @@ namespace WasteProducts.Logic.Services.UserService
         private UserLoginDB MapTo<T>(UserLogin user)
             =>
             _mapper.Map<UserLoginDB>(user);
+
+        ~UserService()
+        {
+            Dispose();
+        }
     }
 }

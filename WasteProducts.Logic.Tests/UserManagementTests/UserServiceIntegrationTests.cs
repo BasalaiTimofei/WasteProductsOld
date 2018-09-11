@@ -335,19 +335,19 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         }
 
         // тестируем апдейт юзера
-        [Test]
+        //[Test]
         public void UserIntegrTest_20UserUpdating()
         {
-            User user = _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            //User user = _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
 
-            string userPhoneNumber = user.PhoneNumber;
-            Assert.AreEqual(userPhoneNumber, null);
+            //string userPhoneNumber = user.PhoneNumber;
+            //Assert.AreEqual(userPhoneNumber, null);
 
-            user.PhoneNumber = "+375172020327";
-            _userService.UpdateAsync(user).GetAwaiter().GetResult();
+            //user.PhoneNumber = "+375172020327";
+            //_userService.UpdateAsync(user).GetAwaiter().GetResult();
 
-            user = _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            Assert.AreEqual(user.PhoneNumber, "+375172020327");
+            //user = _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            //Assert.AreEqual(user.PhoneNumber, "+375172020327");
         }
 
         // тестируем изменение пароля пользователя
@@ -355,11 +355,9 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         public void UserIntegrTest_21ResettingUserPassword()
         {
             User user = _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            user.PhoneNumber = "3334455";
             _userService.ChangePasswordAsync(user.Id, "qwerty1", "New password").GetAwaiter().GetResult();
 
             user = _userService.LogInByEmailAsync("test49someemail@gmail.com", "New password").GetAwaiter().GetResult();
-            Assert.AreNotEqual("3334455", user.PhoneNumber);
             _userService.ChangePasswordAsync(user.Id, "New password", "qwerty1").GetAwaiter().GetResult();
         }
 
@@ -466,8 +464,8 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             UserRole role = _roleService.FindByNameAsync("Simple user").GetAwaiter().GetResult();
 
             IEnumerable<User> users = _roleService.GetRoleUsers(role).GetAwaiter().GetResult();
-            User user1FromGetRoles = users.FirstOrDefault(u => u.Email == user1.Email);
-            User user2FromGetRoles = users.FirstOrDefault(u => u.Email == user2.Email);
+            User user1FromGetRoles = users.FirstOrDefault(u => u.Id == user1.Id);
+            User user2FromGetRoles = users.FirstOrDefault(u => u.Id == user2.Id);
             Assert.AreEqual(user1.Id, user1FromGetRoles.Id);
             Assert.AreEqual(user2.Id, user2FromGetRoles.Id);
         }

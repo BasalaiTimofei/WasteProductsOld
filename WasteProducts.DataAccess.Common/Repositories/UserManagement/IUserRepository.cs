@@ -15,10 +15,11 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <summary>
         /// Adds new registered user in the repository.
         /// </summary>
-        /// <param name="user">New registered user to add.</param>
+        /// <param name="email">Email of the new user.</param>
+        /// <param name="userName">Name of the new user.</param>
         /// <param name="password">Password of the new user.</param>
         /// <returns></returns>
-        Task AddAsync(UserDB user, string password);
+        Task AddAsync(string email, string userName, string password);
 
         /// <summary>
         /// Return a user with the specified username and password or null if there is no match.

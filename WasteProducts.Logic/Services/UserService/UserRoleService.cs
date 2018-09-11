@@ -23,14 +23,6 @@ namespace WasteProducts.Logic.Services.UserService
             _mapper = mapper;
         }
 
-        ~UserRoleService()
-        {
-            if (!_disposed)
-            {
-                Dispose();
-            }
-        }
-
         public void Dispose()
         {
             if (!_disposed)
@@ -85,5 +77,13 @@ namespace WasteProducts.Logic.Services.UserService
             where T : UserRole
             =>
            _mapper.Map<UserRole>(role);
+
+        ~UserRoleService()
+        {
+            if (!_disposed)
+            {
+                Dispose();
+            }
+        }
     }
 }
