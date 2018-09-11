@@ -30,16 +30,5 @@ namespace WasteProducts.Logic.Common.Models.Users
         /// List of products added and described by the user.
         /// </summary>
         public virtual IList<UserProductDescription> ProductDescriptions { get; set; }
-
-        // TODO decomment after the "Groups" model is enabled
-        /// <summary>
-        /// List of all Groups to which current User is assigned.
-        /// </summary>
-        //public virtual List<Group> GroupMembership { get; set; }
-
-        /// <summary>
-        /// Email of the user.
-        /// </summary>
-        public virtual string Email { get; set; }
     }
 }

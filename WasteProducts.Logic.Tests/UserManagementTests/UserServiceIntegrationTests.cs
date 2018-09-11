@@ -76,9 +76,9 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             var user2 = _userService.LogInByEmailAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
             var user3 = _userService.LogInByEmailAsync("test51someemail@gmail.com", "qwerty3").GetAwaiter().GetResult();
 
-            Assert.AreEqual("test49someemail@gmail.com", user1.Email);
+            Assert.AreEqual("Sergei", user1.UserName);
             Assert.AreEqual("Anton", user2.UserName);
-            Assert.IsNotNull(user1.Id);
+            Assert.IsNotNull(user3.Id);
 
             _usersIds.Add(user1.Id);
             _usersIds.Add(user2.Id);
@@ -140,7 +140,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         public void UserIntegrTest_05CorrectLoggingInByEmail()
         {
             User user = _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            Assert.AreEqual(user.Email, "test49someemail@gmail.com");
+            Assert.AreEqual("Sergei", user.UserName);
         }
 
         // проверяем запрос юзера по неверным емейлу и паролю (юзер должен быть null-овым)
@@ -156,7 +156,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         public void UserIntegrTest_07ChangingUserEmailToAvailableEmail()
         {
             User user = _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            Assert.AreEqual("test49someemail@gmail.com", user.Email);
+            Assert.AreEqual("Sergei", user.UserName);
 
             bool result = _userService.UpdateEmailAsync(user.Id, "uniqueemail@gmail.com").GetAwaiter().GetResult();
 
@@ -170,12 +170,12 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         public void UserIntegrTest_08ChangingUserEmailToIncorrectEmail()
         {
             User user = _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            Assert.AreEqual("test49someemail@gmail.com", user.Email);
+            Assert.AreEqual("Sergei", user.UserName);
 
             bool result = _userService.UpdateEmailAsync(user.Id, "uniqueButIncorrectEmail").GetAwaiter().GetResult();
 
             Assert.IsFalse(result);
-            Assert.AreEqual("test49someemail@gmail.com", user.Email);
+            Assert.AreEqual("Sergei", user.UserName);
         }
 
         // пытаемся поменять зарегистрированному юзеру емейл на корректный неуникальный емейл (не должно поменять)
@@ -183,15 +183,15 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         public void UserIntegrTest_09ChangingUserEmailToAlreadyRegisteredEmail()
         {
             User user = _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            Assert.AreEqual("test49someemail@gmail.com", user.Email);
+            Assert.AreEqual("Sergei", user.UserName);
 
             bool result = _userService.UpdateEmailAsync(user.Id, "test50someemail@gmail.com").GetAwaiter().GetResult();
 
             Assert.IsFalse(result);
-            Assert.AreEqual("test49someemail@gmail.com", user.Email);
+            Assert.AreEqual("Sergei", user.UserName);
 
             user = _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            Assert.AreEqual("test49someemail@gmail.com", user.Email);
+            Assert.AreEqual("Sergei", user.UserName);
         }
 
         // пытаемся передать в метод UpdateEmailAsync null-овые аргументы (не должно поменять емейла, не должно выдать ошибку)
@@ -206,7 +206,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
             Assert.IsFalse(result1);
             Assert.IsFalse(result2);
-            Assert.AreEqual("test49someemail@gmail.com", user.Email);
+            Assert.AreEqual("Sergei", user.UserName);
         }
 
         // пытаемся изменить юзеру юзернейм на юзернейм, уже имеющийся в системе (не должно поменять)
