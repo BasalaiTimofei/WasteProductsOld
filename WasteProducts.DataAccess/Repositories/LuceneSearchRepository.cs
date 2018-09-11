@@ -25,8 +25,10 @@ namespace WasteProducts.DataAccess.Repositories
     public class LuceneSearchRepository : ISearchRepository
     {
         public const LuceneVersion MATCH_LUCENE_VERSION = LuceneVersion.LUCENE_48;
+        public const string DEFAULT_ID_FIELD_NAME = "Id";
+        public const string INDEX_STORAGE_PATH_SETTING_STR = "LuceneIndexStoragePath";
         public string IndexPath { get; private set; }
-        public string IDField { get; private set; } = "Id";
+        public string IDField { get; private set; } = DEFAULT_ID_FIELD_NAME;
 
         private Lucene.Net.Store.Directory _directory;
         private Analyzer _analyzer;
@@ -39,14 +41,14 @@ namespace WasteProducts.DataAccess.Repositories
         {
             string assemblyFilename = Assembly.GetAssembly(typeof(LuceneSearchRepository)).Location;
             string assemblyPath = Path.GetDirectoryName(assemblyFilename);
-            string indexStoragePath = WebConfigurationManager.AppSettings["LuceneIndexStoragePath"]; ;
+            string indexStoragePath = WebConfigurationManager.AppSettings[INDEX_STORAGE_PATH_SETTING_STR]; ;
             if (!String.IsNullOrEmpty(indexStoragePath))
             {
                 IndexPath = Path.Combine(assemblyPath, indexStoragePath);
             }
             else
             {
-                throw new LuceneSearchRepositoryException("Can't find Lucene index storage path settings.");
+                throw new LuceneSearchRepositoryException(Resources.LuceneSearchRepository.IndexPathNotFound);
             }
 
             _analyzer = new RussianAnalyzer(MATCH_LUCENE_VERSION);
@@ -66,7 +68,7 @@ namespace WasteProducts.DataAccess.Repositories
             }
             catch (Exception ex)
             {
-                throw new LuceneSearchRepositoryException($"Can't open Lucene index. {ex.Message}",ex);
+                throw new LuceneSearchRepositoryException($"{Resources.LuceneSearchRepository.IndexOpenError} {ex.Message}",ex);
             }
         }
 
@@ -207,7 +209,7 @@ namespace WasteProducts.DataAccess.Repositories
             }
             else
             {
-                throw new LuceneSearchRepositoryException("Сan't delete entity with empty id.");
+                throw new LuceneSearchRepositoryException(Resources.LuceneSearchRepository.DeleteWithEmptyIdError);
             }
         }
 
@@ -222,7 +224,7 @@ namespace WasteProducts.DataAccess.Repositories
                 _writer.Commit();
             }catch(Exception ex)
             {
-                throw new LuceneSearchRepositoryException($"Can't clear index. {ex.Message}", ex);
+                throw new LuceneSearchRepositoryException($"{Resources.LuceneSearchRepository.ClearIndexError} {ex.Message}", ex);
             }
         }
 
@@ -243,7 +245,7 @@ namespace WasteProducts.DataAccess.Repositories
                 {
                     OpenMode = OpenMode.CREATE_OR_APPEND
                 });
-                throw new LuceneSearchRepositoryException($"Can't optimize index. {ex.Message}", ex);
+                throw new LuceneSearchRepositoryException($"{Resources.LuceneSearchRepository.OptimizeIndexError} {ex.Message}", ex);
             }
         }
 
@@ -275,7 +277,7 @@ namespace WasteProducts.DataAccess.Repositories
                 }
                 catch(Exception ex)
                 {
-                    throw new LuceneSearchRepositoryException($"Can't proceed query. {ex.Message}", ex);
+                    throw new LuceneSearchRepositoryException($"{Resources.LuceneSearchRepository.ProcessQueryError} {ex.Message}", ex);
                 }
             }
         }
@@ -306,7 +308,7 @@ namespace WasteProducts.DataAccess.Repositories
                 }
                 catch(Exception ex)
                 {
-                    throw new LuceneSearchRepositoryException($"Can't proceed query. {ex.Message}", ex);
+                    throw new LuceneSearchRepositoryException($"{Resources.LuceneSearchRepository.ProcessQueryError} {ex.Message}", ex);
                 }
             }
         }
@@ -319,7 +321,7 @@ namespace WasteProducts.DataAccess.Repositories
         {
 
             if (String.IsNullOrEmpty(queryString))
-                throw new ArgumentException("Search string can't be empty or null or consist only from whitespaces");
+                throw new ArgumentException(Resources.LuceneSearchRepository.QueryStrError);
         }
 
         /// <summary>
@@ -336,7 +338,7 @@ namespace WasteProducts.DataAccess.Repositories
             CheckQueryString(queryString);
             if (!searchableFields.Any())
             {
-                throw new ArgumentException("Can't search with empty filelds.");
+                throw new ArgumentException(Resources.LuceneSearchRepository.EmptyFieldsError);
             }
             BooleanQuery booleanQuery = new BooleanQuery();
 

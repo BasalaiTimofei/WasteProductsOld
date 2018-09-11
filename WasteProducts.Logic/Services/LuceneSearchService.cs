@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories.Search;
-using WasteProducts.Logic.Common.Models;
-using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Search;
 using WasteProducts.Logic.Common.Services;
@@ -177,7 +172,7 @@ namespace WasteProducts.Logic.Services
         {
             if (String.IsNullOrEmpty(query.Query) || query.SearchableFields.Count == 0)
             {
-                throw new ArgumentException("Incorrect query.");
+                throw new ArgumentException(Resources.SearchService.IncorrectQueryStr);
             }
         }
     }

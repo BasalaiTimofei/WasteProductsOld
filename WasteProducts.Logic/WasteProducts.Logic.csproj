@@ -132,6 +132,11 @@
     <Compile Include="Mappings\Groups\GroupProfile.cs" />
     <Compile Include="Mappings\Groups\GroupCommentProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\SearchService.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SearchService.resx</DependentUpon>
+    </Compile>
     <Compile Include="Services\AppRoleManagerService.cs" />
     <Compile Include="Services\AppUserManagerService.cs" />
     <Compile Include="Services\BarcodeService\BarcodeScanService.cs" />
@@ -172,6 +177,12 @@
       <Project>{643aab59-4858-4e23-9a18-4bbec3ee5f56}</Project>
       <Name>WasteProducts.Logic.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\SearchService.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SearchService.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

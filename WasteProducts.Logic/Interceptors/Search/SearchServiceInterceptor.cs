@@ -45,7 +45,7 @@ namespace WasteProducts.Logic.Interceptors
             }
             else
             {
-                throw new ValidationException("Incorrect query.");
+                throw new ValidationException(Resources.SearchService.IncorrectQueryStr);
             }
         }
     }
