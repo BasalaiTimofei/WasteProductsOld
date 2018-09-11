@@ -10,7 +10,7 @@ namespace WasteProducts.Logic.Mappings.Donations
         public AddressProfile()
         {
             CreateMap<Address, AddressDB>()
-                .ForMember(m => m.CreatedOn, opt => opt.Ignore())
+                .ForMember(m => m.Created, opt => opt.Ignore())
                 .ForMember(m => m.Id, opt => opt.Ignore())
                 .ForMember(m => m.Donors, opt => opt.Ignore())
                 .ReverseMap();
