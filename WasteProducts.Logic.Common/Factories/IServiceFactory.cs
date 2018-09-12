@@ -1,4 +1,5 @@
 ﻿using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Common.Services.Donations;
 using WasteProducts.Logic.Common.Services.UserService;
 
 namespace WasteProducts.Logic.Common.Factories
