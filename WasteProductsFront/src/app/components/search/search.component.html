@@ -1,12 +1,8 @@
-<h2>Search</h2>
-
 <div id="search-component">
-  <div>
-    <label>Search query:
-      <input #query />
-    </label>
-    <button (click)="search(query.value)">
-      Search
-    </button>
+  <div class="input-group mb-3">
+      <input #query type="text" class="form-control" placeholder="Your search query..." aria-label="Your search query..." aria-describedby="basic-addon2">
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" (click)="search(query.value)">Search</button>
+      </div>
   </div>
 </div>
