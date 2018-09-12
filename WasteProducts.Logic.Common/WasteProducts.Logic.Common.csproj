@@ -66,11 +66,11 @@
     <Compile Include="Attributes\TraceAttribute.cs" />
     <Compile Include="Factories\IServiceFactory.cs" />
     <Compile Include="Models\Diagnostic\DatabaseState.cs" />
-    <Compile Include="Models\DonationManagment\Address.cs" />
-    <Compile Include="Models\DonationManagment\Donation.cs" />
+    <Compile Include="Models\Donations\Address.cs" />
+    <Compile Include="Models\Donations\Donation.cs" />
     <Compile Include="Models\Barcods\Barcode.cs" />
     <Compile Include="Models\Barcods\BarcodeInfo.cs" />
-    <Compile Include="Models\DonationManagment\Donor.cs" />
+    <Compile Include="Models\Donations\Donor.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Search\BoostedSearchQuery.cs" />
     <Compile Include="Models\Products\Category.cs" />
@@ -105,7 +105,7 @@
     <Compile Include="Services\Diagnostic\IDbService.cs" />
     <Compile Include="Services\Diagnostic\ITestModelsService.cs" />
     <Compile Include="Services\ICategoryService.cs" />
-    <Compile Include="Services\IDonationLogger.cs" />
+    <Compile Include="Services\Donations\IDonationService.cs" />
     <Compile Include="Services\IProductService.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\IBarcodeScanService.cs" />

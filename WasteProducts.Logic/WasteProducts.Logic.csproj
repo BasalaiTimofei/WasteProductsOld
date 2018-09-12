@@ -114,9 +114,9 @@
   <ItemGroup>
     <Compile Include="InjectorModule.cs" />
     <Compile Include="Mappings\CategoryProfile.cs" />
-    <Compile Include="Mappings\DonationManagment\AddressProfile.cs" />
-    <Compile Include="Mappings\DonationManagment\DonationProfile.cs" />
-    <Compile Include="Mappings\DonationManagment\DonorProfile.cs" />
+    <Compile Include="Mappings\Donations\AddressProfile.cs" />
+    <Compile Include="Mappings\Donations\DonationProfile.cs" />
+    <Compile Include="Mappings\Donations\DonorProfile.cs" />
     <Compile Include="Mappings\SearchProfile.cs" />
     <Compile Include="Mappings\TestProfile.cs" />
     <Compile Include="Mappings\UserMappings\ProductProfile.cs" />

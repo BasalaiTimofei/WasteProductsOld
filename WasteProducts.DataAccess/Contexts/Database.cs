@@ -44,9 +44,11 @@ namespace WasteProducts.DataAccess.Contexts
         {
             if (!_isDisposed)
             {
-                if (disposing) { }
-
-                _dbContext.Dispose();
+                if (disposing)
+                {
+                    _dbContext.Dispose();
+                }
+                
                 _isDisposed = true;
             }
         }

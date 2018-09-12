@@ -408,12 +408,13 @@ namespace WasteProducts.DataAccess.Repositories
         {
             if (!_isDisposed)
             {
-                if (disposing) { }
-
-                _writer.Commit();
-                _writer.Dispose();
-                _directory.Dispose();
-                _analyzer.Dispose();
+                if (disposing)
+                {
+                    _writer.Commit();
+                    _writer.Dispose();
+                    _directory.Dispose();
+                    _analyzer.Dispose();
+                }
 
                 _isDisposed = true;
             }
