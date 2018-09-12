@@ -1,14 +1,14 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { SearchService } from '../../services/search.service';
+import { SearchService } from '../../services/service-search.service';
 import { SearchProduct } from '../../models/SearchProduct.model';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
-  selector: 'app-search',
-  templateUrl: './search.component.html',
-  styleUrls: ['./search.component.css']
+  selector: 'app-component-search',
+  templateUrl: './component-search.component.html',
+  styleUrls: ['./component-search.component.css']
 })
 export class SearchComponent implements OnInit {
   private URL_SEARCH = 'http://localhost:2189/api/search/products';  // URL to web api
