@@ -15,6 +15,7 @@ using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.Logic.Interceptors;
 using WasteProducts.Logic.Services;
 using WasteProducts.Logic.Services.MailService;
+using WasteProducts.Logic.Services.Products;
 using WasteProducts.Logic.Services.UserService;
 using WasteProducts.Logic.Mappings;
 using WasteProducts.Logic.Mappings.Products;
