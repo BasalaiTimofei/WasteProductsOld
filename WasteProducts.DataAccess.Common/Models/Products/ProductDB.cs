@@ -76,6 +76,10 @@ namespace WasteProducts.DataAccess.Common.Models.Products
                    this.Barcode == other.Barcode;
         }
 
+        /// <summary>
+        /// The hash code for this ProductDB
+        /// </summary>
+        /// <returns>A hash code for the current object</returns>
         public override int GetHashCode()
         {
             var hashCode = -1413941165;
@@ -91,15 +95,5 @@ namespace WasteProducts.DataAccess.Common.Models.Products
             hashCode = hashCode * -1521134295 + Marked.GetHashCode();
             return hashCode;
         }
-
-        /// <summary>
-        /// The hash code for this ProductDB
-        /// </summary>
-        /// <returns>A hash code for the current object</returns>
-        //public override int GetHashCode()
-        //{
-        //    return 212122;
-        //}
-
     }
 }
