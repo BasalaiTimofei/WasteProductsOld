@@ -26,7 +26,7 @@ namespace WasteProducts.Logic.Common.Models.Search
                 string key = value as string;
                 if (String.IsNullOrEmpty(key))
                 {
-                    throw new ArgumentException("Incorrect query.");
+                    throw new ArgumentException(Resources.QueryConverter.IncorrectQuerySyntaxis);
                 }
                 BoostedSearchQuery result = new BoostedSearchQuery();
 
@@ -52,14 +52,23 @@ namespace WasteProducts.Logic.Common.Models.Search
                             }
                         }
                     }
-                    return result;
+
+                    CheckForEmptyFields(result);
                 }
                 else
                 {
-                    throw new ArgumentException("Incorrect query.");
+                    throw new ArgumentException(Resources.QueryConverter.IncorrectQuerySyntaxis);
                 }
             }
             return base.ConvertFrom(context, culture, value);
+        }
+
+        private void CheckForEmptyFields(BoostedSearchQuery query)
+        {
+            if (query.SearchableFields.Contains(""))
+            {
+                throw new ArgumentException(Resources.QueryConverter.IncorrectQuerySyntaxis);
+            }
         }
     }
 }

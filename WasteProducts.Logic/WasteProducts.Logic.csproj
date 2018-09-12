@@ -114,9 +114,9 @@
   <ItemGroup>
     <Compile Include="InjectorModule.cs" />
     <Compile Include="Mappings\CategoryProfile.cs" />
-    <Compile Include="Mappings\DonationManagment\AddressProfile.cs" />
-    <Compile Include="Mappings\DonationManagment\DonationProfile.cs" />
-    <Compile Include="Mappings\DonationManagment\DonorProfile.cs" />
+    <Compile Include="Mappings\Donations\AddressProfile.cs" />
+    <Compile Include="Mappings\Donations\DonationProfile.cs" />
+    <Compile Include="Mappings\Donations\DonorProfile.cs" />
     <Compile Include="Mappings\SearchProfile.cs" />
     <Compile Include="Mappings\TestProfile.cs" />
     <Compile Include="Mappings\UserMappings\ProductProfile.cs" />
@@ -132,6 +132,11 @@
     <Compile Include="Mappings\Groups\GroupProfile.cs" />
     <Compile Include="Mappings\Groups\GroupCommentProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\SearchService.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SearchService.resx</DependentUpon>
+    </Compile>
     <Compile Include="Services\AppRoleManagerService.cs" />
     <Compile Include="Services\AppUserManagerService.cs" />
     <Compile Include="Services\BarcodeService\BarcodeScanService.cs" />
@@ -182,6 +187,10 @@
     <EmbeddedResource Include="Strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+    <EmbeddedResource Include="Resources\SearchService.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SearchService.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

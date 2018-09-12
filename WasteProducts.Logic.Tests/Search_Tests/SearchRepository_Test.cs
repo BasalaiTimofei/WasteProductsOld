@@ -471,34 +471,15 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         {
             sut = new LuceneSearchRepository(true);
             TestContext context = new TestContext(sut);
-            ProductDB product = new ProductDB() { Id = "1", Name = "Title", Description = "Description" };
+            ProductDB product = new ProductDB() { Id = "1", Name = "Title", Description = "Description", Modified = DateTime.Now.ToUniversalTime()};
             context.Products.Add(product);
 
-            context.DetectAndSaveChanges(typeof(ProductDB));                        
+            context.DetectAndSaveChanges(typeof(ProductDB));
 
             var productFromRepo = sut.GetById<ProductDB>("1");
 
             Assert.AreNotEqual(null, productFromRepo);
             Assert.AreEqual("1", productFromRepo.Id);
         }
-
-        ////not passed. Need Product mapper
-        //[Test]
-        //public void _DetectChanges_AddNewEntityWithCategory_Result_Entity_added()
-        //{
-        //    sut = new LuceneSearchRepository(true);
-        //    TestContext context = new TestContext();
-        //    CategoryDB category = new CategoryDB() { Id = 1, Name = "Category name", Description = "Category description" };
-        //    ProductDB product = new ProductDB() { Id = "1", Name = "Title", Description = "Description", Category = category };
-
-        //    context.Products.Add(product);
-
-        //    context.DetectAndSaveChanges(System.Data.Entity.EntityState.Added, new List<Type>() { typeof(ProductDB), typeof(CategoryDB) });
-
-        //    var productFromRepo = sut.GetById<ProductDB>(1);            
-
-        //    Assert.AreNotEqual(null, productFromRepo);
-        //    Assert.AreNotEqual(null, productFromRepo.Category);
-        //}
     }
 }

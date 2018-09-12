@@ -1,5 +1,8 @@
-﻿namespace WasteProducts.Logic.Common.Models.DonationManagment
+﻿namespace WasteProducts.Logic.Common.Models.Donations
 {
+    /// <summary>
+    /// Represents an address of a donor.
+    /// </summary>
     public class Address
     {
         /// <summary>
