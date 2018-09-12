@@ -89,10 +89,13 @@ namespace WasteProducts.Web.Controllers.Api
             return verificationRequest;
         }
 
+        /// <summary>
+        /// Processes a verification response.
+        /// </summary>
         private void ProcessVerificationResponse(string verificationResponse, string payPalRequestString)
         {
             const string INVALID = "INVALID";
-            const string PAYMENT_STATUS = "payment_status";
+            
             const string COMPLETED = "Completed";
 
             if (verificationResponse.Equals(INVALID))
@@ -105,9 +108,108 @@ namespace WasteProducts.Web.Controllers.Api
             // process payment
             NameValueCollection payPalArguments = HttpUtility.ParseQueryString(payPalRequestString);
             //.  more args as needed look at the list from paypal IPN doc
-            if (payPalArguments[PAYMENT_STATUS] != COMPLETED)
+            if (payPalArguments[IPN.PAYMENT_STATUS] != COMPLETED)
                 return;
             string user_email = payPalArguments["payer_email"];            
         }
+    }
+
+    /// <summary>
+    /// Represents PayPal IPN variables.
+    /// </summary>
+    public static class IPN
+    {
+        public const string PAYMENT_STATUS = "payment_status";
+    }
+
+    /// <summary>
+    /// Represents Buyer information variables from a IPN request.
+    /// </summary>
+    public static class Buyer
+    {
+        /// <summary>
+        /// Country of customer's address.
+        /// Length: 64 characters.
+        /// </summary>
+        public const string ADDRESS_COUNTRY = "address_country";
+
+        /// <summary>
+        /// City of customer's address.
+        /// Length: 40 characters.
+        /// </summary>
+        public const string ADDRESS_CITY = "address_city";
+
+        /// <summary>
+        /// ISO 3166 country code associated with customer's address.
+        /// Length: 2 characters.
+        /// </summary>
+        public const string ADDRESS_COUNTRY_CODE = "address_country_code";
+
+        /// <summary>
+        /// Name used with address(included when the customer provides a Gift Address).
+        /// Length: 128 characters.
+        /// </summary>
+        public const string ADDRESS_NAME = "address_name";
+
+        /// <summary>
+        /// State of customer's address.
+        /// Length: 40 characters.
+        /// </summary>
+        public const string ADDRESS_STATE = "address_state";
+
+        /// <summary>
+        /// Whether the customer provided a confirmed address. Value is:
+        /// "confirmed" — Customer provided a confirmed address;
+        /// "unconfirmed" — Customer provided an unconfirmed address.
+        /// </summary>
+        public const string ADDRESS_STATUS = "address_status";
+
+        /// <summary>
+        /// Customer's street address.
+        /// Length: 200 characters.
+        /// </summary>
+        public const string ADDRESS_STREET = "address_street";
+
+        /// <summary>
+        /// Zip code of customer's address.
+        /// Length: 20 characters.
+        /// </summary>
+        public const string ADDRESS_ZIP = "address_zip";
+
+        /// <summary>
+        /// Customer's telephone number.
+        /// Length: 20 characters.
+        /// </summary>
+        public const string CONTACT_PHONE = "contact_phone";
+
+        /// <summary>
+        /// Customer's first name.
+        /// Length: 64 characters.
+        /// </summary>
+        public const string FIRST_NAME = "first_name";
+
+        /// <summary>
+        /// Customer's last name.
+        /// Length: 64 characters.
+        /// </summary>
+        public const string LAST_NAME = "last_name";
+
+        /// <summary>
+        /// Customer's company name, if customer is a business.
+        /// Length: 127 characters.
+        /// </summary>
+        public const string PAYER_BUSINESS_NAME = "payer_business_name";
+
+        /// <summary>
+        /// Customer's primary email address. Use this email to provide any credits.
+        /// Length: 127 characters.
+        /// </summary>
+        public const string PAYER_EMAIL = "payer_email";
+
+        /// <summary>
+        /// Unique customer ID.
+        /// Length: 13 characters.
+        /// </summary>
+        public const string PAYER_ID = "payer_id";
     }
 }
