@@ -375,10 +375,10 @@ namespace WasteProducts.Logic.Tests.Search_Tests
                 sut.Insert<TestProduct>(product);
             }
             var result = sut.GetAll<TestProduct>("product", new string[] { "Name", "Composition" }, 1000);
-            Assert.AreEqual(expected: 5, actual: result.Count());
+            Assert.AreEqual(5, result.Count());
 
             result = sut.GetAll<TestProduct>("product1", new string[] { "Name", "Composition" }, 1000);
-            Assert.AreEqual(expected: 1, actual: result.Count());
+            Assert.AreEqual(1, result.Count());
         }
 
         [Test]
@@ -391,10 +391,10 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             }
 
             var result = sut.GetAll<TestProduct>("word1", new string[] { "Name", "Composition" }, 1000);
-            Assert.AreEqual(expected: 0, actual: result.Count());
+            Assert.AreEqual(0, result.Count());
 
             result = sut.GetAll<TestProduct>("name1", new string[] { "Composition" }, 1000);
-            Assert.AreEqual(expected: 0, actual: result.Count());
+            Assert.AreEqual(0, result.Count());
         }
 
         [Test]
@@ -407,19 +407,19 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             }
 
             var result = sut.GetAll<TestProduct>("name1 word1 word2 word3", new string[] { "Name", "Composition" }, 1000);
-            Assert.AreEqual(expected: 1, actual: result.Count());
+            Assert.AreEqual(1, result.Count());
 
             result = sut.GetAll<TestProduct>("word1 word2 NamE1 word3", new string[] { "Name", "Composition" }, 1000);
-            Assert.AreEqual(expected: 1, actual: result.Count());
+            Assert.AreEqual(1, result.Count());
 
             result = sut.GetAll<TestProduct>("word1 composition1", new string[] { "Name", "Composition" }, 1000);
-            Assert.AreEqual(expected: 1, actual: result.Count());
+            Assert.AreEqual(1, result.Count());
 
             result = sut.GetAll<TestProduct>("name1 composition2", new string[] { "Name", "Composition" }, 1000);
-            Assert.AreEqual(expected: 2, actual: result.Count());
+            Assert.AreEqual(2, result.Count());
 
             result = sut.GetAll<TestProduct>("Word1 Word2 NamE1 CompositioN1 NamE2 ProducT2 Word3 Word4", new string[] { "Composition" }, 1000);
-            Assert.AreEqual(expected: 2, actual: result.Count());
+            Assert.AreEqual(2, result.Count());
         }
 
         [Test]
@@ -448,7 +448,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             boostValues.Add("Name", 1.0f);
             boostValues.Add("Composition", 1.0f);
             var result = sut.GetAll<TestProduct>("product", new string[] { "Name", "Composition" }, new ReadOnlyDictionary<string, float>(boostValues), 1000);
-            Assert.AreEqual(expected: 5, actual: result.Count());
+            Assert.AreEqual(5, result.Count());
         }
 
 
@@ -471,34 +471,15 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         {
             sut = new LuceneSearchRepository(true);
             TestContext context = new TestContext(sut);
-            ProductDB product = new ProductDB() { Id = "1", Name = "Title", Composition = "Composition" };
+            ProductDB product = new ProductDB() { Id = "1", Name = "Title", Composition = "Composition", Modified = DateTime.Now.ToUniversalTime() };
             context.Products.Add(product);
 
-            context.DetectAndSaveChanges(typeof(ProductDB));                        
+            context.DetectAndSaveChanges(typeof(ProductDB));
 
             var productFromRepo = sut.GetById<ProductDB>("1");
 
             Assert.AreNotEqual(null, productFromRepo);
             Assert.AreEqual("1", productFromRepo.Id);
         }
-
-        ////not passed. Need Product mapper
-        //[Test]
-        //public void _DetectChanges_AddNewEntityWithCategory_Result_Entity_added()
-        //{
-        //    sut = new LuceneSearchRepository(true);
-        //    TestContext context = new TestContext();
-        //    CategoryDB category = new CategoryDB() { Id = 1, Name = "Category name", Description = "Category description" };
-        //    ProductDB product = new ProductDB() { Id = "1", Name = "Title", Composition = "Composition", Category = category };
-
-        //    context.Products.Add(product);
-
-        //    context.DetectAndSaveChanges(System.Data.Entity.EntityState.Added, new List<Type>() { typeof(ProductDB), typeof(CategoryDB) });
-
-        //    var productFromRepo = sut.GetById<ProductDB>(1);            
-
-        //    Assert.AreNotEqual(null, productFromRepo);
-        //    Assert.AreNotEqual(null, productFromRepo.Category);
-        //}
     }
 }
