@@ -392,7 +392,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                var result = productService.GetById((string)null);
+                var result = productService.GetById(null);
 
                 Assert.That(result, Is.Null);
             }
@@ -412,7 +412,6 @@ namespace WasteProducts.Logic.Tests.Product_Tests
                 Assert.That(result, Is.InstanceOf(typeof(Product)));
             }
         }
-
 
         [Test]
         public void GetAll_GetsNothing_Returns_GenericEnumerableCollection()
@@ -663,41 +662,32 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         [Test]
         public void RemoveCategory_Removed_ReturnsTrue()
         {
-            var categoryDb = new CategoryDB();
-            var category = new Category();
-            var catList = new List<CategoryDB>();
-
             selectedList.Add(new ProductDB());
-            catList.Add(categoryDb);
+            new List<CategoryDB>().Add(new CategoryDB());
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(selectedList);
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                productService.RemoveCategory(product, category).Should().BeTrue();
+                productService.RemoveCategory(product, new Category()).Should().BeTrue();
             }
         }
 
         [Test]
         public void RemoveCategory_NotRemoved_ReturnsFalse()
         {
-            var category = new Category();
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(selectedList);
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                productService.RemoveCategory(product, category).Should().BeFalse();
+                productService.RemoveCategory(product, new Category()).Should().BeFalse();
             }
         }
 
         [Test]
-        //Переиновать
-        public void RemoveCategory_RemovesCategoryInProductWithoutCategory_Method_UpdateOfRepositoryIsNeverCalled()
+        public void RemoveCategory_UpdateOfRepositoryIsNeverCalled()
         {
-            var categoryDb = new CategoryDB();
-            var catList = new List<CategoryDB> { categoryDb };
-
             selectedList.Add(productDB);
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(selectedList);
@@ -790,5 +780,44 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             }
         }
 
+        [Test]
+        public void Update_CallsOnce()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            using (var productService = new ProductService(mockProductRepository.Object, mapper))
+            {
+                productService.Update(product);
+
+                mockProductRepository.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Once);
+            }
+        }
+
+        [Test]
+        public void Update_IfProductIsInDb()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            using (var productService = new ProductService(mockProductRepository.Object, mapper))
+            {
+                productService.Update(product).Should().BeTrue();
+            }
+        }
+
+        [Test]
+        public void Update_IfProductIsNotInDb()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            using (var productService = new ProductService(mockProductRepository.Object, mapper))
+            {
+                productService.Update(product).Should().BeFalse();
+            }
+        }
     }
 }
