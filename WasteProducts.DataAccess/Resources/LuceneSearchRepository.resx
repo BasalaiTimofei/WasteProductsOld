@@ -129,6 +129,9 @@
   <data name="EmptyIdError" xml:space="preserve">
     <value>Сan't update entity with empty id.</value>
   </data>
+  <data name="IdFieldNotFound" xml:space="preserve">
+    <value>Сan't update entity, provide correct field with id.</value>
+  </data>
   <data name="IndexOpenError" xml:space="preserve">
     <value>Can't open Lucene index.</value>
   </data>

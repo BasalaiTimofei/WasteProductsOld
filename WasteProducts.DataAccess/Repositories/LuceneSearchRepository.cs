@@ -175,7 +175,11 @@ namespace WasteProducts.DataAccess.Repositories
         /// <param name="obj"></param>
         public void Update<TEntity>(TEntity obj) where TEntity : class 
         {
-            System.Reflection.PropertyInfo keyFieldInfo = typeof(TEntity).GetProperty(IDField);
+            System.Reflection.PropertyInfo keyFieldInfo = obj.GetType().GetProperty(IDField);
+            if (keyFieldInfo == null)
+            {
+                throw new ArgumentException(Resources.LuceneSearchRepository.IdFieldNotFound);
+            }
             string id = (string)keyFieldInfo.GetValue(obj);
             if (!String.IsNullOrEmpty(id))
             {
