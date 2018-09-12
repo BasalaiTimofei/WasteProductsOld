@@ -3,7 +3,7 @@ using Swagger.Net.Annotations;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Results;
-using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Common.Services.Donations;
 
 namespace WasteProducts.Web.Controllers.Api
 {
