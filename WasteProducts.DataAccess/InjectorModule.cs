@@ -2,10 +2,12 @@
 using Ninject.Modules;
 using WasteProducts.DataAccess.Common.Context;
 using WasteProducts.DataAccess.Common.Repositories;
+using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Contexts;
 using WasteProducts.DataAccess.Repositories;
+using WasteProducts.DataAccess.Repositories.Products;
 using WasteProducts.DataAccess.Repositories.UserManagement;
 
 namespace WasteProducts.DataAccess

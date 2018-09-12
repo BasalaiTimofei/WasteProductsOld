@@ -10,6 +10,7 @@ using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Mappings;
+using WasteProducts.Logic.Mappings.Products;
 using WasteProducts.Logic.Services;
 using WasteProducts.Logic.Services.Products;
 
@@ -48,13 +49,13 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         {
             barcode = new Barcode
             {
-                Id = (new Guid()).ToString(),
+                Id = Guid.NewGuid().ToString(),
                 Code = "456731556",
                 ProductName = "Some product"
             };
             barcodeDB = new BarcodeDB
             {
-                Id = (new Guid()).ToString(),
+                Id = Guid.NewGuid().ToString(),
                 Code = "456731556",
                 ProductName = "Some product"
             };
@@ -83,8 +84,8 @@ namespace WasteProducts.Logic.Tests.Product_Tests
                 Products = new List<Product>()
             };
 
-            product = new Product { Id = (new Guid()).ToString(), Name = "Some name" };
-            productDB = new ProductDB { Id = (new Guid()).ToString(), Name = "Some name" };
+            product = new Product { Id = new Guid().ToString(), Name = "Some name" };
+            productDB = new ProductDB { Id = new Guid().ToString(), Name = "Some name" };
         }
 
         [Test]
