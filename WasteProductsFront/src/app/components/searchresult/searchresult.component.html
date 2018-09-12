@@ -1,7 +1,7 @@
-<app-search [ngTemplateOutlet]="query"></app-search>
+<app-search (messageEvent)="recieveMessage($event)"></app-search>
+
 <div id="search-result">
   <div *ngIf="searchProducts.length == 0">Not found</div>
-<h1>Запрос - {{query}}</h1>
   <ul class="searchResult">
     <li *ngFor="let result of searchProducts" >
       <div>{{result.Id}}</div><div>{{result.Name}}</div><div>{{result.Description}}</div>

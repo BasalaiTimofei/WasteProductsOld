@@ -3,9 +3,9 @@
 <div id="search-component">
   <div>
     <label>Search query:
-      <input [(ngTemplateOutlet)]="query" placeholder="Search query"/>
+      <input #query />
     </label>
-    <button (click)="search(query); query=''">
+    <button (click)="search(query.value)">
       Search
     </button>
   </div>
