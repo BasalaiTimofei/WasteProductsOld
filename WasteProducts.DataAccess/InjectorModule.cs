@@ -26,7 +26,10 @@ namespace WasteProducts.DataAccess
             // bind repositories below
             Bind<IUserRepository>().To<UserRepository>();
             Bind<IUserRoleRepository>().To<UserRoleRepository>();
+
             Bind<IProductRepository>().To<ProductRepository>();
+            Bind<ICategoryRepository>().To<CategoryRepository>();
+
             Bind<ISearchRepository>().To<LuceneSearchRepository>().InSingletonScope();
 
             Bind<IMapper>().ToMethod(ctx =>

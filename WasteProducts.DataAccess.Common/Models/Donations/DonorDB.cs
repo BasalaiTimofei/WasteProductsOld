@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WasteProducts.DataAccess.Common.Models.DonationManagment
+namespace WasteProducts.DataAccess.Common.Models.Donations
 {
+    /// <summary>
+    /// DAL level model of donor.
+    /// </summary>
     public class DonorDB
     {
         /// <summary>
@@ -48,11 +51,11 @@ namespace WasteProducts.DataAccess.Common.Models.DonationManagment
         /// <summary>
         /// Specifies the timestamp for creating of a specific donor in the database.
         /// </summary>
-        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+        public DateTime Created { get; set; } = DateTime.UtcNow;
 
         /// <summary>
         /// Specifies the timestamp for modifying of a specific donor in the database.
         /// </summary>
-        public DateTime? ModifiedOn { get; set; }
+        public DateTime? Modified { get; set; }
     }
 }

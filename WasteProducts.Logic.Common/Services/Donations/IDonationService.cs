@@ -1,7 +1,10 @@
-﻿using WasteProducts.Logic.Common.Models.DonationManagment;
+﻿using WasteProducts.Logic.Common.Models.Donations;
 
-namespace WasteProducts.Logic.Common.Services
+namespace WasteProducts.Logic.Common.Services.Donations
 {
+    /// <summary>
+    /// This interface provides the log method for donations.
+    /// </summary>
     public interface IDonationService
     {
         /// <summary>

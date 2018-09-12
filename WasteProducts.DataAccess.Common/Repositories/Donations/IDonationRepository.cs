@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using WasteProducts.DataAccess.Common.Models.DonationManagment;
+using WasteProducts.DataAccess.Common.Models.Donations;
 
-namespace WasteProducts.DataAccess.Common.Repositories.DonationManagment
+namespace WasteProducts.DataAccess.Common.Repositories.Donations
 {
-    interface IDonationRepository : IDisposable
+    /// <summary>
+    /// This interface provides necessary CRUD methods for donation repository
+    /// </summary>
+    public interface IDonationRepository : IDisposable
     {
         /// <summary>
         /// Returns all donations in an enumerable.

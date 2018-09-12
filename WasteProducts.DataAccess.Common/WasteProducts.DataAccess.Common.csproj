@@ -62,12 +62,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context\IDatabase.cs" />
-    <Compile Include="Models\DonationManagment\AddressDB.cs" />
-    <Compile Include="Models\DonationManagment\DonationDB.cs" />
+    <Compile Include="Models\Donations\AddressDB.cs" />
+    <Compile Include="Models\Donations\DonationDB.cs" />
     <Compile Include="Exceptions\LuceneSearchRepositoryException.cs" />
     <Compile Include="Exceptions\LuceneSearchServiceException.cs" />
     <Compile Include="Models\Barcods\BarcodeDB.cs" />
-    <Compile Include="Models\DonationManagment\DonorDB.cs" />
+    <Compile Include="Models\Donations\DonorDB.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Products\CategoryDB.cs" />
@@ -89,7 +89,7 @@
     <Compile Include="Models\Users\UserProductDescriptionDB.cs" />
     <Compile Include="Models\Users\UserRoleDB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\DonationManagment\IDonationRepository.cs" />
+    <Compile Include="Repositories\Donations\IDonationRepository.cs" />
     <Compile Include="Repositories\IBarcodeRepository.cs" />
     <Compile Include="Repositories\ICategoryRepository.cs" />
     <Compile Include="Repositories\IEntityRepository.cs" />

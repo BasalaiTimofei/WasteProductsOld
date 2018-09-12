@@ -1,27 +1,28 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using FluentValidation;
 using Ninject;
 using Ninject.Extensions.Factory;
 using Ninject.Extensions.Interception.Infrastructure.Language;
 using Ninject.Modules;
+using System;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.Logic.Common.Factories;
-using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Common.Models.Products;
+using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Common.Services.Diagnostic;
 using WasteProducts.Logic.Common.Services.MailService;
 using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.Logic.Interceptors;
+using WasteProducts.Logic.Mappings;
+using WasteProducts.Logic.Mappings.UserMappings;
 using WasteProducts.Logic.Services;
 using WasteProducts.Logic.Services.MailService;
 using WasteProducts.Logic.Services.UserService;
-using WasteProducts.Logic.Mappings;
-using WasteProducts.Logic.Mappings.UserMappings;
 using WasteProducts.Logic.Validators.Search;
 using System.Configuration;
 using System.Net.Mail;
 using System.Net;
+using ProductProfile = WasteProducts.Logic.Mappings.ProductProfile;
 
 namespace WasteProducts.Logic
 {
@@ -30,7 +31,9 @@ namespace WasteProducts.Logic
         public override void Load()
         {
             if (Kernel is null)
+            {
                 return;
+            }
 
             BindMappers();
 
@@ -47,6 +50,8 @@ namespace WasteProducts.Logic
             Bind<ISearchService>().To<LuceneSearchService>().Intercept().With<SearchServiceInterceptor>();
 
             Bind<IProductService>().To<ProductService>();
+
+            Bind<ICategoryService>().To<CategoryService>();
 
             Bind<AppSettingsReader>().ToSelf();
         }
@@ -104,14 +109,16 @@ namespace WasteProducts.Logic
             Bind<IMapper>().ToMethod(ctx =>
                 new Mapper(new MapperConfiguration(cfg =>
                 {
-                    cfg.CreateMap<Product, ProductDB>()
-                        .ForMember(m => m.Created,
-                            opt => opt.MapFrom(p => p.Name != null ? DateTime.UtcNow : default(DateTime)))
-                        .ForMember(m => m.Modified, opt => opt.UseValue((DateTime?) null))
-                        .ForMember(m => m.Barcode, opt => opt.Ignore())
-                        .ReverseMap();
+                    cfg.AddProfile<ProductProfile>();
                     cfg.AddProfile<CategoryProfile>();
                 }))).WhenInjectedExactlyInto<ProductService>();
+
+            Bind<IMapper>().ToMethod(ctx =>
+                new Mapper(new MapperConfiguration(cfg =>
+                {
+                    cfg.AddProfile<ProductProfile>();
+                    cfg.AddProfile<CategoryProfile>();
+                }))).WhenInjectedExactlyInto<CategoryService>();
         }
     }
 }

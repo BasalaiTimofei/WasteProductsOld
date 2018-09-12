@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WasteProducts.DataAccess.Common.Models.DonationManagment
+namespace WasteProducts.DataAccess.Common.Models.Donations
 {
+    /// <summary>
+    /// DAL level model of address.
+    /// </summary>
     public class AddressDB
     {
         /// <summary>
@@ -53,6 +56,6 @@ namespace WasteProducts.DataAccess.Common.Models.DonationManagment
         /// <summary>
         /// Specifies the timestamp for creating of a specific address in the database.
         /// </summary>
-        public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
+        public DateTime Created { get; set; } = DateTime.UtcNow;
     }
 }

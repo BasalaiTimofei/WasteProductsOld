@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.ModelConfiguration;
-using WasteProducts.DataAccess.Common.Models.DonationManagment;
+using WasteProducts.DataAccess.Common.Models.Donations;
 
-namespace WasteProducts.DataAccess.ModelConfigurations.DonationManagment
+namespace WasteProducts.DataAccess.ModelConfigurations.Donations
 {
     class DonorEntityConfiguration : EntityTypeConfiguration<DonorDB>
     {
