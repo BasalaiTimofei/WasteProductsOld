@@ -165,7 +165,6 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
                 Assert.Throws<NullReferenceException>(() => productService.Add((Product)null));
-
                 mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Never);
             }
         }
