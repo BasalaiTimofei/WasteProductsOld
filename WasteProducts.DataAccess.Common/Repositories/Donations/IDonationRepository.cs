@@ -7,7 +7,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Donations
     /// <summary>
     /// This interface provides necessary CRUD methods for donation repository
     /// </summary>
-    interface IDonationRepository : IDisposable
+    public interface IDonationRepository : IDisposable
     {
         /// <summary>
         /// Returns all donations in an enumerable.
