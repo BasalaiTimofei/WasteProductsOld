@@ -2,6 +2,9 @@
 
 namespace WasteProducts.Logic.Common.Services
 {
+    /// <summary>
+    /// This interface provides the log method for donations.
+    /// </summary>
     public interface IDonationService
     {
         /// <summary>

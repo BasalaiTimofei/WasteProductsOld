@@ -1,5 +1,8 @@
 ﻿namespace WasteProducts.Logic.Common.Models.Donations
 {
+    /// <summary>
+    /// Represents a donor.
+    /// </summary>
     public class Donor
     {
         /// <summary>

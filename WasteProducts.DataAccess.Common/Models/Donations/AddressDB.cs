@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace WasteProducts.DataAccess.Common.Models.Donations
 {
+    /// <summary>
+    /// DAL level model of address.
+    /// </summary>
     public class AddressDB
     {
         /// <summary>

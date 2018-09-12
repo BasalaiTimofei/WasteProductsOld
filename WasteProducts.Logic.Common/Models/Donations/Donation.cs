@@ -2,6 +2,9 @@
 
 namespace WasteProducts.Logic.Common.Models.Donations
 {
+    /// <summary>
+    /// Represents a donation.
+    /// </summary>
     public class Donation
     {
         /// <summary>

@@ -4,6 +4,9 @@ using WasteProducts.DataAccess.Common.Models.Donations;
 
 namespace WasteProducts.DataAccess.Common.Repositories.Donations
 {
+    /// <summary>
+    /// This interface provides necessary CRUD methods for donation repository
+    /// </summary>
     interface IDonationRepository : IDisposable
     {
         /// <summary>

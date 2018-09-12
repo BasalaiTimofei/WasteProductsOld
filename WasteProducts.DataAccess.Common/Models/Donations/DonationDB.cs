@@ -2,6 +2,9 @@
 
 namespace WasteProducts.DataAccess.Common.Models.Donations
 {
+    /// <summary>
+    /// DAL level model of donation.
+    /// </summary>
     public class DonationDB
     {
         /// <summary>
