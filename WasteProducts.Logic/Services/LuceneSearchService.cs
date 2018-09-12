@@ -7,6 +7,7 @@ using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Search;
 using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Resources;
 
 namespace WasteProducts.Logic.Services
 {
@@ -159,7 +160,7 @@ namespace WasteProducts.Logic.Services
         {
             if (String.IsNullOrEmpty(query.Query) || query.SearchableFields.Count == 0)
             {
-                throw new ArgumentException(Resources.SearchService.IncorrectQueryStr);
+                throw new ArgumentException(SearchServiceResources.IncorrectQueryStr);
             }
         }
     }

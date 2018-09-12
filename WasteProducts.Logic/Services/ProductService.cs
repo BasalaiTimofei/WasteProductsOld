@@ -72,7 +72,7 @@ namespace WasteProducts.Logic.Services
                 string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
                 out var products)) return false;
 
-            var newProduct = new Product { Id = new Guid().ToString(), Name = name};
+            var newProduct = new Product { Id = Guid.NewGuid().ToString(), Name = name};
             _productRepository.Add(_mapper.Map<ProductDB>(newProduct));
 
             return true;

@@ -1,4 +1,4 @@
-﻿using Ninject;
+using Ninject;
 using Ninject.Modules;
 using WasteProducts.DataAccess.Common.Context;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
@@ -26,9 +26,13 @@ namespace WasteProducts.DataAccess
             // bind repositories below
             Bind<IUserRepository>().To<UserRepository>();
             Bind<IUserRoleRepository>().To<UserRoleRepository>();
-            Bind<IGroupRepository>().To<GroupRepository>();
+
             Bind<IProductRepository>().To<ProductRepository>();
+            Bind<ICategoryRepository>().To<CategoryRepository>();
+
             Bind<ISearchRepository>().To<LuceneSearchRepository>().InSingletonScope();
+
+            Bind<IGroupRepository>().To<GroupRepository>();
         }
     }
 }

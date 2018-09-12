@@ -7,17 +7,12 @@ namespace WasteProducts.DataAccess.Contexts
     {
         private readonly WasteContext _dbContext;
 
-        private bool _isDisposed;
+        private bool _disposed;
 
         /// <inheritdoc />
         public Database(WasteContext dbContext)
         {
             _dbContext = dbContext;
-        }
-
-        ~Database()
-        {
-            Dispose(false);
         }
 
         /// <inheritdoc />
@@ -27,10 +22,16 @@ namespace WasteProducts.DataAccess.Contexts
         public bool IsCompatibleWithModel => _dbContext.Database.CompatibleWithModel(false);
 
         /// <inheritdoc />
-        public void Initialize() => _dbContext.Database.Initialize(false);
+        public void Initialize()
+        {
+            _dbContext.Database.Initialize(false);
+        }
 
         /// <inheritdoc />
-        public bool Delete() => _dbContext.Database.Delete();
+        public void Delete()
+        {
+            _dbContext.Database.Delete();
+        }
 
 
         /// <inheritdoc />
@@ -42,15 +43,20 @@ namespace WasteProducts.DataAccess.Contexts
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!_isDisposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
                     _dbContext.Dispose();
                 }
                 
-                _isDisposed = true;
+                _disposed = true;
             }
+        }
+
+        ~Database()
+        {
+            Dispose(false);
         }
     }
 }
