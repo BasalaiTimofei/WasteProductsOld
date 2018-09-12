@@ -119,9 +119,9 @@
     <Compile Include="Services\Groups\IGroupProductService.cs" />
     <Compile Include="Services\Groups\IGroupBoardService.cs" />
     <Compile Include="Services\Groups\IGroupService.cs" />
-    <Compile Include="Services\MailService\IMailService.cs" />
-    <Compile Include="Services\UserService\IUserRoleService.cs" />
-    <Compile Include="Services\UserService\IUserService.cs" />
+    <Compile Include="Services\Mail\IMailService.cs" />
+    <Compile Include="Services\User\IUserRoleService.cs" />
+    <Compile Include="Services\User\IUserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">

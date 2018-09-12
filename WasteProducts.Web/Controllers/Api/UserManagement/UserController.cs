@@ -8,7 +8,7 @@ using System.Web.Http;
 using NLog;
 using Swagger.Net.Annotations;
 using WasteProducts.Logic.Common.Models.Users;
-using WasteProducts.Logic.Common.Services.UserService;
+using WasteProducts.Logic.Common.Services.Users;
 using WasteProducts.Web.Models.Users;
 
 namespace WasteProducts.Web.Controllers.Api.UserManagement

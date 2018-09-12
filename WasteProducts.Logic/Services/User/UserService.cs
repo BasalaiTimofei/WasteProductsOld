@@ -2,15 +2,15 @@
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.Logic.Common.Models.Users;
-using WasteProducts.Logic.Common.Services.UserService;
-using WasteProducts.Logic.Common.Services.MailService;
+using WasteProducts.Logic.Common.Services.Users;
+using WasteProducts.Logic.Common.Services.Mail;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace WasteProducts.Logic.Services.UserService
+namespace WasteProducts.Logic.Services.Users
 {
     public class UserService : IUserService
     {
@@ -67,9 +67,9 @@ namespace WasteProducts.Logic.Services.UserService
             return await _userRepo.ConfirmEmailAsync(userId, token);
         }
 
-        public async Task<User> LogInByEmailAsync(string email, string password)
+        public async Task<Common.Models.Users.User> LogInByEmailAsync(string email, string password)
         {
-            return await Task.Run(async () =>
+            return await Task.Run((Func<Task<Common.Models.Users.User>>)(async () =>
             {
                 var userDB = await _userRepo.FindByEmailAndPasswordAsync(email, password);
                 if (userDB == null)
@@ -77,14 +77,14 @@ namespace WasteProducts.Logic.Services.UserService
                     return null;
                 }
 
-                var loggedInUser = MapTo<User>(userDB);
+                var loggedInUser = MapTo<Common.Models.Users.User>(userDB);
                 return loggedInUser;
-            });
+            }));
         }
 
-        public async Task<User> LogInByNameAsync(string userName, string password)
+        public async Task<Common.Models.Users.User> LogInByNameAsync(string userName, string password)
         {
-            return await Task.Run(async () =>
+            return await Task.Run((Func<Task<Common.Models.Users.User>>)(async () =>
             {
                 var userDB = await _userRepo.FindByNameAndPasswordAsync(userName, password);
                 if (userDB == null)
@@ -92,9 +92,9 @@ namespace WasteProducts.Logic.Services.UserService
                     return null;
                 }
 
-                var loggedInUser = MapTo<User>(userDB);
+                var loggedInUser = MapTo<Common.Models.Users.User>(userDB);
                 return loggedInUser;
-            });
+            }));
         }
 
         public async Task<bool> ChangePasswordAsync(string userId, string oldPassword, string newPassword)
@@ -118,24 +118,24 @@ namespace WasteProducts.Logic.Services.UserService
         }
 
         //todo make async + userRepomethod
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        public async Task<IEnumerable<Common.Models.Users.User>> GetAllUsersAsync()
         {
             return await Task.Run(() =>
             {
                 IEnumerable<UserDAL> allUserDBs = _userRepo.GetAll(true).ToList();
-                var allUsers = _mapper.Map<IEnumerable<User>>(allUserDBs);
+                var allUsers = _mapper.Map<IEnumerable<Common.Models.Users.User>>(allUserDBs);
                 return allUsers;
             });
         }
 
-        public async Task<User> GetUserAsync(string id)
+        public async Task<Common.Models.Users.User> GetUserAsync(string id)
         {
-            return await Task.Run(async () =>
+            return await Task.Run((Func<Task<Common.Models.Users.User>>)(async () =>
             {
                 var userDB = await _userRepo.GetAsync(id, true);
-                var user = MapTo<User>(userDB);
+                var user = MapTo<Common.Models.Users.User>(userDB);
                 return user;
-            });
+            }));
         }
 
         public async Task<IList<string>> GetRolesAsync(string userId)
@@ -155,7 +155,7 @@ namespace WasteProducts.Logic.Services.UserService
             
         }
 
-        public async Task UpdateAsync(User user)
+        public async Task UpdateAsync(Common.Models.Users.User user)
         {
             await _userRepo.UpdateAsync(MapTo<UserDB>(user));
         }
@@ -251,13 +251,13 @@ namespace WasteProducts.Logic.Services.UserService
             await _userRepo.DeleteAsync(userId);
         }
 
-        private UserDAL MapTo<T>(User user)
+        private UserDAL MapTo<T>(Common.Models.Users.User user)
             =>
             _mapper.Map<UserDAL>(user);
 
         private User MapTo<T>(UserDAL user)
             =>
-            _mapper.Map<User>(user);
+            _mapper.Map<Common.Models.Users.User>(user);
 
         private UserLoginDB MapTo<T>(UserLogin user)
             =>

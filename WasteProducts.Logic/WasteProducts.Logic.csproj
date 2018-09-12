@@ -139,11 +139,11 @@
     <Compile Include="Services\Diagnostic\TestModelsService.cs" />
     <Compile Include="Services\LuceneSearchService.cs" />
     <Compile Include="Services\ProductService.cs" />
-    <Compile Include="Services\MailService\MailService.cs" />
+    <Compile Include="Services\Mail\MailService.cs" />
     <Compile Include="Interceptors\Search\SearchServiceInterceptor.cs" />
     <Compile Include="Services\TestService.cs" />
-    <Compile Include="Services\UserService\UserRoleService.cs" />
-    <Compile Include="Services\UserService\UserService.cs" />
+    <Compile Include="Services\User\UserRoleService.cs" />
+    <Compile Include="Services\User\UserService.cs" />
     <Compile Include="Validators\Search\BoostedSearchQueryValidator.cs" />
     <Compile Include="Validators\TestValidator.cs" />
     <Compile Include="Validators\Groups\GroupValidation.cs" />

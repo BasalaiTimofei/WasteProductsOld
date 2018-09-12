@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using WasteProducts.Logic.Common.Services.MailService;
+using WasteProducts.Logic.Common.Services.Mail;
 
-namespace WasteProducts.Logic.Services.MailService
+namespace WasteProducts.Logic.Services.Mail
 {
     public class MailService : IMailService
     {
@@ -53,9 +53,6 @@ namespace WasteProducts.Logic.Services.MailService
             {
                 message = new MailMessage(OurEmail, to, subject, body);
                 await _smtpClient.SendMailAsync(message);
-            }
-            catch
-            {
             }
             finally
             {

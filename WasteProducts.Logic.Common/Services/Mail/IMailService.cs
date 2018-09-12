@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace WasteProducts.Logic.Common.Services.MailService
+namespace WasteProducts.Logic.Common.Services.Mail
 {
     public interface IMailService : IDisposable
     {
