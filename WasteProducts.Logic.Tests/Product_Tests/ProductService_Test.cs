@@ -662,7 +662,6 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         public void RemoveCategory_Removed_ReturnsTrue()
         {
             selectedList.Add(new ProductDB());
-            new List<CategoryDB>().Add(new CategoryDB());
             mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(selectedList);
 
