@@ -34,6 +34,12 @@ namespace WasteProducts.Logic.Common.Factories
         IProductService CreateProductService();
 
         /// <summary>
+        /// Gets ICategoryService from Ioc container 
+        /// </summary>
+        /// <returns>Implementation of IProductService</returns>
+        ICategoryService CreateCategoryService();
+
+        /// <summary>
         /// Gets IBarcodeService from Ioc container 
         /// </summary>
         /// <returns>Implementation of IBarcodeService</returns>
