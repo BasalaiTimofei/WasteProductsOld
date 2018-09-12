@@ -27,9 +27,11 @@ export class SearchComponent implements OnInit {
   }
 
   search(query: string): void {
-    // this.searchService.getDefault(query).subscribe(data => this.searchResult = data);
-    this.searchResult[0] = new SearchProduct('iiii', 'nnnn', 'dddddd');
-    this.messageEvent.emit(this.searchResult);
+    if (typeof query !== 'undefined' && query) {
+      // this.searchService.getDefault(query).subscribe(data => this.searchResult = data);
+      this.searchResult[0] = new SearchProduct('iiii', 'nnnn', 'dddddd');
+      this.messageEvent.emit(this.searchResult);
+    }
   }
 
   runDefault(query: string): Observable<SearchProduct[]> {
