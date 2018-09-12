@@ -9,6 +9,7 @@ using NLog;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Common.Services.Products;
 
 namespace WasteProducts.Web.Controllers.Api
 {

@@ -8,6 +8,7 @@ using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Mappings;
 using WasteProducts.Logic.Services;
+using WasteProducts.Logic.Services.Products;
 
 namespace WasteProducts.Logic.Tests.Product_Tests
 {

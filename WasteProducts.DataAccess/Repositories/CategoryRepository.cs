@@ -20,10 +20,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// Using the context of the WasteContext class through the private field.
         /// </summary>
         /// <param name="context">The specific context of WasteContext</param>
-        public CategoryRepository(WasteContext context)
-        {
-            _context = context;
-        }
+        public CategoryRepository(WasteContext context) => _context = context;
 
         /// <summary>
         /// Adds a new category

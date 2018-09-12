@@ -11,6 +11,7 @@ using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Mappings;
 using WasteProducts.Logic.Services;
+using WasteProducts.Logic.Services.Products;
 
 #region FluentAssertions descreiption
 //https://fluentassertions.com/documentation/

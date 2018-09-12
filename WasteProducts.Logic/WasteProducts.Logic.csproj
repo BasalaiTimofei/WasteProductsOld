@@ -140,12 +140,12 @@
     <Compile Include="Services\AppRoleManagerService.cs" />
     <Compile Include="Services\AppUserManagerService.cs" />
     <Compile Include="Services\BarcodeService\BarcodeScanService.cs" />
-    <Compile Include="Services\CategoryService.cs" />
+    <Compile Include="Services\Products\CategoryService.cs" />
     <Compile Include="Services\Diagnostic\DbSeedService.cs" />
     <Compile Include="Services\Diagnostic\DbService.cs" />
     <Compile Include="Services\Diagnostic\TestModelsService.cs" />
     <Compile Include="Services\LuceneSearchService.cs" />
-    <Compile Include="Services\ProductService.cs" />
+    <Compile Include="Services\Products\ProductService.cs" />
     <Compile Include="Services\MailService\MailFactory.cs" />
     <Compile Include="Services\MailService\MailService.cs" />
     <Compile Include="Interceptors\Search\SearchServiceInterceptor.cs" />

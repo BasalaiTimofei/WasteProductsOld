@@ -20,10 +20,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// Using the context of the WasteContext class through the private field.
         /// </summary>
         /// <param name="context">The specific context of WasteContext</param>
-        public ProductRepository(WasteContext context)
-        {
-            _context = context;
-        }
+        public ProductRepository(WasteContext context) => _context = context;
 
         /// <summary>
         /// Allows you to add new product to the products colletion.

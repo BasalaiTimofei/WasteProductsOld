@@ -10,6 +10,7 @@ using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Services.Diagnostic;
 using WasteProducts.Logic.Common.Services.MailService;
+using WasteProducts.Logic.Common.Services.Products;
 using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.Logic.Interceptors;
 using WasteProducts.Logic.Services;
@@ -17,6 +18,7 @@ using WasteProducts.Logic.Services.MailService;
 using WasteProducts.Logic.Services.UserService;
 using WasteProducts.Logic.Mappings;
 using WasteProducts.Logic.Mappings.UserMappings;
+using WasteProducts.Logic.Services.Products;
 using WasteProducts.Logic.Validators.Search;
 
 namespace WasteProducts.Logic
