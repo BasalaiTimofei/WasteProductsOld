@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Context;
 using WasteProducts.Logic.Common.Models.Diagnostic;
 using WasteProducts.Logic.Common.Services.Diagnostic;
+using WasteProducts.Logic.Resources;
 
 namespace WasteProducts.Logic.Services
 {
@@ -37,7 +38,7 @@ namespace WasteProducts.Logic.Services
 
             if (isExist && !isCompatibleWithModel)
             {
-                _logger.Warn(Strings.DbService_GetStatusAsync_WarnMsg);
+                _logger.Warn(DbServiceResources.GetStatusAsync_WarnMsg);
             }
 
             return new DatabaseState(isExist, isCompatibleWithModel);

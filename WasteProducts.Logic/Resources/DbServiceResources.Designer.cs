@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WasteProducts.Logic {
+namespace WasteProducts.Logic.Resources {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace WasteProducts.Logic {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Strings {
+    internal class DbServiceResources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Strings() {
+        internal DbServiceResources() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace WasteProducts.Logic {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WasteProducts.Logic.Strings", typeof(Strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WasteProducts.Logic.Resources.DbServiceResources", typeof(DbServiceResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -63,9 +63,9 @@ namespace WasteProducts.Logic {
         /// <summary>
         ///   Ищет локализованную строку, похожую на Existing database don&apos;t compatible with model..
         /// </summary>
-        internal static string DbService_GetStatusAsync_WarnMsg {
+        internal static string GetStatusAsync_WarnMsg {
             get {
-                return ResourceManager.GetString("DbService_GetStatusAsync_WarnMsg", resourceCulture);
+                return ResourceManager.GetString("GetStatusAsync_WarnMsg", resourceCulture);
             }
         }
     }
