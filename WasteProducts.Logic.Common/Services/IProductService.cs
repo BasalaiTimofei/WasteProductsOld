@@ -44,7 +44,7 @@ namespace WasteProducts.Logic.Common.Services
         /// </summary>
         /// <param name="barcode">The barcode of the product.</param>
         /// <returns>The product with the specific barcode.</returns>
-        Product Get(Barcode barcode);
+        Product GetByBarcode(Barcode barcode);
 
         /// <summary>
         /// Gets all products.

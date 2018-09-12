@@ -406,7 +406,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                var result = productService.Get(barcode);
+                var result = productService.GetByBarcode(barcode);
 
                 Assert.That(result, Is.InstanceOf(typeof(Product)));
             }
