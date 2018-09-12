@@ -5,7 +5,7 @@ using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Common.Models.Users;
 using AutoMapper;
-using WasteProducts.Logic.Mappings.UserMappings;
+using Ninject;
 
 namespace WasteProducts.Logic.Services.UserService
 {
@@ -13,19 +13,31 @@ namespace WasteProducts.Logic.Services.UserService
     {
         private readonly IUserRoleRepository _roleRepo;
 
-        private readonly IRuntimeMapper _mapper;
+        private readonly IMapper _mapper;
 
-        public UserRoleService(IUserRoleRepository roleRepo)
+        private bool _disposed;
+
+        public UserRoleService(IUserRoleRepository roleRepo, IMapper mapper)
         {
             _roleRepo = roleRepo;
+            _mapper = mapper;
+        }
 
-            var config = new MapperConfiguration(cfg =>
+        ~UserRoleService()
+        {
+            if (!_disposed)
             {
-                cfg.AddProfile(new UserProfile());
-                cfg.AddProfile(new UserClaimProfile());
-                cfg.AddProfile(new UserLoginProfile());
-            });
-            _mapper = (new Mapper(config)).DefaultContext.Mapper;
+                Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                _roleRepo?.Dispose();
+                _disposed = true;
+            }
         }
 
         public async Task CreateAsync(UserRole role)

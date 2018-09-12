@@ -22,14 +22,14 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [HttpGet]
         public IEnumerable<Group> Get(string userId)
         {
-            return _groupService.GetIds<Group>(userId);
+            return new List<Group>();
         }
 
         [Route("{id}")]
         [HttpGet]
         public Group Get(Guid id)
         {
-            return _groupService.FindById<Group>(id);
+            return new Group();
         }
 
         [HttpPost]

@@ -9,13 +9,22 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
     /// <summary>
     /// Standart DAL level interface using to make CRUD operations with User models.
     /// </summary>
-    public interface IUserRepository
+    public interface IUserRepository : IDisposable
     {
         /// <summary>
         /// Adds new registered user in the repository.
         /// </summary>
         /// <param name="user">New registered user to add.</param>
-        Task AddAsync(UserDB user);
+        /// <param name="password">Password of the new user.</param>
+        /// <returns></returns>
+        Task AddAsync(UserDB user, string password);
+
+        /// <summary>
+        /// Checks if email wasn't used in registering any user. Returns true if not.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        Task<bool> IsEmailAvailableAsync(string email);
 
         /// <summary>
         /// Add a claim to a user.
@@ -23,7 +32,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="user">Specific claim will be added to the user.</param>
         /// <param name="claim">Specific claim to add to the user.</param>
         /// <returns></returns>
-        Task AddClaimAsync(UserDB user, Claim claim);
+        Task AddClaimAsync(string userId, Claim claim);
 
         /// <summary>
         ///  Add a login to the user.
@@ -31,7 +40,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="user">Specific login will be added to the user.</param>
         /// <param name="login">Specific login to add to the user.</param>
         /// <returns></returns>
-        Task AddLoginAsync(UserDB user, UserLoginDB login);
+        Task AddLoginAsync(string userId, UserLoginDB login);
 
         /// <summary>
         /// Add a user to a role.
@@ -39,7 +48,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="user">User will be added to this specific role.</param>
         /// <param name="roleName">Name of the specific role to add to the user.</param>
         /// <returns></returns>
-        Task AddToRoleAsync(UserDB user, string roleName);
+        Task AddToRoleAsync(string userId, string roleName);
 
         /// <summary>
         /// Adds user with id = friendId to the list of friends of user with Id = userId.
@@ -50,10 +59,35 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         Task AddFriendAsync(string userId, string friendId);
 
         /// <summary>
+        /// Deletes a specific friend from the specific user's friend list.
+        /// </summary>
+        /// <param name="userId">From the list of friends of UserDB with Id = userID the UserDB with Id = deletingFriendId will be deleted.</param>
+        /// <param name="deletingFriendId">Specific friend's Id to delete from the user's friend list.</param>
+        Task DeleteFriendAsync(string userID, string deletingFriendId);
+
+        /// <summary>
+        /// Adds product with specific ID to the user's list of products.
+        /// </summary>
+        /// <param name="userId">ID of user who wants to add the specific product to his/her list of products.</param>
+        /// <param name="productId">ID of specific product to add to the user's list of products.</param>
+        /// <param name="rating">Rating from 0 to 10 of this product given by the user.</param>
+        /// <param name="description">Textual description of the product given by the user.</param>
+        /// <returns>Boolean represents whether operation succeed or not.</returns>
+        Task<bool> AddProductAsync(string userId, string productId, int rating, string description);
+
+        /// <summary>
+        /// Deletess product with specific ID to the user's list of products.
+        /// </summary>
+        /// <param name="userId">ID of user who wants to remove the specific product from his/her list of products.</param>
+        /// <param name="productId">ID of specific product to remove from the user's list of products.</param>
+        /// <returns>Boolean represents whether operation succeed or not.</returns>
+        Task<bool> DeleteProductAsync(string userId, string productId);
+
+        /// <summary>
         /// Deletes the record of the specific user.
         /// </summary>
-        /// <param name="user">Specific user to delete.</param>
-        Task DeleteAsync(UserDB user);
+        /// <param name="userId">ID of the specific user to delete.</param>
+        Task DeleteAsync(string userId);
 
         /// <summary>
         /// Remove a claim from a user.
@@ -61,7 +95,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="user">Specific claim will be removed from the user.</param>
         /// <param name="claim">Specific claim to remove from the user.</param>
         /// <returns></returns>
-        Task RemoveClaimAsync(UserDB user, Claim claim);
+        Task RemoveClaimAsync(string userId, Claim claim);
 
         /// <summary>
         /// Remove a user from a role.
@@ -69,7 +103,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="user">User will be removed from this specific role.</param>
         /// <param name="roleName">Name of the specific role to remove from the user.</param>
         /// <returns></returns>
-        Task RemoveFromRoleAsync(UserDB user, string roleName);
+        Task RemoveFromRoleAsync(string userId, string roleName);
 
         /// <summary>
         /// Remove a login from a user.
@@ -77,14 +111,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="user">Specific login will be removed from the user.</param>
         /// <param name="login">Specific login to remove from the user.</param>
         /// <returns></returns>
-        Task RemoveLoginAsync(UserDB user, UserLoginDB login);
-
-        /// <summary>
-        /// Deletes a specific friend from the specific user's friend list.
-        /// </summary>
-        /// <param name="userId">From the list of friends of UserDB with Id = userID the UserDB with Id = deletingFriendId will be deleted.</param>
-        /// <param name="deletingFriendId">Specific friend's Id to delete from the user's friend list.</param>
-        Task DeleteFriendAsync(string userID, string deletingFriendId);
+        Task RemoveLoginAsync(string userId, UserLoginDB login);
 
         /// <summary>
         /// Returns first registered user matches the predicate or null if there is no matches.
@@ -108,6 +135,14 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <param name="password">Password of the requested user.</param>
         /// <returns>User with the specific email and password.</returns>
         UserDB Select(string email, string password, bool lazyInitiation = true);
+
+        /// <summary>
+        /// Returns specific registered user with its roles.
+        /// </summary>
+        /// <param name="email">Email of the registered user.</param>
+        /// <param name="password">Password of the registered user.</param>
+        /// <returns>Tuple with item1 as User, item2 as IList of its roles.</returns>
+        (UserDB, IList<string>) Select(string email, string password);
 
         /// <summary>
         /// Returns first registered user matches the predicate with user's roles (or two nulls if there is no matches).
@@ -138,17 +173,33 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         Task<IList<string>> GetRolesAsync(UserDB user);
 
         /// <summary>
+        /// Resets password of a user.
+        /// </summary>
+        /// <param name="user">Password of this user will be reset.</param>
+        /// <param name="newPassword">New password for a user.</param>
+        /// <returns></returns>
+        Task ResetPasswordAsync(UserDB user, string newPassword, string oldPassword);
+
+        /// <summary>
         /// Updates the record of the specific user.
         /// </summary>
         /// <param name="user">Specific user to update.</param>
         Task UpdateAsync(UserDB user);
 
         /// <summary>
-        /// Resets password of a user.
+        /// Updates user's email if it isn't used by another user. Returns true if email was successfully updated.
         /// </summary>
-        /// <param name="user">Password of this user will be reset.</param>
-        /// <param name="newPassword">New password for a user.</param>
+        /// <param name="userId">ID of User wanting to update its Email.</param>
+        /// <param name="newEmail">New unique email.</param>
         /// <returns></returns>
-        Task ResetPasswordAsync(UserDB user, string newPassword);
+        Task<bool> UpdateEmailAsync(string userId, string newEmail);
+
+        /// <summary>
+        /// Updates user's UserName if it isn't used by another user. Returns true if UserName was successfully updated.
+        /// </summary>
+        /// <param name="user">User wanting to update its UserName.</param>
+        /// <param name="newUserName">New unique UserName</param>
+        /// <returns></returns>
+        Task<bool> UpdateUserNameAsync(UserDB user, string newUserName);
     }
 }

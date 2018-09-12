@@ -7,131 +7,118 @@ using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Contexts;
 using System.Data.Entity;
+using WasteProducts.DataAccess.Common.Repositories.Search;
+using Ninject;
 
 namespace WasteProducts.DataAccess.Repositories.UserManagement
 {
     public class UserRoleRepository : IUserRoleRepository
     {
-        private readonly bool _initiateWithCS;
+        private readonly WasteContext _context;
 
-        public string NameOrConnectionString { get; }
+        private readonly RoleStore<IdentityRole> _store;
+
+        private bool _disposed;
 
         public UserRoleRepository()
         {
-            _initiateWithCS = false;
+            //TODO: Injection
+            StandardKernel kernel = new StandardKernel();
+            kernel.Load(new DataAccess.InjectorModule());
+            _context = new WasteContext(kernel.Get<ISearchRepository>());
+
+            _store = new RoleStore<IdentityRole>(_context)
+            {
+                DisposeContext = true
+            };
         }
 
-        public UserRoleRepository(string nameOrConnectionString)
+        public UserRoleRepository(WasteContext context)
         {
-            _initiateWithCS = true;
-            NameOrConnectionString = nameOrConnectionString;
+            _context = context;
+            _store = new RoleStore<IdentityRole>(_context)
+            {
+                DisposeContext = true
+            };
+        }
+
+        ~UserRoleRepository()
+        {
+            if (!_disposed)
+            {
+                Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                _store?.Dispose();
+                _disposed = true;
+            }
         }
 
         public async Task AddAsync(UserRoleDB role)
         {
             IdentityRole identityRole = new IdentityRole(role.Name) { Id = Guid.NewGuid().ToString() };
 
-            using (var db = GetWasteContext())
-            {
-                using (var roleStore = new RoleStore<IdentityRole>(db))
-                {
-                    await roleStore.CreateAsync(identityRole);
-                    await db.SaveChangesAsync();
-                }
-            }
+            await _store.CreateAsync(identityRole);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(UserRoleDB role)
         {
-            using (var db = GetWasteContext())
-            {
-                using (var roleStore = new RoleStore<IdentityRole>(db))
-                {
-                    IdentityRole identityRole = await roleStore.FindByIdAsync(role.Id);
-                    await roleStore.DeleteAsync(identityRole);
-                    await db.SaveChangesAsync();
-                }
-            }
+            IdentityRole identityRole = await _store.FindByIdAsync(role.Id);
+
+            await _store.DeleteAsync(identityRole);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<UserRoleDB> FindByIdAsync(string roleId)
         {
-            using (var db = GetWasteContext())
-            {
-                using (var roleStore = new RoleStore<IdentityRole>(db))
-                {
-                    IdentityRole ir = await roleStore.FindByIdAsync(roleId);
-                    UserRoleDB result = new UserRoleDB() { Id = ir.Id, Name = ir.Name };
-                    return result;
-                }
-            }
+            IdentityRole ir = await _store.FindByIdAsync(roleId);
+            UserRoleDB result = new UserRoleDB() { Id = ir.Id, Name = ir.Name };
+            return result;
         }
 
         public async Task<UserRoleDB> FindByNameAsync(string roleName)
         {
-            using (var db = GetWasteContext())
+            IdentityRole ir = await _store.FindByNameAsync(roleName);
+            if (ir == null)
             {
-                using (var roleStore = new RoleStore<IdentityRole>(db))
-                {
-                    IdentityRole ir = await roleStore.FindByNameAsync(roleName);
-                    UserRoleDB result = new UserRoleDB() { Id = ir.Id, Name = ir.Name };
-                    return result;
-                }
+                return null;
             }
+            UserRoleDB result = new UserRoleDB() { Id = ir.Id, Name = ir.Name };
+            return result;
         }
 
         public async Task UpdateRoleNameAsync(UserRoleDB role)
         {
-            using (var db = GetWasteContext())
-            {
-                using (var roleStore = new RoleStore<IdentityRole>(db))
-                {
-                    IdentityRole r = await roleStore.FindByIdAsync(role.Id);
-                    r.Name = role.Name;
-                    await roleStore.UpdateAsync(r);
-                    await db.SaveChangesAsync();
-                }
-            }
+            IdentityRole ir = await _store.FindByIdAsync(role.Id);
+            ir.Name = role.Name;
+            await _store.UpdateAsync(ir);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<UserDB>> GetRoleUsers(UserRoleDB role)
         {
-            UserRepository userRepo = new UserRepository();
+            IdentityRole ir = await _store.FindByIdAsync(role.Id);
+            List<string> userIds = new List<string>();
 
-            using (var db = GetWasteContext())
+            foreach (IdentityUserRole iur in ir.Users)
             {
-                using (var roleStore = new RoleStore<IdentityRole>(db))
-                {
-                    IdentityRole ir = await roleStore.FindByIdAsync(role.Id);
-                    List<string> userIds = new List<string>();
-
-                    foreach (IdentityUserRole iur in ir.Users)
-                    {
-                        userIds.Add(iur.UserId);
-                    }
-
-                    IEnumerable<UserDB> result = db.Users.Include(u => u.Roles).
-                                                          Include(u => u.Claims).
-                                                          Include(u => u.Logins).
-                                                          Include(u => u.Friends).
-                                                          Include(u => u.Products).
-                                                          Where(u => userIds.Contains(u.Id));
-
-                    return result.ToArray();
-                }
+                userIds.Add(iur.UserId);
             }
-        }
 
-        private WasteContext GetWasteContext()
-        {
-            if (_initiateWithCS)
-            {
-                return new WasteContext(NameOrConnectionString);
-            }
-            else
-            {
-                return new WasteContext();
-            }
+            IEnumerable<UserDB> result = _context.Users.Include(u => u.Roles).
+                                                  Include(u => u.Claims).
+                                                  Include(u => u.Logins).
+                                                  Include(u => u.Friends).
+                                                  Include(u => u.ProductDescriptions).
+                                                  Where(u => userIds.Contains(u.Id));
+
+            return result.ToArray();
         }
     }
 }

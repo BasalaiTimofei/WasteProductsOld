@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.DataAccess.Contexts;
@@ -57,6 +58,11 @@ namespace WasteProducts.DataAccess.Repositories
             if (id == null || product == null) return;
             product.Marked = true;
             Update(product);
+        }
+
+        public async Task<ProductDB> GetByNameAsync(string name)
+        {
+            return await Task.Run(() => _context.Products.Include(p => p.Barcode).Include(p => p.Category).FirstOrDefault(p => p.Name == name));
         }
 
         /// <summary>

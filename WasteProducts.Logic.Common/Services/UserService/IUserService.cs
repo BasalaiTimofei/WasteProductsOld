@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models.Products;
@@ -9,7 +10,7 @@ namespace WasteProducts.Logic.Common.Services.UserService
     /// <summary>
     /// Standart BL level interface provides standart methods of working with User model.
     /// </summary>
-    public interface IUserService
+    public interface IUserService : IDisposable
     {
         /// <summary>
         /// Tries to register a new user with a specific parameters.
@@ -43,14 +44,43 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// </summary>
         /// <param name="email">Email of the user forgotten its password.</param>
         /// <returns>Boolean representing whether email was correct or not.</returns>
-        Task PasswordRequestAsync(string email);
+        Task ResetPasswordAsync(string email);
 
         /// <summary>
-        /// Updates the specific user in the Database.
+        /// Gets info about all Users in the database.
+        /// </summary>
+        /// <returns>List of all Users in dataase.</returns>
+        List<User> GetAllUsersInfo();
+
+        /// <summary>
+        /// Requests a User by its id. User is returned without PasswordHash.
+        /// </summary>
+        /// <param name="id">Id of requested User.</param>
+        /// <returns>Instance of User that has requested Id. Returns WITHOUT PasswordHash.</returns>
+        Task<User> GetUserInfo(string id);
+
+        /// <summary>
+        /// Updates the specific user in the Database. You can't update email, Id, UserName and Password by this method.
         /// </summary>
         /// <param name="user">The specific user to update.</param>
         /// <returns>Boolean representing whether updating the user was correct or not.</returns>
         Task UpdateAsync(User user);
+
+        /// <summary>
+        /// Updates user's Email. You cannot update email if newEmail is already used by another user.
+        /// </summary>
+        /// <param name="user">ID of User wanting to update its email.</param>
+        /// <param name="newEmail">New unique email to update user's email.</param>
+        /// <returns></returns>
+        Task<bool> UpdateEmailAsync(string userId, string newEmail);
+
+        /// <summary>
+        /// Updates user's UserName. You cannot update UserName if newUserName is already used by another user.
+        /// </summary>
+        /// <param name="user">User wanting to update its UserName.</param>
+        /// <param name="newUserName">New unique UserName to update user's UserName.</param>
+        /// <returns></returns>
+        Task<bool> UpdateUserNameAsync(User user, string newUserName);
 
         /// <summary>
         /// Adds a specific new friend to the specific user's friend list.
@@ -69,18 +99,20 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// <summary>
         /// Adds specific new product to the specific user's list of products.
         /// </summary>
-        /// <param name="user">To this user's list of products the specific product will be added.</param>
-        /// <param name="product">Specific product to add to the user's list of products.</param>
-        /// <returns></returns>
-        Task AddProductAsync(User user, Product product);
+        /// <param name="userId">ID of user to whose list of products the specific product will be added.</param>
+        /// <param name="productId">Specific product's ID to add to the user's list of products.</param>
+        /// <param name="rating">Rating from 0 to 10 of this product given by the user.</param>
+        /// <param name="description">Textual description of the product given by the user.</param>
+        /// <returns>Boolean represents whether operation succeed or no.</returns>
+        Task<bool> AddProductAsync(string userId, string productId, int rating, string description);
 
         /// <summary>
         /// Deletes specific product from the specific user's list of products.
         /// </summary>
-        /// <param name="user">From this user's list of products the specific product will be deleted.</param>
-        /// <param name="product">Specific product to delete from the user's list of products.</param>
-        /// <returns></returns>
-        Task DeleteProductAsync(User user, Product product);
+        /// <param name="userId">ID of user frow whose list of products the specific product will be deleted.</param>
+        /// <param name="productId">Specific product's ID to delete from the user's list of products.</param>
+        /// <returns>Boolean represents whether operation succeed or no.</returns>
+        Task<bool> DeleteProductAsync(string userId, string productId);
 
         /// <summary>
         /// Get the names of the roles a user is a member of.
@@ -95,7 +127,7 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// <param name="user">User will be added to this specific role.</param>
         /// <param name="roleName">Name of the specific role to add to the user.</param>
         /// <returns></returns>
-        Task AddToRoleAsync(User user, string roleName);
+        Task AddToRoleAsync(string userId, string roleName);
 
         /// <summary>
         /// Add a claim to a user.
@@ -103,7 +135,7 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// <param name="user">Specific claim will be added to the user.</param>
         /// <param name="claim">Specific claim to add to the user.</param>
         /// <returns></returns>
-        Task AddClaimAsync(User user, Claim claim);
+        Task AddClaimAsync(string userId, Claim claim);
 
         /// <summary>
         ///  Add a login to the user.
@@ -111,7 +143,7 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// <param name="user">Specific login will be added to the user.</param>
         /// <param name="login">Specific login to add to the user.</param>
         /// <returns></returns>
-        Task AddLoginAsync(User user, UserLogin login);
+        Task AddLoginAsync(string userId, UserLogin login);
 
         /// <summary>
         /// Remove a user from a role.
@@ -119,7 +151,7 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// <param name="user">User will be removed from this specific role.</param>
         /// <param name="roleName">Name of the specific role to remove from the user.</param>
         /// <returns></returns>
-        Task RemoveFromRoleAsync(User user, string roleName);
+        Task RemoveFromRoleAsync(string userId, string roleName);
 
         /// <summary>
         /// Remove a claim from a user.
@@ -127,7 +159,7 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// <param name="user">Specific claim will be removed from the user.</param>
         /// <param name="claim">Specific claim to remove from the user.</param>
         /// <returns></returns>
-        Task RemoveClaimAsync(User user, Claim claim);
+        Task RemoveClaimAsync(string userId, Claim claim);
 
         /// <summary>
         /// Remove a login from a user.
@@ -135,14 +167,14 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// <param name="user">Specific login will be removed from the user.</param>
         /// <param name="login">Specific login to remove from the user.</param>
         /// <returns></returns>
-        Task RemoveLoginAsync(User user, UserLogin login);
+        Task RemoveLoginAsync(string userId, UserLogin login);
 
         /// <summary>
-        /// Deletes user from the WasteProducts
+        /// Deletes user from the WasteProducts.
         /// </summary>
-        /// <param name="user">Deleting user.</param>
+        /// <param name="userId">Deleting user's ID.</param>
         /// <returns></returns>
-        Task DeleteUserAsunc(User user);
+        Task DeleteUserAsync(string userId);
 
         // TODO USER MANAGEMENT PENDING FUNCTIONAL TO ADD:
         // sharing my products with my friends after model "Product" is created

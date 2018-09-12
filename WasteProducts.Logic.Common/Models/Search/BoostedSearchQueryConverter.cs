@@ -26,7 +26,7 @@ namespace WasteProducts.Logic.Common.Models.Search
                 string key = value as string;
                 if (String.IsNullOrEmpty(key))
                 {
-                    throw new ArgumentException("Incorrect query.");
+                    throw new ArgumentException(Resources.QueryConverter.IncorrectQuerySyntaxis);
                 }
                 BoostedSearchQuery result = new BoostedSearchQuery();
 
@@ -41,19 +41,34 @@ namespace WasteProducts.Logic.Common.Models.Search
                         foreach (var boost in boosts)
                         {
                             var fieldNameBoost = boost.Split(new char[] { ':' });
-                            string fieldName = fieldNameBoost[0];
-                            float fieldBoost = float.Parse(fieldNameBoost[1], CultureInfo.InvariantCulture);
-                            result.AddField(fieldName, fieldBoost);
+                            if (fieldNameBoost.Length == 2)
+                            {
+                                float fieldBoost = float.Parse(fieldNameBoost[1], CultureInfo.InvariantCulture);
+                                result.AddField(fieldNameBoost[0], fieldBoost);
+                            }
+                            else
+                            {
+                                result.AddField(fieldNameBoost[0], 1.0f);
+                            }
                         }
                     }
-                    return result;
+
+                    CheckForEmptyFields(result);
                 }
                 else
                 {
-                    throw new ArgumentException("Incorrect query.");
+                    throw new ArgumentException(Resources.QueryConverter.IncorrectQuerySyntaxis);
                 }
             }
             return base.ConvertFrom(context, culture, value);
+        }
+
+        private void CheckForEmptyFields(BoostedSearchQuery query)
+        {
+            if (query.SearchableFields.Contains(""))
+            {
+                throw new ArgumentException(Resources.QueryConverter.IncorrectQuerySyntaxis);
+            }
         }
     }
 }

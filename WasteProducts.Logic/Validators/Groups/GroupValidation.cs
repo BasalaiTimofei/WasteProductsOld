@@ -1,17 +1,18 @@
-﻿using System;
+﻿using FluentValidation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WasteProducts.Logic.Common.Models.Groups;
 
 namespace WasteProducts.Logic.Validators
 {
-    public class GroupValidation : Exception
+    public class GroupValidation : AbstractValidator<Group>
     {
-        public string Property { get; protected set; }
-        public GroupValidation(string message, string prop) : base(message)
+        public GroupValidation()
         {
-            Property = prop;
+
         }
     }
 }

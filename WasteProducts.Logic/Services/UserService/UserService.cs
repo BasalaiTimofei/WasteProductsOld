@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNet.Identity;
-using WasteProducts.Logic.Common.Models.Products;
-using WasteProducts.Logic.Mappings.UserMappings;
+using Ninject;
 
 namespace WasteProducts.Logic.Services.UserService
 {
@@ -23,29 +22,40 @@ namespace WasteProducts.Logic.Services.UserService
 
         private readonly IUserRepository _userRepo;
 
-        private readonly IRuntimeMapper _mapper;
+        private readonly IMapper _mapper;
 
-        public UserService(IMailService mailService, IUserRepository userRepo)
+        private bool _disposed;
+
+        public UserService(IUserRepository userRepo, IMapper mapper, IMailService mailService)
         {
-            _mailService = mailService;
             _userRepo = userRepo;
+            _mapper = mapper;
+            _mailService = mailService;
+        }
 
-            var config = new MapperConfiguration(cfg =>
+        ~UserService()
+        {
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
             {
-                cfg.AddProfile(new UserProfile());
-                cfg.AddProfile(new UserClaimProfile());
-                cfg.AddProfile(new UserLoginProfile());
-                cfg.AddProfile(new ProductProfile());
-            });
-            _mapper = (new Mapper(config)).DefaultContext.Mapper;
+                _mailService?.Dispose();
+                _userRepo?.Dispose();
+                _disposed = true;
+                GC.SuppressFinalize(this);
+            }
         }
 
         public async Task<User> RegisterAsync(string email, string userName, string password, string passwordConfirmation)
         {
-            return await Task.Run(() =>
+            return await Task.Run(async () =>
             {
                 User registeringUser = null;
-                if (passwordConfirmation != password || !_mailService.IsValidEmail(email))
+                if (email == null || userName == null || password == null || passwordConfirmation == null ||
+                    passwordConfirmation != password || !_mailService.IsValidEmail(email) || !(await _userRepo.IsEmailAvailableAsync(email)))
                 {
                     return registeringUser;
                 }
@@ -53,14 +63,13 @@ namespace WasteProducts.Logic.Services.UserService
                 {
                     Id = Guid.NewGuid().ToString(),
                     Email = email,
-                    Password = password,
                     UserName = userName
                 };
                 var userToAdd = MapTo<UserDB>(registeringUser);
-                _userRepo.AddAsync(userToAdd).GetAwaiter().GetResult();
+                await _userRepo.AddAsync(userToAdd, password);
+
                 var userDB = _userRepo.Select(email, false);
-                var result = MapTo<User>(userDB);
-                return result;
+                return MapTo<User>(userDB);
             });
         }
 
@@ -69,25 +78,15 @@ namespace WasteProducts.Logic.Services.UserService
             return await Task.Run(() =>
             {
                 User loggedInUser = null;
-                if (getRoles)
+                var (userDB, roles) = _userRepo.Select(email, password);
+
+                if (userDB == null)
                 {
-                    var (userDB, roles) = _userRepo.SelectWithRoles(u => u.Email == email && u.PasswordHash == password, false);
-                    if (userDB == null)
-                    {
-                        return loggedInUser;
-                    }
-                    loggedInUser = MapTo<User>(userDB);
-                    loggedInUser.Roles = roles;
+                    return loggedInUser;
                 }
-                else
-                {
-                    UserDB userDB = _userRepo.Select(email, password, false);
-                    if (userDB == null)
-                    {
-                        return loggedInUser;
-                    }
-                    loggedInUser = MapTo<User>(userDB);
-                }
+
+                loggedInUser = MapTo<User>(userDB);
+                loggedInUser.Roles = roles;
 
                 return loggedInUser;
             });
@@ -97,33 +96,71 @@ namespace WasteProducts.Logic.Services.UserService
         {
             return await Task.Run(async () =>
             {
-                if (newPassword != newPasswordConfirmation || oldPassword != user.Password)
+                if (newPassword != newPasswordConfirmation)
                 {
                     return false;
                 }
-                user.Password = newPassword;
 
-                await _userRepo.ResetPasswordAsync(MapTo<UserDB>(user), newPassword);
+                await _userRepo.ResetPasswordAsync(MapTo<UserDB>(user), newPassword, oldPassword);
                 return true;
             });
         }
 
-        public async Task PasswordRequestAsync(string email)
+        // TODO переделать метод, он все равно будет отправлять захешированный пароль
+        public Task ResetPasswordAsync(string email)
         {
-            try
-            {
-                User user = MapTo<User>(_userRepo.Select(email));
+            throw new NotImplementedException("Метод будет отправлять захешированный пароль, переделать метод, чтобы он отправлял ссылку на генерацию нового пароля");
+        }
 
-                if (user == null) return;
-                // TODO придумать что писать в письме-восстановителе пароля и где хранить этот стринг
-                await _mailService.SendAsync(email, PASSWORD_RECOWERY_HEADER, $"На ваш аккаунт \"Фуфлопродуктов\" был отправлен запрос на смену пароля. Напоминаем ваш пароль на сайте :\n\n{user.Password}\n\nВы можете поменять пароль в своем личном кабинете.");
+        //todo make async + userRepomethod
+        public List<User> GetAllUsersInfo()
+        {
+            var listOfusers = new List<User>();
+            var listOfuserDB = _userRepo.SelectAll();
+            foreach (var userDB in listOfuserDB)
+            {
+                listOfusers.Add(MapTo<User>(userDB));
             }
-            catch { }
+            return listOfusers;
+        }
+
+        public async Task<User> GetUserInfo(string id)
+        {
+            return await Task.Run(() =>
+            {
+                var userDB = _userRepo.Select(a => a.Id == id, true);
+                var user = MapTo<User>(userDB);
+                //user.PasswordHash = "";
+                return user;
+            }
+            );
+
         }
 
         public async Task UpdateAsync(User user)
         {
             await _userRepo.UpdateAsync(MapTo<UserDB>(user));
+        }
+
+        public async Task<bool> UpdateEmailAsync(string userId, string newEmail)
+        {
+            if (userId == null || newEmail == null || !_mailService.IsValidEmail(newEmail))
+            {
+                return false;
+            }
+
+            bool result = await _userRepo.UpdateEmailAsync(userId, newEmail);
+            return result;
+        }
+
+        public async Task<bool> UpdateUserNameAsync(User user, string newUserName)
+        {
+            bool result = await _userRepo.UpdateUserNameAsync(MapTo<UserDB>(user), newUserName);
+            if (result)
+            {
+                user.UserName = newUserName;
+            }
+            return result;
         }
 
         public async Task AddFriendAsync(User user, User newFriend)
@@ -133,43 +170,6 @@ namespace WasteProducts.Logic.Services.UserService
                 user.Friends.Add(newFriend);
                 await _userRepo.AddFriendAsync(user.Id, newFriend.Id);
             }
-        }
-
-        public async Task AddProductAsync(User user, Product product)
-        {
-            if (user.Products.Count == 0 ||
-                user.Products
-                .FirstOrDefault(p => p.Barcode.Id == product.Barcode.Id &&
-                                     p.Barcode.Code == product.Barcode.Code)
-                                     == null)
-            {
-                user.Products.Add(product);
-                await UpdateAsync(user);
-            }
-        }
-
-        public async Task<IList<string>> GetRolesAsync(User user)
-        {
-            var userDB = MapTo<UserDB>(user);
-            return await _userRepo.GetRolesAsync(userDB);
-        }
-
-        public async Task AddToRoleAsync(User user, string roleName)
-        {
-            await _userRepo.AddToRoleAsync(MapTo<UserDB>(user), roleName);
-            user.Roles.Add(roleName);
-        }
-
-        public async Task AddClaimAsync(User user, Claim claim)
-        {
-            await _userRepo.AddClaimAsync(MapTo<UserDB>(user), claim);
-            user.Claims.Add(claim);
-        }
-
-        public async Task AddLoginAsync(User user, UserLogin login)
-        {
-            await _userRepo.AddLoginAsync(MapTo<UserDB>(user), MapTo<UserLoginInfo>(login));
-            user.Logins?.Add(login);
         }
 
         public async Task DeleteFriendAsync(User user, User deletingFriend)
@@ -183,40 +183,65 @@ namespace WasteProducts.Logic.Services.UserService
             }
         }
 
-        public async Task DeleteProductAsync(User user, Product product)
+        public async Task<bool> AddProductAsync(string userId, string productId, int rating, string description)
         {
-                if (user.Products
-                .FirstOrDefault(p => p.Barcode.Id == product.Barcode.Id &&
-                                     p.Barcode.Code == product.Barcode.Code)
-                                     != null)
-                {
-                user.Products.Remove(product);
-                await UpdateAsync(user);
+            if (userId == null || productId == null || rating > 10 || rating < 0)
+            {
+                return false;
             }
+
+            return await _userRepo.AddProductAsync(userId, productId, rating, description);
         }
 
-        public async Task RemoveFromRoleAsync(User user, string roleName)
+        public async Task<bool> DeleteProductAsync(string userId, string productId)
         {
-            await _userRepo.RemoveFromRoleAsync(MapTo<UserDB>(user), roleName);
-            await _userRepo.RemoveFromRoleAsync(MapTo<UserDB>(user), roleName);
-            user.Roles?.Remove(roleName);
+            if (userId == null || productId == null)
+            {
+                return false;
+            }
+
+            return await _userRepo.DeleteProductAsync(userId, productId);
         }
 
-        public async Task RemoveClaimAsync(User user, Claim claim)
+        public async Task<IList<string>> GetRolesAsync(User user)
         {
-            await _userRepo.RemoveClaimAsync(MapTo<UserDB>(user), claim);
-            user.Claims?.Remove(claim);
+            var userDB = MapTo<UserDB>(user);
+            return await _userRepo.GetRolesAsync(userDB);
         }
 
-        public async Task RemoveLoginAsync(User user, UserLogin login)
+        public async Task AddToRoleAsync(string userId, string roleName)
         {
-            await _userRepo.RemoveLoginAsync(MapTo<UserDB>(user), MapTo<UserLoginInfo>(login));
-            user.Logins?.Remove(login);
+            await _userRepo.AddToRoleAsync(userId, roleName);
         }
 
-        public async Task DeleteUserAsunc(User user)
+        public async Task AddClaimAsync(string userId, Claim claim)
         {
-            await _userRepo.DeleteAsync(MapTo<UserDB>(user));
+            await _userRepo.AddClaimAsync(userId, claim);
+        }
+
+        public async Task AddLoginAsync(string userId, UserLogin login)
+        {
+            await _userRepo.AddLoginAsync(userId, MapTo<UserLoginInfo>(login));
+        }
+
+        public async Task RemoveFromRoleAsync(string userId, string roleName)
+        {
+            await _userRepo.RemoveFromRoleAsync(userId, roleName);
+        }
+
+        public async Task RemoveClaimAsync(string userId, Claim claim)
+        {
+            await _userRepo.RemoveClaimAsync(userId, claim);
+        }
+
+        public async Task RemoveLoginAsync(string userId, UserLogin login)
+        {
+            await _userRepo.RemoveLoginAsync(userId, MapTo<UserLoginInfo>(login));
+        }
+
+        public async Task DeleteUserAsync(string userId)
+        {
+            await _userRepo.DeleteAsync(userId);
         }
 
         private UserDB MapTo<T>(User user)
