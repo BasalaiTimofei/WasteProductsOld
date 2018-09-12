@@ -5,7 +5,7 @@ using WasteProducts.Logic.Common.Models.Donations;
 
 namespace WasteProducts.Logic.Mappings.Donations
 {
-    class DonationProfile : Profile
+    public class DonationProfile : Profile
     {
         public DonationProfile()
         {
