@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Ninject;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.Logic.Common.Models.Barcods;
@@ -55,7 +54,8 @@ namespace WasteProducts.Logic.Services.Products
                 p => string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
                 out var products)) return false;
 
-            var newProduct = new Product { Id = new Guid().ToString(), Barcode = barcode, Name = barcode.ProductName };
+            var newProduct = new Product { Id = Guid.NewGuid()
+                .ToString(), Barcode = barcode, Name = barcode.ProductName };
             _productRepository.Add(_mapper.Map<ProductDB>(newProduct));
 
             return true;
