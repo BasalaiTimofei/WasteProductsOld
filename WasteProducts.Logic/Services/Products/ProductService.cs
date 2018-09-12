@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using WasteProducts.DataAccess.Common.Models.Products;
-using WasteProducts.DataAccess.Common.Repositories;
+using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Services.Products;
@@ -88,7 +88,7 @@ namespace WasteProducts.Logic.Services.Products
         /// </summary>
         /// <param name="barcode">The barcode of the product.</param>
         /// <returns>The product with the specific barcode.</returns>
-        public Product Get(Barcode barcode)
+        public Product GetByBarcode(Barcode barcode)
         {
             return _mapper.Map<Product>(_productRepository.SelectWhere(p =>
                     string.Equals(p.Barcode.Code, barcode.Code, StringComparison.OrdinalIgnoreCase)).First());

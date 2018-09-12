@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using WasteProducts.DataAccess.Common.Models.Products;
-using WasteProducts.DataAccess.Common.Repositories;
+using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Common.Services.Products;
@@ -29,7 +29,7 @@ namespace WasteProducts.Logic.Services.Products
         /// </summary>
         /// <param name="name">The name of the category to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        public bool AddByName(string name)
+        public bool Add(string name)
         {
             if (IsCategoryInDB(p =>
                 string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
@@ -52,7 +52,7 @@ namespace WasteProducts.Logic.Services.Products
 
             foreach(var name in names)
             {
-                if (AddByName(name) && !result) result = true;
+                if (Add(name) && !result) result = true;
             }
 
             return result;

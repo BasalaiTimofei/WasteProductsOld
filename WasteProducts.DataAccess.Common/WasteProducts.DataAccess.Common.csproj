@@ -90,10 +90,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\Donations\IDonationRepository.cs" />
     <Compile Include="Repositories\IBarcodeRepository.cs" />
-    <Compile Include="Repositories\ICategoryRepository.cs" />
+    <Compile Include="Repositories\Products\ICategoryRepository.cs" />
     <Compile Include="Repositories\IEntityRepository.cs" />
     <Compile Include="Repositories\UserManagement\IUserRepository.cs" />
-    <Compile Include="Repositories\IProductRepository.cs" />
+    <Compile Include="Repositories\Products\IProductRepository.cs" />
     <Compile Include="Repositories\Search\ISearchRepository.cs" />
     <Compile Include="Repositories\Security\IRepositoryBase.cs" />
     <Compile Include="Repositories\Security\IRoleRepository.cs" />

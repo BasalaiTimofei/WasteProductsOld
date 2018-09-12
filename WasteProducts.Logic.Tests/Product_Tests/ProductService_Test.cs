@@ -6,7 +6,7 @@ using Moq;
 using NUnit.Framework;
 using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Models.Products;
-using WasteProducts.DataAccess.Common.Repositories;
+using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Mappings;
@@ -407,7 +407,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                var result = productService.Get(barcode);
+                var result = productService.GetByBarcode(barcode);
 
                 Assert.That(result, Is.InstanceOf(typeof(Product)));
             }

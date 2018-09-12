@@ -113,7 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InjectorModule.cs" />
-    <Compile Include="Mappings\CategoryProfile.cs" />
+    <Compile Include="Mappings\Products\CategoryProfile.cs" />
     <Compile Include="Mappings\Donations\AddressProfile.cs" />
     <Compile Include="Mappings\Donations\DonationProfile.cs" />
     <Compile Include="Mappings\Donations\DonorProfile.cs" />
@@ -125,7 +125,7 @@
     <Compile Include="Mappings\UserMappings\UserProductDescriptionProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserRoleProfile.cs" />
-    <Compile Include="Mappings\ProductProfile.cs" />
+    <Compile Include="Mappings\Products\ProductProfile.cs" />
     <Compile Include="Mappings\Groups\GroupUserProfile .cs" />
     <Compile Include="Mappings\Groups\GroupBoardProfile.cs" />
     <Compile Include="Mappings\Groups\GroupProductProfile.cs" />
