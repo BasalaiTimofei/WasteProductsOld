@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SearchresultComponent } from './component-searchresult.component';
 
 describe('SearchresultComponent', () => {

@@ -1,11 +1,16 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { SearchresultComponent } from './components/searchresult/component-searchresult.component';
+import { HttpClientModule, HttpHeaders } from '@angular/common/http';
+
 describe('AppComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        AppComponent
+        AppComponent,
+        SearchresultComponent
       ],
+      imports: [HttpClientModule],
     }).compileComponents();
   }));
   it('should create the app', async(() => {
