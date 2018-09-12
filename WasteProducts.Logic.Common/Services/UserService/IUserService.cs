@@ -115,7 +115,7 @@ namespace WasteProducts.Logic.Common.Services.UserService
         Task<bool> DeleteProductAsync(string userId, string productId);
 
         /// <summary>
-        /// Get the names of the roles a user is a member of.
+        /// GetById the names of the roles a user is a member of.
         /// </summary>
         /// <param name="user">Method will return roles of this user.</param>
         /// <returns></returns>

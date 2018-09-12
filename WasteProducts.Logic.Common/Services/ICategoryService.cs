@@ -13,7 +13,7 @@ namespace WasteProducts.Logic.Common.Services
         /// </summary>
         /// <param name="name">The name of the category to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        bool AddByName(string name);
+        bool Add(string name);
 
         /// <summary>
         /// Tries to add a list of new categories by names and returns whether the addition is successful or not.

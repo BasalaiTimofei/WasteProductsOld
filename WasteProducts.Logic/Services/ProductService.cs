@@ -49,13 +49,13 @@ namespace WasteProducts.Logic.Services
         /// </summary>
         /// <param name="barcode">Barcode of the product to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        public bool AddByBarcode(Barcode barcode)
+        public bool Add(Barcode barcode)
         {
             if (IsProductsInDB(
                 p => string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
                 out var products)) return false;
 
-            var newProduct = new Product {Id = new Guid().ToString(), Barcode = barcode, Name = barcode.ProductName};
+            var newProduct = new Product { Id = new Guid().ToString(), Barcode = barcode, Name = barcode.ProductName };
             _productRepository.Add(_mapper.Map<ProductDB>(newProduct));
 
             return true;
@@ -66,7 +66,7 @@ namespace WasteProducts.Logic.Services
         /// </summary>
         /// <param name="name">The name of the product to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        public bool AddByName(string name)
+        public bool Add(string name)
         {
             var product = new Product { Name = name };
 
@@ -108,21 +108,17 @@ namespace WasteProducts.Logic.Services
         /// </summary>
         /// <param name="name">The name of the product.</param>
         /// <returns>Product with the specific name.</returns>
-        public Product GetByName(string name)
-        {
-            return _mapper.Map<Product>(_productRepository.SelectWhere(p =>
-                    string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase)).First());
-        }
+        public Product GetByName(string name) =>
+            _mapper.Map<Product>(_productRepository.SelectWhere(p =>
+            string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase)).First());
 
         /// <summary>
         /// Gets asynchronously product by its name.
         /// </summary>
         /// <param name="name">The name of the product.</param>
         /// <returns>Product with the specific name.</returns>
-        public async Task<Product> GetByNameAsync(string name)
-        {
-            return _mapper.Map<Product>(await _productRepository.GetByNameAsync(name));
-        }
+        public async Task<Product> GetByNameAsync(string name) =>
+            _mapper.Map<Product>(await _productRepository.GetByNameAsync(name));
 
         /// <summary>
         /// Gets products by a category.
@@ -139,7 +135,7 @@ namespace WasteProducts.Logic.Services
         /// </summary>
         /// <param name="barcode">Barcode of the product to be deleted.</param>
         /// <returns>Boolean represents whether the deletion is successful or not.</returns>
-        public bool DeleteByBarcode(Barcode barcode)
+        public bool Delete(Barcode barcode)
         {
             if (!IsProductsInDB(
                 p => string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
@@ -152,11 +148,26 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
+        /// Updates product if been modyfied.
+        /// </summary>
+        /// <param name="product">The specific product for updating.</param>
+        /// <returns></returns>
+        public bool Update(Product product)
+        {
+            if (!IsProductsInDB(p =>
+                    string.Equals(p.Id, product.Id, StringComparison.CurrentCultureIgnoreCase),
+                out IEnumerable<ProductDB> products)) return false;
+            _productRepository.Update(_mapper.Map<ProductDB>(product));
+
+            return true;
+        }
+
+        /// <summary>
         /// Tries to delete the product by name and returns whether the deletion is successful or not.
         /// </summary>
         /// <param name="name">The name of the product to be deleted.</param>
         /// <returns>Boolean represents whether the deletion is successful or not.</returns>
-        public bool DeleteByName(string name)
+        public bool Delete(string name)
         {
             if (!IsProductsInDB(p =>
                     string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
@@ -218,7 +229,7 @@ namespace WasteProducts.Logic.Services
             if (!IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.Ordinal),
                 out var products)) return false;
-           
+
             var productFromDB = products.ToList().First();
             if (productFromDB.IsHidden) return true;
 
@@ -258,7 +269,7 @@ namespace WasteProducts.Logic.Services
             if (!IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.Ordinal),
                 out var products)) return null;
-            
+
             var productFromDB = products.ToList().First();
 
             return productFromDB.IsHidden;
@@ -279,7 +290,7 @@ namespace WasteProducts.Logic.Services
             productFromDB.Composition = composition;
             _productRepository.Update(productFromDB);
         }
-     
+
         private bool IsProductsInDB(Predicate<ProductDB> conditionPredicate, out IEnumerable<ProductDB> products)
         {
             products = _productRepository.SelectWhere(conditionPredicate);

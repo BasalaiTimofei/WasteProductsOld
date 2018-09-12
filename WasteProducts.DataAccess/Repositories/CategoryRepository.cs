@@ -52,7 +52,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// Deletes the specific category by id
         /// </summary>
         /// <param name="id">Represents a specific category id to delete</param>
-        public void DeleteById(int id)
+        public void Delete(int id)
         {
             var category = _context.Categories.Find(id);
             Delete(category);

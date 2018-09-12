@@ -29,7 +29,7 @@ namespace WasteProducts.Logic.Services
         /// </summary>
         /// <param name="name">The name of the category to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        public bool AddByName(string name)
+        public bool Add(string name)
         {
             if (IsCategoryInDB(p =>
                 string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
@@ -52,7 +52,7 @@ namespace WasteProducts.Logic.Services
 
             foreach(var name in names)
             {
-                if (AddByName(name) && !result) result = true;
+                if (Add(name) && !result) result = true;
             }
 
             return result;

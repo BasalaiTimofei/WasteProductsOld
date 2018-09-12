@@ -80,7 +80,7 @@ namespace WasteProducts.Web.Controllers.Api
                 return BadRequest();
             }
 
-            if (_productService.AddByName(name))
+            if (_productService.Add(name))
             {
                 return Content(HttpStatusCode.Created, "Product was successfully added");
             }
@@ -101,7 +101,7 @@ namespace WasteProducts.Web.Controllers.Api
         {
             if (barcode == null) return BadRequest();
 
-            if (_productService.AddByBarcode(barcode))
+            if (_productService.Add(barcode))
             {
                 return Content(HttpStatusCode.Created, "Product was successfully added");
             }
@@ -125,7 +125,7 @@ namespace WasteProducts.Web.Controllers.Api
                 return BadRequest();
             }
 
-            if (_productService.DeleteByName(name))
+            if (_productService.Delete(name))
             {
                 return Content(HttpStatusCode.OK, "Product was successfully deleted");
             }
@@ -146,7 +146,7 @@ namespace WasteProducts.Web.Controllers.Api
         {
             if (barcode == null) return BadRequest();
 
-            if (_productService.DeleteByBarcode(barcode))
+            if (_productService.Delete(barcode))
             {
                 return Content(HttpStatusCode.OK, "Product was successfully deleted");
             }
