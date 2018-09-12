@@ -41,7 +41,7 @@ namespace WasteProducts.Web.Controllers.Api
         [SwaggerResponse(HttpStatusCode.OK, "GetById search result collection", typeof(IEnumerable<Product>))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
         [HttpGet, Route("products/default")]
-        public Task<IEnumerable<Product>> GetProductsDefaultFields([FromUri]string query)
+        public async Task<IEnumerable<Product>> GetProductsDefaultFields([FromUri]string query)
         {
             if (string.IsNullOrEmpty(query))
             {
@@ -54,7 +54,7 @@ namespace WasteProducts.Web.Controllers.Api
                 .AddField(DEFAULT_PRODUCT_BARCODE_FIELD, 1.0f);
             searchQuery.Query = query;
 
-            return Task.FromResult(_searchService.SearchProduct(searchQuery));
+            return await _searchService.SearchProductAsync(searchQuery);
         }
 
 
@@ -67,14 +67,10 @@ namespace WasteProducts.Web.Controllers.Api
         [SwaggerResponse(HttpStatusCode.OK, "GetById search result collection", typeof(IEnumerable<Product>))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
         [HttpGet, Route("products/custom")]
-        public Task<IEnumerable<Product>> GetProducts(BoostedSearchQuery query)
+        public async Task<IEnumerable<Product>> GetProducts(BoostedSearchQuery query)
         {
-            if (!ModelState.IsValid)
-            {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
-            }
 
-            return Task.FromResult(_searchService.SearchProduct(query));
+            return await  _searchService.SearchProductAsync(query);
         }
     }
 }
