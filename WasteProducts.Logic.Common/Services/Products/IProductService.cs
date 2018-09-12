@@ -87,6 +87,13 @@ namespace WasteProducts.Logic.Common.Services.Products
         /// <returns>Boolean represents whether the deletion is successful or not.</returns>
         bool Delete(string name);
 
+
+        /// <summary>
+        /// Deletes product from Database.
+        /// </summary>
+        /// <param name="product">Product that should be deleted.</param>
+        /// <returns></returns>
+        bool Delete(Product product);
         /// <summary>
         /// Tries to add the category by specific category and returns whether the addition is successful or not.
         /// </summary>

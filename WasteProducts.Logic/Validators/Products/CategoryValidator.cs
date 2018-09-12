@@ -4,15 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
-using FluentAssertions;
 using WasteProducts.Logic.Common.Models.Products;
+using FluentAssertions;
 
 namespace WasteProducts.Logic.Validators.Products
 {
-    public class ProductsValidator : AbstractValidator<Product>
+    public class CategoryValidator : AbstractValidator<Category>
     {
-        public ProductsValidator()
-        {
-        }
     }
 }

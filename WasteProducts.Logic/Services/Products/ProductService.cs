@@ -19,6 +19,7 @@ namespace WasteProducts.Logic.Services.Products
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
         private bool _disposed;
+        private IProductService _productServiceImplementation;
 
         public ProductService(IProductRepository productRepository, IMapper mapper)
         {
@@ -37,7 +38,7 @@ namespace WasteProducts.Logic.Services.Products
                     string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
                 out var products)) return false;
 
-            product.Id = new Guid().ToString();
+            product.Id = Guid.NewGuid().ToString();
             _productRepository.Add(_mapper.Map<ProductDB>(product));
 
             return true;
@@ -175,6 +176,17 @@ namespace WasteProducts.Logic.Services.Products
 
             var productFromDB = products.ToList().First();
             _productRepository.Delete(productFromDB);
+
+            return true;
+        }
+
+        /// <inheritdoc />
+        public bool Delete(Product product)
+        {
+                if (!IsProductsInDB(p =>
+                        string.Equals(p.Id, product.Id, StringComparison.CurrentCultureIgnoreCase),
+                    out var products)) return false;
+            _productRepository.Delete(_mapper.Map<ProductDB>(product));
 
             return true;
         }

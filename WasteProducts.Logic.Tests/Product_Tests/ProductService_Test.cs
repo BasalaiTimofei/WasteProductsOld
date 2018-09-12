@@ -499,7 +499,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             {
                 var result = productService.Delete(It.IsAny<string>());
 
-                Assert.That(result, Is.EqualTo(true));
+                result.Should().BeTrue();
             }
         }
 
@@ -796,6 +796,20 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
+        public void Update_CallsNever()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            using (var productService = new ProductService(mockProductRepository.Object, mapper))
+            {
+                productService.Update(product);
+
+                mockProductRepository.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Never);
+            }
+        }
+
+        [Test]
         public void Update_IfProductIsInDb()
         {
             selectedList.Add(productDB);
@@ -817,6 +831,60 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
                 productService.Update(product).Should().BeFalse();
+            }
+        }
+
+        [Test]
+        public void Delete_IfProductIsInDb()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            using (var productService = new ProductService(mockProductRepository.Object, mapper))
+            {
+                productService.Delete(product).Should().BeTrue();
+            }
+        }
+
+        [Test]
+        public void Delete_IfProductIsNotInDb()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            using (var productService = new ProductService(mockProductRepository.Object, mapper))
+            {
+                productService.Delete(product).Should().BeFalse();
+            }
+        }
+
+        [Test]
+        public void Delete_CallsOnce()
+        {
+            selectedList.Add(productDB);
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            using (var productService = new ProductService(mockProductRepository.Object, mapper))
+            {
+                productService.Update(product);
+
+                mockProductRepository.Verify(m => m.Update(It.IsAny<ProductDB>()), Times.Once);
+            }
+        }
+
+        [Test]
+        public void Delete_CallsNever()
+        {
+            mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
+                .Returns(selectedList);
+
+            using (var productService = new ProductService(mockProductRepository.Object, mapper))
+            {
+                productService.Update(product);
+
+                mockProductRepository.Verify(m => m.Delete(It.IsAny<ProductDB>()), Times.Never);
             }
         }
     }

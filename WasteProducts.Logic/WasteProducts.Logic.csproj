@@ -182,6 +182,7 @@
     <Compile Include="Services\TestService.cs" />
     <Compile Include="Services\UserService\UserRoleService.cs" />
     <Compile Include="Services\UserService\UserService.cs" />
+    <Compile Include="Validators\Products\CategoryValidator.cs" />
     <Compile Include="Validators\Products\ProductsValidator.cs" />
     <Compile Include="Validators\Search\BoostedSearchQueryValidator.cs" />
     <Compile Include="Validators\TestValidator.cs" />
