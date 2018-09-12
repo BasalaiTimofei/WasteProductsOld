@@ -69,13 +69,13 @@
       <HintPath>..\packages\FluentValidation.8.0.100\lib\net45\FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation.Mvc, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentValidation.Mvc5.8.0.100\lib\net45\FluentValidation.Mvc.dll</HintPath>
+      <HintPath>..\packages\FluentValidation.Mvc5.8.0.0\lib\net45\FluentValidation.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation.ValidatorAttribute, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentValidation.ValidatorAttribute.8.0.100\lib\net45\FluentValidation.ValidatorAttribute.dll</HintPath>
+      <HintPath>..\packages\FluentValidation.ValidatorAttribute.8.0.0\lib\net45\FluentValidation.ValidatorAttribute.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation.WebApi, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentValidation.WebApi.8.0.100\lib\net45\FluentValidation.WebApi.dll</HintPath>
+      <HintPath>..\packages\FluentValidation.WebApi.8.0.0\lib\net45\FluentValidation.WebApi.dll</HintPath>
     </Reference>
     <Reference Include="FromHeaderAttribute, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FromHeaderAttribute.2.0.4\lib\net45\FromHeaderAttribute.dll</HintPath>
@@ -394,6 +394,7 @@
     <Compile Include="Areas\Administration\Controllers\ErrorManagementController.cs" />
     <Compile Include="Controllers\Api\BaseApiController.cs" />
     <Compile Include="Controllers\Api\ErrorController.cs" />
+    <Compile Include="Controllers\Api\PayPalController.cs" />
     <Compile Include="Controllers\Api\ProductController.cs" />
     <Compile Include="Controllers\Api\SearchController.cs" />
     <Compile Include="Controllers\Mvc\BaseMvcController.cs" />
