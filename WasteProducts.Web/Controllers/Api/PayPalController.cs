@@ -123,6 +123,105 @@ namespace WasteProducts.Web.Controllers.Api
     }
 
     /// <summary>
+    /// Represents Transaction information variables from a IPN request.
+    /// </summary>
+    public static class Transaction
+    {
+        /// <summary>
+        /// Email address or account ID of the payment recipient(that is, the merchant).
+        /// Equivalent to the values of receiver_email(if payment is sent to primary account)
+        /// and business set in the Website Payment HTML.
+        /// Note: The value of this variable is normalized to lowercase characters.
+        /// </summary>
+        public const string BUSINESS = "business";
+
+        /// <summary>
+        /// Character set.
+        /// </summary>
+        public const string CHARSET = "charset";
+
+        /// <summary>
+        /// Custom value as passed by you, the merchant.
+        /// These are pass-through variables that are never presented to your customer.
+        /// Length: 255 characters.
+        /// </summary>
+        public const string CUSTOM = "custom";
+
+        /// <summary>
+        /// Internal; only for use by MTS.
+        /// </summary>
+        public const string IPN_TRACK_ID = "ipn_track_id";
+
+        /// <summary>
+        /// Message's version number.
+        /// </summary>
+        public const string NOTIFY_VERSION = "notify_version";
+
+        /// <summary>
+        /// In the case of a refund, reversal, or canceled reversal,
+        /// this variable contains the "txn_id" of the original transaction,
+        /// while "txn_id" contains a new ID for the new transaction.
+        /// Length: 19 characters.
+        /// </summary>
+        public const string PARENT_TXN_ID = "parent_txn_id";
+
+        /// <summary>
+        /// Unique ID generated during guest checkout (payment by credit card without logging in).
+        /// </summary>
+        public const string RECEIPT_ID = "receipt_id";
+
+        /// <summary>
+        /// Primary email address of the payment recipient (that is, the merchant).
+        /// If the payment is sent to a non-primary email address on your PayPal account,
+        /// the receiver_email is still your primary email.
+        /// Note: The value of this variable is normalized to lowercase characters.
+        /// Length: 127 characters.
+        /// </summary>
+        public const string RECEIVER_EMAIL = "receiver_email";
+
+        /// <summary>
+        /// Unique account ID of the payment recipient (i.e., the merchant).
+        /// This is the same as the recipient's referral ID. 
+        /// Length: 13 characters.
+        /// </summary>
+        public const string RECEIVER_ID = "receiver_id";
+
+        /// <summary>
+        /// Whether this IPN message was resent (equals true);
+        /// otherwise, this is the original message.
+        /// </summary>
+        public const string RESEND = "resend";
+
+        /// <summary>
+        /// ISO 3166 country code associated with the country of residence.
+        /// Length: 2 characters.
+        /// </summary>
+        public const string RESIDENCE_COUNTRY = "residence_country";
+
+        /// <summary>
+        /// Whether the message is a test message. Value is:
+        /// 1 — the message is directed to the Sandbox.
+        /// </summary>
+        public const string TEST_IPN = "test_ipn";
+
+        /// <summary>
+        /// The merchant's original transaction identification number for the payment from the buyer,
+        /// against which the case was registered.
+        /// </summary>
+        public const string TXN_ID = "txn_id";
+
+        /// <summary>
+        /// The kind of transaction for which the IPN message was sent.
+        /// </summary>
+        public const string TXN_TYPE = "txn_type";
+
+        /// <summary>
+        /// Encrypted string used to validate the authenticity of the transaction.
+        /// </summary>
+        public const string VERIFY_SIGN = "verify_sign";
+    }
+
+    /// <summary>
     /// Represents Buyer information variables from a IPN request.
     /// </summary>
     public static class Buyer
