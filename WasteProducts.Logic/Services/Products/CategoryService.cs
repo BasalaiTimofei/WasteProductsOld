@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using WasteProducts.DataAccess.Common.Models.Products;
-using WasteProducts.DataAccess.Common.Repositories;
-using WasteProducts.Logic.Common.Models.Barcods;
+using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.Logic.Common.Models.Products;
-using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Common.Services.Products;
 
-namespace WasteProducts.Logic.Services
+namespace WasteProducts.Logic.Services.Products
 {
     /// <summary>
     /// Implementation of ICategoryService.

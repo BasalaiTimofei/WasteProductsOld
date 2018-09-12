@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using System.Web.Http;
 using NLog;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
-using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Common.Services.Products;
 
 namespace WasteProducts.Web.Controllers.Api
 {
@@ -20,7 +18,12 @@ namespace WasteProducts.Web.Controllers.Api
     {
         private readonly IProductService _productService;
 
-        public ProductController(ILogger logger, IProductService productService) : base(logger)
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="productService">Product service.</param>
+        /// <param name="logger">NLog logger.</param>
+        public ProductController(IProductService productService, ILogger logger) : base(logger)
         {
             _productService = productService;
         }

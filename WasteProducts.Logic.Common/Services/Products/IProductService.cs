@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
 
-namespace WasteProducts.Logic.Common.Services
+namespace WasteProducts.Logic.Common.Services.Products
 {
     /// <summary>
     /// This interface provides product methods.

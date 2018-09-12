@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using WasteProducts.Logic.Common.Models.Products;
 
-namespace WasteProducts.Logic.Common.Services
+namespace WasteProducts.Logic.Common.Services.Products
 {
     /// <summary>
     /// This interface provides category methods.

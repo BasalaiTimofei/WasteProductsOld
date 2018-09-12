@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Ninject;
 using WasteProducts.DataAccess.Common.Models.Products;
-using WasteProducts.DataAccess.Common.Repositories;
+using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
-using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Common.Services.Products;
 
-namespace WasteProducts.Logic.Services
+namespace WasteProducts.Logic.Services.Products
 {
     /// <summary>
     /// Implementation of IProductService.

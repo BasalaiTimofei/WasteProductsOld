@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using WasteProducts.DataAccess.Common.Models.Products;
-using WasteProducts.DataAccess.Common.Repositories;
+using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.DataAccess.Contexts;
 
-namespace WasteProducts.DataAccess.Repositories
+namespace WasteProducts.DataAccess.Repositories.Products
 {
     /// <summary>
     /// This class is a context class. A binder for the 'CategoyrDB' class with a data access.
