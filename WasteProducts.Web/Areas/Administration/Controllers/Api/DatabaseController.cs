@@ -49,7 +49,7 @@ namespace WasteProducts.Web.Areas.Administration.Controllers.Api
         /// Deletes old database if it exists and creates new database
         /// </summary>
         /// <returns>Task</returns>
-        [HttpPost, Route("recreate")]
+        [HttpGet, Route("recreate")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.NoContent, "Database was created and seeded.")]
         public async Task<IHttpActionResult> ReCreateDatabaseAsync(bool withTestData)
