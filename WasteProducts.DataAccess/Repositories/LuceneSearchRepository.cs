@@ -187,7 +187,7 @@ namespace WasteProducts.DataAccess.Repositories
             }
             else
             {
-                throw new LuceneSearchRepositoryException("Сan't update entity with empty id.");
+                throw new LuceneSearchRepositoryException(Resources.LuceneSearchRepository.EmptyIdError);
             }
         }
 

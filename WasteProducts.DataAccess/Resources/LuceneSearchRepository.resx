@@ -126,6 +126,9 @@
   <data name="EmptyFieldsError" xml:space="preserve">
     <value>Can't search within empty filelds.</value>
   </data>
+  <data name="EmptyIdError" xml:space="preserve">
+    <value>Сan't update entity with empty id.</value>
+  </data>
   <data name="IndexOpenError" xml:space="preserve">
     <value>Can't open Lucene index.</value>
   </data>

@@ -88,6 +88,15 @@ namespace WasteProducts.DataAccess.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Сan&apos;t update entity with empty id..
+        /// </summary>
+        internal static string EmptyIdError {
+            get {
+                return ResourceManager.GetString("EmptyIdError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Can&apos;t open Lucene index..
         /// </summary>
         internal static string IndexOpenError {
