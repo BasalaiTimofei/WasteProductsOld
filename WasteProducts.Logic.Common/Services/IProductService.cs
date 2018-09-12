@@ -57,7 +57,7 @@ namespace WasteProducts.Logic.Common.Services
         /// </summary>
         /// <param name="name">The name of the product.</param>
         /// <returns>Product with the specific name.</returns>
-        Product Get(string name);
+        Product GetByName(string name);
 
         /// <summary>
         /// Gets asynchronously product by its name.
@@ -69,7 +69,7 @@ namespace WasteProducts.Logic.Common.Services
         /// <summary>
         /// Gets products by a category.
         /// </summary>
-        /// <param name="name">Name of the product.</param>
+        /// <param name="category">Category of the product.</param>
         /// <returns>Product with the specific name.</returns>
         IEnumerable<Product> GetByCategory(Category category);
 
@@ -133,7 +133,7 @@ namespace WasteProducts.Logic.Common.Services
         /// Sets the description of the specific product
         /// </summary>
         /// <param name="product">The specific product to set description</param>
-        /// <param name="Composition">The description of the specific product</param>
+        /// <param name="composition">The description of the specific product</param>
         void SetComposition(Product product, string composition);
     }
 }

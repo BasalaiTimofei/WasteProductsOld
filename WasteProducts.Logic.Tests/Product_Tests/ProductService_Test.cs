@@ -437,7 +437,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                var result = productService.Get(productName);
+                var result = productService.GetByName(productName);
 
                 Assert.That(result, Is.InstanceOf(typeof(Product)));
             }

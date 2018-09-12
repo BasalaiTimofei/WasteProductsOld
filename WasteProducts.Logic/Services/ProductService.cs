@@ -108,7 +108,7 @@ namespace WasteProducts.Logic.Services
         /// </summary>
         /// <param name="name">The name of the product.</param>
         /// <returns>Product with the specific name.</returns>
-        public Product Get(string name) =>
+        public Product GetByName(string name) =>
             _mapper.Map<Product>(_productRepository.SelectWhere(p =>
             string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase)).First());
 
