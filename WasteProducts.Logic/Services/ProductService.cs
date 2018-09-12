@@ -147,15 +147,17 @@ namespace WasteProducts.Logic.Services
             return true;
         }
 
+        /// <summary>
+        /// Updates product if been modyfied.
+        /// </summary>
+        /// <param name="product">The specific product for updating.</param>
+        /// <returns></returns>
         public bool Update(Product product)
         {
-            if (IsProductsInDB(p =>
+            if (!IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.CurrentCultureIgnoreCase),
-                out var products)) return false;
-
-            var productFromDB = from prod in products.ToList()
-                                select prod;
-            _productRepository.Update(productFromDB.First());
+                out IEnumerable<ProductDB> products)) return false;
+            _productRepository.Update(_mapper.Map<ProductDB>(product));
 
             return true;
         }

@@ -123,6 +123,13 @@ namespace WasteProducts.Logic.Common.Services
         bool? IsHidden(Product product);
 
         /// <summary>
+        /// Updates product if been modyfied.
+        /// </summary>
+        /// <param name="product">The specific product for updating.</param>
+        /// <returns></returns>
+        bool Update(Product product);
+
+        /// <summary>
         /// Sets the description of the specific product
         /// </summary>
         /// <param name="product">The specific product to set description</param>
