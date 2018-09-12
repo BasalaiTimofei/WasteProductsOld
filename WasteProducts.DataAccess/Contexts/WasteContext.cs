@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Data.Entity;
 using System.Diagnostics;
-using Microsoft.AspNet.Identity.EntityFramework;
-using WasteProducts.DataAccess.Common.Models.Products;
-using WasteProducts.DataAccess.Common.Models.Users;
-using WasteProducts.DataAccess.Contexts.Config;
 using System.Linq;
 using System.Threading.Tasks;
-using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Models.Groups;
+using WasteProducts.DataAccess.Common.Models.Products;
+using WasteProducts.DataAccess.Common.Models.Users;
+using WasteProducts.DataAccess.Common.Repositories.Search;
+using WasteProducts.DataAccess.Contexts.Config;
 using WasteProducts.DataAccess.ModelConfigurations;
 using WasteProducts.DataAccess.ModelConfigurations.UserManagement;
 
@@ -17,7 +17,7 @@ namespace WasteProducts.DataAccess.Contexts
     [DbConfigurationType(typeof(MsSqlConfiguration))]
     public class WasteContext : IdentityDbContext<UserDB, IdentityRole, string, IdentityUserLogin, IdentityUserRole, IdentityUserClaim>
     {
-        private readonly ISearchRepository _searchRepository;    
+        private readonly ISearchRepository _searchRepository;
 
         public WasteContext(ISearchRepository searchRepository)
         {
@@ -77,9 +77,9 @@ namespace WasteProducts.DataAccess.Contexts
         public IDbSet<GroupUserDB> GroupUserDBs { get; set; }
         public IDbSet<GroupCommentDB> GroupCommentDBs { get; set; }
         public IDbSet<GroupProductDB> GroupProductDBs { get; set; }
-                
+
         public override int SaveChanges()
-        {            
+        {
             SaveChangesToSearchRepository();
             return base.SaveChanges();
         }
@@ -95,7 +95,7 @@ namespace WasteProducts.DataAccess.Contexts
         /// </summary>
         private void SaveChangesToSearchRepository()
         {
-            DetectAndSaveChanges(typeof(ProductDB), typeof(CategoryDB), typeof(GroupDB), typeof(UserDB));
+            DetectAndSaveChanges(typeof(ProductDB));
         }
 
         /// <summary>
@@ -107,7 +107,9 @@ namespace WasteProducts.DataAccess.Contexts
             foreach (var entry in ChangeTracker.Entries())
             {
                 if (!types.Contains(entry.Entity.GetType()))
+                {
                     continue;
+                }
 
                 switch (entry.State)
                 {

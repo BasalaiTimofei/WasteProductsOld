@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories.Search;
-using WasteProducts.Logic.Common.Models;
-using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Search;
 using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Resources;
 
 namespace WasteProducts.Logic.Services
 {
@@ -24,24 +20,12 @@ namespace WasteProducts.Logic.Services
         public const int DEFAULT_MAX_LUCENE_RESULTS = 1000;
         public int MaxResultCount { get; set; } = DEFAULT_MAX_LUCENE_RESULTS;
 
-        private ISearchRepository _repository;
+        private readonly ISearchRepository _repository;
 
         public LuceneSearchService(ISearchRepository repository)
         {
             _repository = repository;
         }
-
-        /// <summary>
-        /// Performs search in repository
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="query">SearchQuery object containing query information</param>
-        /// <returns></returns>
-        /*public IEnumerable<TEntity> Search<TEntity>(SearchQuery query) where TEntity : class
-        {
-            CheckQuery(query);
-            return _repository.GetAll<TEntity>(query.Query, query.SearchableFields, MaxResultCount);
-        }*/
 
         /// <summary>
         /// Performs search in repository
@@ -167,22 +151,16 @@ namespace WasteProducts.Logic.Services
             return result;
         }
 
-        //TODO: implement async methods later if necessary
-        public Task<IEnumerable<TEntity>> SearchAsync<TEntity>(BoostedSearchQuery query)
+        public Task<IEnumerable<Product>> SearchProductAsync(BoostedSearchQuery query)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<TEntity>> SearchDefaultAsync<TEntity>(BoostedSearchQuery query)
-        {
-            throw new NotImplementedException();
+            return Task.Run(() => SearchProduct(query));
         }
 
         private void CheckQuery(BoostedSearchQuery query)
         {
             if (String.IsNullOrEmpty(query.Query) || query.SearchableFields.Count == 0)
             {
-                throw new ArgumentException("Incorrect query.");
+                throw new ArgumentException(SearchServiceResources.IncorrectQueryStr);
             }
         }
     }

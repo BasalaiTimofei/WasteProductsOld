@@ -1,31 +1,21 @@
-﻿using System;
-using System.Data.Entity.Core;
-using System.Data.Entity.Validation;
-using System.Data.SqlClient;
-using System.Text;
+﻿using NLog;
+using System;
 using System.Threading.Tasks;
-using NLog;
 using WasteProducts.DataAccess.Common.Context;
 using WasteProducts.Logic.Common.Models.Diagnostic;
 using WasteProducts.Logic.Common.Services.Diagnostic;
+using WasteProducts.Logic.Resources;
 
 namespace WasteProducts.Logic.Services
 {
     /// <inheritdoc />
     public class DbService : IDbService
     {
-        private const string GetStatusDebugMsg = "Checking database status";
-        private const string GetStatusWarnMsg = "Existing database don't compatible with model!";
-
-        private const string DeleteDebugMsg = "Trying to delete database";
-        private const string CreateAndSeedAsyncDebugMsg = "Trying to create and to seed in to database";
-
-
         private readonly IDbSeedService _dbSeedService;
         private readonly IDatabase _database;
         private readonly ILogger _logger;
 
-        private bool _isDisposed;
+        private bool _disposed = false;
 
         /// <summary>
         /// Constructor
@@ -40,51 +30,35 @@ namespace WasteProducts.Logic.Services
             _logger = logger;
         }
 
-        ~DbService()
-        {
-            Dispose(false);
-        }
-
-
         /// <inheritdoc />
-        public DatabaseStatus GetStatus()
+        public async Task<DatabaseState> GetStateAsync()
         {
-            _logger.Debug(GetStatusDebugMsg);
+            bool isExist = await Task.FromResult(_database.IsExists).ConfigureAwait(false);
+            bool isCompatibleWithModel = isExist && await Task.FromResult(_database.IsCompatibleWithModel).ConfigureAwait(false);
 
-            bool isExist = _database.IsExists;
-            var isCompatibleWithModel = isExist && _database.IsCompatibleWithModel;
+            if (isExist && !isCompatibleWithModel)
+            {
+                _logger.Warn(DbServiceResources.GetStatusAsync_WarnMsg);
+            }
 
-            if (isExist && !isCompatibleWithModel) _logger.Warn(GetStatusWarnMsg);
-
-            return new DatabaseStatus(isExist, isCompatibleWithModel);
+            return new DatabaseState(isExist, isCompatibleWithModel);
         }
 
         /// <inheritdoc />
-        public bool Delete()
+        public Task DeleteAsync()
         {
-            _logger.Debug(DeleteDebugMsg);
-
-            if (!_database.IsExists)
-                return false;
-
-            return _database.Delete();
+            return Task.Run(()=> _database.Delete());
         }
 
         /// <inheritdoc />
-        public async Task<bool> CreateAndSeedAsync(bool seedTestData)
+        public async Task ReCreateAsync(bool withTestData)
         {
-            _logger.Debug(CreateAndSeedAsyncDebugMsg);
-
-            if (_database.IsExists)
-                return false;
-
-            _database.Initialize();
+            await DeleteAsync().ConfigureAwait(false);
+            await Task.Run(() => _database.Initialize()).ConfigureAwait(false);
             await _dbSeedService.SeedBaseDataAsync().ConfigureAwait(false);
 
-            if(seedTestData)
+            if(withTestData)
                 await _dbSeedService.SeedTestDataAsync().ConfigureAwait(false);
-
-            return true;
         }
 
         /// <inheritdoc />
@@ -96,15 +70,20 @@ namespace WasteProducts.Logic.Services
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!_isDisposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
                     _database.Dispose();
                 }
-                
-                _isDisposed = true;
+
+                _disposed = true;
             }
+        }
+
+        ~DbService()
+        {
+            Dispose(false);
         }
     }
 }

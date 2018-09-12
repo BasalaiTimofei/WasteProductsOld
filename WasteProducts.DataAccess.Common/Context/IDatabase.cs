@@ -31,7 +31,6 @@ namespace WasteProducts.DataAccess.Common.Context
         /// after it has been deleted, then any initializer set will run again and, usually, will
         /// try to create the database again automatically.
         /// </summary>
-        /// <returns> True if the database did exist and was deleted; false otherwise. </returns>
-        bool Delete();
+        void Delete();
     }
 }
