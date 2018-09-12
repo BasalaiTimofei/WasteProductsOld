@@ -19,24 +19,12 @@ namespace WasteProducts.Logic.Services
         public const int DEFAULT_MAX_LUCENE_RESULTS = 1000;
         public int MaxResultCount { get; set; } = DEFAULT_MAX_LUCENE_RESULTS;
 
-        private ISearchRepository _repository;
+        private readonly ISearchRepository _repository;
 
         public LuceneSearchService(ISearchRepository repository)
         {
             _repository = repository;
         }
-
-        /// <summary>
-        /// Performs search in repository
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="query">SearchQuery object containing query information</param>
-        /// <returns></returns>
-        /*public IEnumerable<TEntity> Search<TEntity>(SearchQuery query) where TEntity : class
-        {
-            CheckQuery(query);
-            return _repository.GetAll<TEntity>(query.Query, query.SearchableFields, MaxResultCount);
-        }*/
 
         /// <summary>
         /// Performs search in repository
@@ -162,7 +150,6 @@ namespace WasteProducts.Logic.Services
             return result;
         }
 
-        //TODO: implement async methods later if necessary
         public Task<IEnumerable<Product>> SearchProductAsync(BoostedSearchQuery query)
         {
             return Task.Run(() => SearchProduct(query));
