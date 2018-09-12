@@ -31,21 +31,28 @@ namespace WasteProducts.DataAccess.Common.Repositories.Groups
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">New objects</param>
-        void Update<T>(IEnumerable<T> items) where T : class;
+        void UpdateAll<T>(IList<T> items) where T : class;
 
         /// <summary>
-        /// Delete object from db
+        /// Delete object from db by primary key
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="id">Primary key object</param>
         void Delete<T>(Guid id) where T : class;
 
         /// <summary>
-        /// Delete object from db
+        /// Delete object from db by object
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
         void Delete<T>(T item) where T : class;
+
+        /// <summary>
+        /// Delete object from db by colection
+        /// </summary>
+        /// <typeparam name="T">Object</typeparam>
+        /// <param name="item">Object</param>
+        void DeleteAll<T>(IList<T> items) where T : class;
 
         /// <summary>
         /// Getting object from db

@@ -254,7 +254,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
                 .Returns(_selectedUserList);
 
             var result = _groupUserService.FindReceivedInvites("2");
-            Assert.AreEqual(null, result.FirstOrDefault());
+            Assert.AreEqual(null, result);
         }
 
         [Test]
@@ -276,7 +276,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
                 .Returns(_selectedUserList);
 
             var result = _groupUserService.FindGroupsById("2");
-            Assert.AreEqual(null, result.FirstOrDefault());
+            Assert.AreEqual(null, result);
         }
 
         [Test]
@@ -298,7 +298,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
                 .Returns(_selectedUserList);
 
             var result = _groupUserService.FindUsersByGroupId(new Guid("00000000-0000-0000-0000-000000000001"));
-            Assert.AreEqual(null, result.FirstOrDefault());
+            Assert.AreEqual(null, result);
         }
     }
 }

@@ -63,10 +63,11 @@ namespace WasteProducts.Logic.Services.Groups
         public void Delete(GroupBoard item)
         {
             var result = _mapper.Map<GroupBoardDB>(item);
-            var model = _dataBase.GetWithInclude<GroupBoardDB>(
-                x => x.Id == result.GroupId,
-                z => z.GroupProducts).FirstOrDefault();
 
+            var model = _dataBase.GetWithInclude<GroupBoardDB>(
+                x => x.Id == result.Id
+                &&x.GroupId == result.GroupId,
+                z => z.GroupProducts).FirstOrDefault();
             var modelUser = _dataBase.Find<GroupUserDB>(
                 x => x.RightToCreateBoards == true
                 && x.UserId == result.CreatorId
@@ -77,11 +78,8 @@ namespace WasteProducts.Logic.Services.Groups
             model.IsNotDeleted = false;
             model.Deleted = DateTime.UtcNow;
             model.Modified = DateTime.UtcNow;
-            foreach (var groupProduct in model.GroupProducts)
-            {
-                _dataBase.Delete(groupProduct);
-            }
 
+            _dataBase.DeleteAll(model.GroupProducts);
             _dataBase.Update(model);
             _dataBase.Save();
         }

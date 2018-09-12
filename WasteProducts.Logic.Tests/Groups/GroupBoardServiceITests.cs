@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
@@ -143,28 +144,32 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         {
             _selectedBoardList.Add(_groupBoardDB);
             _selectedUserList.Add(_groupUserDB);
-            _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
+            _groupRepositoryMock.Setup(m => m.GetWithInclude(
+                It.IsAny<Func<GroupBoardDB, Boolean>>(),
+                It.IsAny<Expression<Func<GroupBoardDB, object>>[]>()))
                 .Returns(_selectedBoardList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
                 .Returns(_selectedUserList);
 
-            _groupBoardService.Update(_groupBoard);
+            _groupBoardService.Delete(_groupBoard);
 
             _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupBoardDB>()), Times.Once);
-            _groupRepositoryMock.Verify(m => m.Delete(It.IsAny<GroupProductDB>()), Times.AtMostOnce);
+            _groupRepositoryMock.Verify(m => m.DeleteAll(It.IsAny<List<GroupProductDB>>()), Times.Once);
         }
         [Test]
         public void GroupBoardService_03_Delete_02_GroupBoard_Unavalible_or_UserGroup_Unavalible_or_User_Dose_Not_Have_Access_or_Board_Unavalible_or_UserGroup_Unavalible()
         {
-            _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
+            _groupRepositoryMock.Setup(m => m.GetWithInclude(
+                It.IsAny<Func<GroupBoardDB, Boolean>>(),
+                It.IsAny<Expression<Func<GroupBoardDB, object>>[]>()))
                 .Returns(_selectedBoardList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
                 .Returns(_selectedUserList);
 
-            _groupBoardService.Update(_groupBoard);
+            _groupBoardService.Delete(_groupBoard);
 
             _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupBoardDB>()), Times.Never);
-            _groupRepositoryMock.Verify(m => m.Delete(It.IsAny<GroupProductDB>()), Times.Never);
+            _groupRepositoryMock.Verify(m => m.DeleteAll(It.IsAny<List<GroupProductDB>>()), Times.Never);
         }
 
         [Test]

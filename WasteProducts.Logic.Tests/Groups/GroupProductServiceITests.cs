@@ -152,8 +152,11 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public void GroupProductService_03_Delete_01_Remove_GroupProduct()
         {
+            _selectedProductList.Add(_groupProductDB);
             _selectedBoardList.Add(_groupBoardDB);
             _selectedUserList.Add(_groupUserDB);
+            _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupProductDB, Boolean>>()))
+                .Returns(_selectedProductList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
                 .Returns(_selectedBoardList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
@@ -161,11 +164,13 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
             _groupProductService.Delete(_groupProduct, "2", new Guid("00000000-0000-0000-0000-000000000003"));
 
-            _groupRepositoryMock.Verify(m => m.Delete<GroupProductDB>(_groupProductDB.Id), Times.Once);
+            _groupRepositoryMock.Verify(m => m.Delete(_groupProductDB), Times.Once);
         }
         [Test]
         public void GroupProductService_03_Delete_02_GroupBoard_Unavalible_or_UserGroup_Unavalible_or_Group_Unavalible()
         {
+            _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupProductDB, Boolean>>()))
+                .Returns(_selectedProductList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
                 .Returns(_selectedBoardList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
@@ -173,7 +178,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
             _groupProductService.Delete(_groupProduct, "2", new Guid("00000000-0000-0000-0000-000000000003"));
 
-            _groupRepositoryMock.Verify(m => m.Delete<GroupProductDB>(_groupProductDB.Id), Times.Never);
+            _groupRepositoryMock.Verify(m => m.Delete(_groupProductDB), Times.Never);
         }
 
         [Test]

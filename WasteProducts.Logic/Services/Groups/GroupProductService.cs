@@ -71,10 +71,12 @@ namespace WasteProducts.Logic.Services.Groups
             var modelBoard = _dataBase.Find<GroupBoardDB>(
                 x => x.Id == result.GroupBoardId
                 && x.GroupId == groupId).FirstOrDefault();
-            if (modelUser == null || modelBoard == null)
+            var model = _dataBase.Find<GroupProductDB>(
+                x => x.Id == result.Id).FirstOrDefault();
+            if (modelUser == null || modelBoard == null || model == null)
                 return;
 
-            _dataBase.Delete<GroupProductDB>(result.Id);
+            _dataBase.Delete(model);
             _dataBase.Save();
         }
 

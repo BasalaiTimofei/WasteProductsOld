@@ -20,17 +20,17 @@ namespace WasteProducts.Logic.Services.Groups
             _mapper = mapper;
         }
 
-        public void Create<T>(T item, Guid groupId) where T : class
+        public void Create(GroupComment item, Guid groupId)
         {
             var result = _mapper.Map<GroupCommentDB>(item);
 
             var modelUser = _dataBase.Find<GroupUserDB>(
                 x => x.UserId == result.CommentatorId
-                && x.GroupId == groupId);
+                && x.GroupId == groupId).FirstOrDefault();
             var modelBoard = _dataBase.Find<GroupBoardDB>(
                 x => x.Id == result.GroupBoardId
-                && x.GroupId == groupId);
-            if (modelUser == null && modelBoard == null)
+                && x.GroupId == groupId).FirstOrDefault();
+            if (modelUser == null || modelBoard == null)
                 return;
 
             result.Modified = DateTime.UtcNow;
@@ -39,23 +39,20 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public void Update<T>(T item, Guid groupId) where T : class
+        public void Update(GroupComment item, Guid groupId)
         {
             var result = _mapper.Map<GroupCommentDB>(item);
 
             var modelUser = _dataBase.Find<GroupUserDB>(
                 x => x.UserId == result.CommentatorId
-                && x.GroupId == groupId);
+                && x.GroupId == groupId).FirstOrDefault();
             var modelBoard = _dataBase.Find<GroupBoardDB>(
                 x => x.Id == result.GroupBoardId
-                && x.GroupId == groupId);
-            if (modelUser == null && modelBoard == null)
-                return;
-
+                && x.GroupId == groupId).FirstOrDefault();
             var model = _dataBase.Find<GroupCommentDB>(
                 x => x.Id == result.Id
-                && x.CommentatorId == result.CommentatorId).First();
-            if (model == null)
+                && x.CommentatorId == result.CommentatorId).FirstOrDefault();
+            if (modelUser == null || modelBoard == null || model == null)
                 return;
 
             model.Comment = result.Comment;
@@ -65,45 +62,46 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public void Delete<T>(T item, Guid groupId) where T : class
+        public void Delete(GroupComment item, Guid groupId)
         {
             var result = _mapper.Map<GroupCommentDB>(item);
 
             var modelUser = _dataBase.Find<GroupUserDB>(
                 x => x.UserId == result.CommentatorId
-                && x.GroupId == groupId);
+                && x.GroupId == groupId).FirstOrDefault();
             var modelBoard = _dataBase.Find<GroupBoardDB>(
                 x => x.Id == result.GroupBoardId
-                && x.GroupId == groupId);
-            if (modelUser == null && modelBoard == null)
-                return;
-
+                && x.GroupId == groupId).FirstOrDefault();
             var model = _dataBase.Find<GroupCommentDB>(
                 x => x.Id == result.Id
-                && x.CommentatorId == result.CommentatorId).First();
-            if (model == null)
+                && x.CommentatorId == result.CommentatorId).FirstOrDefault();
+            if (modelUser == null || modelBoard == null || model == null)
                 return;
 
-            _dataBase.Delete<GroupProductDB>(model.Id);
-
-            _dataBase.Update(model);
+            _dataBase.Delete(model);
             _dataBase.Save();
         }
 
-        public T FindById<T>(Guid id) where T : class
+        public GroupComment FindById(Guid id)
         {
             var model = _dataBase.Find<GroupCommentDB>(
-                x => x.Id == id).First();
-            var result = _mapper.Map<T>(model);
+                x => x.Id == id).FirstOrDefault();
+            if (model == null)
+                return null;
+
+            var result = _mapper.Map<GroupComment>(model);
 
             return result;
         }
 
-        public IEnumerable<T> FindtBoardComment<T>(Guid boardId) where T : class
+        public IEnumerable<GroupComment> FindtBoardComment(Guid boardId)
         {
             var model = _dataBase.Find<GroupCommentDB>(
                 x => x.GroupBoardId == boardId);
-            var result = _mapper.Map<IEnumerable<T>>(model);
+            if (model.FirstOrDefault() == null)
+                return null;
+
+            var result = _mapper.Map<IEnumerable<GroupComment>>(model);
 
             return result;
         }

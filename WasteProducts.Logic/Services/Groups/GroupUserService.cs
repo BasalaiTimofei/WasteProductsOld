@@ -151,7 +151,7 @@ namespace WasteProducts.Logic.Services.Groups
             var model = _dataBase.Find<GroupUserDB>(
                 x => x.UserId == userId 
                 && x.IsInvited == 0);
-            if (model == null)
+            if (model.FirstOrDefault() == null)
                 return null;
 
             var result = _mapper.Map<IEnumerable<GroupUser>>(model);
@@ -164,7 +164,7 @@ namespace WasteProducts.Logic.Services.Groups
             var model = _dataBase.Find<GroupUserDB>(
                 x => x.UserId == userId
                 && x.IsInvited == 1);
-            if (model == null)
+            if (model.FirstOrDefault() == null)
                 return null;
 
             var result = _mapper.Map<IEnumerable<GroupUser>>(model);
@@ -176,7 +176,7 @@ namespace WasteProducts.Logic.Services.Groups
         {
             var model = _dataBase.Find<GroupUserDB>(
                 x => x.GroupId == groupId);
-            if (model == null)
+            if (model.FirstOrDefault() == null)
                 return null;
 
             var result = _mapper.Map<IEnumerable<GroupUser>>(model);

@@ -152,7 +152,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             _groupService.Delete(_group);
 
             _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupDB>()), Times.Once);
-            _groupRepositoryMock.Verify(m => m.Delete(It.IsAny<GroupProductDB>()), Times.AtMostOnce);
+            _groupRepositoryMock.Verify(m => m.DeleteAll(It.IsAny<List<GroupProductDB>>()), Times.Once);
         }
         [Test]
         public void GroupService_03_Delete_02_Group_Did_Not_Created_or_User_Is_Not_Admin()
@@ -165,7 +165,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             _groupService.Delete(_group);
 
             _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupDB>()), Times.Never);
-            _groupRepositoryMock.Verify(m => m.Delete(It.IsAny<GroupProductDB>()), Times.Never);
+            _groupRepositoryMock.Verify(m => m.DeleteAll(It.IsAny<List<GroupProductDB>>()), Times.Never);
         }
 
         [Test]

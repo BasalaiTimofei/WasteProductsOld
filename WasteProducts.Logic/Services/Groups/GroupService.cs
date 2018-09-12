@@ -83,10 +83,7 @@ namespace WasteProducts.Logic.Services.Groups
                 groupBoard.IsNotDeleted = false;
                 groupBoard.Deleted = DateTime.UtcNow;
                 groupBoard.Modified = DateTime.UtcNow;
-                foreach (var groupProduct in groupBoard.GroupProducts)
-                {
-                    _dataBase.Delete(groupProduct);
-                }
+                _dataBase.DeleteAll(groupBoard.GroupProducts);
             }
             foreach (var groupUser in model.GroupUsers)
             {

@@ -28,11 +28,11 @@ namespace WasteProducts.DataAccess.Repositories.Groups
             _context.Entry(item).State = EntityState.Modified;
         }
  
-        public void Update<T>(IEnumerable<T> items) where T : class
+        public void UpdateAll<T>(IList<T> items) where T : class
         {
-            foreach (var item in items)
+            while(items.Count > 0)
             {
-                _context.Entry(item).State = EntityState.Modified;
+                _context.Entry(items[0]).State = EntityState.Modified;
             }
         }
  
@@ -46,6 +46,14 @@ namespace WasteProducts.DataAccess.Repositories.Groups
         public void Delete<T>(T item) where T : class
         {
             _context.Entry(item).State = EntityState.Deleted;
+        }
+
+        public void DeleteAll<T>(IList<T> items) where T : class
+        {
+            while (items.Count > 0)
+            {
+                _context.Entry(items[0]).State = EntityState.Deleted;
+            }
         }
 
         public T Get<T>(Guid id) where T : class
