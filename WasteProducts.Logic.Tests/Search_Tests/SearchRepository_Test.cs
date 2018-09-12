@@ -471,15 +471,19 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         {
             sut = new LuceneSearchRepository(true);
             TestContext context = new TestContext(sut);
-            ProductDB product = new ProductDB() { Id = "1", Name = "Title", Description = "Description" };
+            ProductDB product = new ProductDB() { Id = "1", Name = "Title", Description = "Description", Modified = DateTime.Now.ToUniversalTime()};
             context.Products.Add(product);
 
-            context.DetectAndSaveChanges(typeof(ProductDB));                        
+            //context.DetectAndSaveChanges(typeof(ProductDB));
+            context.SaveChanges();
 
             var productFromRepo = sut.GetById<ProductDB>("1");
 
             Assert.AreNotEqual(null, productFromRepo);
             Assert.AreEqual("1", productFromRepo.Id);
+
+            product.Name = "Modified title";
+            context.DetectAndSaveChanges(typeof(ProductDB));
         }
 
         ////not passed. Need Product mapper
