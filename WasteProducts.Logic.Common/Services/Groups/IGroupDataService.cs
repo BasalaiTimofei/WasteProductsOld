@@ -10,7 +10,7 @@ namespace WasteProducts.Logic.Common.Services
     public interface IGroupDataService
     {
         /// <summary>
-        /// Get - return one object
+        /// GetById - return one object
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="id">Primary key</param>

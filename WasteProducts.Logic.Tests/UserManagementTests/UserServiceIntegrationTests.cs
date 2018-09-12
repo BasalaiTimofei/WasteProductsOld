@@ -405,7 +405,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
             using (var prodService = _kernel.Get<IProductService>())
             {
-                prodService.AddByName(productName);
+                prodService.Add(productName);
                 var product = prodService.GetByNameAsync(productName).GetAwaiter().GetResult();
 
                 Assert.IsNotNull(product);

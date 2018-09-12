@@ -49,7 +49,7 @@ namespace WasteProducts.Logic.Services
         /// </summary>
         /// <param name="barcode">Barcode of the product to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        public bool AddByBarcode(Barcode barcode)
+        public bool Add(Barcode barcode)
         {
             if (IsProductsInDB(
                 p => string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
@@ -66,7 +66,7 @@ namespace WasteProducts.Logic.Services
         /// </summary>
         /// <param name="name">The name of the product to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        public bool AddByName(string name)
+        public bool Add(string name)
         {
             var product = new Product { Name = name };
 
@@ -88,7 +88,7 @@ namespace WasteProducts.Logic.Services
         /// </summary>
         /// <param name="barcode">The barcode of the product.</param>
         /// <returns>The product with the specific barcode.</returns>
-        public Product GetByBarcode(Barcode barcode)
+        public Product Get(Barcode barcode)
         {
             return _mapper.Map<Product>(_productRepository.SelectWhere(p =>
                     string.Equals(p.Barcode.Code, barcode.Code, StringComparison.OrdinalIgnoreCase)).First());
@@ -108,7 +108,7 @@ namespace WasteProducts.Logic.Services
         /// </summary>
         /// <param name="name">The name of the product.</param>
         /// <returns>Product with the specific name.</returns>
-        public Product GetByName(string name) =>
+        public Product Get(string name) =>
             _mapper.Map<Product>(_productRepository.SelectWhere(p =>
             string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase)).First());
 
@@ -135,7 +135,7 @@ namespace WasteProducts.Logic.Services
         /// </summary>
         /// <param name="barcode">Barcode of the product to be deleted.</param>
         /// <returns>Boolean represents whether the deletion is successful or not.</returns>
-        public bool DeleteByBarcode(Barcode barcode)
+        public bool Delete(Barcode barcode)
         {
             if (!IsProductsInDB(
                 p => string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
@@ -147,24 +147,25 @@ namespace WasteProducts.Logic.Services
             return true;
         }
 
-        //public bool Update(Product product)
-        //{
-        //    if (IsProductsInDB(p =>
-        //            string.(p.Modified.Value, product.Name, StringComparison.CurrentCultureIgnoreCase),
-        //        out var products)) return false;
+        public bool Update(Product product)
+        {
+            if (IsProductsInDB(p =>
+                    string.Equals(p.Id, product.Id, StringComparison.CurrentCultureIgnoreCase),
+                out var products)) return false;
 
-        //    product.Id = new Guid().ToString();
-        //    _productRepository.Add(_mapper.Map<ProductDB>(product));
+            var productFromDB = from prod in products.ToList()
+                                select prod;
+            _productRepository.Update(productFromDB.First());
 
-        //    return true;
-        //}
+            return true;
+        }
 
         /// <summary>
         /// Tries to delete the product by name and returns whether the deletion is successful or not.
         /// </summary>
         /// <param name="name">The name of the product to be deleted.</param>
         /// <returns>Boolean represents whether the deletion is successful or not.</returns>
-        public bool DeleteByName(string name)
+        public bool Delete(string name)
         {
             if (!IsProductsInDB(p =>
                     string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),

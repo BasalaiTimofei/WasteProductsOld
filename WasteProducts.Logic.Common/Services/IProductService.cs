@@ -23,14 +23,14 @@ namespace WasteProducts.Logic.Common.Services
         /// </summary>
         /// <param name="barcode">Barcode of the product to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        bool AddByBarcode(Barcode barcode);
+        bool Add(Barcode barcode);
 
         /// <summary>
         /// Tries to add a new product by name and returns whether the addition is successful or not.
         /// </summary>
         /// <param name="name">The name of the product to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        bool AddByName(string name);
+        bool Add(string name);
 
         /// <summary>
         /// Gets the product by its id.
@@ -44,7 +44,7 @@ namespace WasteProducts.Logic.Common.Services
         /// </summary>
         /// <param name="barcode">The barcode of the product.</param>
         /// <returns>The product with the specific barcode.</returns>
-        Product GetByBarcode(Barcode barcode);
+        Product Get(Barcode barcode);
 
         /// <summary>
         /// Gets all products.
@@ -57,7 +57,7 @@ namespace WasteProducts.Logic.Common.Services
         /// </summary>
         /// <param name="name">The name of the product.</param>
         /// <returns>Product with the specific name.</returns>
-        Product GetByName(string name);
+        Product Get(string name);
 
         /// <summary>
         /// Gets asynchronously product by its name.
@@ -78,14 +78,14 @@ namespace WasteProducts.Logic.Common.Services
         /// </summary>
         /// <param name="barcode">Barcode of the product to be deleted.</param>
         /// <returns>Boolean represents whether the deletion is successful or not.</returns>
-        bool DeleteByBarcode(Barcode barcode);
+        bool Delete(Barcode barcode);
 
         /// <summary>
         /// Tries to delete the product by name and returns whether the deletion is successful or not.
         /// </summary>
         /// <param name="name">The name of the product to be deleted.</param>
         /// <returns>Boolean represents whether the deletion is successful or not.</returns>
-        bool DeleteByName(string name);
+        bool Delete(string name);
 
         /// <summary>
         /// Tries to add the category by specific category and returns whether the addition is successful or not.
