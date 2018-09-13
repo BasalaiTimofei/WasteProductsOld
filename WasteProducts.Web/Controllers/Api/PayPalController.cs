@@ -23,6 +23,7 @@ namespace WasteProducts.Web.Controllers.Api
     public class PayPalController : BaseApiController
     {
         private readonly IDonationService _donationService;
+        private readonly NameValueCollection _appSettings = ConfigurationManager.AppSettings;
 
         /// <summary>
         /// Constructor
@@ -71,12 +72,12 @@ namespace WasteProducts.Web.Controllers.Api
         /// </summary>
         private HttpWebRequest PrepareVerificationRequest(string payPalRequestString)
         {
-            const string PAYPAL_URL = "https://www.sandbox.paypal.com/cgi-bin/webscr";
+            const string PAYPAL_URL = "PayPalUrl";
             const string VERIFICATION_PREFIX = "cmd=_notify-validate&";
             const string POST = "POST";
             const string CONTENT_TYPE = "application/x-www-form-urlencoded";
 
-            HttpWebRequest verificationRequest = (HttpWebRequest)WebRequest.Create(PAYPAL_URL);
+            HttpWebRequest verificationRequest = (HttpWebRequest)WebRequest.Create(_appSettings[PAYPAL_URL]);
 
             // Set values for the verification request
             verificationRequest.Method = POST;
@@ -113,9 +114,8 @@ namespace WasteProducts.Web.Controllers.Api
             // check that Payment_amount/Payment_currency are correct
             // process payment
             NameValueCollection payPalArguments = HttpUtility.ParseQueryString(payPalRequestString);
-            NameValueCollection appSettings = ConfigurationManager.AppSettings;
             if (payPalArguments[IPN.Payment.PAYMENT_STATUS] != COMPLETED || 
-                appSettings[EMAIL] != payPalArguments[IPN.Transaction.RECEIVER_EMAIL])
+                _appSettings[EMAIL] != payPalArguments[IPN.Transaction.RECEIVER_EMAIL])
                 return;
             Address address = new Address
             {
@@ -152,14 +152,12 @@ namespace WasteProducts.Web.Controllers.Api
             const string LOCAL_TIME_ZONE = "LocalTimeZone";
             const string PAYPAL_TIME_FORMAT = "PayPalTimeFormat";
 
-            NameValueCollection appSettings = ConfigurationManager.AppSettings;
-
-            string[] dateFormats = { appSettings[PAYPAL_TIME_FORMAT] };
+            string[] dateFormats = { _appSettings[PAYPAL_TIME_FORMAT] };
             DateTime outputDateTime;
             DateTime.TryParseExact(payPalDateTime, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out outputDateTime);
 
             // convert to local timezone
-            TimeZoneInfo hwZone = TimeZoneInfo.FindSystemTimeZoneById(appSettings[LOCAL_TIME_ZONE]);
+            TimeZoneInfo hwZone = TimeZoneInfo.FindSystemTimeZoneById(_appSettings[LOCAL_TIME_ZONE]);
 
             outputDateTime = TimeZoneInfo.ConvertTime(outputDateTime, hwZone, TimeZoneInfo.Local);
 
