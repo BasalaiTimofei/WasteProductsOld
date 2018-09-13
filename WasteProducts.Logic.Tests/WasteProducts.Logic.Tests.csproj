@@ -125,6 +125,11 @@
     <Compile Include="UserManagementTests\UserServiceIntegrationTests.cs" />
     <Compile Include="Search_Tests\SearchRepository_Test.cs" />
     <Compile Include="Search_Tests\SearchService_Test.cs" />
+    <Compile Include="Groups\GroupCommentServiceITests.cs" />
+    <Compile Include="Groups\GroupBoardServiceITests.cs" />
+    <Compile Include="Groups\GroupUserServiceITests.cs" />
+    <Compile Include="Groups\GroupProductServiceITests.cs" />
+    <Compile Include="Groups\GroupServiceITests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">

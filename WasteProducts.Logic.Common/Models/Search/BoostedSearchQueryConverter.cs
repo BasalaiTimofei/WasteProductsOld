@@ -54,6 +54,7 @@ namespace WasteProducts.Logic.Common.Models.Search
                     }
 
                     CheckForEmptyFields(result);
+                    return result;
                 }
                 else
                 {

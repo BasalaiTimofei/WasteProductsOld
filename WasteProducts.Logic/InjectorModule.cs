@@ -9,12 +9,14 @@ using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Common.Services.Diagnostic;
 using WasteProducts.Logic.Common.Services.Mail;
 using WasteProducts.Logic.Common.Services.Users;
+using WasteProducts.Logic.Common.Services.Groups;
 using WasteProducts.Logic.Interceptors;
 using WasteProducts.Logic.Mappings;
 using WasteProducts.Logic.Mappings.UserMappings;
 using WasteProducts.Logic.Services;
 using WasteProducts.Logic.Services.Mail;
 using WasteProducts.Logic.Services.Users;
+using WasteProducts.Logic.Services.Groups;
 using WasteProducts.Logic.Validators.Search;
 using System.Configuration;
 using System.Net.Mail;
@@ -85,6 +87,13 @@ namespace WasteProducts.Logic
 
             Bind<IUserService>().To<UserService>();
             Bind<IUserRoleService>().To<UserRoleService>();
+            Bind<ISearchService>().To<LuceneSearchService>();
+
+            Bind<IGroupService>().To<GroupService>();
+            Bind<IGroupBoardService>().To<GroupBoardService>();
+            Bind<IGroupProductService>().To<GroupProductService>();
+            Bind<IGroupUserService>().To<GroupUserService>();
+            Bind<IGroupCommentService>().To<GroupCommentService>();
         }
 
         private void BindMappers()
@@ -119,4 +128,3 @@ namespace WasteProducts.Logic
         }
     }
 }
-

@@ -135,6 +135,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UserResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\Groups\GroupCommentService.cs" />
+    <Compile Include="Services\Groups\GroupUserService.cs" />
+    <Compile Include="Services\Groups\GroupProductService.cs" />
+    <Compile Include="Services\Groups\GroupBoardService .cs" />
+    <Compile Include="Services\Groups\GroupService.cs" />
     <Compile Include="Services\AppRoleManagerService.cs" />
     <Compile Include="Services\AppUserManagerService.cs" />
     <Compile Include="Services\BarcodeService\BarcodeScanService.cs" />

@@ -1,13 +1,15 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Ninject;
 using Ninject.Modules;
 using WasteProducts.DataAccess.Common.Context;
 using WasteProducts.DataAccess.Common.Models.Users;
+using WasteProducts.DataAccess.Common.Repositories.Groups;
 using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Contexts;
 using WasteProducts.DataAccess.Repositories;
+using WasteProducts.DataAccess.Repositories.Groups;
 using WasteProducts.DataAccess.Repositories.UserManagement;
 
 namespace WasteProducts.DataAccess
@@ -31,6 +33,8 @@ namespace WasteProducts.DataAccess
             Bind<ICategoryRepository>().To<CategoryRepository>();
 
             Bind<ISearchRepository>().To<LuceneSearchRepository>().InSingletonScope();
+
+            Bind<IGroupRepository>().To<GroupRepository>();
 
             Bind<IMapper>().ToMethod(ctx =>
             {
