@@ -16,21 +16,21 @@ namespace WasteProducts.Logic.Common.Services.Products
         /// </summary>
         /// <param name="product">The product to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        bool Add(Product product);
+        bool Add(Product product, out Product addedProduct);
 
         /// <summary>
         /// Tries to add a new product by barcode and returns whether the addition is successful or not.
         /// </summary>
         /// <param name="barcode">Barcode of the product to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        bool Add(Barcode barcode);
+        bool Add(Barcode barcode, out Product addedProduct);
 
         /// <summary>
         /// Tries to add a new product by name and returns whether the addition is successful or not.
         /// </summary>
         /// <param name="name">The name of the product to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        bool Add(string name);
+        bool Add(string name, out Product addedProduct);
 
         /// <summary>
         /// Gets the product by its id.

@@ -96,7 +96,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                var result = productService.Add(product);
+                var result = productService.Add(product, out var addedProduct);
 
                 Assert.That(result, Is.EqualTo(true));
             }
@@ -111,7 +111,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                var result = productService.Add(product);
+                var result = productService.Add(product, out var addedProduct);
 
                 Assert.That(result, Is.EqualTo(false));
             }
@@ -125,7 +125,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                Assert.Throws<NullReferenceException>(() => productService.Add((Product)null));
+                Assert.Throws<NullReferenceException>(() => productService.Add((Product)null, out var addedProduct));
             }
         }
 
@@ -137,7 +137,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                productService.Add(product);
+                productService.Add(product, out var addedProduct);
 
                 mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Once);
             }
@@ -152,7 +152,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                productService.Add(product);
+                productService.Add(product, out var addedProduct);
 
                 mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Never);
             }
@@ -166,7 +166,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                Assert.Throws<NullReferenceException>(() => productService.Add((Product)null));
+                Assert.Throws<NullReferenceException>(() => productService.Add((Product)null, out var addedProduct));
                 mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Never);
             }
         }
@@ -179,7 +179,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                var result = productService.Add(barcode);
+                var result = productService.Add(barcode, out var addedProduct);
 
                 Assert.That(result, Is.EqualTo(true));
             }
@@ -194,7 +194,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                var result = productService.Add(barcode);
+                var result = productService.Add(barcode, out var addedProduct);
 
                 Assert.That(result, Is.EqualTo(false));
             }
@@ -205,7 +205,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         {
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                var isSuccess = productService.Add(barcode);
+                var isSuccess = productService.Add(barcode, out var addedProduct);
 
                 isSuccess.Should().BeTrue().And.Should().NotBe(null);
             }
@@ -219,7 +219,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                productService.Add(barcode);
+                productService.Add(barcode, out var addedProduct);
 
                 mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Once);
             }
@@ -234,7 +234,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                productService.Add(barcode);
+                productService.Add(barcode, out var addedProduct);
 
                 mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Never);
             }
@@ -248,7 +248,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                var result = productService.Add(productName);
+                var result = productService.Add(productName, out var addedProduct);
 
                 Assert.That(result, Is.EqualTo(true));
             }
@@ -263,7 +263,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                var result = productService.Add(It.IsAny<string>());
+                var result = productService.Add(It.IsAny<string>(), out var addedProduct);
 
                 Assert.That(result, Is.EqualTo(false));
             }
@@ -274,7 +274,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         {
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                productService.Add((string)null);
+                productService.Add((string)null, out var addedProduct);
                 mockProductRepository.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<ProductDB>>()))
                     .Returns(selectedList);
 
@@ -290,7 +290,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                productService.Add(productName);
+                productService.Add(productName, out var addedProduct);
 
                 mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Once);
             }
@@ -305,7 +305,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             using (var productService = new ProductService(mockProductRepository.Object, mapper))
             {
-                productService.Add(It.IsAny<string>());
+                productService.Add(It.IsAny<string>(), out var addedProduct);
 
                 mockProductRepository.Verify(m => m.Add(It.IsAny<ProductDB>()), Times.Never);
             }

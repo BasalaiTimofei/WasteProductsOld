@@ -31,15 +31,20 @@ namespace WasteProducts.Logic.Services.Products
         /// </summary>
         /// <param name="product">The product to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        public bool Add(Product product)
+        public bool Add(Product product, out Product addedProduct)
         {
             if (IsProductsInDB(p =>
                     string.Equals(p.Name, product.Name, StringComparison.CurrentCultureIgnoreCase),
-                out var products)) return false;
+                out var products))
+            {
+                addedProduct = null;
+                return false;
+            }
 
             product.Id = new Guid().ToString();
             _productRepository.Add(_mapper.Map<ProductDB>(product));
 
+            addedProduct = product;
             return true;
         }
 
@@ -48,16 +53,21 @@ namespace WasteProducts.Logic.Services.Products
         /// </summary>
         /// <param name="barcode">Barcode of the product to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        public bool Add(Barcode barcode)
+        public bool Add(Barcode barcode, out Product addedProduct)
         {
             if (IsProductsInDB(
                 p => string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
-                out var products)) return false;
+                out var products))
+            {
+                addedProduct= null;
+                return false;
+            }
 
             var newProduct = new Product { Id = Guid.NewGuid()
                 .ToString(), Barcode = barcode, Name = barcode.ProductName };
             _productRepository.Add(_mapper.Map<ProductDB>(newProduct));
 
+            addedProduct = newProduct;
             return true;
         }
 
@@ -66,11 +76,11 @@ namespace WasteProducts.Logic.Services.Products
         /// </summary>
         /// <param name="name">The name of the product to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        public bool Add(string name)
+        public bool Add(string name, out Product addedProduct)
         {
             var product = new Product { Name = name };
 
-            return Add(product);
+            return Add(product, out addedProduct);
         }
 
         /// <summary>
