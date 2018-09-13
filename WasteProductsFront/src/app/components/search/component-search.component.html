@@ -6,3 +6,17 @@
       </div>
   </div>
 </div>
+
+<div id="search-component">
+  <div id="search-3">
+    <input class="search-3" #query type="text" placeholder="Искать здесь...">
+    <button class="search-3" type="submit" (click)="search(query.value)">ssss</button>
+  </div>
+</div>
+
+<mat-form-field>
+  <input #query matInput type="text" placeholder="Clearable input">
+  <button mat-button *ngIf="query" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-form-field>

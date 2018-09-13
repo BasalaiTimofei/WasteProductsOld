@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+
 @Component({
   selector: 'app-component-search',
   templateUrl: './component-search.component.html',
@@ -15,6 +16,7 @@ export class SearchComponent implements OnInit {
   showError = false;
   errorMessage: string;
   searchResult: SearchProduct[] = [];
+  // https://material.angular.io/components/form-field/overview
 
   @Output() messageEvent = new EventEmitter<SearchProduct[]>();
 

@@ -5,6 +5,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { SearchComponent } from './components/search/component-search.component';
 import { SearchresultComponent } from './components/searchresult/component-searchresult.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule, MatIcon } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -14,7 +16,9 @@ import { SearchresultComponent } from './components/searchresult/component-searc
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    MatFormFieldModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]
