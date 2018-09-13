@@ -58,7 +58,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <returns>Product collection of the specific category.</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "GetByCategory products result", typeof(IEnumerable<Product>))]
-        [SwaggerResponse(HttpStatusCode.NotFound, "Products with the specified category were not found in the database")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Products with specified category were not found in the database")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect category")]
         [HttpGet, Route("get")]
         public IHttpActionResult GetProducts([FromBody]Category category)
@@ -78,11 +78,38 @@ namespace WasteProducts.Web.Controllers.Api
         /// <summary>
         /// Tries to add a new product by name and returns whether the addition is successful or not.
         /// </summary>
-        /// <param name="name">The name of the product to be added.</param>
-        /// <returns>Represents whether the addition is successful or not.</returns>
+        /// <param name="product">The product to be added.</param>
+        /// <returns>Represents added product.</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.Created, "Product was successfully added", typeof(Product))]
-        [SwaggerResponse(HttpStatusCode.Forbidden, "Products with the specified name already exists")]
+        [SwaggerResponse(HttpStatusCode.Forbidden, "Products with specified properties already exists")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect product")]
+        [HttpPost, Route("add-product")]
+        public IHttpActionResult AddProduct([FromBody]Product product)
+        {
+            if (product == null) 
+            {
+                return BadRequest();
+            }
+
+            if (_productService.Add((product), out var addedProduct))
+            {
+                return Content(HttpStatusCode.Created, addedProduct);
+            }
+            else
+            {
+                return Content(HttpStatusCode.Forbidden, "Products with specified properties already exists");
+            }
+        }
+
+        /// <summary>
+        /// Tries to add a new product by name and returns whether the addition is successful or not.
+        /// </summary>
+        /// <param name="name">The name of the product to be added.</param>
+        /// <returns>Represents added product.</returns>
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.Created, "Product was successfully added", typeof(Product))]
+        [SwaggerResponse(HttpStatusCode.Forbidden, "Products with specified name already exists")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect name")]
         [HttpPost, Route("add-product")]
         public IHttpActionResult AddProduct([FromBody]string name)
@@ -98,7 +125,7 @@ namespace WasteProducts.Web.Controllers.Api
             }
             else
             {
-                return Content(HttpStatusCode.Forbidden, "Products with the specified name already exists");
+                return Content(HttpStatusCode.Forbidden, "Products with specified name already exists");
             }
         }
 
@@ -106,10 +133,10 @@ namespace WasteProducts.Web.Controllers.Api
         /// Tries to add a new product by barcode and returns whether the addition is successful or not.
         /// </summary>
         /// <param name="barcode">Barcode of the product to be added.</param>
-        /// <returns>Boolean represents whether the addition is successful or not.</returns>
+        /// <returns>Represents added product.</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.Created, "Product was successfully added", typeof(Product))]
-        [SwaggerResponse(HttpStatusCode.Forbidden, "Products with the specified barcode already exists")]
+        [SwaggerResponse(HttpStatusCode.Forbidden, "Products with specified barcode already exists")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect barcode")]
         [HttpPost, Route("add-product")]
         public IHttpActionResult AddProduct([FromBody]Barcode barcode)
@@ -133,7 +160,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <returns>Represents whether the deletion is successful or not.</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Product was successfully deleted")]
-        [SwaggerResponse(HttpStatusCode.NotFound, "Product with the specified name not found in the database")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Product with specified name not found in the database")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect name")]
         [HttpDelete, Route("delete-product")]
         public IHttpActionResult DeleteProduct([FromBody]string name)
@@ -160,7 +187,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <returns>Represents whether the deletion is successful or not.</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Product was successfully deleted")]
-        [SwaggerResponse(HttpStatusCode.NotFound, "Product with the specified barcode not found in the database")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Product with specified barcode not found in the database")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect barcode")]
         [HttpDelete, Route("delete-product")]
         public IHttpActionResult DeleteProduct([FromBody]Barcode barcode)
