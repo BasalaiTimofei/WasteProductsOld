@@ -160,11 +160,21 @@
     <Compile Include="Mappings\Groups\GroupProfile.cs" />
     <Compile Include="Mappings\Groups\GroupCommentProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\SearchService.Designer.cs">
+    <Compile Include="Resources\DbServiceResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>SearchService.resx</DependentUpon>
+      <DependentUpon>DbServiceResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources\SearchServiceResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SearchServiceResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Services\Groups\GroupCommentService.cs" />
+    <Compile Include="Services\Groups\GroupUserService.cs" />
+    <Compile Include="Services\Groups\GroupProductService.cs" />
+    <Compile Include="Services\Groups\GroupBoardService .cs" />
+    <Compile Include="Services\Groups\GroupService.cs" />
     <Compile Include="Services\AppRoleManagerService.cs" />
     <Compile Include="Services\AppUserManagerService.cs" />
     <Compile Include="Services\BarcodeService\BarcodeScanService.cs" />
@@ -209,9 +219,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\SearchService.resx">
+    <EmbeddedResource Include="Resources\DbServiceResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SearchService.Designer.cs</LastGenOutput>
+      <LastGenOutput>DbServiceResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\SearchServiceResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SearchServiceResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

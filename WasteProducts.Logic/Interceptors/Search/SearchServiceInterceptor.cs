@@ -3,6 +3,7 @@ using System.Linq;
 using FluentValidation;
 using Ninject.Extensions.Interception;
 using WasteProducts.Logic.Common.Models.Search;
+using WasteProducts.Logic.Resources;
 
 namespace WasteProducts.Logic.Interceptors
 {
@@ -45,7 +46,7 @@ namespace WasteProducts.Logic.Interceptors
             }
             else
             {
-                throw new ValidationException(Resources.SearchService.IncorrectQueryStr);
+                throw new ValidationException(SearchServiceResources.IncorrectQueryStr);
             }
         }
     }

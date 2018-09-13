@@ -9,6 +9,8 @@ namespace WasteProducts.Logic.Mappings.Products
         public CategoryProfile()
         {
             CreateMap<Category, CategoryDB>()
+                .ForMember(c => c.Id, opt => opt.Ignore())
+                .ForMember(c => c.Marked, opt => opt.Ignore())
                 .ReverseMap();
         }
     }

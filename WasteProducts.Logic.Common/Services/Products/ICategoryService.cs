@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using WasteProducts.Logic.Common.Models.Products;
 
 namespace WasteProducts.Logic.Common.Services.Products
@@ -6,7 +7,7 @@ namespace WasteProducts.Logic.Common.Services.Products
     /// <summary>
     /// This interface provides category methods.
     /// </summary>
-    public interface ICategoryService
+    public interface ICategoryService : IDisposable
     {
         /// <summary>
         /// Tries to add a new category by name and returns whether the addition is successful or not.

@@ -1,19 +1,23 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using FluentValidation;
 using Ninject.Extensions.Factory;
 using Ninject.Extensions.Interception.Infrastructure.Language;
 using Ninject.Modules;
+using System;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.Logic.Common.Factories;
-using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Common.Models.Products;
+using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Common.Services.Diagnostic;
+using WasteProducts.Logic.Common.Services.Groups;
 using WasteProducts.Logic.Common.Services.MailService;
 using WasteProducts.Logic.Common.Services.Products;
 using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.Logic.Interceptors;
+using WasteProducts.Logic.Mappings;
+using WasteProducts.Logic.Mappings.UserMappings;
 using WasteProducts.Logic.Services;
+using WasteProducts.Logic.Services.Groups;
 using WasteProducts.Logic.Services.MailService;
 using WasteProducts.Logic.Services.Products;
 using WasteProducts.Logic.Services.UserService;
@@ -21,6 +25,7 @@ using WasteProducts.Logic.Mappings;
 using WasteProducts.Logic.Mappings.Products;
 using WasteProducts.Logic.Mappings.UserMappings;
 using WasteProducts.Logic.Validators.Search;
+using ProductProfile = WasteProducts.Logic.Mappings.ProductProfile;
 
 namespace WasteProducts.Logic
 {
@@ -29,7 +34,9 @@ namespace WasteProducts.Logic
         public override void Load()
         {
             if (Kernel is null)
+            {
                 return;
+            }
 
             BindMappers();
 
@@ -46,6 +53,7 @@ namespace WasteProducts.Logic
             Bind<ISearchService>().To<LuceneSearchService>().Intercept().With<SearchServiceInterceptor>();
 
             Bind<IProductService>().To<ProductService>();
+            Bind<ICategoryService>().To<CategoryService>();
         }
 
         private void BindDatabaseServices()
@@ -57,11 +65,17 @@ namespace WasteProducts.Logic
 
         private void BindUserServices()
         {
-            //Bind<IMailService>().To<MailService>(); //TODO: тут сергей, выбирай сам
             Bind<IMailService>().ToMethod(ctx => new MailService(null, "somevalidemail@mail.ru", null));
 
             Bind<IUserService>().To<UserService>();
             Bind<IUserRoleService>().To<UserRoleService>();
+            Bind<ISearchService>().To<LuceneSearchService>();
+
+            Bind<IGroupService>().To<GroupService>();
+            Bind<IGroupBoardService>().To<GroupBoardService>();
+            Bind<IGroupProductService>().To<GroupProductService>();
+            Bind<IGroupUserService>().To<GroupUserService>();
+            Bind<IGroupCommentService>().To<GroupCommentService>();
         }
 
         private void BindMappers()
@@ -95,7 +109,13 @@ namespace WasteProducts.Logic
                         .ReverseMap();
                     cfg.AddProfile<CategoryProfile>();
                 }))).WhenInjectedExactlyInto<ProductService>();
+
+            Bind<IMapper>().ToMethod(ctx =>
+                new Mapper(new MapperConfiguration(cfg =>
+                {
+                    cfg.AddProfile<ProductProfile>();
+                    cfg.AddProfile<CategoryProfile>();
+                }))).WhenInjectedExactlyInto<CategoryService>();
         }
     }
 }
-

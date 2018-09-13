@@ -47,13 +47,15 @@ namespace WasteProducts.Logic.Tests.Diagnostic_Tests
             _databaseMoq.SetupGet(database => database.IsExists).Returns(databaseIsExists);
             _databaseMoq.SetupGet(database => database.IsCompatibleWithModel).Returns(databaseIsCompatibleWithModel);
 
-            var expectedResult = new DatabaseStatus(databaseIsExists, databaseIsCompatibleWithModel);
+            var expectedResult = new DatabaseState(databaseIsExists, databaseIsCompatibleWithModel);
 
             //action
-            var actualResult = dbManagementService.GetStatus();
+            var actualResult = dbManagementService.GetStateAsync().Result;
 
             // assert
-            Assert.AreEqual(expectedResult, actualResult, IncorrectMethodWorkMsg);
+            Assert.AreEqual(expectedResult.IsExist, actualResult.IsExist, IncorrectMethodWorkMsg);
+            Assert.AreEqual(expectedResult.IsCompatibleWithModel, actualResult.IsCompatibleWithModel, IncorrectMethodWorkMsg);
+
             _databaseMoq.VerifyGet(database => database.IsExists, Times.Once);
 
             if (databaseIsExists)
@@ -65,54 +67,24 @@ namespace WasteProducts.Logic.Tests.Diagnostic_Tests
             }
             else
                 _databaseMoq.VerifyGet(database => database.IsCompatibleWithModel, Times.Never);
-
-            _loggerMoq.Verify(logger => logger.Debug(It.IsAny<string>()), Times.Once);
         }
 
         [Test]
-        public void Delete_Returns_False_When_Database_DoNotExist()
+        public async Task DeleteAsync_Test()
         {
             // arrange
             var dbManagementService = GetDbService();
 
-            _databaseMoq.SetupGet(database => database.IsExists).Returns(false);
-
             // action
-            var actualResult = dbManagementService.Delete();
+            await dbManagementService.DeleteAsync().ConfigureAwait(false);
 
             // assert
-            Assert.IsFalse(actualResult, IncorrectMethodWorkMsg);
-
-            _databaseMoq.VerifyGet(database => database.IsExists, Times.Once);
-            _databaseMoq.Verify(database => database.Delete(), Times.Never);
-
-            _loggerMoq.Verify(logger => logger.Debug(It.IsAny<string>()), Times.Once);
-        }
-
-        [Test]
-        public void Delete_Returns_True_When_Database_IsExist()
-        {
-            // arrange
-            var dbManagementService = GetDbService();
-
-            _databaseMoq.SetupGet(database => database.IsExists).Returns(true);
-            _databaseMoq.Setup(database => database.Delete()).Returns(true);
-
-            // action
-            var actualResult = dbManagementService.Delete();
-
-            // assert
-            Assert.IsTrue(actualResult, IncorrectMethodWorkMsg);
-
-            _databaseMoq.VerifyGet(database => database.IsExists, Times.Once);
             _databaseMoq.Verify(database => database.Delete(), Times.Once);
-
-            _loggerMoq.Verify(logger => logger.Debug(It.IsAny<string>()), Times.Once);
         }
 
         [TestCase(false)]
         [TestCase(true)]
-        public async Task CreateAndSeedAsync_Returns_True_When_Database_DoNotExist(bool seedTestData)
+        public async Task ReCreateAsync_Test(bool seedTestData)
         {
             // arrange
             var dbManagementService = GetDbService();
@@ -120,46 +92,17 @@ namespace WasteProducts.Logic.Tests.Diagnostic_Tests
             _databaseMoq.SetupGet(database => database.IsExists).Returns(false);
 
             // action
-            var actualResult = await dbManagementService.CreateAndSeedAsync(seedTestData);
+           await dbManagementService.ReCreateAsync(seedTestData).ConfigureAwait(false);
 
             // assert
-            Assert.IsTrue(actualResult, IncorrectMethodWorkMsg);
-
-            _databaseMoq.VerifyGet(database => database.IsExists, Times.Once);
-
+            _databaseMoq.Verify(database => database.Delete(), Times.Once);
             _dbSeedServiceMoq.Verify(seedService => seedService.SeedBaseDataAsync(), Times.Once);
 
             if (seedTestData)
                 _dbSeedServiceMoq.Verify(seedService => seedService.SeedTestDataAsync(), Times.Once);
             else
                 _dbSeedServiceMoq.Verify(seedService => seedService.SeedTestDataAsync(), Times.Never);
-
-            _loggerMoq.Verify(logger => logger.Debug(It.IsAny<string>()), Times.Once);
         }
-
-
-        [TestCase(false)]
-        [TestCase(true)]
-        public async Task CreateAndSeedAsync_Returns_False_When_Database_IsExist(bool seedTestData)
-        {
-            // arrange
-            var dbManagementService = GetDbService();
-
-            _databaseMoq.SetupGet(database => database.IsExists).Returns(true);
-
-            // action
-            var actualResult = await dbManagementService.CreateAndSeedAsync(seedTestData);
-
-            // assert
-            Assert.IsFalse(actualResult, IncorrectMethodWorkMsg);
-            _databaseMoq.VerifyGet(database => database.IsExists, Times.Once);
-
-            _dbSeedServiceMoq.Verify(seedService => seedService.SeedBaseDataAsync(), Times.Never);
-            _dbSeedServiceMoq.Verify(seedService => seedService.SeedTestDataAsync(), Times.Never);
-
-            _loggerMoq.Verify(logger => logger.Debug(It.IsAny<string>()), Times.Once);
-        }
-
 
         IDbService GetDbService() => new DbService(_dbSeedServiceMoq.Object, _databaseMoq.Object, _loggerMoq.Object);
     }
