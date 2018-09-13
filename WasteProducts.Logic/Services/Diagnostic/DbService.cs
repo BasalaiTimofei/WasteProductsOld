@@ -43,7 +43,7 @@ namespace WasteProducts.Logic.Services
 
             return new DatabaseState(isExist, isCompatibleWithModel);
         }
-
+        
         /// <inheritdoc />
         public Task DeleteAsync()
         {

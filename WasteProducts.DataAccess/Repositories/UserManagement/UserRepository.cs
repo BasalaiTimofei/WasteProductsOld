@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -9,7 +9,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Users;
-using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Contexts;
 
@@ -23,9 +22,11 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         private readonly UserManager<UserDB> _manager;
 
+        private readonly IMapper _mapper;
+
         private bool _disposed;
 
-        public UserRepository(WasteContext context)
+        public UserRepository(WasteContext context, IMapper mapper)
         {
             _context = context;
             _store = new UserStore<UserDB>(_context)
@@ -33,11 +34,9 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
                 DisposeContext = true
             };
             _manager = new UserManager<UserDB>(_store);
-        }
 
-        ~UserRepository()
-        {
-            Dispose();
+            _mapper = mapper;
+
         }
 
         public void Dispose()
@@ -55,14 +54,80 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         /// </summary>
         public void RecreateTestDatabase()
         {
-                _context.Database.Delete();
-                _context.Database.CreateIfNotExists();
+            _context.Database.Delete();
+            _context.Database.CreateIfNotExists();
         }
 
-        public async Task AddAsync(UserDB user, string password)
+        public async Task<(string id, string token)> AddAsync(string email, string userName, string password)
         {
-            user.Created = DateTime.UtcNow;
-            await _manager.CreateAsync(user, password);
+            return await Task.Run(() =>
+            {
+                string id = Guid.NewGuid().ToString();
+
+                var user = new UserDB
+                {
+                    Id = id,
+                    Email = email,
+                    UserName = userName,
+                    Created = DateTime.UtcNow
+                };
+                _manager.Create(user, password);
+                if (_manager.FindById(id) != null)
+                {
+                    _manager.UserTokenProvider = new EmailTokenProvider<UserDB>();
+                    return (id, _manager.GenerateEmailConfirmationToken(id));
+                }
+                else
+                {
+                    return (null, null);
+                }
+            });
+        }
+
+        public async Task<bool> ConfirmEmailAsync(string userId, string token)
+        {
+            _manager.UserTokenProvider = new EmailTokenProvider<UserDB>();
+            await _manager.ConfirmEmailAsync(userId, token);
+            if (await _manager.IsEmailConfirmedAsync(userId))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public async Task<(string id, string token)> GeneratePasswordResetTokenAsync(string email)
+        {
+            var user = _manager.FindByEmail(email);
+            _manager.UserTokenProvider = new TotpSecurityStampBasedTokenProvider<UserDB, string>();
+            var token = await _manager.GeneratePasswordResetTokenAsync(user.Id);
+            return (user.Id, token);
+        }
+
+        public async Task<bool> ResetPasswordAsync(string userId, string token, string newPassword)
+        {
+            var result = await _manager.ResetPasswordAsync(userId, token, newPassword);
+            return result.Succeeded;
+        }
+
+        public async Task<UserDAL> FindByNameAndPasswordAsync(string userName, string password)
+        {
+            return MapTo<UserDAL>(await _manager.FindAsync(userName, password));
+        }
+
+        public async Task<UserDAL> FindByEmailAndPasswordAsync(string email, string password)
+        {
+            var user = await _manager.FindByEmailAsync(email);
+            if (user != null && await _manager.CheckPasswordAsync(user, password))
+            {
+                return MapTo<UserDAL>(user);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task<bool> IsEmailAvailableAsync(string email)
@@ -84,81 +149,6 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         public async Task AddToRoleAsync(string userId, string roleName)
         {
             await _manager.AddToRoleAsync(userId, roleName);
-        }
-
-        public async Task AddFriendAsync(string userId, string friendId)
-        {
-            UserDB user = _context.Users.Include(p => p.Friends).FirstOrDefault(u => u.Id == userId);
-            UserDB friend = _context.Users.FirstOrDefault(u => u.Id == friendId);
-
-            if(user != null && friend != null)
-            {
-                user.Friends.Add(friend);
-                user.Modified = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        public async Task DeleteFriendAsync(string userId, string deletingFriendId)
-        {
-            UserDB user = _context.Users.Include(p => p.Friends).FirstOrDefault(u => u.Id == userId);
-            UserDB friend = _context.Users.FirstOrDefault(u => u.Id == deletingFriendId);
-
-            if (user != null && friend != null)
-            {
-                user.Friends.Remove(friend);
-                user.Modified = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        public async Task<bool> AddProductAsync(string userId, string productId, int rating, string description)
-        {
-            return await Task.Run(() =>
-            {
-                UserDB user = null;
-                ProductDB product = null;
-                try
-                {
-                    user = _context.Users.Include(u => u.ProductDescriptions).First(u => u.Id == userId);
-                    product = _context.Products.FirstOrDefault(p => p.Id == productId);
-                }
-                catch (InvalidOperationException)
-                {
-                    return false;
-                }
-                var userProdDescr = new UserProductDescriptionDB()
-                {
-                    User = user,
-                    Product = product,
-                    Rating = rating,
-                    Description = description,
-                    Created = DateTime.UtcNow
-                };
-                _context.UserProductDescriptions.Add(userProdDescr);
-                _context.SaveChanges();
-                return true;
-            });
-        }
-
-        public async Task<bool> DeleteProductAsync(string userId, string productId)
-        {
-            return await Task.Run(() =>
-            {
-                UserProductDescriptionDB description = null;
-                try
-                {
-                    description = _context.UserProductDescriptions.First(d => d.User.Id == userId && d.Product.Id == productId);
-                }
-                catch (InvalidOperationException)
-                {
-                    return false;
-                }
-                var entry = _context.Entry(description);
-                entry.State = EntityState.Deleted;
-                _context.SaveChanges();
-                return true;
-            });
         }
 
         public async Task DeleteAsync(string userId)
@@ -183,85 +173,78 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             await _manager.RemoveLoginAsync(userId, userLoginInfo);
         }
 
-        public UserDB Select(string email, string password, bool lazyInitiation = true)
+        public async Task<IEnumerable<UserDAL>> GetAllAsync(bool initiateNavigationalProps)
         {
-            return (Select(user => user.Email == email && user.PasswordHash == password, lazyInitiation, getRoles: false)).user;
-        }
-
-        public UserDB Select(string email, bool lazyInitiation = true)
-        {
-            return (Select(user => user.Email == email, lazyInitiation, getRoles: false)).user;
-        }
-
-        public UserDB Select(Func<UserDB, bool> predicate, bool lazyInitiation = true)
-        {
-            return (Select(predicate, lazyInitiation, getRoles: false)).user;
-        }
-
-        public (UserDB, IList<string>) Select(string email, string password)
-        {
-            _context.Configuration.LazyLoadingEnabled = false;
-
-            var user = _context.Users.Include(u => u.Roles).
-                    Include(u => u.Claims).
-                    Include(u => u.Logins).
-                    Include(u => u.Friends).
-                    Include(u => u.ProductDescriptions).
-                    FirstOrDefault(u => u.Email == email);
-
-            if (user != null && _manager.CheckPassword(user, password))
+            return await Task.Run(() =>
             {
-                var roles = _manager.GetRoles(user.Id);
-                return (user, roles);
-            }
-            else
+                if (initiateNavigationalProps)
+                {
+                    return _mapper.Map<IEnumerable<UserDAL>>(_context.Users.ToList());
+                }
+                else
+                {
+                    var subresult = _context.Users.Include(u => u.Roles).
+                        Include(u => u.Claims).
+                        Include(u => u.Logins).
+                        Include(u => u.Friends).
+                        Include(u => u.ProductDescriptions.Select(p => p.Product)).ToList();
+
+                    return _mapper.Map<IEnumerable<UserDAL>>(subresult);
+                }
+            });
+        }
+
+        public async Task<UserDAL> GetAsync(string id, bool initiateNavigationalProps)
+        {
+            return await Task.Run(() =>
             {
-                return (null, null);
-            }
+                if (initiateNavigationalProps)
+                {
+                    var subresult = _context.Users.FirstOrDefault(u => u.Id == id);
+                    return MapTo<UserDAL>(subresult);
+                }
+                else
+                {
+                    var subresult = _context.Users.Include(u => u.Roles).
+                        Include(u => u.Claims).
+                        Include(u => u.Logins).
+                        Include(u => u.Friends).
+                        Include(u => u.ProductDescriptions.Select(p => p.Product))
+                        .FirstOrDefault(u => u.Id == id);
+
+                    return MapTo<UserDAL>(subresult);
+                }
+            });
         }
 
-        public (UserDB user, IList<string> roles) SelectWithRoles(Func<UserDB, bool> predicate, bool lazyInitiation = true)
+        public async Task<IList<string>> GetRolesAsync(string userId)
         {
-            return Select(predicate, lazyInitiation, getRoles: true);
+            return await _manager.GetRolesAsync(userId);
         }
 
-        //todo fix method
-        public List<UserDB> SelectAll()
+        public async Task<IList<Claim>> GetClaimsAsync(string userId)
         {
-            return _context.Users.ToList();
+            return await _manager.GetClaimsAsync(userId);
         }
 
-        public IEnumerable<UserDB> SelectRange(Func<UserDB, bool> predicate, bool lazyInitiation = true)
+        public async Task<IList<UserLoginDB>> GetLoginsAsync(string userId)
         {
-            if (lazyInitiation)
+            var logins = await _manager.GetLoginsAsync(userId);
+            IList<UserLoginDB> result = new List<UserLoginDB>(logins.Count);
+
+            foreach (var login in logins)
             {
-                return _context.Users.Where(predicate);
+                result.Add(new UserLoginDB { LoginProvider = login.LoginProvider, ProviderKey = login.ProviderKey });
             }
-            else
-            {
-                _context.Configuration.LazyLoadingEnabled = false;
-
-                // TODO expand with publicGroups when it awailable
-                return _context.Users.Include(u => u.Roles).
-                    Include(u => u.Claims).
-                    Include(u => u.Logins).
-                    Include(u => u.Friends).
-                    Include(u => u.ProductDescriptions).
-                    Where(predicate);
-            }
+            return result;
         }
 
-        public async Task<IList<string>> GetRolesAsync(UserDB user)
+        public async Task ChangePasswordAsync(string userId, string newPassword, string oldPassword)
         {
-            return await _store.GetRolesAsync(user);
+            await _manager.ChangePasswordAsync(userId, oldPassword, newPassword);
         }
 
-        public async Task ResetPasswordAsync(UserDB user, string newPassword, string oldPassword)
-        {
-            await _manager.ChangePasswordAsync(user.Id, oldPassword, newPassword);
-        }
-
-        public async Task UpdateAsync(UserDB user)
+        public async Task UpdateAsync(UserDAL user)
         {
             var userInDB = _context.Users.FirstOrDefault(u => u.Id == user.Id);
 
@@ -293,48 +276,142 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             return false;
         }
 
-        public async Task<bool> UpdateUserNameAsync(UserDB user, string newUserName)
+        public async Task<bool> UpdateUserNameAsync(string userId, string newUserName)
         {
             bool userNameAvailable = !(await _context.Users.AnyAsync(u => u.UserName == newUserName));
+
             if (userNameAvailable)
             {
+                var user = _manager.FindById(userId);
+
                 user.Modified = DateTime.UtcNow;
-                _context.Users.Attach(user);
+                user.UserName = newUserName;
+
                 var entry = _context.Entry(user);
+
+                entry.State = EntityState.Unchanged;
                 entry.Property(u => u.UserName).IsModified = true;
+                entry.Property(u => u.Modified).IsModified = true;
+
                 await _context.SaveChangesAsync();
             }
             return userNameAvailable;
         }
 
-        private (UserDB user, IList<string> roles) Select(Func<UserDB, bool> predicate, bool lazyInitiation, bool getRoles)
+        // Business logic below
+        public async Task AddFriendAsync(string userId, string friendId)
         {
-            (UserDB user, IList<string> roles) result = (null, null);
-            if (lazyInitiation)
+            await Task.Run(() =>
             {
-                result.user = _context.Users.FirstOrDefault(predicate);
-            }
-            else
-            {
-                _context.Configuration.LazyLoadingEnabled = lazyInitiation;
+                UserDB user = _context.Users.Include(p => p.Friends).FirstOrDefault(u => u.Id == userId);
+                UserDB friend = _context.Users.FirstOrDefault(u => u.Id == friendId);
 
-                result.user = _context.Users.Include(u => u.Roles).
-                    Include(u => u.Claims).
-                    Include(u => u.Logins).
-                    Include(u => u.Friends).
-                    Include(u => u.ProductDescriptions.Select(p => p.Product)).
-                    FirstOrDefault(predicate);
-            }
-
-            if (getRoles)
-            {
-                using (var userStore = new UserStore<UserDB>(_context))
+                if (user != null && friend != null)
                 {
-                    result.roles = userStore.GetRolesAsync(result.user).GetAwaiter().GetResult();
+                    user.Friends.Add(friend);
+                    user.Modified = DateTime.UtcNow;
+                    _context.SaveChanges();
                 }
-            }
+            });
+        }
 
-            return result;
+        public async Task DeleteFriendAsync(string userId, string deletingFriendId)
+        {
+            await Task.Run(() =>
+            {
+                UserDB user = _context.Users.Include(p => p.Friends).FirstOrDefault(u => u.Id == userId);
+                UserDB friend = _context.Users.FirstOrDefault(u => u.Id == deletingFriendId);
+
+                if (user != null && friend != null)
+                {
+                    user.Friends.Remove(friend);
+                    user.Modified = DateTime.UtcNow;
+                    _context.SaveChanges();
+                }
+            });
+        }
+
+        public async Task<bool> AddProductAsync(string userId, string productId, int rating, string description)
+        {
+            return await Task.Run(() =>
+            {
+                UserDB user = null;
+                ProductDB product = null;
+                try
+                {
+                    user = _context.Users.Include(u => u.ProductDescriptions).First(u => u.Id == userId);
+                    product = _context.Products.FirstOrDefault(p => p.Id == productId);
+                }
+                catch (InvalidOperationException)
+                {
+                    return false;
+                }
+                var userProdDescr = new UserProductDescriptionDB()
+                {
+                    User = user,
+                    Product = product,
+                    Rating = rating,
+                    Description = description,
+                    Created = DateTime.UtcNow
+                };
+                _context.UserProductDescriptions.Add(userProdDescr);
+                _context.SaveChanges();
+                return true;
+            });
+        }
+
+        public async Task<bool> UpdateProductDescriptionAsync(string userId, string productId, int rating, string description)
+        {
+            return await Task.Run(() =>
+            {
+                UserProductDescriptionDB descr = _context.UserProductDescriptions.FirstOrDefault(d => d.UserId == userId && d.ProductId == productId);
+                if (descr == null)
+                {
+                    return false;
+                }
+                descr.Rating = rating;
+                descr.Description = description;
+
+                _context.SaveChanges();
+                return true;
+            });
+        }
+
+        public async Task<bool> DeleteProductAsync(string userId, string productId)
+        {
+            return await Task.Run(() =>
+            {
+                UserProductDescriptionDB description = null;
+                try
+                {
+                    description = _context.UserProductDescriptions.First(d => d.User.Id == userId && d.Product.Id == productId);
+                }
+                catch (InvalidOperationException)
+                {
+                    return false;
+                }
+                var entry = _context.Entry(description);
+                entry.State = EntityState.Deleted;
+                _context.SaveChanges();
+                return true;
+            });
+        }
+
+        private UserDB MapTo<T>(UserDAL user)
+            where T : UserDB
+            =>
+            _mapper.Map<UserDB>(user);
+
+        private UserDAL MapTo<T>(UserDB user)
+            where T : UserDAL
+            =>
+            _mapper.Map<UserDAL>(user);
+
+        
+
+        ~UserRepository()
+        {
+            Dispose();
         }
     }
 }

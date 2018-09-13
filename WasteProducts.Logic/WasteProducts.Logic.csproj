@@ -148,8 +148,6 @@
     <Compile Include="Mappings\SearchProfile.cs" />
     <Compile Include="Mappings\TestProfile.cs" />
     <Compile Include="Mappings\UserMappings\ProductProfile.cs" />
-    <Compile Include="Mappings\UserMappings\UserClaimProfile.cs" />
-    <Compile Include="Mappings\UserMappings\UserLoginProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserProductDescriptionProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserRoleProfile.cs" />
@@ -169,6 +167,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SearchServiceResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\UserResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UserResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Services\Groups\GroupCommentService.cs" />
     <Compile Include="Services\Groups\GroupUserService.cs" />
@@ -226,6 +229,10 @@
     <EmbeddedResource Include="Resources\SearchServiceResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SearchServiceResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\UserResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>UserResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
