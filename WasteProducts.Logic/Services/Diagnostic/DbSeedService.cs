@@ -70,7 +70,7 @@ namespace WasteProducts.Logic.Services
                         for (int j = 0; j < categoriesCount; j++)
                         {
                             var productName = faker.Commerce.ProductName();
-                            productService.AddByName(productName);
+                            productService.Add(productName, out  var addedProduct);
 
                             var product = await productService.GetByNameAsync(productName).ConfigureAwait(false);
                             productService.AddCategory(product, categories[j]);

@@ -25,7 +25,7 @@ using WasteProducts.Logic.Mappings;
 using WasteProducts.Logic.Mappings.Products;
 using WasteProducts.Logic.Mappings.UserMappings;
 using WasteProducts.Logic.Validators.Search;
-using ProductProfile = WasteProducts.Logic.Mappings.ProductProfile;
+using ProductProfile = WasteProducts.Logic.Mappings.UserMappings.ProductProfile;
 
 namespace WasteProducts.Logic
 {
