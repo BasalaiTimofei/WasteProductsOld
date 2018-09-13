@@ -9,12 +9,14 @@ using WasteProducts.Logic.Common.Factories;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Common.Services.Diagnostic;
+using WasteProducts.Logic.Common.Services.Groups;
 using WasteProducts.Logic.Common.Services.MailService;
 using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.Logic.Interceptors;
 using WasteProducts.Logic.Mappings;
 using WasteProducts.Logic.Mappings.UserMappings;
 using WasteProducts.Logic.Services;
+using WasteProducts.Logic.Services.Groups;
 using WasteProducts.Logic.Services.MailService;
 using WasteProducts.Logic.Services.UserService;
 using WasteProducts.Logic.Validators.Search;
@@ -58,11 +60,17 @@ namespace WasteProducts.Logic
 
         private void BindUserServices()
         {
-            //Bind<IMailService>().To<MailService>(); //TODO: тут сергей, выбирай сам
             Bind<IMailService>().ToMethod(ctx => new MailService(null, "somevalidemail@mail.ru", null));
 
             Bind<IUserService>().To<UserService>();
             Bind<IUserRoleService>().To<UserRoleService>();
+            Bind<ISearchService>().To<LuceneSearchService>();
+
+            Bind<IGroupService>().To<GroupService>();
+            Bind<IGroupBoardService>().To<GroupBoardService>();
+            Bind<IGroupProductService>().To<GroupProductService>();
+            Bind<IGroupUserService>().To<GroupUserService>();
+            Bind<IGroupCommentService>().To<GroupCommentService>();
         }
 
         private void BindMappers()
@@ -101,4 +109,3 @@ namespace WasteProducts.Logic
         }
     }
 }
-

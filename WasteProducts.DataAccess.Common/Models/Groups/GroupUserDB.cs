@@ -8,12 +8,22 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         /// <summary>
         /// Primary key
         /// </summary>
-        public virtual int Id { get; set; }
+        public virtual Guid Id { get; set; }
+
+        /// <summary>
+        /// Foreign key
+        /// </summary>
+        public virtual Guid GroupId { get; set; }
 
         /// <summary>
         /// This group
         /// </summary>
         public virtual GroupDB Group { get; set; }
+
+        /// <summary>
+        /// Foreign key
+        /// </summary>
+        public virtual string UserId { get; set; }
 
         /// <summary>
         /// User which entered in group
@@ -24,7 +34,7 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         /// true - can created boards;
         /// false - can't created boards
         /// </summary>
-        public virtual bool RigtToCreateBoards { get; set; }
+        public virtual bool RightToCreateBoards { get; set; }
 
         /// <summary>
         /// User action when administrator inviting

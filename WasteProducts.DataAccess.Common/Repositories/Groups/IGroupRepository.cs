@@ -5,68 +5,89 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WasteProducts.DataAccess.Common.Repositories
+namespace WasteProducts.DataAccess.Common.Repositories.Groups
 {
     /// <summary>
     /// Group repository
     /// </summary>
-    /// <typeparam name="T">Object</typeparam>
-    public interface IGroupRepository: IDisposable
+    public interface IGroupRepository : IDisposable
     {
         /// <summary>
-        /// Create - add a new object in db
+        /// Add a new object in db
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">New object</param>
         void Create<T>(T item) where T : class;
+
         /// <summary>
-        /// Update - correct object in db
+        /// Correct object in db
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">New object</param>
         void Update<T>(T item) where T : class;
+
         /// <summary>
-        /// Update - correct object in db
+        /// Correct objects in db
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="item">New objects</param>
-        void Update<T>(IEnumerable<T> items) where T : class;
+        void UpdateAll<T>(IList<T> items) where T : class;
+
         /// <summary>
-        /// Delete - delete object from db
+        /// Delete object from db by primary key
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="id">Primary key object</param>
-        void Delete<T>(int id) where T : class;
+        void Delete<T>(Guid id) where T : class;
+
         /// <summary>
-        /// Get - getting object from db
+        /// Delete object from db by object
+        /// </summary>
+        /// <typeparam name="T">Object</typeparam>
+        /// <param name="item">Object</param>
+        void Delete<T>(T item) where T : class;
+
+        /// <summary>
+        /// Delete object from db by colection
+        /// </summary>
+        /// <typeparam name="T">Object</typeparam>
+        /// <param name="item">Object</param>
+        void DeleteAll<T>(IList<T> items) where T : class;
+
+        /// <summary>
+        /// Getting object from db
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="id">Primary key object</param>
         /// <returns>Object</returns>
-        T Get<T>(int id) where T : class;
+        T Get<T>(Guid id) where T : class;
+
         /// <summary>
-        /// GetAll - returns all objects
+        /// Returns all objects
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <returns>IEnumerable objects</returns>
         IEnumerable<T> GetAll<T>() where T : class;
+
         /// <summary>
-        /// Find - returns objects set with condition
+        /// Returns objects set with condition
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="predicate">Lambda function</param>
         /// <returns>IEnumerable objects</returns>
         IEnumerable<T> Find<T>(Func<T, Boolean> predicate) where T : class;
+
         /// <summary>
-        /// GetWithInclude - immediate loading objects with condition
+        /// Immediate loading objects with condition
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="includeProperties">Expression trees</param>
         /// <returns>IEnumerable objects</returns>
-        IEnumerable<T> GetWithInclude<T>(params Expression<Func<T, 
+        IEnumerable<T> GetWithInclude<T>(params Expression<Func<T,
             object>>[] includeProperties) where T : class;
+
         /// <summary>
-        /// GetWithInclude - immediate loading objects with condition
+        /// Immediate loading objects with condition
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="predicate">Lambda function</param>
@@ -74,8 +95,9 @@ namespace WasteProducts.DataAccess.Common.Repositories
         /// <returns>IEnumerable objects</returns>
         IEnumerable<T> GetWithInclude<T>(Func<T, bool> predicate,
             params Expression<Func<T, object>>[] includeProperties) where T : class;
+
         /// <summary>
-        /// Save = save model 
+        /// Save model 
         /// </summary>
         void Save();
     }
