@@ -22,14 +22,14 @@ namespace WasteProducts.Logic.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class DbServiceResources {
+    internal class UserResources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal DbServiceResources() {
+        internal UserResources() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace WasteProducts.Logic.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WasteProducts.Logic.Resources.DbServiceResources", typeof(DbServiceResources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WasteProducts.Logic.Resources.UserResources", typeof(UserResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,11 +61,20 @@ namespace WasteProducts.Logic.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Existing database don&apos;t compatible with model..
+        ///   Looks up a localized string similar to На нашем сайте была оставлена заявка на регистрацию аккаунта, привязанного к этому емейлу. Если вы не регистрировались на нашем сайте, просим вас проигнорировать это письмо. Иначе, для того, чтобы завершить регистрацию, вы должны подтвердить свой email, перейдя по ссылке, указанной ниже. Ссылка для подтверждения email:\r\n{0}.
         /// </summary>
-        internal static string GetStatusAsync_WarnMsg {
+        internal static string EmailConfirmationBody {
             get {
-                return ResourceManager.GetString("GetStatusAsync_WarnMsg", resourceCulture);
+                return ResourceManager.GetString("EmailConfirmationBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Подтверждение регистрации на WasteProducts.
+        /// </summary>
+        internal static string EmailConfirmationHeader {
+            get {
+                return ResourceManager.GetString("EmailConfirmationHeader", resourceCulture);
             }
         }
     }

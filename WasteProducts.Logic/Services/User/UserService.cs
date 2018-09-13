@@ -9,15 +9,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Security.Claims;
+using WasteProducts.Logic.Resources;
 
 namespace WasteProducts.Logic.Services.Users
 {
     public class UserService : IUserService
     {
-        private const string EmailConfirmHeader = "WasteProducts email confirmation";
-
-        private const string EmailConfirmBody = "На нашем сайте была оставлена заявка на регистрацию аккаунта, привязанного к этому емейлу. Если вы не регистрировались на нашем сайте, просим вас проигнорировать это письмо. Иначе, для того, чтобы завершить регистрацию, вы должны подтвердить свой email, перейдя по ссылке, указанной ниже. Ссылка для подтверждения email:\r\n{0}";
-
         private readonly IMailService _mailService;
 
         private readonly IUserRepository _userRepo;
@@ -58,7 +55,7 @@ namespace WasteProducts.Logic.Services.Users
             if(path != null)
             {
                 var fullpath = string.Format(path, id, token);
-                await _mailService.SendAsync(email, EmailConfirmHeader, string.Format(EmailConfirmBody, fullpath));
+                await _mailService.SendAsync(email, UserResources.EmailConfirmationHeader, string.Format(UserResources.EmailConfirmationBody, fullpath));
             }
         }
 
