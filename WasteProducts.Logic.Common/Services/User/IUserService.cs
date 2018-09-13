@@ -18,8 +18,9 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// <param name="email">Email of the new user.</param>
         /// <param name="userName">UserName of the new user.</param>
         /// <param name="password">Password of the new user.</param>
-        /// <param name="path">Layout of the path to the ConfirmEmail API method.</param>
-        Task RegisterAsync(string email, string userName, string password, string path);
+        /// <param name="path">Layout of the path to the ConfirmEmail reference.</param>
+        /// <returns>Data containing in the email, returns for test purposes.</returns>
+        Task<(string id, string token)> RegisterAsync(string email, string userName, string password, string path);
 
         /// <summary>
         /// Confirms user's email by the confirmation token given by RegisterAsync method.
@@ -35,7 +36,7 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// <param name="email">Email of the logging in user.</param>
         /// <param name="password">Password of the logging in user.</param>
         /// <returns>Logged in user.</returns>
-        Task<Models.Users.User> LogInByEmailAsync(string email, string password);
+        Task<User> LogInByEmailAsync(string email, string password);
 
         /// <summary>
         /// Tries to login as a user with the specific user name and password.
@@ -43,7 +44,7 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// <param name="userName">Name of the logging in user.</param>
         /// <param name="password">Password of the logging in user.</param>
         /// <returns>Logged in user.</returns>
-        Task<Models.Users.User> LogInByNameAsync(string userName, string password);
+        Task<User> LogInByNameAsync(string userName, string password);
 
         /// <summary>
         /// Tries to reset a password of the specific user to the new password and returns whether resetting succeed or not.
@@ -58,21 +59,31 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// Requests an email with the password of the user registered to this email.
         /// </summary>
         /// <param name="email">Email of the user forgotten its password.</param>
-        /// <returns>Boolean representing whether email was correct or not.</returns>
-        Task ResetPasswordAsync(string email);
+        /// <param name="path">Layout of the path to the GeneratePassword reference.</param>
+        /// <returns>Data containing in the email, returns for test purposes.</returns>
+        Task<(string id, string token)> ResetPasswordRequestAsync(string email, string path);
+
+        /// <summary>
+        /// Resets password of the user with the userId ID by the reset password token.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <param name="token">Reset password token</param>
+        /// <param name="newPassword">New password of the user.</param>
+        /// <returns>Boolean represents whether operation succeed or no.</returns>
+        Task<bool> ResetPasswordAsync(string userId, string token, string newPassword);
 
         /// <summary>
         /// Gets info about all Users in the database.
         /// </summary>
         /// <returns>List of all Users in dataase.</returns>
-        Task<IEnumerable<Models.Users.User>> GetAllUsersAsync();
+        Task<IEnumerable<User>> GetAllUsersAsync();
 
         /// <summary>
         /// Requests a User by its id. User is returned without PasswordHash.
         /// </summary>
         /// <param name="id">Id of requested User.</param>
         /// <returns>Instance of User that has requested Id. Returns WITHOUT PasswordHash.</returns>
-        Task<Models.Users.User> GetUserAsync(string id);
+        Task<User> GetUserAsync(string id);
 
         /// <summary>
         /// Get the names of the roles a user is a member of.
@@ -100,7 +111,7 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// </summary>
         /// <param name="user">The specific user to update.</param>
         /// <returns>Boolean representing whether updating the user was correct or not.</returns>
-        Task UpdateAsync(Models.Users.User user);
+        Task UpdateAsync(User user);
 
         /// <summary>
         /// Updates user's Email. You cannot update email if newEmail is already used by another user.

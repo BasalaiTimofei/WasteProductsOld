@@ -1,5 +1,6 @@
 ﻿using Ninject;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -85,6 +86,8 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             _usersIds.Add(user2.Id);
             _usersIds.Add(user3.Id);
         }
+
+        
 
         // пытаемся зарегистрировать юзера с некорректным емейлом
         [Test]
@@ -225,9 +228,32 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
             Assert.AreEqual("Sergei", user.UserName);
         }
 
+        // пытаемся зарегистрировать юзера так, как он будет регистрироваться на самом деле,
+        // т.е. с "отправкой" письма на почту (по факту, если использовать настоящий ящик, оно отправляется),
+        // где в тестовых целях из методов возвращаются айди и токен, необходимые для подтверждения емейла
+        // так же тут тестируется аналогичная "отправка" запроса на изменение пароля (в if statement)
+        [Test]
+        public async Task UserIntegrTest_12TryingToRegisterUserPropperlyAndResetPassword()
+        {
+            string email = "tishkovsergei92@gmail.com";
+            var (id, token) = await _userService.RegisterAsync(email, "Serj", "treytrey", "Письмо короче{0} {1}");
+            if (await _userService.ConfirmEmailAsync(id, token))
+            {
+                (id, token) = await _userService.ResetPasswordRequestAsync(email, @"http://localhost:2189/api/user/{0}/resetpasswordresponse/{1}");
+                await _userService.ResetPasswordAsync(id, token, "newPassword");
+                var user = await _userService.LogInByNameAsync("Serj", "newPassword");
+                Assert.IsNotNull(user);
+                Assert.AreEqual(id, user.Id);
+            }
+            else
+            {
+                throw new Exception("Email wasn't confirmed!");
+            }
+        }
+
         // тестируем создание роли, а так же проверяем, действительно ли роль создается в базе данных
         [Test]
-        public async Task UserIntegrTest_12FindingRoleByCorrectRoleName()
+        public async Task UserIntegrTest_13FindingRoleByCorrectRoleName()
         {
             UserRole roleToCreate = new UserRole() { Name = "Simple user" };
             await _roleService.CreateAsync(roleToCreate);
@@ -238,7 +264,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // проверяем запрос роли по несуществующему названию
         [Test]
-        public async Task UserIntegrTest_13FindingRoleByIncorrectRoleName()
+        public async Task UserIntegrTest_14FindingRoleByIncorrectRoleName()
         {
             UserRole role = await _roleService.FindByNameAsync("Not existing role name");
             Assert.IsNull(role);
@@ -246,7 +272,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестим, правильно ли работает функционал добавления роли и добавления юзера в роль, a так же метод GetRolesAsync IUserService
         [Test]
-        public async Task UserIntegrTest_14AddingToTheUserDBNewRole()
+        public async Task UserIntegrTest_15AddingToTheUserDBNewRole()
         {
             User user1 = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
             User user2 = await _userService.LogInByEmailAsync("test50someemail@gmail.com", "qwerty2");
@@ -263,7 +289,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем изъятие из роли
         [Test]
-        public async Task UserIntegrTest_15RemovingUserFromRole()
+        public async Task UserIntegrTest_16RemovingUserFromRole()
         {
             var userId = _usersIds[0];
             var userRoles = await _userService.GetRolesAsync(userId);
@@ -276,7 +302,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // Тестируем добавление утверждения (Claim) в юзера
         [Test]
-        public async Task UserIntegrTest_16AddingClaimToUser()
+        public async Task UserIntegrTest_17AddingClaimToUser()
         {
             var userId = _usersIds[0];
             var claim = new Claim("SomeType", "SomeValue");
@@ -292,7 +318,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем удаление утверждения из юзера
         [Test]
-        public async Task UserIntegrTest_17DeletingClaimFromUser()
+        public async Task UserIntegrTest_18DeletingClaimFromUser()
         {
             var userId = _usersIds[0];
             var userClaims = await _userService.GetClaimsAsync(userId);
@@ -306,7 +332,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем добавление логина в юзера
         [Test]
-        public async Task UserIntegrTest_18AddingLoginToUser()
+        public async Task UserIntegrTest_19AddingLoginToUser()
         {
             var userId = _usersIds[0];
             var login = new UserLogin { LoginProvider = "SomeLoginProvider", ProviderKey = "SomeProviderKey" };
@@ -321,7 +347,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем удаление логина из юзера
         [Test]
-        public async Task UserIntegrTest_19DeletingLoginFromUser()
+        public async Task UserIntegrTest_20DeletingLoginFromUser()
         {
             var userId = _usersIds[0];
             var login = new UserLogin { LoginProvider = "SomeLoginProvider", ProviderKey = "SomeProviderKey" };

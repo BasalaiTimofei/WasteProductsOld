@@ -413,6 +413,7 @@
     </Compile>
     <Compile Include="Hubs\NotificationHub.cs" />
     <Compile Include="Models\Users\ChangePassword.cs" />
+    <Compile Include="Models\Users\Email.cs" />
     <Compile Include="Models\Users\LoginByEmail.cs" />
     <Compile Include="Models\Users\LoginByName.cs" />
     <Compile Include="Models\Users\ProductDescriprion.cs" />

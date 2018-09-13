@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Security.Claims;
 using WasteProducts.Logic.Resources;
+using Bogus;
 
 namespace WasteProducts.Logic.Services.Users
 {
@@ -41,15 +42,12 @@ namespace WasteProducts.Logic.Services.Users
             }
         }
 
-        public async Task RegisterAsync(string email, string userName, string password, string path)
+        public async Task<(string id, string token)> RegisterAsync(string email, string userName, string password, string path)
         {
-            if (email == null ||
-            userName == null ||
-            password == null ||
-            !_mailService.IsValidEmail(email) ||
-            !(await _userRepo.IsEmailAvailableAsync(email)))
+            if (email == null || userName == null || password == null ||
+            !_mailService.IsValidEmail(email) || !(await _userRepo.IsEmailAvailableAsync(email)))
             {
-                return;
+                return(null, null);
             }
             var (id, token) = await _userRepo.AddAsync(email, userName, password);
             if(path != null)
@@ -57,6 +55,7 @@ namespace WasteProducts.Logic.Services.Users
                 var fullpath = string.Format(path, id, token);
                 await _mailService.SendAsync(email, UserResources.EmailConfirmationHeader, string.Format(UserResources.EmailConfirmationBody, fullpath));
             }
+            return (id, token);
         }
 
         public async Task<bool> ConfirmEmailAsync(string userId, string token)
@@ -64,34 +63,28 @@ namespace WasteProducts.Logic.Services.Users
             return await _userRepo.ConfirmEmailAsync(userId, token);
         }
 
-        public async Task<Common.Models.Users.User> LogInByEmailAsync(string email, string password)
+        public async Task<User> LogInByEmailAsync(string email, string password)
         {
-            return await Task.Run((Func<Task<Common.Models.Users.User>>)(async () =>
+            var userDB = await _userRepo.FindByEmailAndPasswordAsync(email, password);
+            if (userDB == null)
             {
-                var userDB = await _userRepo.FindByEmailAndPasswordAsync(email, password);
-                if (userDB == null)
-                {
-                    return null;
-                }
+                return null;
+            }
 
-                var loggedInUser = MapTo<Common.Models.Users.User>(userDB);
-                return loggedInUser;
-            }));
+            var loggedInUser = MapTo<User>(userDB);
+            return loggedInUser;
         }
 
-        public async Task<Common.Models.Users.User> LogInByNameAsync(string userName, string password)
+        public async Task<User> LogInByNameAsync(string userName, string password)
         {
-            return await Task.Run((Func<Task<Common.Models.Users.User>>)(async () =>
+            var userDB = await _userRepo.FindByNameAndPasswordAsync(userName, password);
+            if (userDB == null)
             {
-                var userDB = await _userRepo.FindByNameAndPasswordAsync(userName, password);
-                if (userDB == null)
-                {
-                    return null;
-                }
+                return null;
+            }
 
-                var loggedInUser = MapTo<Common.Models.Users.User>(userDB);
-                return loggedInUser;
-            }));
+            var loggedInUser = MapTo<User>(userDB);
+            return loggedInUser;
         }
 
         public async Task<bool> ChangePasswordAsync(string userId, string oldPassword, string newPassword)
@@ -101,38 +94,46 @@ namespace WasteProducts.Logic.Services.Users
                 return false;
             }
 
-            return await Task.Run(async () =>
-            {
-                await _userRepo.ChangePasswordAsync(userId, newPassword, oldPassword);
-                return true;
-            });
+            await _userRepo.ChangePasswordAsync(userId, newPassword, oldPassword);
+            return true;
         }
 
-        // TODO переделать метод, он все равно будет отправлять захешированный пароль
-        public Task ResetPasswordAsync(string email)
+        public async Task<(string id, string token)> ResetPasswordRequestAsync(string email, string path)
         {
-            throw new NotImplementedException("Метод будет отправлять захешированный пароль, переделать метод, чтобы он отправлял ссылку на генерацию нового пароля");
+            if (email != null && path != null)
+            {
+                var (id, token) = await _userRepo.GeneratePasswordResetTokenAsync(email);
+                var fullpath = string.Format(path, id, token);
+                await _mailService.SendAsync(email, UserResources.ResetPasswordHeader, string.Format(UserResources.ResetPasswordBody, fullpath));
+                return (id, token);
+            }
+            else
+            {
+                return (null, null);
+            }
         }
 
-        //todo make async + userRepomethod
-        public async Task<IEnumerable<Common.Models.Users.User>> GetAllUsersAsync()
+        public async Task<bool> ResetPasswordAsync(string userId, string token, string newPassword)
+        {
+            return await _userRepo.ResetPasswordAsync(userId, token, newPassword);
+        }
+
+
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
             return await Task.Run(() =>
             {
                 IEnumerable<UserDAL> allUserDBs = _userRepo.GetAll(true).ToList();
-                var allUsers = _mapper.Map<IEnumerable<Common.Models.Users.User>>(allUserDBs);
+                var allUsers = _mapper.Map<IEnumerable<User>>(allUserDBs);
                 return allUsers;
             });
         }
 
-        public async Task<Common.Models.Users.User> GetUserAsync(string id)
+        public async Task<User> GetUserAsync(string id)
         {
-            return await Task.Run((Func<Task<Common.Models.Users.User>>)(async () =>
-            {
-                var userDB = await _userRepo.GetAsync(id, true);
-                var user = MapTo<Common.Models.Users.User>(userDB);
-                return user;
-            }));
+            var userDB = await _userRepo.GetAsync(id, true);
+            var user = MapTo<User>(userDB);
+            return user;
         }
 
         public async Task<IList<string>> GetRolesAsync(string userId)
@@ -152,7 +153,7 @@ namespace WasteProducts.Logic.Services.Users
             
         }
 
-        public async Task UpdateAsync(Common.Models.Users.User user)
+        public async Task UpdateAsync(User user)
         {
             await _userRepo.UpdateAsync(MapTo<UserDB>(user));
         }
@@ -248,18 +249,18 @@ namespace WasteProducts.Logic.Services.Users
             await _userRepo.DeleteAsync(userId);
         }
 
-        private UserDAL MapTo<T>(Common.Models.Users.User user)
+        private UserDAL MapTo<T>(User user)
             =>
             _mapper.Map<UserDAL>(user);
 
         private User MapTo<T>(UserDAL user)
             =>
-            _mapper.Map<Common.Models.Users.User>(user);
+            _mapper.Map<User>(user);
 
         private UserLoginDB MapTo<T>(UserLogin user)
             =>
             _mapper.Map<UserLoginDB>(user);
-
+        
         ~UserService()
         {
             Dispose();

@@ -79,7 +79,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// Checks if email wasn't used in registering any user. Returns true if not.
         /// </summary>
         /// <param name="email">Checking email.</param>
-        /// <returns></returns>
+        /// <returns>True if email is available, false if it's not.</returns>
         Task<bool> IsEmailAvailableAsync(string email);
 
         /// <summary>
@@ -116,10 +116,26 @@ namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
         /// <summary>
         /// Use this method to select user by its ID.
         /// </summary>
-        /// <param name="id">ID of the user.</param>
+        /// <param name="userId">ID of the user.</param>
         /// <param name="initiateNavigationalProps">Specifies whether navigational properties will be included or no.</param>
         /// <returns>DB User entity.</returns>
-        Task<UserDAL> GetAsync(string id, bool initiateNavigationalProps);
+        Task<UserDAL> GetAsync(string userId, bool initiateNavigationalProps);
+
+        /// <summary>
+        /// Generates a password reset token for the specific user and returns tuple where item1 is ID of the user and item2 is the token.
+        /// </summary>
+        /// <param name="email">Email of the user.</param>
+        /// <returns>ID of the user and password reset token.</returns>
+        Task<(string id, string token)> GeneratePasswordResetTokenAsync(string email);
+
+        /// <summary>
+        /// Resets password of the user with the userId ID by the reset password token.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <param name="token">Reset password token</param>
+        /// <param name="newPassword">New password of the user.</param>
+        /// <returns>Boolean represents whether operation succeed or no.</returns>
+        Task<bool> ResetPasswordAsync(string userId, string token, string newPassword);
 
         /// <summary>
         /// Get the names of the roles a user is a member of.

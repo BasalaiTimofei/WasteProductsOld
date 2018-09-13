@@ -61,7 +61,8 @@ namespace WasteProducts.Logic.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to На нашем сайте была оставлена заявка на регистрацию аккаунта, привязанного к этому емейлу. Если вы не регистрировались на нашем сайте, просим вас проигнорировать это письмо. Иначе, для того, чтобы завершить регистрацию, вы должны подтвердить свой email, перейдя по ссылке, указанной ниже. Ссылка для подтверждения email:\r\n{0}.
+        ///   Looks up a localized string similar to На нашем сайте была оставлена заявка на регистрацию аккаунта, привязанного к этому емейлу. Если вы не регистрировались на нашем сайте, просим вас проигнорировать это письмо. Иначе, для того, чтобы завершить регистрацию, вы должны подтвердить свой email, перейдя по ссылке, указанной ниже. Ссылка для подтверждения email:
+        ///{0}.
         /// </summary>
         internal static string EmailConfirmationBody {
             get {
@@ -75,6 +76,25 @@ namespace WasteProducts.Logic.Resources {
         internal static string EmailConfirmationHeader {
             get {
                 return ResourceManager.GetString("EmailConfirmationHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to На нашем сайте был сделан запрос на восстановление пароля аккаунта, привязанного к этому email. Если вы не делали этого запроса, просим вас проигнорировать это письмо. Иначе, для того, чтобы восстановить пароль, вы должны перейти по ссылке, указанной ниже. Ссылка для восстановления пароля:
+        ///{0}.
+        /// </summary>
+        internal static string ResetPasswordBody {
+            get {
+                return ResourceManager.GetString("ResetPasswordBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Запрос на восстановление пароля.
+        /// </summary>
+        internal static string ResetPasswordHeader {
+            get {
+                return ResourceManager.GetString("ResetPasswordHeader", resourceCulture);
             }
         }
     }

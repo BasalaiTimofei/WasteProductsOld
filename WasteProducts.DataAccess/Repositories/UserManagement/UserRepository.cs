@@ -86,19 +86,30 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task<bool> ConfirmEmailAsync(string userId, string token)
         {
-            return await Task.Run(() =>
+            _manager.UserTokenProvider = new EmailTokenProvider<UserDB>();
+            await _manager.ConfirmEmailAsync(userId, token);
+            if (await _manager.IsEmailConfirmedAsync(userId))
             {
-                _manager.UserTokenProvider = new EmailTokenProvider<UserDB>();
-                _manager.ConfirmEmail(userId, token);
-                if (_manager.IsEmailConfirmed(userId))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            });
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public async Task<(string id, string token)> GeneratePasswordResetTokenAsync(string email)
+        {
+            var user = _manager.FindByEmail(email);
+            _manager.UserTokenProvider = new TotpSecurityStampBasedTokenProvider<UserDB, string>();
+            var token = await _manager.GeneratePasswordResetTokenAsync(user.Id);
+            return (user.Id, token);
+        }
+
+        public async Task<bool> ResetPasswordAsync(string userId, string token, string newPassword)
+        {
+            var result = await _manager.ResetPasswordAsync(userId, token, newPassword);
+            return result.Succeeded;
         }
 
         public async Task<UserDAL> FindByNameAndPasswordAsync(string userName, string password)
@@ -386,6 +397,8 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             where T : UserDAL
             =>
             _mapper.Map<UserDAL>(user);
+
+        
 
         ~UserRepository()
         {

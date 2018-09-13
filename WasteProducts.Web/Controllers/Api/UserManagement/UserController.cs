@@ -19,7 +19,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
     [RoutePrefix("api/user")]
     public class UserController : BaseApiController
     {
-        private readonly IUserService _userService;
+        private readonly IUserService _service;
 
         private readonly ILogger _logger;
 
@@ -30,7 +30,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <param name="logger">Instance of NLog Logger.</param>
         public UserController(IUserService userService, ILogger logger) : base(logger)
         {
-            _userService = userService;
+            _service = userService;
             _logger = logger;
         }
 
@@ -47,7 +47,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the search.")]
         public async Task<IEnumerable<User>> GetUsers()
         {
-            return await _userService.GetAllUsersAsync();
+            return await _service.GetAllUsersAsync();
         }
 
         // GET api/user/5
@@ -64,7 +64,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the search.")]
         public async Task<User> GetUserById(string id)
         {
-            return await _userService.GetUserAsync(id);
+            return await _service.GetUserAsync(id);
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the logging in.")]
         public async Task<User> LoginByEmailAndPassword([FromBody]LoginByEmail user)
         {
-            return await _userService.LogInByEmailAsync(user.Email, user.Password);
+            return await _service.LogInByEmailAsync(user.Email, user.Password);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the logging in.")]
         public async Task<User> LoginByNameAndPassword([FromBody]LoginByName user)
         {
-            return await _userService.LogInByNameAsync(user.UserName, user.Password);
+            return await _service.LogInByNameAsync(user.UserName, user.Password);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [HttpGet, Route("{id}/roles")]
         public async Task<IList<string>> GetRoles(string id)
         {
-            return await _userService.GetRolesAsync(id);
+            return await _service.GetRolesAsync(id);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [HttpGet, Route("{id}/claims")]
         public async Task<IList<Claim>> GetClaims(string id)
         {
-            return await _userService.GetClaimsAsync(id);
+            return await _service.GetClaimsAsync(id);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [HttpGet, Route("{id}/logins")]
         public async Task<IList<UserLogin>> GetLogins(string id)
         {
-            return await _userService.GetLoginsAsync(id);
+            return await _service.GetLoginsAsync(id);
         }
 
         // POST api/user
@@ -150,7 +150,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         {
             StringBuilder sb = new StringBuilder(Request.RequestUri.GetLeftPart(UriPartial.Authority));
             sb.Append("/api/user/{0}/confirmemail/{1}");
-            await _userService.RegisterAsync(model.Email, model.UserName, model.Password, sb.ToString());
+            await _service.RegisterAsync(model.Email, model.UserName, model.Password, sb.ToString());
         }
 
         // DELETE api/user/5
@@ -167,7 +167,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the deletion.")]
         public async Task Delete([FromUri] string id)
         {
-            await _userService.DeleteUserAsync(id);
+            await _service.DeleteUserAsync(id);
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [HttpGet, Route("{id}/confirmemail/{token}")]
         public async Task<bool> ConfirmEmail([FromUri] string id, [FromUri] string token)
         {
-            return await _userService.ConfirmEmailAsync(id, token);
+            return await _service.ConfirmEmailAsync(id, token);
         }
 
         // POST api/user/resetpassword
@@ -198,25 +198,40 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task<bool> ChangePassword([FromUri] string id, [FromBody] ChangePassword model)
         {
-            return await _userService.ChangePasswordAsync(id, model.OldPassword, model.NewPassword);
+            return await _service.ChangePasswordAsync(id, model.OldPassword, model.NewPassword);
         }
 
         // POST api/user/resetpassword
         /// <summary>
-        /// Asks for the email with a hyperlink which will reset password of the user with this email.
+        /// Requests for the email with a hyperlink which will reset password of the user with this email.
         /// </summary>
         /// <param name="email">Email of the user forgotten its password.</param>
         /// <returns></returns>
-        [HttpPut, Route("resetpassword")]
+        [HttpPut, Route("resetpasswordrequest")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.NoContent, "Request is sent")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such Email.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
-        public async Task ResetPassword([FromBody] string email)
+        public async Task ResetPasswordRequest([FromBody] Email email)
         {
-            await _userService.ResetPasswordAsync(email);
+            StringBuilder sb = new StringBuilder(Request.RequestUri.GetLeftPart(UriPartial.Authority));
+            sb.Append("/api/user/{0}/resetpasswordresponse/{1}");
+            await _service.ResetPasswordRequestAsync(email.EmailOfTheUser, sb.ToString());
+        }
+
+        /// <summary>
+        /// Resets a user's password to the new password by confirmation token.
+        /// </summary>
+        /// <param name="id">ID of the user.</param>
+        /// <param name="token">Reset password token, sended to the user's email.</param>
+        /// <param name="newPassword"></param>
+        /// <returns>Boolean represents whether operation succeed or no.</returns>
+        [HttpPut, Route("{id}/resetpasswordresponse/{token}")]
+        public async Task<bool> ResetPasswordResponse([FromUri] string id, [FromUri] string token, [FromBody] string newPassword)
+        {
+            return await _service.ResetPasswordAsync(id, token, newPassword);
         }
 
         // POST api/user/updateemail
@@ -235,7 +250,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the update.")]
         public async Task<bool> UpdateEmail([FromUri] string id, [FromBody] string newEmail)
         {
-            return await _userService.UpdateEmailAsync(id, newEmail);
+            return await _service.UpdateEmailAsync(id, newEmail);
         }
 
         //PUT api/user/UpdateUserName
@@ -254,7 +269,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the update.")]
         public async Task<bool> UpdateUserName([FromUri] string id, [FromBody] string newUserName)
         {
-            return await _userService.UpdateUserNameAsync(id, newUserName);
+            return await _service.UpdateUserNameAsync(id, newUserName);
         }
 
         // PUT api/User/Friends
@@ -273,7 +288,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task AddFriend([FromUri] string userId, [FromUri] string friendId)
         {
-            await _userService.AddFriendAsync(userId, friendId);
+            await _service.AddFriendAsync(userId, friendId);
         }
 
         //POST api/user/deletefriend
@@ -291,7 +306,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task DeleteFriend([FromUri] string userId, [FromUri] string friendId)
         {
-            await _userService.DeleteFriendAsync(userId, friendId);
+            await _service.DeleteFriendAsync(userId, friendId);
         }
 
         //PUT api/User/addproduct
@@ -311,7 +326,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task AddProduct([FromUri] string userId, [FromUri] string productId, [FromBody] ProductDescriprion description)
         {
-            await _userService.AddProductAsync(userId, productId, description.Rating, description.Description);
+            await _service.AddProductAsync(userId, productId, description.Rating, description.Description);
         }
 
         /// <summary>
@@ -330,7 +345,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task UpdateProduct([FromUri] string userId, [FromUri] string productId, [FromBody] ProductDescriprion description)
         {
-            await _userService.UpdateProductDescriptionAsync(userId, productId, description.Rating, description.Description);
+            await _service.UpdateProductDescriptionAsync(userId, productId, description.Rating, description.Description);
         }
 
         /// <summary>
@@ -347,7 +362,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task DeleteProduct([FromUri] string userId, [FromUri] string productId)
         {
-            await _userService.DeleteProductAsync(userId, productId);
+            await _service.DeleteProductAsync(userId, productId);
         }
 
         /// <summary>
@@ -359,7 +374,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [HttpPut, Route("{id}/addtorole/{roleName}")]
         public async Task AddToRole([FromUri] string id, [FromUri]string roleName)
         {
-            await _userService.AddToRoleAsync(id, roleName);
+            await _service.AddToRoleAsync(id, roleName);
         }
 
         /// <summary>
@@ -371,7 +386,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [HttpPut, Route("{id}/removefromrole/{roleName}")]
         public async Task RemoveFromRole([FromUri] string id, [FromUri]string roleName)
         {
-            await _userService.RemoveFromRoleAsync(id, roleName);
+            await _service.RemoveFromRoleAsync(id, roleName);
         }
 
         /// <summary>
@@ -383,7 +398,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [HttpPut, Route("{id}/addclaim")]
         public async Task AddClaim([FromUri] string id, [FromBody]Claim claim)
         {
-            await _userService.AddClaimAsync(id, claim);
+            await _service.AddClaimAsync(id, claim);
         }
 
         /// <summary>
@@ -395,7 +410,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [HttpPut, Route("{id}/removeclaim")]
         public async Task RemoveClaim([FromUri] string id, [FromBody]Claim claim)
         {
-            await _userService.RemoveClaimAsync(id, claim);
+            await _service.RemoveClaimAsync(id, claim);
         }
 
         /// <summary>
@@ -407,7 +422,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [HttpPut, Route("{id}/addlogin")]
         public async Task AddLogin([FromBody] string id, [FromBody]UserLogin userLogin)
         {
-            await _userService.AddLoginAsync(id, userLogin);
+            await _service.AddLoginAsync(id, userLogin);
         }
 
         /// <summary>
@@ -419,7 +434,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [HttpPut, Route("{id}/removelogin")]
         public async Task RemoveLogin([FromBody] string id, [FromBody]UserLogin userLogin)
         {
-            await _userService.RemoveLoginAsync(id, userLogin);
+            await _service.RemoveLoginAsync(id, userLogin);
         }
     }
 }
