@@ -60,12 +60,10 @@ namespace WasteProducts.Logic
 
         private void BindUserServices()
         {
-            //Bind<IMailService>().To<MailService>(); //TODO: тут сергей, выбирай сам
             Bind<IMailService>().ToMethod(ctx => new MailService(null, "somevalidemail@mail.ru", null));
 
             Bind<IUserService>().To<UserService>();
             Bind<IUserRoleService>().To<UserRoleService>();
-            Bind<IMailService>().To<MailService>();
             Bind<ISearchService>().To<LuceneSearchService>();
 
             Bind<IGroupService>().To<GroupService>();
