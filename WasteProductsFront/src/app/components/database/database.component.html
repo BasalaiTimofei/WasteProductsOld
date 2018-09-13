@@ -1,0 +1,31 @@
+<mat-card>
+    <mat-card-title>
+        <h2>Database Panel</h2>
+    </mat-card-title>
+    <mat-card-content>
+        <span>The database&nbsp;</span>
+
+        <span *ngIf="state !== null">
+            <span class="badge badge-danger" *ngIf="!state.IsExist" >dosn't exist</span>
+            <span class="badge badge-warn" *ngIf="state.IsExist && !state.IsCompatibleWithModel">is exist but isn't compatible with model</span>
+            <span class="badge badge-success" *ngIf="state.IsExist && state.IsCompatibleWithModel">is exist and compatible with model</span>
+        </span>
+        <span class="badge badge-secondary" *ngIf="state == null">is in the undefuned state</span>
+
+        <button mat-icon-button color="primary" class="m-3" (click)="getDatabaseState()"><mat-icon>replay</mat-icon></button>
+    </mat-card-content>
+    <mat-card-actions>
+        <mat-menu #createMenu="matMenu" xPosition="after" yPosition="above">
+            <ng-template matMenuContent>
+                <button mat-menu-item (click)="reCreateDatabase(false)">Without test data</button>
+                <button mat-menu-item (click)="reCreateDatabase(true)">With test data</button>
+            </ng-template>
+        </mat-menu>
+        <button mat-stroked-button color="primary" class="m-3" [matMenuTriggerFor]="createMenu">
+            <mat-icon>autorenew</mat-icon>  Create database
+        </button>
+        <button mat-stroked-button color="warn" class="m-3" (click)="deleteDatabase()" [disabled]="state == null || !state.IsExist">
+            <mat-icon>delete</mat-icon>  Delete database
+        </button>
+    </mat-card-actions>
+</mat-card>
