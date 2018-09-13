@@ -13,9 +13,7 @@ using WasteProducts.Logic.Common.Services.Diagnostic;
 using WasteProducts.Logic.Common.Services.Mail;
 using WasteProducts.Logic.Common.Services.Users;
 using WasteProducts.Logic.Common.Services.Groups;
-using WasteProducts.Logic.Common.Services.MailService;
 using WasteProducts.Logic.Common.Services.Products;
-using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.Logic.Interceptors;
 using WasteProducts.Logic.Mappings;
 using WasteProducts.Logic.Mappings.UserMappings;
@@ -23,17 +21,13 @@ using WasteProducts.Logic.Services;
 using WasteProducts.Logic.Services.Mail;
 using WasteProducts.Logic.Services.Users;
 using WasteProducts.Logic.Services.Groups;
-using WasteProducts.Logic.Services.MailService;
 using WasteProducts.Logic.Services.Products;
-using WasteProducts.Logic.Services.UserService;
-using WasteProducts.Logic.Mappings;
 using WasteProducts.Logic.Mappings.Products;
-using WasteProducts.Logic.Mappings.UserMappings;
 using WasteProducts.Logic.Validators.Search;
 using System.Configuration;
 using System.Net.Mail;
 using System.Net;
-using ProductProfile = WasteProducts.Logic.Mappings.ProductProfile;
+using ProductProfile = WasteProducts.Logic.Mappings.Products.ProductProfile;
 
 namespace WasteProducts.Logic
 {
