@@ -1,6 +1,8 @@
 ﻿using NLog;
 using Swagger.Net.Annotations;
+using System;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -131,6 +133,27 @@ namespace WasteProducts.Web.Controllers.Api
                 FirstName = payPalArguments[IPN.Buyer.FIRST_NAME],
                 LastName = payPalArguments[IPN.Buyer.LAST_NAME]
             };
+            Donation donation = new Donation
+            {
+                Donor = donor,
+                TransactionId = payPalArguments[IPN.Transaction.TXN_ID],
+                Date = ConvertPayPalDateTime(payPalArguments[IPN.Payment.PAYMENT_DATE])
+            };
+        }
+
+        private DateTime ConvertPayPalDateTime(string payPalDateTime)
+        {
+            string[] dateFormats = { "HH:MM:SS Mmm DD, YYYY PDT" };
+
+            DateTime outputDateTime;
+            DateTime.TryParseExact(payPalDateTime, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out outputDateTime);
+
+            // convert to local timezone
+            TimeZoneInfo hwZone = TimeZoneInfo.FindSystemTimeZoneById("Belarus Standard Time");
+
+            outputDateTime = TimeZoneInfo.ConvertTime(outputDateTime, hwZone, TimeZoneInfo.Local);
+
+            return outputDateTime;
         }
     }
 
