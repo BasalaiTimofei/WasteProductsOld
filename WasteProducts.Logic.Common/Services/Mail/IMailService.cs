@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace WasteProducts.Logic.Common.Services.MailService
+namespace WasteProducts.Logic.Common.Services.Mail
 {
     public interface IMailService : IDisposable
     {
-        IMailFactory MailFactory { get; }
-
         string OurEmail { get; set; }
 
         Task SendAsync(string to, string subject, string body);

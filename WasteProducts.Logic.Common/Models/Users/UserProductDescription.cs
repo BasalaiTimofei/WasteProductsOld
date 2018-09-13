@@ -20,7 +20,7 @@ namespace WasteProducts.Logic.Common.Models.Users
         /// <summary>
         /// Rating of this product pescription.
         /// </summary>
-        public virtual int Rating { get; set; }
+        public virtual int? Rating { get; set; }
 
         /// <summary>
         /// Description contains opinion of the user about the product.

@@ -1,25 +1,26 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Ninject;
 using Ninject.Extensions.Factory;
 using Ninject.Extensions.Interception.Infrastructure.Language;
 using Ninject.Modules;
-using System;
-using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.Logic.Common.Factories;
-using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Common.Services.Diagnostic;
+using WasteProducts.Logic.Common.Services.Mail;
+using WasteProducts.Logic.Common.Services.Users;
 using WasteProducts.Logic.Common.Services.Groups;
-using WasteProducts.Logic.Common.Services.MailService;
-using WasteProducts.Logic.Common.Services.UserService;
 using WasteProducts.Logic.Interceptors;
 using WasteProducts.Logic.Mappings;
 using WasteProducts.Logic.Mappings.UserMappings;
 using WasteProducts.Logic.Services;
+using WasteProducts.Logic.Services.Mail;
+using WasteProducts.Logic.Services.Users;
 using WasteProducts.Logic.Services.Groups;
-using WasteProducts.Logic.Services.MailService;
-using WasteProducts.Logic.Services.UserService;
 using WasteProducts.Logic.Validators.Search;
+using System.Configuration;
+using System.Net.Mail;
+using System.Net;
 using ProductProfile = WasteProducts.Logic.Mappings.ProductProfile;
 
 namespace WasteProducts.Logic
@@ -48,7 +49,10 @@ namespace WasteProducts.Logic
             Bind<ISearchService>().To<LuceneSearchService>().Intercept().With<SearchServiceInterceptor>();
 
             Bind<IProductService>().To<ProductService>();
+
             Bind<ICategoryService>().To<CategoryService>();
+
+            Bind<AppSettingsReader>().ToSelf();
         }
 
         private void BindDatabaseServices()
@@ -60,7 +64,26 @@ namespace WasteProducts.Logic
 
         private void BindUserServices()
         {
-            Bind<IMailService>().ToMethod(ctx => new MailService(null, "somevalidemail@mail.ru", null));
+            Bind<IMailService>().ToMethod(ctx =>
+            {
+                AppSettingsReader appSettingsReader = ctx.Kernel.Get<AppSettingsReader>();
+
+                string ourEmail = (string)appSettingsReader.GetValue("OurMailAddress", typeof(string));
+                string host = (string)appSettingsReader.GetValue("Host", typeof(string));
+                int port = (int)appSettingsReader.GetValue("Port", typeof(int));
+                SmtpDeliveryMethod method = (SmtpDeliveryMethod)appSettingsReader.GetValue("SMTPDeliveryMethod", typeof(int));
+                string ourMailPassword = (string)appSettingsReader.GetValue("OurMailPassword", typeof(string));
+                bool enableSsl = (bool)appSettingsReader.GetValue("EnableSSL", typeof(bool));
+
+                var client = new SmtpClient(host, port)
+                {
+                    DeliveryMethod = method,
+                    Credentials = new NetworkCredential(ourEmail, ourMailPassword),
+                    EnableSsl = enableSsl
+                };
+
+                return new MailService(client, ourEmail);
+            });
 
             Bind<IUserService>().To<UserService>();
             Bind<IUserRoleService>().To<UserRoleService>();
@@ -79,8 +102,6 @@ namespace WasteProducts.Logic
                 new Mapper(new MapperConfiguration(cfg =>
                 {
                     cfg.AddProfile<UserProfile>();
-                    cfg.AddProfile<UserClaimProfile>();
-                    cfg.AddProfile<UserLoginProfile>();
                     cfg.AddProfile<Mappings.UserMappings.ProductProfile>();
                     cfg.AddProfile<UserProductDescriptionProfile>();
                 }))).WhenInjectedExactlyInto<UserService>();
@@ -89,8 +110,6 @@ namespace WasteProducts.Logic
                 new Mapper(new MapperConfiguration(cfg =>
                 {
                     cfg.AddProfile(new UserProfile());
-                    cfg.AddProfile(new UserClaimProfile());
-                    cfg.AddProfile(new UserLoginProfile());
                 }))).WhenInjectedExactlyInto<UserRoleService>();
 
             Bind<IMapper>().ToMethod(ctx =>

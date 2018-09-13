@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models.Users;
 
-namespace WasteProducts.Logic.Common.Services.UserService
+namespace WasteProducts.Logic.Common.Services.Users
 {
     /// <summary>
     /// Standart BL level interface that exposes basic role management.
@@ -52,6 +52,6 @@ namespace WasteProducts.Logic.Common.Services.UserService
         /// </summary>
         /// <param name="role">Users of this role will be returned</param>
         /// <returns></returns>
-        Task<IEnumerable<User>> GetRoleUsers(UserRole role);
+        Task<IEnumerable<Models.Users.User>> GetRoleUsers(UserRole role);
     }
 }

@@ -83,6 +83,7 @@
     <Compile Include="Models\Security\Models\UserDb.cs" />
     <Compile Include="Models\Security\Models\UserLoginDb.cs" />
     <Compile Include="Models\Security\Models\UserRoleDb.cs" />
+    <Compile Include="Models\Users\UserDAL.cs" />
     <Compile Include="Models\Users\UserLoginDB.cs" />
     <Compile Include="Models\Users\UserDB.cs" />
     <Compile Include="Models\Users\UserProductDescriptionDB.cs" />

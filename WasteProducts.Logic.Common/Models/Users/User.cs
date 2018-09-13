@@ -30,36 +30,5 @@ namespace WasteProducts.Logic.Common.Models.Users
         /// List of products added and described by the user.
         /// </summary>
         public virtual IList<UserProductDescription> ProductDescriptions { get; set; }
-
-        // TODO decomment after the "Groups" model is enabled
-        /// <summary>
-        /// List of all Groups to which current User is assigned.
-        /// </summary>
-        //public virtual List<Group> GroupMembership { get; set; }
-
-        /// <summary>
-        /// Email of the user.
-        /// </summary>
-        public virtual string Email { get; set; }
-
-        /// <summary>
-        /// PhoneNumber for the user.
-        /// </summary>
-        public virtual string PhoneNumber { get; set; }
-
-        /// <summary>
-        /// All user roles.
-        /// </summary>
-        public virtual ICollection<string> Roles { get; set; }
-         
-        /// <summary>
-        /// All user claims.
-        /// </summary>
-        public virtual ICollection<Claim> Claims { get; set; }
-
-        /// <summary>
-        /// All user logins.
-        /// </summary>
-        public virtual ICollection<UserLogin> Logins { get; set; }
     }
 }

@@ -405,6 +405,7 @@
     <Compile Include="Controllers\Api\ErrorController.cs" />
     <Compile Include="Controllers\Api\PayPalController.cs" />
     <Compile Include="Controllers\Api\SearchController.cs" />
+    <Compile Include="Controllers\Api\UserManagement\UserController.cs" />
     <Compile Include="Controllers\Mvc\BaseMvcController.cs" />
     <Compile Include="Controllers\Mvc\ErrorController.cs" />
     <Compile Include="Controllers\Mvc\HomeController.cs" />
@@ -414,6 +415,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Hubs\NotificationHub.cs" />
+    <Compile Include="Models\Users\ChangePassword.cs" />
+    <Compile Include="Models\Users\Email.cs" />
+    <Compile Include="Models\Users\LoginByEmail.cs" />
+    <Compile Include="Models\Users\LoginByName.cs" />
+    <Compile Include="Models\Users\ProductDescriprion.cs" />
+    <Compile Include="Models\Users\RegisterUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\NinjectSignalRDependencyResolver.cs" />
@@ -452,7 +459,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Administration\Models\" />
     <Folder Include="Areas\Administration\Views\Shared\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WasteProducts.Logic.Common\WasteProducts.Logic.Common.csproj">

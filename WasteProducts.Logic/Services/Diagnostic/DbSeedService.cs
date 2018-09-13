@@ -7,6 +7,8 @@ using WasteProducts.Logic.Common.Factories;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.Diagnostic;
+using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Common.Services.Users;
 
 namespace WasteProducts.Logic.Services
 {
@@ -49,10 +51,13 @@ namespace WasteProducts.Logic.Services
         {
             _logger.Debug("Seeding test data");
 
-            // TODO: Seeding test data using services from IServiceFactory
-
-            using (var userService = _serviceFactory.CreateUserService())
+            IUserService userService = null;
+            IProductService productService = null;
+            try
             {
+                userService = _serviceFactory.CreateUserService();
+                productService = _serviceFactory.CreateProductService();
+
                 var faker = new Faker("en");
 
                 var categoriesCount = 5;
@@ -60,29 +65,34 @@ namespace WasteProducts.Logic.Services
 
                 for (int i = 0; i < 10; i++)
                 {
-                    var user = _testModelsService.GenerateUser();
-                    var userPassword = faker.Internet.Password();
+                    var email = faker.Internet.Email();
+                    await userService.RegisterAsync(email, $"user{i}", $"password{i}", null).ConfigureAwait(false);
+                }
+                var users = await userService.GetAllUsersAsync();
 
-                    user = await userService.RegisterAsync(user.Email, user.UserName, userPassword, userPassword).ConfigureAwait(false);
-
-                    using (var productService = _serviceFactory.CreateProductService())
+                foreach (var user in users)
+                {
+                    for (int j = 0; j < categoriesCount; j++)
                     {
-                        for (int j = 0; j < categoriesCount; j++)
-                        {
-                            var productName = faker.Commerce.ProductName();
-                            productService.AddByName(productName);
+                        var productName = faker.Commerce.ProductName();
+                        productService.AddByName(productName);
 
-                            var product = await productService.GetByNameAsync(productName).ConfigureAwait(false);
-                            productService.AddCategory(product, categories[j]);
+                        var product = await productService.GetByNameAsync(productName).ConfigureAwait(false);
+                        productService.AddCategory(product, categories[j]);
 
-                            var isGoodProduct = faker.Random.Bool();
-                            var rating = faker.Random.Int(-10, 10);
-                            await userService.AddProductAsync(user.Id, product.Id, rating, $"The '{productName}' is the {(isGoodProduct ? "best" : "most crappy")} product I've ever seen .. bla-bla-bla ...").ConfigureAwait(false);
-                        }
+                        var isGoodProduct = faker.Random.Bool();
+                        var rating = faker.Random.Int(0, 10);
+                        await userService.AddProductAsync(user.Id, product.Id, rating, $"The '{productName}' is the {(isGoodProduct ? "best" : "most crappy")} product I've ever seen .. bla-bla-bla ...").ConfigureAwait(false);
                     }
                 }
             }
+            finally
+            {
+                userService?.Dispose();
+                productService?.Dispose();
+            }
         }
+
 
         private List<Category> CreateCategories(Faker faker, int categoriesCount)
         {
@@ -102,7 +112,7 @@ namespace WasteProducts.Logic.Services
         {
             var adminEmail = "admin@wasteproducts.com";
             var adminUsername = "admin";
-            var adminPassword = "admin1" ;
+            var adminPassword = "admin1";
             var adminRoleName = "Admin";
 
             using (var roleService = _serviceFactory.CreateRoleService())
@@ -113,7 +123,8 @@ namespace WasteProducts.Logic.Services
 
             using (var userService = _serviceFactory.CreateUserService())
             {
-                var adminUser = await userService.RegisterAsync(adminEmail, adminUsername, adminPassword, adminPassword).ConfigureAwait(false);
+                await userService.RegisterAsync(adminEmail, adminUsername, adminPassword, null).ConfigureAwait(false);
+                var adminUser = await userService.LogInByNameAsync(adminUsername, adminPassword).ConfigureAwait(false);
                 await userService.AddToRoleAsync(adminUser.Id, adminRoleName).ConfigureAwait(false);
             }
         }

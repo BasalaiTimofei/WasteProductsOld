@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models.Users;
-using WasteProducts.Logic.Common.Services.UserService;
+using WasteProducts.Logic.Common.Services.Users;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Common.Models.Users;
 using AutoMapper;
-using Ninject;
 
-namespace WasteProducts.Logic.Services.UserService
+namespace WasteProducts.Logic.Services.Users
 {
     public class UserRoleService : IUserRoleService
     {
@@ -21,14 +20,6 @@ namespace WasteProducts.Logic.Services.UserService
         {
             _roleRepo = roleRepo;
             _mapper = mapper;
-        }
-
-        ~UserRoleService()
-        {
-            if (!_disposed)
-            {
-                Dispose();
-            }
         }
 
         public void Dispose()
@@ -68,11 +59,11 @@ namespace WasteProducts.Logic.Services.UserService
             await _roleRepo.UpdateRoleNameAsync(MapTo<UserRoleDB>(role));
         }
 
-        public async Task<IEnumerable<User>> GetRoleUsers(UserRole role)
+        public async Task<IEnumerable<Common.Models.Users.User>> GetRoleUsers(UserRole role)
         {
             UserRoleDB roleDB = MapTo<UserRoleDB>(role);
             IEnumerable<UserDB> subResult = await _roleRepo.GetRoleUsers(roleDB);
-            IEnumerable<User> result = _mapper.Map<IEnumerable<User>>(subResult);
+            IEnumerable<Common.Models.Users.User> result = _mapper.Map<IEnumerable<Common.Models.Users.User>>(subResult);
             return result;
         }
 
@@ -85,5 +76,10 @@ namespace WasteProducts.Logic.Services.UserService
             where T : UserRole
             =>
            _mapper.Map<UserRole>(role);
+
+        ~UserRoleService()
+        {
+            Dispose();
+        }
     }
 }
