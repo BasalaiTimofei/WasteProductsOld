@@ -137,7 +137,10 @@ namespace WasteProducts.Web.Controllers.Api
             {
                 Donor = donor,
                 TransactionId = payPalArguments[IPN.Transaction.TXN_ID],
-                Date = ConvertPayPalDateTime(payPalArguments[IPN.Payment.PAYMENT_DATE])
+                Date = ConvertPayPalDateTime(payPalArguments[IPN.Payment.PAYMENT_DATE]),
+                Gross = Convert.ToDecimal(payPalArguments[IPN.Payment.MC_GROSS]),
+                Currency = payPalArguments[IPN.Payment.MC_CURRENCY],
+                Fee = Convert.ToDecimal(payPalArguments[IPN.Payment.MC_FEE])
             };
         }
 
