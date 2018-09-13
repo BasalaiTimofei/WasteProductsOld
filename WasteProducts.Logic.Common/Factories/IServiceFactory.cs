@@ -1,7 +1,7 @@
 ﻿using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Common.Services.Donations;
 using WasteProducts.Logic.Common.Services.Products;
-using WasteProducts.Logic.Common.Services.UserService;
+using WasteProducts.Logic.Common.Services.Users;
 
 namespace WasteProducts.Logic.Common.Factories
 {
