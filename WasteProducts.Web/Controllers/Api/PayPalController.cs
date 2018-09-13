@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
+using WasteProducts.Logic.Common.Models.Donations;
 using WasteProducts.Logic.Common.Services.Donations;
 
 namespace WasteProducts.Web.Controllers.Api
@@ -95,8 +96,8 @@ namespace WasteProducts.Web.Controllers.Api
         private void ProcessVerificationResponse(string verificationResponse, string payPalRequestString)
         {
             const string INVALID = "INVALID";
-
             const string COMPLETED = "Completed";
+            const string CONFIRMED = "confirmed";
 
             if (verificationResponse.Equals(INVALID))
                 return;
@@ -110,7 +111,16 @@ namespace WasteProducts.Web.Controllers.Api
             //.  more args as needed look at the list from paypal IPN doc
             if (payPalArguments[IPN.Payment.PAYMENT_STATUS] != COMPLETED)
                 return;
-            string user_email = payPalArguments["payer_email"];
+            Address address = new Address
+            {
+                City = payPalArguments[IPN.Buyer.ADDRESS_CITY],
+                Country = payPalArguments[IPN.Buyer.ADDRESS_COUNTRY],
+                State = payPalArguments[IPN.Buyer.ADDRESS_STATE],
+                IsConfirmed = payPalArguments[IPN.Buyer.ADDRESS_STATUS] == CONFIRMED,
+                Name = payPalArguments[IPN.Buyer.ADDRESS_NAME],
+                Street = payPalArguments[IPN.Buyer.ADDRESS_STREET],
+                Zip = payPalArguments[IPN.Buyer.ADDRESS_ZIP]
+            };
         }
     }
 
