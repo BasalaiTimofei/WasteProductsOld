@@ -191,8 +191,8 @@
     <Compile Include="Services\MailService\MailService.cs" />
     <Compile Include="Interceptors\Search\SearchServiceInterceptor.cs" />
     <Compile Include="Services\TestService.cs" />
-    <Compile Include="Services\UserService\UserRoleService.cs" />
-    <Compile Include="Services\UserService\UserService.cs" />
+    <Compile Include="Services\User\UserRoleService.cs" />
+    <Compile Include="Services\User\UserService.cs" />
     <Compile Include="Validators\Products\CategoryValidator.cs" />
     <Compile Include="Validators\Products\ProductValidator.cs" />
     <Compile Include="Validators\Search\BoostedSearchQueryValidator.cs" />
@@ -208,9 +208,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\Groups\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">
       <Project>{9acbec5d-caa7-4e29-a19c-a247190f6da8}</Project>

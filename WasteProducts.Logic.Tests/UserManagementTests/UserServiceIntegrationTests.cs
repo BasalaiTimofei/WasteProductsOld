@@ -10,7 +10,7 @@ using WasteProducts.DataAccess.Repositories.UserManagement;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Common.Services.Products;
-using WasteProducts.Logic.Common.Services.UserService;
+using WasteProducts.Logic.Common.Services.Users;
 
 namespace WasteProducts.Logic.Tests.UserManagementTests
 {
