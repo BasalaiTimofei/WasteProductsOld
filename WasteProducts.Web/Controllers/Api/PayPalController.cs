@@ -98,6 +98,7 @@ namespace WasteProducts.Web.Controllers.Api
             const string INVALID = "INVALID";
             const string COMPLETED = "Completed";
             const string CONFIRMED = "confirmed";
+            const string VERIFIED = "verified";
 
             if (verificationResponse.Equals(INVALID))
                 return;
@@ -120,6 +121,15 @@ namespace WasteProducts.Web.Controllers.Api
                 Name = payPalArguments[IPN.Buyer.ADDRESS_NAME],
                 Street = payPalArguments[IPN.Buyer.ADDRESS_STREET],
                 Zip = payPalArguments[IPN.Buyer.ADDRESS_ZIP]
+            };
+            Donor donor = new Donor
+            {
+                Address = address,
+                Id = payPalArguments[IPN.Buyer.PAYER_ID],
+                Email = payPalArguments[IPN.Buyer.PAYER_EMAIL],
+                IsVerified = payPalArguments[IPN.Payment.PAYER_STATUS] == VERIFIED,
+                FirstName = payPalArguments[IPN.Buyer.FIRST_NAME],
+                LastName = payPalArguments[IPN.Buyer.LAST_NAME]
             };
         }
     }
