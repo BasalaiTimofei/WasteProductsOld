@@ -100,10 +100,8 @@ namespace WasteProducts.Web.Controllers.Api
         private void ProcessVerificationResponse(string verificationResponse, string payPalRequestString)
         {            
             const string COMPLETED = "Completed";
-            const string CONFIRMED = "confirmed";
             const string OUR_PAYPAL_EMAIL = "OurPayPalEmail";
             const string INVALID = "INVALID";
-            const string VERIFIED = "verified";
 
             if (verificationResponse.Equals(INVALID))
                 return; // It was fraud try.
@@ -117,7 +115,43 @@ namespace WasteProducts.Web.Controllers.Api
             if (payPalArguments[IPN.Payment.PAYMENT_STATUS] != COMPLETED || 
                 _appSettings[OUR_PAYPAL_EMAIL] != payPalArguments[IPN.Transaction.RECEIVER_EMAIL])
                 return;
-            Address address = new Address
+
+            Donation donation = FillDonation(payPalArguments);
+        }
+
+        private Donation FillDonation(NameValueCollection payPalArguments)
+        {
+            return new Donation
+            {
+                Donor = FillDonor(payPalArguments),
+                TransactionId = payPalArguments[IPN.Transaction.TXN_ID],
+                Date = ConvertPayPalDateTime(payPalArguments[IPN.Payment.PAYMENT_DATE]),
+                Gross = Convert.ToDecimal(payPalArguments[IPN.Payment.MC_GROSS]),
+                Currency = payPalArguments[IPN.Payment.MC_CURRENCY],
+                Fee = Convert.ToDecimal(payPalArguments[IPN.Payment.MC_FEE])
+            };
+        }
+
+        private Donor FillDonor(NameValueCollection payPalArguments)
+        {
+            const string VERIFIED = "verified";
+
+            return new Donor
+            {
+                Address = FillAddress(payPalArguments),
+                Id = payPalArguments[IPN.Buyer.PAYER_ID],
+                Email = payPalArguments[IPN.Buyer.PAYER_EMAIL],
+                IsVerified = payPalArguments[IPN.Payment.PAYER_STATUS] == VERIFIED,
+                FirstName = payPalArguments[IPN.Buyer.FIRST_NAME],
+                LastName = payPalArguments[IPN.Buyer.LAST_NAME]
+            };
+        }
+
+        private Address FillAddress(NameValueCollection payPalArguments)
+        {
+            const string CONFIRMED = "confirmed";
+
+            return new Address
             {
                 City = payPalArguments[IPN.Buyer.ADDRESS_CITY],
                 Country = payPalArguments[IPN.Buyer.ADDRESS_COUNTRY],
@@ -126,24 +160,6 @@ namespace WasteProducts.Web.Controllers.Api
                 Name = payPalArguments[IPN.Buyer.ADDRESS_NAME],
                 Street = payPalArguments[IPN.Buyer.ADDRESS_STREET],
                 Zip = payPalArguments[IPN.Buyer.ADDRESS_ZIP]
-            };
-            Donor donor = new Donor
-            {
-                Address = address,
-                Id = payPalArguments[IPN.Buyer.PAYER_ID],
-                Email = payPalArguments[IPN.Buyer.PAYER_EMAIL],
-                IsVerified = payPalArguments[IPN.Payment.PAYER_STATUS] == VERIFIED,
-                FirstName = payPalArguments[IPN.Buyer.FIRST_NAME],
-                LastName = payPalArguments[IPN.Buyer.LAST_NAME]
-            };
-            Donation donation = new Donation
-            {
-                Donor = donor,
-                TransactionId = payPalArguments[IPN.Transaction.TXN_ID],
-                Date = ConvertPayPalDateTime(payPalArguments[IPN.Payment.PAYMENT_DATE]),
-                Gross = Convert.ToDecimal(payPalArguments[IPN.Payment.MC_GROSS]),
-                Currency = payPalArguments[IPN.Payment.MC_CURRENCY],
-                Fee = Convert.ToDecimal(payPalArguments[IPN.Payment.MC_FEE])
             };
         }
 
