@@ -20,7 +20,6 @@ using WasteProducts.Logic.Services.UserService;
 using WasteProducts.Logic.Mappings;
 using WasteProducts.Logic.Mappings.Products;
 using WasteProducts.Logic.Mappings.UserMappings;
-using WasteProducts.Logic.Services.Products;
 using WasteProducts.Logic.Validators.Search;
 
 namespace WasteProducts.Logic
