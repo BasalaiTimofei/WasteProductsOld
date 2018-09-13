@@ -173,22 +173,25 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             await _manager.RemoveLoginAsync(userId, userLoginInfo);
         }
 
-        public IEnumerable<UserDAL> GetAll(bool initiateNavigationalProps)
+        public async Task<IEnumerable<UserDAL>> GetAllAsync(bool initiateNavigationalProps)
         {
-            if (initiateNavigationalProps)
+            return await Task.Run(() =>
             {
-                return _mapper.Map<IEnumerable<UserDAL>>(_context.Users.ToList());
-            }
-            else
-            {
-                var subresult = _context.Users.Include(u => u.Roles).
-                    Include(u => u.Claims).
-                    Include(u => u.Logins).
-                    Include(u => u.Friends).
-                    Include(u => u.ProductDescriptions.Select(p => p.Product)).ToList();
+                if (initiateNavigationalProps)
+                {
+                    return _mapper.Map<IEnumerable<UserDAL>>(_context.Users.ToList());
+                }
+                else
+                {
+                    var subresult = _context.Users.Include(u => u.Roles).
+                        Include(u => u.Claims).
+                        Include(u => u.Logins).
+                        Include(u => u.Friends).
+                        Include(u => u.ProductDescriptions.Select(p => p.Product)).ToList();
 
-                return _mapper.Map<IEnumerable<UserDAL>>(subresult);
-            }
+                    return _mapper.Map<IEnumerable<UserDAL>>(subresult);
+                }
+            });
         }
 
         public async Task<UserDAL> GetAsync(string id, bool initiateNavigationalProps)
@@ -298,31 +301,37 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         // Business logic below
         public async Task AddFriendAsync(string userId, string friendId)
         {
-            UserDB user = _context.Users.Include(p => p.Friends).FirstOrDefault(u => u.Id == userId);
-            UserDB friend = _context.Users.FirstOrDefault(u => u.Id == friendId);
-
-            if (user != null && friend != null)
+            await Task.Run(() =>
             {
-                user.Friends.Add(friend);
-                user.Modified = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
-            }
+                UserDB user = _context.Users.Include(p => p.Friends).FirstOrDefault(u => u.Id == userId);
+                UserDB friend = _context.Users.FirstOrDefault(u => u.Id == friendId);
+
+                if (user != null && friend != null)
+                {
+                    user.Friends.Add(friend);
+                    user.Modified = DateTime.UtcNow;
+                    _context.SaveChanges();
+                }
+            });
         }
 
         public async Task DeleteFriendAsync(string userId, string deletingFriendId)
         {
-            UserDB user = _context.Users.Include(p => p.Friends).FirstOrDefault(u => u.Id == userId);
-            UserDB friend = _context.Users.FirstOrDefault(u => u.Id == deletingFriendId);
-
-            if (user != null && friend != null)
+            await Task.Run(() =>
             {
-                user.Friends.Remove(friend);
-                user.Modified = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
-            }
+                UserDB user = _context.Users.Include(p => p.Friends).FirstOrDefault(u => u.Id == userId);
+                UserDB friend = _context.Users.FirstOrDefault(u => u.Id == deletingFriendId);
+
+                if (user != null && friend != null)
+                {
+                    user.Friends.Remove(friend);
+                    user.Modified = DateTime.UtcNow;
+                    _context.SaveChanges();
+                }
+            });
         }
 
-        public async Task<bool> AddProductAsync(string userId, string productId, int? rating, string description)
+        public async Task<bool> AddProductAsync(string userId, string productId, int rating, string description)
         {
             return await Task.Run(() =>
             {
@@ -351,19 +360,19 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             });
         }
 
-        public async Task<bool> UpdateProductDescriptionAsync(string userId, string productId, int? rating, string description)
+        public async Task<bool> UpdateProductDescriptionAsync(string userId, string productId, int rating, string description)
         {
-            return await Task.Run(async () =>
+            return await Task.Run(() =>
             {
                 UserProductDescriptionDB descr = _context.UserProductDescriptions.FirstOrDefault(d => d.UserId == userId && d.ProductId == productId);
                 if (descr == null)
                 {
                     return false;
                 }
-                descr.Rating = (int)rating;
+                descr.Rating = rating;
                 descr.Description = description;
 
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
                 return true;
             });
         }

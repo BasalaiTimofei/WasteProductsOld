@@ -121,12 +121,9 @@ namespace WasteProducts.Logic.Services.Users
 
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
-            return await Task.Run(() =>
-            {
-                IEnumerable<UserDAL> allUserDBs = _userRepo.GetAll(true).ToList();
-                var allUsers = _mapper.Map<IEnumerable<User>>(allUserDBs);
-                return allUsers;
-            });
+            IEnumerable<UserDAL> allUserDBs = await _userRepo.GetAllAsync(true);
+            var allUsers = _mapper.Map<IEnumerable<User>>(allUserDBs);
+            return allUsers;
         }
 
         public async Task<User> GetUserAsync(string id)
@@ -184,7 +181,7 @@ namespace WasteProducts.Logic.Services.Users
             await _userRepo.DeleteFriendAsync(userId, deletingFriendId);
         }
 
-        public async Task<bool> AddProductAsync(string userId, string productId, int? rating, string description)
+        public async Task<bool> AddProductAsync(string userId, string productId, int rating, string description)
         {
             if (userId == null || productId == null || rating > 10 || rating < 0)
             {
@@ -194,7 +191,7 @@ namespace WasteProducts.Logic.Services.Users
             return await _userRepo.AddProductAsync(userId, productId, rating, description);
         }
 
-        public async Task<bool> UpdateProductDescriptionAsync(string userId, string productId, int? rating, string description)
+        public async Task<bool> UpdateProductDescriptionAsync(string userId, string productId, int rating, string description)
         {
             if (userId == null || productId == null || rating > 10 || rating < 0)
             {
