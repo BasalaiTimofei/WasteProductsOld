@@ -101,7 +101,7 @@ namespace WasteProducts.Web.Controllers.Api
         {            
             const string COMPLETED = "Completed";
             const string CONFIRMED = "confirmed";
-            const string EMAIL = "Email";
+            const string OUR_PAYPAL_EMAIL = "OurPayPalEmail";
             const string INVALID = "INVALID";
             const string VERIFIED = "verified";
 
@@ -115,7 +115,7 @@ namespace WasteProducts.Web.Controllers.Api
             // process payment
             NameValueCollection payPalArguments = HttpUtility.ParseQueryString(payPalRequestString);
             if (payPalArguments[IPN.Payment.PAYMENT_STATUS] != COMPLETED || 
-                _appSettings[EMAIL] != payPalArguments[IPN.Transaction.RECEIVER_EMAIL])
+                _appSettings[OUR_PAYPAL_EMAIL] != payPalArguments[IPN.Transaction.RECEIVER_EMAIL])
                 return;
             Address address = new Address
             {
