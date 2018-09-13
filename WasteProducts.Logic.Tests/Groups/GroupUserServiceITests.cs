@@ -15,7 +15,7 @@ using WasteProducts.Logic.Common.Services.Groups;
 using WasteProducts.Logic.Mappings.Groups;
 using WasteProducts.Logic.Services.Groups;
 
-namespace WasteProducts.Logic.Tests.UserManagementTests
+namespace WasteProducts.Logic.Tests.GroupManagementTests
 {
     public class GroupUserServiceITests
     {
