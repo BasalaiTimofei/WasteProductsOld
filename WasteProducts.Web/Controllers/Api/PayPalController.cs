@@ -2,6 +2,7 @@
 using Swagger.Net.Annotations;
 using System;
 using System.Collections.Specialized;
+using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -96,14 +97,15 @@ namespace WasteProducts.Web.Controllers.Api
         /// Processes a verification response.
         /// </summary>
         private void ProcessVerificationResponse(string verificationResponse, string payPalRequestString)
-        {
-            const string INVALID = "INVALID";
+        {            
             const string COMPLETED = "Completed";
             const string CONFIRMED = "confirmed";
+            const string EMAIL = "Email";
+            const string INVALID = "INVALID";
             const string VERIFIED = "verified";
 
             if (verificationResponse.Equals(INVALID))
-                return;
+                return; // It was fraud try.
 
             // check that Payment_status=Completed
             // check that Txn_id has not been previously processed
@@ -111,8 +113,9 @@ namespace WasteProducts.Web.Controllers.Api
             // check that Payment_amount/Payment_currency are correct
             // process payment
             NameValueCollection payPalArguments = HttpUtility.ParseQueryString(payPalRequestString);
-            //.  more args as needed look at the list from paypal IPN doc
-            if (payPalArguments[IPN.Payment.PAYMENT_STATUS] != COMPLETED)
+            NameValueCollection appSettings = ConfigurationManager.AppSettings;
+            if (payPalArguments[IPN.Payment.PAYMENT_STATUS] != COMPLETED || 
+                appSettings[EMAIL] != payPalArguments[IPN.Transaction.RECEIVER_EMAIL])
                 return;
             Address address = new Address
             {
@@ -146,13 +149,17 @@ namespace WasteProducts.Web.Controllers.Api
 
         private DateTime ConvertPayPalDateTime(string payPalDateTime)
         {
-            string[] dateFormats = { "HH:MM:SS Mmm DD, YYYY PDT" };
+            const string LOCAL_TIME_ZONE = "LocalTimeZone";
+            const string PAYPAL_TIME_FORMAT = "PayPalTimeFormat";
 
+            NameValueCollection appSettings = ConfigurationManager.AppSettings;
+
+            string[] dateFormats = { appSettings[PAYPAL_TIME_FORMAT] };
             DateTime outputDateTime;
             DateTime.TryParseExact(payPalDateTime, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out outputDateTime);
 
             // convert to local timezone
-            TimeZoneInfo hwZone = TimeZoneInfo.FindSystemTimeZoneById("Belarus Standard Time");
+            TimeZoneInfo hwZone = TimeZoneInfo.FindSystemTimeZoneById(appSettings[LOCAL_TIME_ZONE]);
 
             outputDateTime = TimeZoneInfo.ConvertTime(outputDateTime, hwZone, TimeZoneInfo.Local);
 
