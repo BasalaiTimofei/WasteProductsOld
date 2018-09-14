@@ -9,6 +9,7 @@ using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Repositories.UserManagement;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Common.Services.Products;
 using WasteProducts.Logic.Common.Services.Users;
 
 namespace WasteProducts.Logic.Tests.UserManagementTests
@@ -414,7 +415,7 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
             using (var prodService = _kernel.Get<IProductService>())
             {
-                prodService.AddByName(productName);
+                prodService.Add(productName, out var addedProduct);
                 var product = await prodService.GetByNameAsync(productName);
 
                 Assert.IsNotNull(product);

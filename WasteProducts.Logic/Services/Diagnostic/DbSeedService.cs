@@ -8,6 +8,7 @@ using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.Diagnostic;
 using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Common.Services.Products;
 using WasteProducts.Logic.Common.Services.Users;
 
 namespace WasteProducts.Logic.Services
@@ -75,7 +76,7 @@ namespace WasteProducts.Logic.Services
                     for (int j = 0; j < categoriesCount; j++)
                     {
                         var productName = faker.Commerce.ProductName();
-                        productService.AddByName(productName);
+                        productService.Add(productName, out  var addedProduct);
 
                         var product = await productService.GetByNameAsync(productName).ConfigureAwait(false);
                         productService.AddCategory(product, categories[j]);

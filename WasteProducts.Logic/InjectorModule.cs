@@ -4,12 +4,16 @@ using Ninject;
 using Ninject.Extensions.Factory;
 using Ninject.Extensions.Interception.Infrastructure.Language;
 using Ninject.Modules;
+using System;
+using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.Logic.Common.Factories;
+using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Common.Services.Diagnostic;
 using WasteProducts.Logic.Common.Services.Mail;
 using WasteProducts.Logic.Common.Services.Users;
 using WasteProducts.Logic.Common.Services.Groups;
+using WasteProducts.Logic.Common.Services.Products;
 using WasteProducts.Logic.Interceptors;
 using WasteProducts.Logic.Mappings;
 using WasteProducts.Logic.Mappings.UserMappings;
@@ -17,11 +21,13 @@ using WasteProducts.Logic.Services;
 using WasteProducts.Logic.Services.Mail;
 using WasteProducts.Logic.Services.Users;
 using WasteProducts.Logic.Services.Groups;
+using WasteProducts.Logic.Services.Products;
+using WasteProducts.Logic.Mappings.Products;
 using WasteProducts.Logic.Validators.Search;
 using System.Configuration;
 using System.Net.Mail;
 using System.Net;
-using ProductProfile = WasteProducts.Logic.Mappings.ProductProfile;
+using ProductProfile = WasteProducts.Logic.Mappings.Products.ProductProfile;
 
 namespace WasteProducts.Logic
 {
@@ -115,7 +121,12 @@ namespace WasteProducts.Logic
             Bind<IMapper>().ToMethod(ctx =>
                 new Mapper(new MapperConfiguration(cfg =>
                 {
-                    cfg.AddProfile<ProductProfile>();
+                    cfg.CreateMap<Product, ProductDB>()
+                        .ForMember(m => m.Created,
+                            opt => opt.MapFrom(p => p.Name != null ? DateTime.UtcNow : default(DateTime)))
+                        .ForMember(m => m.Modified, opt => opt.UseValue((DateTime?) null))
+                        .ForMember(m => m.Barcode, opt => opt.Ignore())
+                        .ReverseMap();
                     cfg.AddProfile<CategoryProfile>();
                 }))).WhenInjectedExactlyInto<ProductService>();
 

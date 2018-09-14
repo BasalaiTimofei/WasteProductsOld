@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using WasteProducts.DataAccess.Common.Models.Products;
-using WasteProducts.DataAccess.Common.Repositories;
+using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.DataAccess.Contexts;
 
-namespace WasteProducts.DataAccess.Repositories
+namespace WasteProducts.DataAccess.Repositories.Products
 {
     /// <summary>
     /// This class is a context class. A binder for the 'CategoyrDB' class with a data access.
@@ -20,10 +20,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// Using the context of the WasteContext class through the private field.
         /// </summary>
         /// <param name="context">The specific context of WasteContext</param>
-        public CategoryRepository(WasteContext context)
-        {
-            _context = context;
-        }
+        public CategoryRepository(WasteContext context) => _context = context;
 
         /// <summary>
         /// Adds a new category
@@ -52,7 +49,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// Deletes the specific category by id
         /// </summary>
         /// <param name="id">Represents a specific category id to delete</param>
-        public void DeleteById(int id)
+        public void Delete(int id)
         {
             var category = _context.Categories.Find(id);
             Delete(category);
