@@ -11,7 +11,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrls: ['./component-search.component.css']
 })
 export class SearchComponent implements OnInit {
-  MyQuery: 'sssss';
+  query: string;
   private URL_SEARCH = 'http://localhost:2189/api/search/products';  // URL to web api
   showError = false;
   errorMessage: string;

@@ -1,15 +1,9 @@
-#search-component {
-  margin: 0 450px;
+.search-component {
+  width: 500px;
+
 }
 
-* {box-sizing: border-box;}
-
-#search-3 {
-  width: auto;
-  float: right;
-  margin-right: 30px;
-}
-input.search-3 {
+input.search {
   width: 180px;
   height: 35px;
   padding-left: 15px;
@@ -20,15 +14,17 @@ input.search-3 {
   position: relative;
   transition: .3s linear;
 }
-input.search-3:focus {
+input.search:focus {
   width: 350px;
 }
-button.search-3 {
-  width: 50px;
-  height: 50px;
-  background: none;
-  border: white;
+
+.main-container {
+  float: left;
   position: relative;
-  top: 0;
-  right: 0;
+  left: 50%;
+}
+.fixer-container {
+  float: left;
+  position: relative;
+  left: -50%;
 }
