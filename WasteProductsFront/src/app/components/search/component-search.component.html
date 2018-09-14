@@ -8,7 +8,7 @@
   </div>
 </div>
 
-<div id="search-component">
+<div id="search-component-2">
   <div id="search-3">
     <input class="search-3" [(ngModel)]="MyQuery" type="text" placeholder="Your search query...">
     <button mat-button *ngIf="MyQuery" (click)="MyQuery=''" matSuffix mat-icon-button aria-label="Clear">
@@ -19,3 +19,12 @@
     </button>
   </div>
 </div>
+
+<div id="search-component-3">
+    <div id="search-3">
+      <input class="search-3" [(ngModel)]="MyQuery" (keyup)="search(MyQuery)" type="text" placeholder="Your search query...">
+      <button mat-button *ngIf="MyQuery" (click)="MyQuery=''" matSuffix mat-icon-button aria-label="Clear">
+          <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
