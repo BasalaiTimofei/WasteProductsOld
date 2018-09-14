@@ -2,17 +2,16 @@
   width: 500px;
 }
 
-input.search {
+input.search-style {
   width: 180px;
   height: 35px;
   padding-left: 15px;
   border-radius: 42px;
   border: 2px solid #5c5d5e;
-  background: rgb(255, 255, 255);
   outline: none;
   position: relative;
-  transition: .3s linear;
+  transition: .3s ease-in-out;
 }
-input.search:focus {
+input.search-style:focus {
   width: 350px;
 }

@@ -8,26 +8,26 @@
   </div>
 </div>
 
-<div class="search-component-7">
-  <input class="search" [(ngModel)]="query" type="text" placeholder="Your search query...">
-  <button mat-button *ngIf="query" (click)="query=''" matSuffix mat-icon-button aria-label="Clear">
+<div class="search-component">
+  <input class="search-style" aria-label="Search" placeholder="Your search query..." [(ngModel)]="query">
+  <button *ngIf="query" matSuffix  mat-button mat-icon-button aria-label="Clear" (click)="query=''">
     <mat-icon>close</mat-icon>
   </button>
-  <button type="submit" (click)="search(query)" matSuffix mat-icon-button aria-label="Search">
+  <button type="submit"  matSuffix mat-button mat-icon-button aria-label="Search" (click)="search(query)">
     <mat-icon>search</mat-icon>
   </button>
 </div>
 
 <div class="search-component">
-  <input class="search" [(ngModel)]="query2" (keyup)="search(query2)" type="text" placeholder="Your search query...">
-  <button mat-button *ngIf="query2" (click)="query2=''" matSuffix mat-icon-button aria-label="Clear">
+  <input class="search-style" [(ngModel)]="query2" (keyup)="search(query2)" type="text" placeholder="Your search query...">
+  <button *ngIf="query2" matSuffix mat-button mat-icon-button aria-label="Clear" (click)="query2=''">
     <mat-icon>close</mat-icon>
   </button>
 </div>
 
-<mat-form-field class="example-form-field">
-  <input matInput type="text" placeholder="Clearable input" [(ngModel)]="query">
-  <button mat-button *ngIf="query" matSuffix mat-icon-button aria-label="Clear" (click)="query=''">
+<mat-form-field>
+  <input matInput type="text" placeholder="Your search query..." [(ngModel)]="query">
+  <button *ngIf="query" matSuffix mat-button mat-icon-button aria-label="Clear" (click)="query=''">
     <mat-icon>close</mat-icon>
   </button>
 </mat-form-field>
