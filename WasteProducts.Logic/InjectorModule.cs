@@ -87,7 +87,6 @@ namespace WasteProducts.Logic
 
             Bind<IUserService>().To<UserService>();
             Bind<IUserRoleService>().To<UserRoleService>();
-            Bind<ISearchService>().To<LuceneSearchService>();
 
             Bind<IGroupService>().To<GroupService>();
             Bind<IGroupBoardService>().To<GroupBoardService>();
