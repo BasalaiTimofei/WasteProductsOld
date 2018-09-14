@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { SearchService } from '../../services/service-search.service';
 import { SearchProduct } from '../../models/SearchProduct.model';
 import { Observable, of } from 'rxjs';
@@ -11,7 +11,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   styleUrls: ['./component-search.component.css']
 })
 export class SearchComponent implements OnInit {
-  value = 'Clear me';
+  MyQuery: 'sssss';
   private URL_SEARCH = 'http://localhost:2189/api/search/products';  // URL to web api
   showError = false;
   errorMessage: string;

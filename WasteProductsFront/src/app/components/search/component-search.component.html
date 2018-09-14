@@ -1,16 +1,20 @@
 <div id="search-component">
   <div class="input-group mb-3">
-      <input #query type="text" class="form-control" placeholder="Your search query..." aria-label="Your search query..." aria-describedby="basic-addon2">
+      <input #query1 type="text" class="form-control" placeholder="Your search query..." aria-label="Your search query..." aria-describedby="basic-addon2">
       <div class="input-group-append">
-        <button class="btn btn-outline-secondary" type="button" (click)="search(query.value)">Search</button>
+        <button class="btn btn-outline-secondary" type="button" (click)="search(query1.value)">Search</button>
+        <button class="btn btn-outline-secondary" type="button" (click)="query1.value=''">Clear</button>
       </div>
   </div>
 </div>
 
 <div id="search-component">
   <div id="search-3">
-    <input class="search-3" #query type="text" placeholder="Your search query...">
-    <button class="search-3" type="submit" (click)="search(query.value)">
+    <input class="search-3" [(ngModel)]="MyQuery" type="text" placeholder="Your search query...">
+    <button mat-button *ngIf="MyQuery" (click)="MyQuery=''" matSuffix mat-icon-button aria-label="Clear">
+        <mat-icon>close</mat-icon>
+    </button>
+    <button mat-button type="submit" (click)="search(MyQuery)" matSuffix mat-icon-button aria-label="Search">
       <mat-icon>search</mat-icon>
     </button>
   </div>
