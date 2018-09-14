@@ -40,19 +40,10 @@ export class SearchComponent implements OnInit {
             this.errorStatusCode = err.status;
           }
         });*/
-      this.searchResult[0] = new SearchProduct('iiii', 'nnnn', 'dddddd');
+      // this.searchResult[0] = new SearchProduct('iiii', 'nnnn', 'dddddd');
       this.searchCollectionEvent.emit(this.searchResult);
       this.statusCodeEvent.emit(200);
     }
-  }
-
-  runDefault(query: string): Observable<SearchProduct[]> {
-    return this.http.get<SearchProduct[]>(this.URL_SEARCH + '/test?query=' + query).pipe(
-      map(res => {
-        const result: any = res;
-        return result.map((item) => new SearchProduct(item.Id, item.Name, item.Description));
-      }), catchError(this.handleError('Error response', []))
-      );
   }
 
   private handleError<T> (operation = 'operation', result?: T) {

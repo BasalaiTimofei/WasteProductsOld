@@ -3,9 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material';
-import { MatButtonModule } from '@angular/material/button';
 import { MaterialModule } from './modules/material/material.module';
 
 /* Components */
@@ -22,13 +19,10 @@ import { SearchresultComponent } from './components/searchresult/component-searc
     SearchresultComponent
   ],
   imports: [
-    BrowserModule, 
-	FormsModule,
+    BrowserModule,
+    FormsModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatButtonModule,    
     MaterialModule
   ],
   providers: [],

@@ -3,6 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SearchProduct } from '../../models/SearchProduct.model';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment.prod';
+import { LoggingService } from '../logging/logging.service';
 
 
 @Injectable({
@@ -10,9 +12,11 @@ import { catchError, tap, map } from 'rxjs/operators';
 })
 export class SearchService {
   searchProducts: SearchProduct[];
-  private URL_SEARCH = 'http://localhost:2189/api/search/products';  // URL to web api
+  private URL_SEARCH = `${environment.apiHostUrl}/api/search/products`;  // URL to web api
 
-  constructor( private http: HttpClient ) { }
+  constructor(
+    private http: HttpClient,
+    private logService: LoggingService ) { }
 
   getProductList(): Observable<SearchProduct[]> {
     return this.http.get<SearchProduct[]>(this.URL_SEARCH + '?query=sssss')
@@ -50,8 +54,8 @@ export class SearchService {
       return of(result as T);
     };
   }
-    /** Log a HeroService message with the MessageService */
-    private log(message: string) {
-      // this.messageService.add(`HeroService: ${message}`);
-    }
+    /** Log with the LoggingService */
+  private log(msg: any) {
+    this.logService.log(`DatabaseService: ${msg}`);
+  }
 }
