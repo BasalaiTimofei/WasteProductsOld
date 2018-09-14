@@ -8,12 +8,12 @@
   </div>
 </div>
 
-<div class="search-component">
+<div class="search-component-7">
   <input class="search" [(ngModel)]="query" type="text" placeholder="Your search query...">
   <button mat-button *ngIf="query" (click)="query=''" matSuffix mat-icon-button aria-label="Clear">
     <mat-icon>close</mat-icon>
   </button>
-  <button mat-button type="submit" (click)="search(query)" matSuffix mat-icon-button aria-label="Search">
+  <button type="submit" (click)="search(query)" matSuffix mat-icon-button aria-label="Search">
     <mat-icon>search</mat-icon>
   </button>
 </div>
@@ -24,3 +24,10 @@
     <mat-icon>close</mat-icon>
   </button>
 </div>
+
+<mat-form-field class="example-form-field">
+  <input matInput type="text" placeholder="Clearable input" [(ngModel)]="query">
+  <button mat-button *ngIf="query" matSuffix mat-icon-button aria-label="Clear" (click)="query=''">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-form-field>

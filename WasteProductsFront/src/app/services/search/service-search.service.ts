@@ -56,6 +56,6 @@ export class SearchService {
   }
     /** Log with the LoggingService */
   private log(msg: any) {
-    this.logService.log(`DatabaseService: ${msg}`);
+    this.logService.log(`SearchService: ${msg}`);
   }
 }

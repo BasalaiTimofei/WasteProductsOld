@@ -40,7 +40,7 @@ export class SearchComponent implements OnInit {
             this.errorStatusCode = err.status;
           }
         });*/
-      // this.searchResult[0] = new SearchProduct('iiii', 'nnnn', 'dddddd');
+      this.searchResult[0] = new SearchProduct('iiii', 'nnnn', 'dddddd');
       this.searchCollectionEvent.emit(this.searchResult);
       this.statusCodeEvent.emit(200);
     }
