@@ -6,7 +6,9 @@ import { AppComponent } from './app.component';
 import { SearchComponent } from './components/search/component-search.component';
 import { SearchresultComponent } from './components/searchresult/component-searchresult.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule, MatIcon } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+
 
 @NgModule({
   declarations: [
@@ -18,7 +20,8 @@ import { MatIconModule, MatIcon } from '@angular/material/icon';
     BrowserModule,
     HttpClientModule,
     MatFormFieldModule,
-    MatIconModule
+    MatIconModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
