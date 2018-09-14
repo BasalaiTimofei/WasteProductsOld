@@ -8,13 +8,18 @@ import { SearchProduct } from '../../models/SearchProduct.model';
 })
 export class SearchresultComponent implements OnInit {
   searchProducts: SearchProduct[] = [];
+  statusCode: 200;
 
   constructor() { }
 
   resultQuery: string;
 
-  recieveMessage($event) {
+  recieveSearchResult($event) {
     this.searchProducts = $event;
+  }
+
+  recieveStatusCode($event) {
+    this.statusCode = $event;
   }
 
   ngOnInit() {

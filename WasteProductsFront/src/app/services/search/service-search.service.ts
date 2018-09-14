@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { SearchProduct } from '../models/SearchProduct.model';
+import { SearchProduct } from '../../models/SearchProduct.model';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 
@@ -41,7 +41,7 @@ export class SearchService {
     return (error: any): Observable<T> => {
 
       // TODO: send the error to remote logging infrastructure
-      // console.error(error); // log to console instead
+      console.error(error); // log to console instead
 
       // TODO: better job of transforming error for user consumption
       this.log(`${operation} failed: ${error.message}`);

@@ -1,6 +1,6 @@
-<app-component-search (messageEvent)="recieveMessage($event)"></app-component-search>
+<app-component-search (searchCollectionEvent)="recieveSearchResult($event)" (statusCodeEvent)="recieveStatusCode($event)"></app-component-search>
 
-<div id="search-result">
+<div *ngIf="searchProducts.length > 0; else error">
   <table class="table table-hover">
       <tbody>
         <tr *ngFor="let result of searchProducts">
@@ -10,4 +10,10 @@
         </tr>
       </tbody>
   </table>
+  <h2 *ngIf="statusCode === 204">Not found .....</h2>
 </div>
+
+<ng-template #error>
+    <h1>Somethig was wrong. Status code {{statusCode}}</h1>
+</ng-template>
+
