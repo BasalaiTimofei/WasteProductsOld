@@ -12,6 +12,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class SearchComponent implements OnInit {
   query: string;
+  query2: string;
   private URL_SEARCH = 'http://localhost:2189/api/search/products';  // URL to web api
   showError = false;
   errorMessage: string;

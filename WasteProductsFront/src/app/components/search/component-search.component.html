@@ -1,7 +1,4 @@
-<div class="main-container">
-    <div class="fixer-container">
-<ul>
-  <li>
+
 <div class="search-component">
   <div class="input-group mb-3">
       <input #query1 type="text" class="form-control" placeholder="Your search query..." aria-label="Your search query..." aria-describedby="basic-addon2">
@@ -11,8 +8,7 @@
       </div>
   </div>
 </div>
-</li>
-<li>
+
 <div class="search-component">
   <input class="search" [(ngModel)]="query" type="text" placeholder="Your search query...">
   <button mat-button *ngIf="query" (click)="query=''" matSuffix mat-icon-button aria-label="Clear">
@@ -22,15 +18,10 @@
     <mat-icon>search</mat-icon>
   </button>
 </div>
-</li>
-<li>
-<div id="search-component">
-  <input class="search" [(ngModel)]="query" (keyup)="search(query)" type="text" placeholder="Your search query...">
-      <button mat-button *ngIf="query" (click)="query=''" matSuffix mat-icon-button aria-label="Clear">
-          <mat-icon>close</mat-icon>
-      </button>
-</div>
-</li>
-</ul>
-</div>
+
+<div class="search-component">
+  <input class="search" [(ngModel)]="query2" (keyup)="search(query2)" type="text" placeholder="Your search query...">
+  <button mat-button *ngIf="query2" (click)="query2=''" matSuffix mat-icon-button aria-label="Clear">
+    <mat-icon>close</mat-icon>
+  </button>
 </div>
