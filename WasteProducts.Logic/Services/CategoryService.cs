@@ -127,5 +127,34 @@ namespace WasteProducts.Logic.Services
             categories = _categoryRepository.SelectWhere(conditionPredicate);
             return categories.Any();
         }
+
+        private bool _disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _categoryRepository.Dispose();
+                }
+
+                _disposed = true;
+            }
+        }
+
+        
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~CategoryService()
+        {
+            Dispose(false);
+        }
     }
 }

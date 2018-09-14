@@ -1,14 +1,15 @@
 ﻿using Ninject;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Repositories.UserManagement;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services;
-using WasteProducts.Logic.Common.Services.UserService;
+using WasteProducts.Logic.Common.Services.Users;
 
 namespace WasteProducts.Logic.Tests.UserManagementTests
 {
@@ -67,346 +68,354 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем регистрирование юзеров и делаем начальное заполнение таблицы юзерами
         [Test]
-        public void UserIntegrTest_00AddingUsers()
+        public async Task UserIntegrTest_00AddingUsers()
         {
-            User user1 = _userService.RegisterAsync("test49someemail@gmail.com", "Sergei", "qwerty1", "qwerty1").GetAwaiter().GetResult();
-            User user2 = _userService.RegisterAsync("test50someemail@gmail.com", "Anton", "qwerty2", "qwerty2").GetAwaiter().GetResult();
-            User user3 = _userService.RegisterAsync("test51someemail@gmail.com", "Alexander", "qwerty3", "qwerty3").GetAwaiter().GetResult();
+            await _userService.RegisterAsync("test49someemail@gmail.com", "Sergei", "qwerty1", null);
+            await _userService.RegisterAsync("test50someemail@gmail.com", "Anton", "qwerty2", null);
+            await _userService.RegisterAsync("test51someemail@gmail.com", "Alexander", "qwerty3", null);
 
-            Assert.AreEqual("test49someemail@gmail.com", user1.Email);
+            var user1 = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
+            var user2 = await _userService.LogInByEmailAsync("test50someemail@gmail.com", "qwerty2");
+            var user3 = await _userService.LogInByEmailAsync("test51someemail@gmail.com", "qwerty3");
+
+            Assert.AreEqual("Sergei", user1.UserName);
             Assert.AreEqual("Anton", user2.UserName);
-            Assert.IsNotNull(user1.Id);
+            Assert.IsNotNull(user3.Id);
 
             _usersIds.Add(user1.Id);
             _usersIds.Add(user2.Id);
             _usersIds.Add(user3.Id);
         }
 
+        
+
         // пытаемся зарегистрировать юзера с некорректным емейлом
         [Test]
-        public void UserIntegrTest_01AddingUserWithIncorrectEmail()
+        public async Task UserIntegrTest_01AddingUserWithIncorrectEmail()
         {
-            User user = _userService.RegisterAsync("Incorrect email", "NewLogin", "qwerty", "qwerty").GetAwaiter().GetResult();
+            await _userService.RegisterAsync("Incorrect email", "NewLogin", "qwerty", null);
+            User user = await _userService.LogInByEmailAsync("Incorrect email", "qwerty");
             Assert.IsNull(user);
 
-            user = _userService.LogInAsync("Incorrect email", "qwerty").GetAwaiter().GetResult();
+            user = await _userService.LogInByEmailAsync("Incorrect email", "qwerty");
             Assert.IsNull(user);
         }
 
         // пытаемся зарегистрировать юзера с уже использованным емейлом
         [Test]
-        public void UserIntegrTest_02AddingUserWithAlreadyRegisteredEmail()
+        public async Task UserIntegrTest_02AddingUserWithAlreadyRegisteredEmail()
         {
-            User user = _userService.RegisterAsync("test49someemail@gmail.com", "NewLogin", "qwerty", "qwerty").GetAwaiter().GetResult();
+            await _userService.RegisterAsync("test49someemail@gmail.com", "NewLogin", "qwerty", null);
+            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty");
             Assert.IsNull(user);
 
-            user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty").GetAwaiter().GetResult();
+            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty");
             Assert.IsNull(user);
         }
 
         // пытаемся зарегистрировать юзера с неуникальным юзернеймом
         [Test]
-        public void UserIntegrTest_03AddingUserWithAlreadyRegisteredNickName()
+        public async Task UserIntegrTest_03AddingUserWithAlreadyRegisteredNickName()
         {
-            User user = _userService.RegisterAsync("test100someemail@gmail.com", "Sergei", "qwerty", "qwerty").GetAwaiter().GetResult();
+            await _userService.RegisterAsync("test100someemail@gmail.com", "Sergei", "qwerty", null);
+            User user = await _userService.LogInByEmailAsync("test100someemail@gmail.com", "qwerty");
             Assert.IsNull(user);
 
-            user = _userService.LogInAsync("test100someemail@gmail.com", "qwerty").GetAwaiter().GetResult();
+            user = await _userService.LogInByEmailAsync("test100someemail@gmail.com", "qwerty");
             Assert.IsNull(user);
         }
 
-        // пытаемся зарегистрировать юзера с null-овыми аргументами, не должно крашить, должно возвращать null
+        // пытаемся зарегистрировать юзера с null-овыми аргументами, не должно крашить, не должно регистрировать
         [Test]
-        public void UserIntegrTest_04RegisteringUserWithNullArguements()
+        public async Task UserIntegrTest_04RegisteringUserWithNullArguements()
         {
-            User user1 = _userService.RegisterAsync(null, "Sergei1", "qwert1", "qwert1").GetAwaiter().GetResult();
-            User user2 = _userService.RegisterAsync("test101someemail@gmail.com", null, "qwert2", "qwert2").GetAwaiter().GetResult();
-            User user3 = _userService.RegisterAsync("test102someemail@gmail.com", "Sergei3", null, "qwert3").GetAwaiter().GetResult();
-            User user4 = _userService.RegisterAsync("test103someemail@gmail.com", "Sergei4", "qwert4", null).GetAwaiter().GetResult();
+            await _userService.RegisterAsync(null, "Sergei1", "qwert1", null);
+            await _userService.RegisterAsync("test101someemail@gmail.com", null, "qwert2", null);
+
+            User user1 = await _userService.LogInByNameAsync("Sergei1", "qwert1");
+            User user2 = await _userService.LogInByEmailAsync("test101someemail@gmail.com", "qwert2");
 
             Assert.IsNull(user1);
             Assert.IsNull(user2);
-            Assert.IsNull(user3);
-            Assert.IsNull(user4);
         }
 
         // проверяем запрос юзера по правильным емейлу и паролю (должно вернуть соответствующего юзера)
         [Test]
-        public void UserIntegrTest_05CorrectLoggingInByEmail()
+        public async Task UserIntegrTest_05CorrectLoggingInByEmail()
         {
-            User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            Assert.AreEqual(user.Email, "test49someemail@gmail.com");
+            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
+            Assert.AreEqual("Sergei", user.UserName);
         }
 
         // проверяем запрос юзера по неверным емейлу и паролю (юзер должен быть null-овым)
         [Test]
-        public void UserIntegrTest_06IncorrectQueryingByEmail()
+        public async Task UserIntegrTest_06IncorrectQueryingByEmail()
         {
-            User user = _userService.LogInAsync("incorrectEmail", "incorrectPassword").GetAwaiter().GetResult();
+            User user = await _userService.LogInByEmailAsync("incorrectEmail", "incorrectPassword");
             Assert.IsNull(user);
         }
 
         // пытаемся поменять зарегистрированному юзеру емейл на корректный уникальный емейл (должно поменять)
         [Test]
-        public void UserIntegrTest_07ChangingUserEmailToAvailableEmail()
+        public async Task UserIntegrTest_07ChangingUserEmailToAvailableEmail()
         {
-            User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            Assert.AreEqual("test49someemail@gmail.com", user.Email);
+            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
+            Assert.AreEqual("Sergei", user.UserName);
 
-            bool result = _userService.UpdateEmailAsync(user.Id, "uniqueemail@gmail.com").GetAwaiter().GetResult();
+            bool result = await _userService.UpdateEmailAsync(user.Id, "uniqueemail@gmail.com");
 
             Assert.IsTrue(result);
 
-            _userService.UpdateEmailAsync(user.Id, "test49someemail@gmail.com").GetAwaiter().GetResult();
+            await _userService.UpdateEmailAsync(user.Id, "test49someemail@gmail.com");
         }
 
         // пытаемся поменять зарегистрированному юзеру емейл на некорректный уникальный емейл (не должно поменять)
         [Test]
-        public void UserIntegrTest_08ChangingUserEmailToIncorrectEmail()
+        public async Task UserIntegrTest_08ChangingUserEmailToIncorrectEmail()
         {
-            User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            Assert.AreEqual("test49someemail@gmail.com", user.Email);
+            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
+            Assert.AreEqual("Sergei", user.UserName);
 
-            bool result = _userService.UpdateEmailAsync(user.Id, "uniqueButIncorrectEmail").GetAwaiter().GetResult();
+            bool result = await _userService.UpdateEmailAsync(user.Id, "uniqueButIncorrectEmail");
 
             Assert.IsFalse(result);
-            Assert.AreEqual("test49someemail@gmail.com", user.Email);
+            Assert.AreEqual("Sergei", user.UserName);
         }
 
         // пытаемся поменять зарегистрированному юзеру емейл на корректный неуникальный емейл (не должно поменять)
         [Test]
-        public void UserIntegrTest_09ChangingUserEmailToAlreadyRegisteredEmail()
+        public async Task UserIntegrTest_09ChangingUserEmailToAlreadyRegisteredEmail()
         {
-            User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            Assert.AreEqual("test49someemail@gmail.com", user.Email);
+            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
+            Assert.AreEqual("Sergei", user.UserName);
 
-            bool result = _userService.UpdateEmailAsync(user.Id, "test50someemail@gmail.com").GetAwaiter().GetResult();
+            bool result = await _userService.UpdateEmailAsync(user.Id, "test50someemail@gmail.com");
 
             Assert.IsFalse(result);
-            Assert.AreEqual("test49someemail@gmail.com", user.Email);
+            Assert.AreEqual("Sergei", user.UserName);
 
-            user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            Assert.AreEqual("test49someemail@gmail.com", user.Email);
+            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
+            Assert.AreEqual("Sergei", user.UserName);
         }
 
         // пытаемся передать в метод UpdateEmailAsync null-овые аргументы (не должно поменять емейла, не должно выдать ошибку)
         [Test]
-        public void UserIntegrTest_10CallUpdateEmailAsyncWithNulArguements()
+        public async Task UserIntegrTest_10CallUpdateEmailAsyncWithNulArguements()
         {
-            User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
             Assert.IsNotNull(user);
 
-            bool result1 = _userService.UpdateEmailAsync(user.Id, null).GetAwaiter().GetResult();
-            bool result2 = _userService.UpdateEmailAsync(null, "correctuniqueemail@gmail.com").GetAwaiter().GetResult();
+            bool result1 = await _userService.UpdateEmailAsync(user.Id, null);
+            bool result2 = await _userService.UpdateEmailAsync(null, "correctuniqueemail@gmail.com");
 
             Assert.IsFalse(result1);
             Assert.IsFalse(result2);
-            Assert.AreEqual("test49someemail@gmail.com", user.Email);
+            Assert.AreEqual("Sergei", user.UserName);
         }
 
         // пытаемся изменить юзеру юзернейм на юзернейм, уже имеющийся в системе (не должно поменять)
         [Test]
-        public void UserIntegrTest_11ChangingUserNameToAlreadyExistingUserName()
+        public async Task UserIntegrTest_11ChangingUserNameToAlreadyExistingUserName()
         {
-            User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
             Assert.AreEqual("Sergei", user.UserName);
 
-            bool result = _userService.UpdateUserNameAsync(user, "Anton").GetAwaiter().GetResult();
+            bool result = await _userService.UpdateUserNameAsync(user.Id, "Anton");
+
+            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
 
             Assert.IsFalse(result);
             Assert.AreEqual("Sergei", user.UserName);
         }
 
+        // пытаемся зарегистрировать юзера так, как он будет регистрироваться на самом деле,
+        // т.е. с "отправкой" письма на почту (по факту, если использовать настоящий ящик, оно отправляется),
+        // где в тестовых целях из методов возвращаются айди и токен, необходимые для подтверждения емейла
+        // так же тут тестируется аналогичная "отправка" запроса на изменение пароля (в if statement)
+        [Test]
+        public async Task UserIntegrTest_12TryingToRegisterUserPropperlyAndResetPassword()
+        {
+            string email = "tishkovsergei92@gmail.com";
+            var (id, token) = await _userService.RegisterAsync(email, "Serj", "treytrey", "Письмо короче{0} {1}");
+            if (await _userService.ConfirmEmailAsync(id, token))
+            {
+                (id, token) = await _userService.ResetPasswordRequestAsync(email, @"http://localhost:2189/api/user/{0}/resetpasswordresponse/{1}");
+                await _userService.ResetPasswordAsync(id, token, "newPassword");
+                var user = await _userService.LogInByNameAsync("Serj", "newPassword");
+                Assert.IsNotNull(user);
+                Assert.AreEqual(id, user.Id);
+            }
+            else
+            {
+                throw new Exception("Email wasn't confirmed!");
+            }
+        }
+
         // тестируем создание роли, а так же проверяем, действительно ли роль создается в базе данных
         [Test]
-        public void UserIntegrTest_12FindingRoleByCorrectRoleName()
+        public async Task UserIntegrTest_13FindingRoleByCorrectRoleName()
         {
             UserRole roleToCreate = new UserRole() { Name = "Simple user" };
-            _roleService.CreateAsync(roleToCreate).GetAwaiter().GetResult();
+            await _roleService.CreateAsync(roleToCreate);
 
-            UserRole role = _roleService.FindByNameAsync("Simple user").GetAwaiter().GetResult();
+            UserRole role = await _roleService.FindByNameAsync("Simple user");
             Assert.AreEqual(role.Name, "Simple user");
         }
 
         // проверяем запрос роли по несуществующему названию
         [Test]
-        public void UserIntegrTest_13FindingRoleByIncorrectRoleName()
+        public async Task UserIntegrTest_14FindingRoleByIncorrectRoleName()
         {
-            UserRole role = _roleService.FindByNameAsync("Not existing role name").GetAwaiter().GetResult();
+            UserRole role = await _roleService.FindByNameAsync("Not existing role name");
             Assert.IsNull(role);
         }
 
-        // тестим, правильно ли работает функционал добавления роли и добавления юзера в роль
+        // тестим, правильно ли работает функционал добавления роли и добавления юзера в роль, a так же метод GetRolesAsync IUserService
         [Test]
-        public void UserIntegrTest_14AddingToTheUserDBNewRole()
+        public async Task UserIntegrTest_15AddingToTheUserDBNewRole()
         {
-            User user1 = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            User user2 = _userService.LogInAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
-            User user3 = _userService.LogInAsync("test51someemail@gmail.com", "qwerty3").GetAwaiter().GetResult();
+            User user1 = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
+            User user2 = await _userService.LogInByEmailAsync("test50someemail@gmail.com", "qwerty2");
+            User user3 = await _userService.LogInByEmailAsync("test51someemail@gmail.com", "qwerty3");
 
-            _userService.AddToRoleAsync(user1.Id, "Simple user").GetAwaiter().GetResult();
-            _userService.AddToRoleAsync(user2.Id, "Simple user").GetAwaiter().GetResult();
-            _userService.AddToRoleAsync(user3.Id, "Simple user").GetAwaiter().GetResult();
+            await _userService.AddToRoleAsync(user1.Id, "Simple user");
+            await _userService.AddToRoleAsync(user2.Id, "Simple user");
+            await _userService.AddToRoleAsync(user3.Id, "Simple user");
 
-            user1 = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            Assert.AreEqual("Simple user", user1.Roles.FirstOrDefault());
-        }
-
-        // тестируем, как работает метот GetRolesAsynс IUserService
-        [Test]
-        public void UserIntegrTest_15GettingRolesOfTheUser()
-        {
-            User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            user.Roles = _userService.GetRolesAsync(user).GetAwaiter().GetResult();
-
-            Assert.AreEqual("Simple user", user.Roles.FirstOrDefault());
+            user1 = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
+            var rolesOfUser1 = await _userService.GetRolesAsync(user1.Id);
+            Assert.AreEqual("Simple user", rolesOfUser1.FirstOrDefault());
         }
 
         // тестируем изъятие из роли
         [Test]
-        public void UserIntegrTest_16RemovingUserFromRole()
+        public async Task UserIntegrTest_16RemovingUserFromRole()
         {
-            User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            Assert.AreEqual(user.Roles.FirstOrDefault(), "Simple user");
+            var userId = _usersIds[0];
+            var userRoles = await _userService.GetRolesAsync(userId);
+            Assert.AreEqual(userRoles.FirstOrDefault(), "Simple user");
+            await _userService.RemoveFromRoleAsync(userId, "Simple user");
 
-            _userService.RemoveFromRoleAsync(user.Id, "Simple user").GetAwaiter().GetResult();
-
-            user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            Assert.IsNull(user.Roles.FirstOrDefault());
+            userRoles = await _userService.GetRolesAsync(userId);
+            Assert.IsNull(userRoles.FirstOrDefault());
         }
 
         // Тестируем добавление утверждения (Claim) в юзера
         [Test]
-        public void UserIntegrTest_17AddingClaimToUser()
+        public async Task UserIntegrTest_17AddingClaimToUser()
         {
-            User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            var userId = _usersIds[0];
             var claim = new Claim("SomeType", "SomeValue");
 
-            _userService.AddClaimAsync(user.Id, claim).GetAwaiter().GetResult();
+            await _userService.AddClaimAsync(userId, claim);
 
-            user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            var userClaim = user.Claims.FirstOrDefault();
+            var userClaims = await _userService.GetClaimsAsync(userId);
+            var userClaim = userClaims.FirstOrDefault();
+
             Assert.AreEqual(userClaim.Type, claim.Type);
             Assert.AreEqual(userClaim.Value, claim.Value);
         }
 
         // тестируем удаление утверждения из юзера
         [Test]
-        public void UserIntegrTest_18DeletingClaimFromUser()
+        public async Task UserIntegrTest_18DeletingClaimFromUser()
         {
-            User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            Assert.AreEqual(user.Claims.Count, 1);
+            var userId = _usersIds[0];
+            var userClaims = await _userService.GetClaimsAsync(userId);
+            Assert.AreEqual(1, userClaims.Count);
 
-            _userService.RemoveClaimAsync(user.Id, user.Claims.FirstOrDefault()).GetAwaiter().GetResult();
+            await _userService.RemoveClaimAsync(userId, userClaims.FirstOrDefault());
 
-            user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            Assert.AreEqual(user.Claims.Count, 0);
+            userClaims = await _userService.GetClaimsAsync(userId);
+            Assert.AreEqual(0, userClaims.Count);
         }
 
         // тестируем добавление логина в юзера
         [Test]
-        public void UserIntegrTest_19AddingLoginToUser()
+        public async Task UserIntegrTest_19AddingLoginToUser()
         {
-            User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            var userId = _usersIds[0];
             var login = new UserLogin { LoginProvider = "SomeLoginProvider", ProviderKey = "SomeProviderKey" };
 
-            _userService.AddLoginAsync(user.Id, login).GetAwaiter().GetResult();
+            await _userService.AddLoginAsync(userId, login);
 
-            user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            var userLogin = user.Logins.FirstOrDefault();
+            var userLogins = await _userService.GetLoginsAsync(userId);
+            var userLogin = userLogins.FirstOrDefault();
+
             Assert.AreEqual(login, userLogin);
         }
 
         // тестируем удаление логина из юзера
         [Test]
-        public void UserIntegrTest_20DeletingLoginFromUser()
+        public async Task UserIntegrTest_20DeletingLoginFromUser()
         {
-            User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            var userId = _usersIds[0];
             var login = new UserLogin { LoginProvider = "SomeLoginProvider", ProviderKey = "SomeProviderKey" };
 
-            Assert.AreEqual(user.Logins.Count, 1);
-            _userService.RemoveLoginAsync(user.Id, login).GetAwaiter().GetResult();
+            var userLogins = await _userService.GetLoginsAsync(userId);
 
-            user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            Assert.AreEqual(user.Logins.Count, 0);
+            Assert.AreEqual(1, userLogins.Count);
+            await _userService.RemoveLoginAsync(userId, login);
+
+            userLogins = await _userService.GetLoginsAsync(userId);
+            Assert.AreEqual(0, userLogins.Count);
         }
-
-        // тестируем апдейт юзера
-        [Test]
-        public void UserIntegrTest_21UserUpdating()
-        {
-            User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-
-            string userPhoneNumber = user.PhoneNumber;
-            Assert.AreEqual(userPhoneNumber, null);
-
-            user.PhoneNumber = "+375172020327";
-            _userService.UpdateAsync(user).GetAwaiter().GetResult();
-
-            user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            Assert.AreEqual(user.PhoneNumber, "+375172020327");
-        }
-
+                
         // тестируем изменение пароля пользователя
         [Test]
-        public void UserIntegrTest_22ResettingUserPassword()
+        public async Task UserIntegrTest_21ResettingUserPassword()
         {
-            User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
-            user.PhoneNumber = "3334455";
-            _userService.ResetPasswordAsync(user, "qwerty1", "New password", "New password").GetAwaiter().GetResult();
+            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
+            await _userService.ChangePasswordAsync(user.Id, "qwerty1", "New password");
 
-            user = _userService.LogInAsync("test49someemail@gmail.com", "New password").GetAwaiter().GetResult();
-            Assert.AreNotEqual("3334455", user.PhoneNumber);
-            _userService.ResetPasswordAsync(user, "New password", "qwerty1", "qwerty1").GetAwaiter().GetResult();
+            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "New password");
+            await _userService.ChangePasswordAsync(user.Id, "New password", "qwerty1");
         }
 
         // тестируем добавление друзей
         [Test]
-        public void UserIntegrTest_23AddingNewFriendsToUser()
+        public async Task UserIntegrTest_22AddingNewFriendsToUser()
         {
-            User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
             Assert.AreEqual(0, user.Friends.Count);
 
-            User user2 = _userService.LogInAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
-            User user3 = _userService.LogInAsync("test51someemail@gmail.com", "qwerty3").GetAwaiter().GetResult();
+            User user2 = await _userService.LogInByEmailAsync("test50someemail@gmail.com", "qwerty2");
+            User user3 = await _userService.LogInByEmailAsync("test51someemail@gmail.com", "qwerty3");
 
-            _userService.AddFriendAsync(user, user2).GetAwaiter().GetResult();
-            _userService.AddFriendAsync(user, user3).GetAwaiter().GetResult();
+            await _userService.AddFriendAsync(user.Id, user2.Id);
+            await _userService.AddFriendAsync(user.Id, user3.Id);
 
-            Assert.AreEqual(2, user.Friends.Count);
-
-            user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
             Assert.AreEqual(2, user.Friends.Count);
         }
 
         // тестируем удаление друзей
         [Test]
-        public void UserIntegrTest_24DeletingFriendsFromUser()
+        public async Task UserIntegrTest_23DeletingFriendsFromUser()
         {
-            User user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
             Assert.AreEqual(2, user.Friends.Count);
 
-            User user2 = _userService.LogInAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
-            User user3 = _userService.LogInAsync("test51someemail@gmail.com", "qwerty3").GetAwaiter().GetResult();
+            User user2 = await _userService.LogInByEmailAsync("test50someemail@gmail.com", "qwerty2");
+            User user3 = await _userService.LogInByEmailAsync("test51someemail@gmail.com", "qwerty3");
 
-            _userService.DeleteFriendAsync(user, user2).GetAwaiter().GetResult();
-            _userService.DeleteFriendAsync(user, user3).GetAwaiter().GetResult();
-            Assert.AreEqual(0, user.Friends.Count);
+            await _userService.DeleteFriendAsync(user.Id, user2.Id);
+            await _userService.DeleteFriendAsync(user.Id, user3.Id);
 
-            user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
             Assert.AreEqual(0, user.Friends.Count);
         }
 
         // тестируем создание продукта (не относится к юзер сервису, но необходимо для следующего теста)
         [Test]
-        public void UserIntegrTest_25AddingNewProductsToDB()
+        public async Task UserIntegrTest_24AddingNewProductsToDB()
         {
             string productName = "Waste product";
 
             using (var prodService = _kernel.Get<IProductService>())
             {
                 prodService.AddByName(productName);
-                var product = prodService.GetByNameAsync(productName).GetAwaiter().GetResult();
+                var product = await prodService.GetByNameAsync(productName);
 
                 Assert.IsNotNull(product);
                 Assert.AreEqual(productName, product.Name);
@@ -416,15 +425,15 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем добавление продукта
         [Test]
-        public void UserIntegrTest_26AddingNewProductsToUser()
+        public async Task UserIntegrTest_25AddingNewProductsToUser()
         {
             string description = "Tastes like garbage, won't buy it ever again.";
 
-            var user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            var user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
             Assert.AreEqual(0, user.ProductDescriptions.Count);
 
-            _userService.AddProductAsync(user.Id, _productIds[0], 1, description).GetAwaiter().GetResult();
-            user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            await _userService.AddProductAsync(user.Id, _productIds[0], 1, description);
+            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
 
             Assert.AreEqual(1, user.ProductDescriptions.Count);
             Assert.AreEqual(_productIds[0], user.ProductDescriptions[0].Product.Id);
@@ -434,79 +443,83 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
 
         // тестируем удаление продуктов
         [Test]
-        public void UserIntegrTest_27DeletingProductsFromUser()
+        public async Task UserIntegrTest_26DeletingProductsFromUser()
         {
-            var user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            var user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
             Assert.AreEqual(1, user.ProductDescriptions.Count);
 
-            _userService.DeleteProductAsync(user.Id, user.ProductDescriptions[0].Product.Id).GetAwaiter().GetResult();
+            await _userService.DeleteProductAsync(user.Id, user.ProductDescriptions[0].Product.Id);
 
-            user = _userService.LogInAsync("test49someemail@gmail.com", "qwerty1").GetAwaiter().GetResult();
+            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
             Assert.AreEqual(0, user.ProductDescriptions.Count);
         }
 
         // тестируем поиск роли по айди и имени
         [Test]
-        public void UserIntegrTest_28FindRoleByIdAndName()
+        public async Task UserIntegrTest_27FindRoleByIdAndName()
         {
-            UserRole foundByName = _roleService.FindByNameAsync("Simple user").GetAwaiter().GetResult();
+            UserRole foundByName = await _roleService.FindByNameAsync("Simple user");
             Assert.AreEqual("Simple user", foundByName.Name);
 
-            UserRole foundById = _roleService.FindByIdAsync(foundByName.Id).GetAwaiter().GetResult();
+            UserRole foundById = await _roleService.FindByIdAsync(foundByName.Id);
             Assert.AreEqual(foundByName.Name, foundById.Name);
             Assert.AreEqual(foundByName.Id, foundById.Id);
         }
 
         // тестируем получение всех пользователей определенной роли
         [Test]
-        public void UserIntegrTest_29GettingRoleUsers()
+        public async Task UserIntegrTest_28GettingRoleUsers()
         {
-            User user1 = _userService.LogInAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
-            User user2 = _userService.LogInAsync("test51someemail@gmail.com", "qwerty3").GetAwaiter().GetResult();
-            UserRole role = _roleService.FindByNameAsync("Simple user").GetAwaiter().GetResult();
+            User user1 = await _userService.LogInByEmailAsync("test50someemail@gmail.com", "qwerty2");
+            User user2 = await _userService.LogInByEmailAsync("test51someemail@gmail.com", "qwerty3");
+            UserRole role = await _roleService.FindByNameAsync("Simple user");
 
-            IEnumerable<User> users = _roleService.GetRoleUsers(role).GetAwaiter().GetResult();
-            User user1FromGetRoles = users.FirstOrDefault(u => u.Email == user1.Email);
-            User user2FromGetRoles = users.FirstOrDefault(u => u.Email == user2.Email);
+            IEnumerable<User> users = await _roleService.GetRoleUsers(role);
+            User user1FromGetRoles = users.FirstOrDefault(u => u.Id == user1.Id);
+            User user2FromGetRoles = users.FirstOrDefault(u => u.Id == user2.Id);
             Assert.AreEqual(user1.Id, user1FromGetRoles.Id);
             Assert.AreEqual(user2.Id, user2FromGetRoles.Id);
         }
 
         // тестируем изменение названия роли
         [Test]
-        public void UserIntegrTest_30UpdatingRoleName()
+        public async Task UserIntegrTest_29UpdatingRoleName()
         {
-            User user1 = _userService.LogInAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
-            Assert.AreEqual("Simple user", user1.Roles.FirstOrDefault());
+            var userId = _usersIds[1];
 
-            UserRole role = _roleService.FindByNameAsync("Simple user").GetAwaiter().GetResult();
+            var rolesOfUser = await _userService.GetRolesAsync(userId);
+            Assert.AreEqual("Simple user", rolesOfUser.FirstOrDefault());
 
-            _roleService.UpdateRoleNameAsync(role, "Not so simple user").GetAwaiter().GetResult();
-            User user2 = _userService.LogInAsync("test51someemail@gmail.com", "qwerty3").GetAwaiter().GetResult();
-            Assert.AreEqual("Not so simple user", user2.Roles.FirstOrDefault());
+            UserRole role = await _roleService.FindByNameAsync("Simple user");
+            await _roleService.UpdateRoleNameAsync(role, "Not so simple user");
+
+            rolesOfUser = await _userService.GetRolesAsync(userId);
+            Assert.AreEqual("Not so simple user", rolesOfUser.FirstOrDefault());
         }
 
         // тестируем удаление роли
         [Test]
-        public void UserIntegrTest_31DeletingRole()
+        public async Task UserIntegrTest_30DeletingRole()
         {
-            User user1 = _userService.LogInAsync("test50someemail@gmail.com", "qwerty2").GetAwaiter().GetResult();
-            Assert.AreEqual("Not so simple user", user1.Roles.FirstOrDefault());
+            var userId = _usersIds[1];
 
-            UserRole role = _roleService.FindByNameAsync("Not so simple user").GetAwaiter().GetResult();
-            _roleService.DeleteAsync(role).GetAwaiter().GetResult();
+            var rolesOfUser = await _userService.GetRolesAsync(userId);
+            Assert.AreEqual("Not so simple user", rolesOfUser.FirstOrDefault());
 
-            User user2 = _userService.LogInAsync("test51someemail@gmail.com", "qwerty3").GetAwaiter().GetResult();
-            Assert.IsNull(user2.Roles.FirstOrDefault());
+            UserRole role = await _roleService.FindByNameAsync("Not so simple user");
+            await _roleService.DeleteAsync(role);
+
+            rolesOfUser = await _userService.GetRolesAsync(userId);
+            Assert.IsNull(rolesOfUser.FirstOrDefault());
         }
 
         // тестируем удаление юзеров, а заодно и чистим базу до изначального состояния
         [Test]
-        public void UserIntegrTest_32DeletingUsers()
+        public async Task UserIntegrTest_31DeletingUsers()
         {
             foreach (var id in _usersIds)
             {
-                _userService.DeleteUserAsync(id).GetAwaiter().GetResult();
+                await _userService.DeleteUserAsync(id);
             }
         }
     }

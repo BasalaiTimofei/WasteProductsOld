@@ -1,5 +1,6 @@
 ﻿using WasteProducts.Logic.Common.Services;
-using WasteProducts.Logic.Common.Services.UserService;
+using WasteProducts.Logic.Common.Services.Donations;
+using WasteProducts.Logic.Common.Services.Users;
 
 namespace WasteProducts.Logic.Common.Factories
 {
@@ -32,6 +33,12 @@ namespace WasteProducts.Logic.Common.Factories
         /// </summary>
         /// <returns>Implementation of IProductService</returns>
         IProductService CreateProductService();
+
+        /// <summary>
+        /// Gets ICategoryService from Ioc container 
+        /// </summary>
+        /// <returns>Implementation of IProductService</returns>
+        ICategoryService CreateCategoryService();
 
         /// <summary>
         /// Gets IBarcodeService from Ioc container 

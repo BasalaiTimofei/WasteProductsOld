@@ -1,4 +1,5 @@
-﻿using WasteProducts.Logic.Common.Models.Users;
+﻿using System;
+using WasteProducts.Logic.Common.Models.Users;
 
 namespace WasteProducts.Logic.Common.Models.Groups
 {
@@ -7,17 +8,17 @@ namespace WasteProducts.Logic.Common.Models.Groups
         /// <summary>
         /// Primary key
         /// </summary>
-        public virtual string Id { get; set; }
+        public virtual Guid Id { get; set; }
 
         /// <summary>
-        /// This board
+        /// Foreign key
         /// </summary>
-        public virtual GroupBoard GroupBoard { get; set; }
+        public virtual Guid GroupBoardId { get; set; }
 
         /// <summary>
-        /// User who send message
+        /// Foreign key
         /// </summary>
-        public virtual User Commentator { get; set; }
+        public virtual string CommentatorId { get; set; }
 
         /// <summary>
         /// This comment

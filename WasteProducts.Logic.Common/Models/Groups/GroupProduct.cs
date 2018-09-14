@@ -1,4 +1,5 @@
-﻿using WasteProducts.Logic.Common.Models.Products;
+﻿using System;
+using WasteProducts.Logic.Common.Models.Products;
 
 namespace WasteProducts.Logic.Common.Models.Groups
 {
@@ -7,17 +8,17 @@ namespace WasteProducts.Logic.Common.Models.Groups
         /// <summary>
         /// Primary key
         /// </summary>
-        public virtual int Id { get; set; }
+        public virtual Guid Id { get; set; }
 
         /// <summary>
-        /// This product
+        /// Foreign key
         /// </summary>
-        public virtual Product Product { get; set; }
+        public virtual string ProductId { get; set; }
 
         /// <summary>
-        /// This board
+        /// Foreign key
         /// </summary>
-        public virtual GroupBoard GroupBoard { get; set; }
+        public virtual Guid GroupBoardId { get; set; }
 
         /// <summary>
         /// Additional information

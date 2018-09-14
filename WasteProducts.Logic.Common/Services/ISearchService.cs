@@ -95,13 +95,11 @@ namespace WasteProducts.Logic.Common.Services
         IEnumerable<Product> SearchProduct(BoostedSearchQuery query);
 
         /// <summary>
-        /// Async version of Search
+        /// Async version of SearchProduct
         /// </summary>
-        Task<IEnumerable<TEntity>> SearchAsync<TEntity>(BoostedSearchQuery query);
-
-        /// <summary>
-        ///  Async version of SearchDefault
-        /// </summary>
-        Task<IEnumerable<TEntity>> SearchDefaultAsync<TEntity>(BoostedSearchQuery query);        
+        /// <param name="query">Search query</param>
+        /// <returns>List of products</returns>
+        Task<IEnumerable<Product>> SearchProductAsync(BoostedSearchQuery query);
+     
     }
 }
