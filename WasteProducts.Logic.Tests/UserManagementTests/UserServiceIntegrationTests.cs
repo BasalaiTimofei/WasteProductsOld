@@ -235,13 +235,13 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public async Task UserIntegrTest_12TryingToRegisterUserPropperlyAndResetPassword()
         {
-            string email = "tishkovsergei92@gmail.com";
-            var (id, token) = await _userService.RegisterAsync(email, "Serj", "treytrey", "Письмо короче{0} {1}");
+            string email = "test52someemail@gmail.com";
+            var (id, token) = await _userService.RegisterAsync(email, "TestName", "TestPassword123", "Айди юзера: {0} и токен: {1}");
             if (await _userService.ConfirmEmailAsync(id, token))
             {
-                (id, token) = await _userService.ResetPasswordRequestAsync(email, @"http://localhost:2189/api/user/{0}/resetpasswordresponse/{1}");
+                (id, token) = await _userService.ResetPasswordRequestAsync(email, "Айди юзера: {0} и токен: {1}");
                 await _userService.ResetPasswordAsync(id, token, "newPassword");
-                var user = await _userService.LogInByNameAsync("Serj", "newPassword");
+                var user = await _userService.LogInByNameAsync("TestName", "newPassword");
                 Assert.IsNotNull(user);
                 Assert.AreEqual(id, user.Id);
             }
