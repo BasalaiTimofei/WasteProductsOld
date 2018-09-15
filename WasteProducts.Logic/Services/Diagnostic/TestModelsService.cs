@@ -74,7 +74,6 @@ namespace WasteProducts.Logic.Services
 
                 .RuleFor(barcode => barcode.ProductName, faker => faker.Commerce.ProductName())
                 .RuleFor(barcode => barcode.Weight, faker => faker.Random.Double(0.1, 100))
-                .RuleFor(barcode => barcode.Type, faker => faker.Random.Bool() ? "UPC-B" : "UPC-C")
 
                 .FinishWith((faker, barcode) => _logger.Debug($"Created Barcode: {barcode}"))
                 .Generate();
