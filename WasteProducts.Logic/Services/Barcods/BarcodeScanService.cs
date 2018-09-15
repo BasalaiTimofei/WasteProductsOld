@@ -2,12 +2,11 @@
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using WasteProducts.Logic.Common.Models.Barcods;
-using WasteProducts.Logic.Common.Services;
 using ZXing;
 using Spire.Barcode;
+using WasteProducts.Logic.Common.Services.Barcods;
 
-namespace WasteProducts.Logic.Services.BarcodeService
+namespace WasteProducts.Logic.Services.Barcods
 {
     public class BarcodeScanService : IBarcodeScanService
     {

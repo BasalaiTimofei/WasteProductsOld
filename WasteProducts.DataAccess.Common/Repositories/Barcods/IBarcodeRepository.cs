@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Barcods;
 
-namespace WasteProducts.DataAccess.Common.Repositories
+namespace WasteProducts.DataAccess.Common.Repositories.Barcods
 {
     /// <summary>
     /// This interface provides CRUD methods for barcode repository
