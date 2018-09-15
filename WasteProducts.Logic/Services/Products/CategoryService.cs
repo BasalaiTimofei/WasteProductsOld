@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using WasteProducts.DataAccess.Common.Models.Products;
-using WasteProducts.DataAccess.Common.Repositories;
-using WasteProducts.Logic.Common.Models.Barcods;
+using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Common.Services.Products;
 
-namespace WasteProducts.Logic.Services
+namespace WasteProducts.Logic.Services.Products
 {
     /// <summary>
-    /// Implementation of ICategoryService
+    /// Implementation of ICategoryService.
     /// </summary>
     public class CategoryService : ICategoryService
     {
@@ -25,11 +25,11 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
-        /// Tries to add a new category by name and returns whether the addition is successful or not
+        /// Tries to add a new category by name and returns whether the addition is successful or not.
         /// </summary>
-        /// <param name="name">The name of the category to be added</param>
-        /// <returns>Boolean represents whether the addition is successful or not</returns>
-        public bool AddByName(string name)
+        /// <param name="name">The name of the category to be added.</param>
+        /// <returns>Boolean represents whether the addition is successful or not.</returns>
+        public bool Add(string name)
         {
             if (IsCategoryInDB(p =>
                 string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
@@ -42,27 +42,27 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
-        /// Tries to add a list of new categories by names and returns whether the addition is successful or not
+        /// Tries to add a list of new categories by names and returns whether the addition is successful or not.
         /// </summary>
-        /// <param name="names">The list of names of the categories to be added</param>
-        /// <returns>Boolean represents whether the addition is successful or not</returns>
+        /// <param name="names">The list of names of the categories to be added.</param>
+        /// <returns>Boolean represents whether the addition is successful or not.</returns>
         public bool AddRange(IEnumerable<string> names)
         {
             var result = false;
 
             foreach(var name in names)
             {
-                if (AddByName(name) && !result) result = true;
+                if (Add(name) && !result) result = true;
             }
 
             return result;
         }
 
         /// <summary>
-        /// Returns a spicific category by its name
+        /// Returns a spicific category by its name.
         /// </summary>
-        /// <param name="name">The name of the category to be gotten</param>
-        /// <returns>The specific category to be returned</returns>
+        /// <param name="name">The name of the category to be gotten.</param>
+        /// <returns>The specific category to be returned.</returns>
         public Category Get(string name)
         {
             if (!IsCategoryInDB(p =>
@@ -73,10 +73,10 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
-        /// Adds the description for specific category
+        /// Adds the description for specific category.
         /// </summary>
-        /// <param name="category">The specific category for which a description is added</param>
-        /// <param name="description">The specific description for the specfic category</param>
+        /// <param name="category">The specific category for which a description is added.</param>
+        /// <param name="description">The specific description for the specfic category.</param>
         public void SetDescription(Category category, string description)
         {
             if (!IsCategoryInDB(p =>
@@ -89,10 +89,10 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
-        /// Tries to delete the specific category
+        /// Tries to delete the specific category.
         /// </summary>
-        /// <param name="name">The name of the category to be deleted</param>
-        /// <returns>Boolean represents whether the deletion is successful or not</returns>
+        /// <param name="name">The name of the category to be deleted.</param>
+        /// <returns>Boolean represents whether the deletion is successful or not.</returns>
         public bool Delete(string name)
         {
             if (!IsCategoryInDB(p =>
@@ -106,10 +106,10 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <summary>
-        /// Tries to delete the list of specific categories
+        /// Tries to delete the list of specific categories.
         /// </summary>
-        /// <param name="names">The list of names of the categories to be deleted</param>
-        /// <returns>Boolean represents whether the deletion is successful or not</returns>
+        /// <param name="names">The list of names of the categories to be deleted.</param>
+        /// <returns>Boolean represents whether the deletion is successful or not.</returns>
         public bool DeleteRange(IEnumerable<string> names)
         {
             var result = false;

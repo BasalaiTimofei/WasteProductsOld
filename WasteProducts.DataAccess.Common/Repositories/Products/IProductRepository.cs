@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Products;
 
-namespace WasteProducts.DataAccess.Common.Repositories
+namespace WasteProducts.DataAccess.Common.Repositories.Products
 {
     /// <summary>
     /// Interface for the ProductRepository. Has an inheritance branch from IDisposable.
