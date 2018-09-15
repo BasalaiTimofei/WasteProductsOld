@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using WasteProducts.DataAccess.Common.Models.Products;
 
-namespace WasteProducts.DataAccess.Common.Repositories
+namespace WasteProducts.DataAccess.Common.Repositories.Products
 {
     /// <summary>
     /// Interface for the CategoryRepository. Has an inheritance branch from IDisposable.
@@ -25,7 +25,7 @@ namespace WasteProducts.DataAccess.Common.Repositories
         /// Deletes the specific category by id
         /// </summary>
         /// <param name="id">Represents a specific category id to delete</param>
-        void DeleteById(int id);
+        void Delete(int id);
 
         /// <summary>
         /// Provides a listing of all categories.

@@ -20,7 +20,7 @@ namespace WasteProducts.Web.Controllers.Api
     {
         private ISearchService _searchService { get; }
         public const string DEFAULT_PRODUCT_NAME_FIELD = "Name";
-        public const string DEFAULT_PRODUCT_DESCRIPTION_FIELD = "Description";
+        public const string DEFAULT_PRODUCT_COMPOSITION_FIELD = "Composition";
         public const string DEFAULT_PRODUCT_BARCODE_FIELD = "Barcode.Code";
 
         /// <summary>
@@ -34,12 +34,12 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Performs full-text search by default fields "Name", "Description", "Barcode".
+        /// Performs full-text search by default fields "Name", "Composition", "Barcode".
         /// </summary>
         /// <param name="query">Query string</param>
         /// <returns>Product collection</returns>
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
+        [SwaggerResponse(HttpStatusCode.OK, "GetById search result collection", typeof(IEnumerable<Product>))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
         [HttpGet, Route("products/default")]
         public async Task<IEnumerable<Product>> GetProductsDefaultFields([FromUri]string query)
@@ -51,7 +51,7 @@ namespace WasteProducts.Web.Controllers.Api
 
             BoostedSearchQuery searchQuery = new BoostedSearchQuery();
             searchQuery.AddField(DEFAULT_PRODUCT_NAME_FIELD, 1.0f)
-                .AddField(DEFAULT_PRODUCT_DESCRIPTION_FIELD, 1.0f)
+                .AddField(DEFAULT_PRODUCT_COMPOSITION_FIELD, 1.0f)
                 .AddField(DEFAULT_PRODUCT_BARCODE_FIELD, 1.0f);
             searchQuery.Query = query;
 
@@ -65,7 +65,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="query">SearchQuery object converted from string "query;field1[:boost1],field2[:boost2],..."</param>
         /// <returns>Product collection</returns>
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<Product>))]
+        [SwaggerResponse(HttpStatusCode.OK, "GetById search result collection", typeof(IEnumerable<Product>))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
         [HttpGet, Route("products/custom")]
         public async Task<IEnumerable<Product>> GetProducts(BoostedSearchQuery query)

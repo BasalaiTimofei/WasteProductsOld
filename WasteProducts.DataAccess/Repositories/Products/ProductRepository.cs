@@ -4,10 +4,10 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Products;
-using WasteProducts.DataAccess.Common.Repositories;
+using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.DataAccess.Contexts;
 
-namespace WasteProducts.DataAccess.Repositories
+namespace WasteProducts.DataAccess.Repositories.Products
 {   /// <summary>
     ///This class is a context class. A binder for the 'ProductDB' class with a data access.
     /// </summary>
@@ -20,10 +20,7 @@ namespace WasteProducts.DataAccess.Repositories
         /// Using the context of the WasteContext class through the private field.
         /// </summary>
         /// <param name="context">The specific context of WasteContext</param>
-        public ProductRepository(WasteContext context)
-        {
-            _context = context;
-        }
+        public ProductRepository(WasteContext context) => _context = context;
 
         /// <summary>
         /// Allows you to add new product to the products colletion.

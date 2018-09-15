@@ -21,11 +21,11 @@ namespace WasteProducts.Web.Tests.WebApiTests
         {
             products = new List<ProductDB>
             {
-                new ProductDB { Name = "Test Product1 Name1", Description = "Test Product1 Description1"},
-                new ProductDB { Name = "Test Product2 Name2", Description = "Test Product2 Description2"},
-                new ProductDB { Name = "Test Product3 Name3", Description = "Test Product3 Description3"},
-                new ProductDB { Name = "Test Product4 Name4", Description = "Test Product4 Description4"},
-                new ProductDB { Name = "Test Product5 Name5 Unique", Description = "Test Product5 Description5"}
+                new ProductDB { Name = "Test Product1 Name1", Composition = "Test Product1 Composition1"},
+                new ProductDB { Name = "Test Product2 Name2", Composition = "Test Product2 Composition2"},
+                new ProductDB { Name = "Test Product3 Name3", Composition = "Test Product3 Composition3"},
+                new ProductDB { Name = "Test Product4 Name4", Composition = "Test Product4 Composition4"},
+                new ProductDB { Name = "Test Product5 Name5 Unique", Composition = "Test Product5 Composition5"}
             };
 
         }
