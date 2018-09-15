@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using System;
+using NLog;
 using Swagger.Net.Annotations;
 using System.Collections.Generic;
 using System.Net;
@@ -71,6 +72,24 @@ namespace WasteProducts.Web.Controllers.Api
         {
 
             return await  _searchService.SearchProductAsync(query);
+        }
+
+        /// <summary>
+        /// Returns previous user's queries similar to new query.
+        /// </summary>
+        /// <param name="query">Query string</param>
+        /// <returns>Product collection</returns>
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<UserQuery>))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
+        [HttpGet, Route("queries")]
+        public async Task<IEnumerable<UserQuery>> GetUserQueries(string query)
+        {
+            if (string.IsNullOrEmpty(query))
+            {
+                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
+            }
+            return await _searchService.GetSimilarQueriesAsync(query);
         }
     }
 }
