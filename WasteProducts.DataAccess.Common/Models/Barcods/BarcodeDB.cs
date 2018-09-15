@@ -3,6 +3,9 @@ using WasteProducts.DataAccess.Common.Models.Products;
 
 namespace WasteProducts.DataAccess.Common.Models.Barcods
 {
+    /// <summary>
+    /// DataBase entity of barcode.
+    /// </summary>
     public class BarcodeDB
     {
         /// <summary>

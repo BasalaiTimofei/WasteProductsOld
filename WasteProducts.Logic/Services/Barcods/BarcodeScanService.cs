@@ -8,8 +8,10 @@ using WasteProducts.Logic.Common.Services.Barcods;
 
 namespace WasteProducts.Logic.Services.Barcods
 {
+    /// <inheritdoc />
     public class BarcodeScanService : IBarcodeScanService
     {
+        /// <inheritdoc />
         public Bitmap Resize(Bitmap img, int width, int height)
         {
             Bitmap result = new Bitmap(width, height);
@@ -22,6 +24,7 @@ namespace WasteProducts.Logic.Services.Barcods
             return result;
         }
 
+        /// <inheritdoc />
         public string ScanByZxing(Bitmap image)
         {
             string decoded = "";
@@ -32,6 +35,7 @@ namespace WasteProducts.Logic.Services.Barcods
             return decoded;
         }
 
+        /// <inheritdoc />
         public string ScanBySpire(Bitmap image)
         {
             string decoded = "";

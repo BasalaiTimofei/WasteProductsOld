@@ -2,6 +2,9 @@
 
 namespace WasteProducts.Logic.Common.Models.Barcods
 {
+    /// <summary>
+    /// Model for entity barcode.
+    /// </summary>
     public class Barcode
     {
         /// <summary>
