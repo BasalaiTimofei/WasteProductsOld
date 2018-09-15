@@ -4,17 +4,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WasteProducts.Web", "WasteProducts.Web\WasteProducts.Web.csproj", "{1A417C80-E84A-4CF2-A007-BD9AE412CE86}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E9FB0E3E-01D5-4316-8703-84248A90BE98} = {E9FB0E3E-01D5-4316-8703-84248A90BE98}
+		{6CF2C1B1-05E5-412F-8AF5-5D2F6E2450E9} = {6CF2C1B1-05E5-412F-8AF5-5D2F6E2450E9}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6463C37F-C7DF-4AA9-8C39-DA4EDFC4F260}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataAccess", "DataAccess", "{D1C023C3-F1E3-464B-827E-6BF8EFCFE77E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logic", "Logic", "{F44E3173-7A14-445E-8CB5-77274C59AF0E}"
-	ProjectSection(SolutionItems) = preProject
-		WasteProducts.DataAccess\App.config = WasteProducts.DataAccess\App.config
-		WasteProducts.DataAccess\App.Debug.config = WasteProducts.DataAccess\App.Debug.config
-		WasteProducts.DataAccess\App.Release.config = WasteProducts.DataAccess\App.Release.config
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WasteProducts.DataAccess", "WasteProducts.DataAccess\WasteProducts.DataAccess.csproj", "{E9FB0E3E-01D5-4316-8703-84248A90BE98}"
 EndProject

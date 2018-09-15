@@ -47,8 +47,8 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=1.0.0.4, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpZipLib.1.0.0-rc2\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.0.0.999, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.0.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Lucene.Net, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Lucene.Net.4.8.0-beta00005\lib\net45\Lucene.Net.dll</HintPath>
@@ -110,18 +110,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contexts\Config\MsSqlConfiguration.cs" />
+    <Compile Include="Contexts\Database.cs" />
     <Compile Include="Contexts\Security\IdentityContext.cs" />
     <Compile Include="Contexts\WasteContext.cs" />
     <Compile Include="InjectorModule.cs" />
-    <Compile Include="ModelConfigurations\DonationManagment\AddressEntityConfiguration.cs" />
-    <Compile Include="ModelConfigurations\DonationManagment\DonationEntityConfiguration.cs" />
-    <Compile Include="ModelConfigurations\DonationManagment\DonorEntityConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Donations\AddressEntityConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Donations\DonationEntityConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Donations\DonorEntityConfiguration.cs" />
     <Compile Include="ModelConfigurations\EntityConfiguration.cs" />
     <Compile Include="ModelConfigurations\Groups\GroupBoardConfiguration.cs" />
     <Compile Include="ModelConfigurations\Groups\GroupCommentConfiguration.cs" />
     <Compile Include="ModelConfigurations\Groups\GroupConfiguration.cs" />
     <Compile Include="ModelConfigurations\Groups\GroupProductConfiguration.cs" />
     <Compile Include="ModelConfigurations\Groups\GroupUserConfiguration.cs" />
+    <Compile Include="ModelConfigurations\UserManagement\UserProductDescriptionConfiguration.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Contexts\Security\Configurations\RoleConfiguration.cs" />
     <Compile Include="Contexts\Security\Configurations\UserClaimConfiguration.cs" />
@@ -129,12 +131,12 @@
     <Compile Include="Contexts\Security\Configurations\UserLoginConfiguration.cs" />
     <Compile Include="Contexts\Security\Configurations\UserRoleConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\CategoryRepository.cs" />
+    <Compile Include="Repositories\Products\CategoryRepository.cs" />
     <Compile Include="Repositories\EntityRepository.cs" />
     <Compile Include="Repositories\LuceneSearchRepository.cs" />
     <Compile Include="Repositories\Groups\GroupRepository.cs" />
     <Compile Include="Repositories\UserManagement\UserRepository.cs" />
-    <Compile Include="Repositories\ProductRepository.cs" />
+    <Compile Include="Repositories\Products\ProductRepository.cs" />
     <Compile Include="Repositories\Security\DbFactory.cs" />
     <Compile Include="Repositories\Security\RepositoryBase.cs" />
     <Compile Include="Repositories\Security\RoleRepository.cs" />
@@ -142,19 +144,14 @@
     <Compile Include="Repositories\Security\UserLoginRepository.cs" />
     <Compile Include="Repositories\Security\UserRepository.cs" />
     <Compile Include="Repositories\Security\UserRoleRepository.cs" />
+    <Compile Include="Resources\LuceneSearchRepository.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LuceneSearchRepository.resx</DependentUpon>
+    </Compile>
     <Compile Include="UoW\Security\UnitOfWork.cs" />
     <Compile Include="Repositories\UserManagement\UserRoleRepository.cs" />
     <Compile Include="UoW\UnitOfWork.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">
-      <Project>{9acbec5d-caa7-4e29-a19c-a247190f6da8}</Project>
-      <Name>WasteProducts.DataAccess.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WasteProducts.Logic.Common\WasteProducts.Logic.Common.csproj">
-      <Project>{643AAB59-4858-4E23-9A18-4BBEC3EE5F56}</Project>
-      <Name>WasteProducts.Logic.Common</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -169,6 +166,18 @@
       <IsTransformFile>true</IsTransformFile>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">
+      <Project>{9acbec5d-caa7-4e29-a19c-a247190f6da8}</Project>
+      <Name>WasteProducts.DataAccess.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\LuceneSearchRepository.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LuceneSearchRepository.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.VisualStudio.SlowCheetah.3.1.66\build\Microsoft.VisualStudio.SlowCheetah.targets" Condition="Exists('..\packages\Microsoft.VisualStudio.SlowCheetah.3.1.66\build\Microsoft.VisualStudio.SlowCheetah.targets')" />

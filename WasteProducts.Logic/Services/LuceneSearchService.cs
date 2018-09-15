@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories.Search;
-using WasteProducts.Logic.Common.Models;
+using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Search;
 using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Resources;
 
 namespace WasteProducts.Logic.Services
 {
@@ -15,25 +16,16 @@ namespace WasteProducts.Logic.Services
     /// </summary>
     public class LuceneSearchService : ISearchService
     {
-        private ISearchRepository _repository;
+
         public const int DEFAULT_MAX_LUCENE_RESULTS = 1000;
+        public const int MAX_SIMILAR_QUERIES_COUNT = 10;
         public int MaxResultCount { get; set; } = DEFAULT_MAX_LUCENE_RESULTS;
+
+        private readonly ISearchRepository _repository;
 
         public LuceneSearchService(ISearchRepository repository)
         {
             _repository = repository;
-        }
-
-        /// <summary>
-        /// Performs search in repository
-        /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <param name="query">SearchQuery object containing query information</param>
-        /// <returns></returns>
-        public IEnumerable<TEntity> Search<TEntity>(SearchQuery query) where TEntity : class
-        {
-            CheckQuery(query);
-            return _repository.GetAll<TEntity>(query.Query, query.SearchableFields, MaxResultCount);
         }
 
         /// <summary>
@@ -45,10 +37,13 @@ namespace WasteProducts.Logic.Services
         public IEnumerable<TEntity> Search<TEntity>(BoostedSearchQuery query) where TEntity : class
         {
             CheckQuery(query);
+            UserQuery userQuery = new UserQuery();
+            userQuery.QueryString = query.Query;
+            _repository.Insert(userQuery);
             return _repository.GetAll<TEntity>(query.Query, query.SearchableFields, query.BoostValues, MaxResultCount);
         }
 
-        public IEnumerable<TEntity> SearchDefault<TEntity>(SearchQuery query)
+        public IEnumerable<TEntity> SearchDefault<TEntity>(BoostedSearchQuery query)
         {
             throw new NotImplementedException();
         }
@@ -138,23 +133,51 @@ namespace WasteProducts.Logic.Services
             _repository.Optimize();
         }
 
-        //todo: implement async methods later if necessary
-
-        public Task<IEnumerable<TEntity>> SearchAsync<TEntity>(SearchQuery query)
+        public IEnumerable<Product> SearchProduct(BoostedSearchQuery query)
         {
-            throw new NotImplementedException();
+            var productDbList = Search<ProductDB>(query);
+
+            //TODO: map all values in productDbList to Product
+            List<Product> result = new List<Product>();            
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new Mappings.SearchProfile());                
+            });
+
+            var mapper = (new Mapper(config)).DefaultContext.Mapper;
+
+            foreach (var productDb in productDbList)
+            {
+                result.Add(mapper.Map<Product>(productDb));
+            }
+
+            return result;
         }
 
-        public Task<IEnumerable<TEntity>> SearchDefaultAsync<TEntity>(SearchQuery query)
+        public IEnumerable<UserQuery> GetSimilarQueries(string query)
         {
-            throw new NotImplementedException();
+            BoostedSearchQuery searchQuery = new BoostedSearchQuery(query);
+            searchQuery.AddField("QueryString");
+            CheckQuery(searchQuery);
+            return _repository.GetAll<UserQuery>(searchQuery.Query, searchQuery.SearchableFields, searchQuery.BoostValues, MAX_SIMILAR_QUERIES_COUNT);
         }
 
-        private void CheckQuery(SearchQuery query)
+        public Task<IEnumerable<Product>> SearchProductAsync(BoostedSearchQuery query)
+        {
+            return Task.Run(() => SearchProduct(query));
+        }
+
+        public Task<IEnumerable<UserQuery>> GetSimilarQueriesAsync(string query)
+        {
+            return Task.Run(() => GetSimilarQueries(query));
+        }
+
+        private void CheckQuery(BoostedSearchQuery query)
         {
             if (String.IsNullOrEmpty(query.Query) || query.SearchableFields.Count == 0)
             {
-                throw new ArgumentException("Incorrect query.");
+                throw new ArgumentException(SearchServiceResources.IncorrectQueryStr);
             }
         }
 

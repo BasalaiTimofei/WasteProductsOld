@@ -41,29 +41,14 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         public virtual BarcodeDB Barcode { get; set; }
 
         /// <summary>
-        /// Defines the average Product rating based on user ratings.
+        /// User descriptions of this product.
         /// </summary>
-        public double? AvgRating { get; set; }
-
-        /// <summary>
-        /// Defines the price of the Product.
-        /// </summary>
-        public decimal Price { get; set; }
-
-        /// <summary>
-        /// Defines the number of users who have rated the Product. Is used to determine the property "AvgRating".
-        /// </summary>
-        public int RateCount { get; set; }
-
-        /// <summary>
-        /// Users having this product in their lists.
-        /// </summary>
-        public virtual ICollection<UserDB> Users { get; set; }
+        public virtual ICollection<UserProductDescriptionDB> UserDescriptions { get; set; }
 
         /// <summary>
         /// Defines the Product description
         /// </summary>
-        public string Description { get; set; }
+        public string Composition { get; set; }
 
         /// <summary>
         /// Defines whether the Product is in the "hidden" state
@@ -75,18 +60,40 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         /// </summary>
         public bool Marked { get; set; }
 
+        /// <summary>
+        /// Determines whether the specified object is equal to the current object
+        /// </summary>
+        /// <param name="obj">The object to compare with the current object</param>
+        /// <returns>Returns true if the specified object is equal to the current object; otherwise, false</returns>
         public override bool Equals(object obj)
         {
             return obj is ProductDB other &&
                    this.Name == other.Name &&
-                   this.AvgRating == other.AvgRating &&
                    this.Id == other.Id &&
                    this.Created == other.Created &&
                    this.Modified == other.Modified &&
                    this.Category == other.Category &&
-                   this.Barcode == other.Barcode &&
-                   this.Price == other.Price &&
-                   this.RateCount == other.RateCount;
+                   this.Barcode == other.Barcode;
+        }
+
+        /// <summary>
+        /// The hash code for this ProductDB
+        /// </summary>
+        /// <returns>A hash code for the current object</returns>
+        public override int GetHashCode()
+        {
+            var hashCode = -1413941165;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Id);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Name);
+            hashCode = hashCode * -1521134295 + Created.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<DateTime?>.Default.GetHashCode(Modified);
+            hashCode = hashCode * -1521134295 + EqualityComparer<CategoryDB>.Default.GetHashCode(Category);
+            hashCode = hashCode * -1521134295 + EqualityComparer<BarcodeDB>.Default.GetHashCode(Barcode);
+            hashCode = hashCode * -1521134295 + EqualityComparer<ICollection<UserProductDescriptionDB>>.Default.GetHashCode(UserDescriptions);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Composition);
+            hashCode = hashCode * -1521134295 + IsHidden.GetHashCode();
+            hashCode = hashCode * -1521134295 + Marked.GetHashCode();
+            return hashCode;
         }
     }
 }

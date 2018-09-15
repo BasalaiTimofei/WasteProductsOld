@@ -1,3 +1,6 @@
+using WasteProducts.Web.Controllers.Api;
+using Ninject.Extensions.Interception.Infrastructure.Language;
+
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(WasteProducts.Web.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethod(typeof(WasteProducts.Web.App_Start.NinjectWebCommon), "Stop")]
 
@@ -18,6 +21,8 @@ namespace WasteProducts.Web.App_Start
 
     using WasteProducts.Web.Utils.Interception;
     using WasteProducts.Web.Filters;
+    using Microsoft.AspNet.SignalR;
+    using WasteProducts.Web.Utils;
 
     public static class NinjectWebCommon
     {
@@ -55,7 +60,9 @@ namespace WasteProducts.Web.App_Start
 
                 kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
-                
+
+                GlobalHost.DependencyResolver = new NinjectSignalRDependencyResolver(kernel);
+
                 RegisterLoggers(kernel);
                 RegisterFiltres(kernel);
                 RegisterServices(kernel);

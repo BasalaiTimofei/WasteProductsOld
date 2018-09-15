@@ -1,4 +1,5 @@
-﻿using System.Data.Entity.ModelConfiguration;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity.ModelConfiguration;
 using WasteProducts.DataAccess.Common.Models.Groups;
 
 namespace WasteProducts.DataAccess.ModelConfigurations
@@ -9,21 +10,22 @@ namespace WasteProducts.DataAccess.ModelConfigurations
         {
             ToTable("GroupBoard");
 
-            HasKey<int>(x => x.Id);
+            HasKey(x => x.Id);
+            Property(x => x.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             Property(x => x.Name).HasMaxLength(50);
             Property(x => x.Information).HasMaxLength(255);
             Property(x => x.Created).IsOptional();
             Property(x => x.Deleted).IsOptional();
             Property(x => x.Modified).IsOptional();
-            Property(x => x.IsDeleted).IsOptional();
+            Property(x => x.IsNotDeleted).IsOptional();
 
             HasMany(x => x.GroupProducts)
                 .WithRequired(y => y.GroupBoard)
-                .Map(m => m.MapKey("GroupBoard_Id"));
+                .HasForeignKey(z => z.GroupBoardId);
 
             HasMany(x => x.GroupComments)
                 .WithRequired(y => y.GroupBoard)
-                .Map(m => m.MapKey("GroupBoard_Id"));
+                .HasForeignKey(z => z.GroupBoardId);
         }
 
     }

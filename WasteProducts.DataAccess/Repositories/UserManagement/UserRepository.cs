@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.UserManagement;
 using WasteProducts.DataAccess.Contexts;
@@ -14,327 +16,400 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 {
     public class UserRepository : IUserRepository
     {
-        private readonly bool _initiateWithCS;
+        private readonly WasteContext _context;
 
-        public string NameOrConnectionString { get; }
+        private readonly UserStore<UserDB> _store;
 
-        public UserRepository()
+        private readonly UserManager<UserDB> _manager;
+
+        private readonly IMapper _mapper;
+
+        private bool _disposed;
+
+        public UserRepository(WasteContext context, IMapper mapper)
         {
-            _initiateWithCS = false;
+            _context = context;
+            _store = new UserStore<UserDB>(_context)
+            {
+                DisposeContext = true
+            };
+            _manager = new UserManager<UserDB>(_store);
+
+            _mapper = mapper;
+
         }
 
-        public UserRepository(string nameOrConnectionString)
+        public void Dispose()
         {
-            _initiateWithCS = true;
-            NameOrConnectionString = nameOrConnectionString;
+            if (!_disposed)
+            {
+                _manager?.Dispose();
+                _disposed = true;
+                GC.SuppressFinalize(this);
+            }
         }
 
         /// <summary>
-        /// Use ONLY with testDB!
+        /// Use ONLY with TestDB!
         /// </summary>
         public void RecreateTestDatabase()
         {
-            using (var db = GetWasteContext())
+            _context.Database.Delete();
+            _context.Database.CreateIfNotExists();
+        }
+
+        public async Task<(string id, string token)> AddAsync(string email, string userName, string password)
+        {
+            string id = Guid.NewGuid().ToString();
+
+            var user = new UserDB
             {
-                db.Database.Delete();
-                db.Database.CreateIfNotExists();
+                Id = id,
+                Email = email,
+                UserName = userName,
+                Created = DateTime.UtcNow
+            };
+            await _manager.CreateAsync(user, password);
+            if (await _manager.FindByIdAsync(id) != null)
+            {
+                _manager.UserTokenProvider = new EmailTokenProvider<UserDB>();
+                var token = await _manager.GenerateEmailConfirmationTokenAsync(id);
+                return (id, token);
+            }
+            else
+            {
+                return (null, null);
             }
         }
 
-        public async Task AddAsync(UserDB user)
+        public async Task<bool> ConfirmEmailAsync(string userId, string token)
         {
-            using (var db = GetWasteContext())
+            _manager.UserTokenProvider = new EmailTokenProvider<UserDB>();
+            await _manager.ConfirmEmailAsync(userId, token);
+            if (await _manager.IsEmailConfirmedAsync(userId))
             {
-                using (var userStore = new UserStore<UserDB>(db))
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public async Task<(string id, string token)> GeneratePasswordResetTokenAsync(string email)
+        {
+            var user = await _manager.FindByEmailAsync(email);
+            _manager.UserTokenProvider = new TotpSecurityStampBasedTokenProvider<UserDB, string>();
+            var token = await _manager.GeneratePasswordResetTokenAsync(user.Id);
+            return (user.Id, token);
+        }
+
+        public async Task<bool> ResetPasswordAsync(string userId, string token, string newPassword)
+        {
+            var result = await _manager.ResetPasswordAsync(userId, token, newPassword);
+            return result.Succeeded;
+        }
+
+        public async Task<UserDAL> FindByNameAndPasswordAsync(string userName, string password)
+        {
+            return MapTo<UserDAL>(await _manager.FindAsync(userName, password));
+        }
+
+        public async Task<UserDAL> FindByEmailAndPasswordAsync(string email, string password)
+        {
+            var user = await _manager.FindByEmailAsync(email);
+            if (user != null && await _manager.CheckPasswordAsync(user, password))
+            {
+                return MapTo<UserDAL>(user);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<bool> IsEmailAvailableAsync(string email)
+        {
+            return !(await _context.Users.AnyAsync(u => u.Email == email));
+        }
+
+        public async Task AddClaimAsync(string userId, Claim claim)
+        {
+            await _manager.AddClaimAsync(userId, claim);
+        }
+
+        public async Task AddLoginAsync(string userId, UserLoginDB login)
+        {
+            var userLoginInfo = new UserLoginInfo(login.LoginProvider, login.ProviderKey);
+            await _manager.AddLoginAsync(userId, userLoginInfo);
+        }
+
+        public async Task AddToRoleAsync(string userId, string roleName)
+        {
+            await _manager.AddToRoleAsync(userId, roleName);
+        }
+
+        public async Task DeleteAsync(string userId)
+        {
+            var user = await _manager.FindByIdAsync(userId);
+            await _manager.DeleteAsync(user);
+        }
+
+        public async Task RemoveClaimAsync(string userId, Claim claim)
+        {
+            await _manager.RemoveClaimAsync(userId, claim);
+        }
+
+        public async Task RemoveFromRoleAsync(string userId, string roleName)
+        {
+            await _manager.RemoveFromRoleAsync(userId, roleName);
+        }
+
+        public async Task RemoveLoginAsync(string userId, UserLoginDB login)
+        {
+            var userLoginInfo = new UserLoginInfo(login.LoginProvider, login.ProviderKey);
+            await _manager.RemoveLoginAsync(userId, userLoginInfo);
+        }
+
+        public async Task<IEnumerable<UserDAL>> GetAllAsync(bool initiateNavigationalProps)
+        {
+            return await Task.Run(() =>
+            {
+                if (initiateNavigationalProps)
                 {
-                    user.Created = DateTime.UtcNow;
-                    await userStore.CreateAsync(user);
-                    await db.SaveChangesAsync();
+                    return _mapper.Map<IEnumerable<UserDAL>>(_context.Users.ToList());
                 }
-            }
-        }
-
-        public async Task AddClaimAsync(UserDB user, Claim claim)
-        {
-            using (var db = GetWasteContext())
-            {
-                using (var userStore = new UserStore<UserDB>(db))
+                else
                 {
-                    await userStore.AddClaimAsync(user, claim);
+                    var subresult = _context.Users.Include(u => u.Roles).
+                        Include(u => u.Claims).
+                        Include(u => u.Logins).
+                        Include(u => u.Friends).
+                        Include(u => u.ProductDescriptions.Select(p => p.Product)).ToList();
 
-                    user.Modified = DateTime.UtcNow;
-                    await db.SaveChangesAsync();
-                }
-            }
-        }
-
-        public async Task AddLoginAsync(UserDB user, UserLoginDB login)
-        {
-            UserLoginInfo loginInfo = new UserLoginInfo(login.LoginProvider, login.ProviderKey);
-
-            using (var db = GetWasteContext())
-            {
-                using (var userStore = new UserStore<UserDB>(db))
-                {
-                    await userStore.AddLoginAsync(user, loginInfo);
-
-                    user.Modified = DateTime.UtcNow;
-                    await db.SaveChangesAsync();
-                }
-            }
-        }
-
-        public async Task AddToRoleAsync(UserDB user, string roleName)
-        {
-            using (var db = GetWasteContext())
-            {
-                using (var userStore = new UserStore<UserDB>(db))
-                {
-                    await userStore.AddToRoleAsync(user, roleName);
-
-                    user.Modified = DateTime.UtcNow;
-                    await db.SaveChangesAsync();
-                }
-            }
-        }
-
-        public async Task AddFriendAsync(string userId, string friendId)
-        {
-            using (var db = GetWasteContext())
-            {
-                UserDB user = db.Users.Include(p => p.Friends).First(u => u.Id == userId);
-                UserDB friend = db.Users.First(u => u.Id == friendId);
-
-                user.Friends.Add(friend);
-
-                user.Modified = DateTime.UtcNow;
-                await db.SaveChangesAsync();
-            }
-        }
-
-        public async Task DeleteAsync(UserDB user)
-        {
-            await Task.Run(async () =>
-            {
-                using (var db = GetWasteContext())
-                {
-                    db.Users.Attach(user);
-                    var entry = db.Entry(user);
-                    entry.State = EntityState.Deleted;
-                    await db.SaveChangesAsync();
+                    return _mapper.Map<IEnumerable<UserDAL>>(subresult);
                 }
             });
         }
 
-        public async Task RemoveClaimAsync(UserDB user, Claim claim)
+        public async Task<UserDAL> GetAsync(string id, bool initiateNavigationalProps)
         {
-            using (var db = GetWasteContext())
+            return await Task.Run(() =>
             {
-                var userInDB = db.Users.Include(u => u.Claims).FirstOrDefault(u => u.Email == user.Email);
-
-                var claimToDelete = userInDB.Claims.FirstOrDefault(c => c.UserId == userInDB.Id &&
-                                                                        c.ClaimType == claim.Type &&
-                                                                        c.ClaimValue == claim.Value);
-
-                if (claimToDelete != null)
+                if (initiateNavigationalProps)
                 {
-                    db.Entry(claimToDelete).State = EntityState.Deleted;
-                    user.Modified = DateTime.UtcNow;
-                    await db.SaveChangesAsync();
+                    var subresult = _context.Users.FirstOrDefault(u => u.Id == id);
+                    return MapTo<UserDAL>(subresult);
                 }
-            }
+                else
+                {
+                    var subresult = _context.Users.Include(u => u.Roles).
+                        Include(u => u.Claims).
+                        Include(u => u.Logins).
+                        Include(u => u.Friends).
+                        Include(u => u.ProductDescriptions.Select(p => p.Product))
+                        .FirstOrDefault(u => u.Id == id);
+
+                    return MapTo<UserDAL>(subresult);
+                }
+            });
         }
 
-        public async Task RemoveFromRoleAsync(UserDB user, string roleName)
+        public async Task<IList<string>> GetRolesAsync(string userId)
         {
-            using (var db = GetWasteContext())
-            {
-                using (var userStore = new UserStore<UserDB>(db))
-                {
-                    await userStore.RemoveFromRoleAsync(user, roleName);
-                    user.Modified = DateTime.UtcNow;
-                    await db.SaveChangesAsync();
-                }
-            }
+            return await _manager.GetRolesAsync(userId);
         }
 
-        public async Task RemoveLoginAsync(UserDB user, UserLoginDB login)
+        public async Task<IList<Claim>> GetClaimsAsync(string userId)
         {
-            using (var db = GetWasteContext())
+            return await _manager.GetClaimsAsync(userId);
+        }
+
+        public async Task<IList<UserLoginDB>> GetLoginsAsync(string userId)
+        {
+            var logins = await _manager.GetLoginsAsync(userId);
+            IList<UserLoginDB> result = new List<UserLoginDB>(logins.Count);
+
+            foreach (var login in logins)
             {
-                var userInDB = db.Users.Include(u => u.Logins).FirstOrDefault(u => u.Email == user.Email);
-
-                var loginToDelete = userInDB.Logins.FirstOrDefault(c => c.UserId == userInDB.Id &&
-                                                                        c.LoginProvider == login.LoginProvider &&
-                                                                        c.ProviderKey == login.ProviderKey);
-
-                if (loginToDelete != null)
-                {
-                    db.Entry(loginToDelete).State = EntityState.Deleted;
-                    user.Modified = DateTime.UtcNow;
-                    await db.SaveChangesAsync();
-                }
+                result.Add(new UserLoginDB { LoginProvider = login.LoginProvider, ProviderKey = login.ProviderKey });
             }
+            return result;
+        }
+
+        public async Task ChangePasswordAsync(string userId, string newPassword, string oldPassword)
+        {
+            await _manager.ChangePasswordAsync(userId, oldPassword, newPassword);
+        }
+
+        public async Task UpdateAsync(UserDAL user)
+        {
+            var userInDB = _context.Users.FirstOrDefault(u => u.Id == user.Id);
+
+            var entry = _context.Entry(userInDB);
+            entry.CurrentValues.SetValues(user);
+            entry.Property(u => u.Modified).CurrentValue = DateTime.UtcNow;
+
+            entry.Property(u => u.UserName).IsModified = false;
+            entry.Property(u => u.Email).IsModified = false;
+            entry.Property(u => u.Created).IsModified = false;
+            entry.Property(u => u.PasswordHash).IsModified = false;
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> UpdateEmailAsync(string userId, string newEmail)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user != null && await IsEmailAvailableAsync(newEmail))
+            {
+                user.Modified = DateTime.UtcNow;
+                user.Email = newEmail;
+                var entry = _context.Entry(user);
+                entry.Property(u => u.Email).IsModified = true;
+                entry.Property(u => u.Modified).IsModified = true;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> UpdateUserNameAsync(string userId, string newUserName)
+        {
+            bool userNameAvailable = !(await _context.Users.AnyAsync(u => u.UserName == newUserName));
+
+            if (userNameAvailable)
+            {
+                var user = _manager.FindById(userId);
+
+                user.Modified = DateTime.UtcNow;
+                user.UserName = newUserName;
+
+                var entry = _context.Entry(user);
+
+                entry.State = EntityState.Unchanged;
+                entry.Property(u => u.UserName).IsModified = true;
+                entry.Property(u => u.Modified).IsModified = true;
+
+                await _context.SaveChangesAsync();
+            }
+            return userNameAvailable;
+        }
+
+        // Business logic below
+        public async Task AddFriendAsync(string userId, string friendId)
+        {
+            await Task.Run(() =>
+            {
+                UserDB user = _context.Users.Include(p => p.Friends).FirstOrDefault(u => u.Id == userId);
+                UserDB friend = _context.Users.FirstOrDefault(u => u.Id == friendId);
+
+                if (user != null && friend != null)
+                {
+                    user.Friends.Add(friend);
+                    user.Modified = DateTime.UtcNow;
+                    _context.SaveChanges();
+                }
+            });
         }
 
         public async Task DeleteFriendAsync(string userId, string deletingFriendId)
         {
-            using (var db = GetWasteContext())
+            await Task.Run(() =>
             {
-                UserDB user = db.Users.Include(p => p.Friends).First(u => u.Id == userId);
-                UserDB friend = db.Users.First(u => u.Id == deletingFriendId);
+                UserDB user = _context.Users.Include(p => p.Friends).FirstOrDefault(u => u.Id == userId);
+                UserDB friend = _context.Users.FirstOrDefault(u => u.Id == deletingFriendId);
 
-                user.Friends.Remove(friend);
-
-                user.Modified = DateTime.UtcNow;
-                await db.SaveChangesAsync();
-            }
-        }
-
-        public UserDB Select(string email, string password, bool lazyInitiation = true)
-        {
-            return (Select(user => user.Email == email && user.PasswordHash == password, lazyInitiation, getRoles: false)).user;
-        }
-
-        public UserDB Select(string email, bool lazyInitiation = true)
-        {
-            return (Select(user => user.Email == email, lazyInitiation, getRoles: false)).user;
-        }
-
-        public UserDB Select(Func<UserDB, bool> predicate, bool lazyInitiation = true)
-        {
-            return (Select(predicate, lazyInitiation, getRoles: false)).user;
-        }
-
-        public (UserDB user, IList<string> roles) SelectWithRoles(Func<UserDB, bool> predicate, bool lazyInitiation = true)
-        {
-            return Select(predicate, lazyInitiation, getRoles: true);
-        }
-
-        public List<UserDB> SelectAll()
-        {
-            using (var db = GetWasteContext())
-            {
-                return db.Users.ToList();
-            }
-        }
-
-        public IEnumerable<UserDB> SelectRange(Func<UserDB, bool> predicate, bool lazyInitiation = true)
-        {
-            using (var db = GetWasteContext())
-            {
-                if (lazyInitiation)
+                if (user != null && friend != null)
                 {
-                    return db.Users.Where(predicate);
+                    user.Friends.Remove(friend);
+                    user.Modified = DateTime.UtcNow;
+                    _context.SaveChanges();
                 }
-                else
-                {
-                    db.Configuration.LazyLoadingEnabled = false;
-
-                    // TODO expand with publicGroups when it awailable
-                    return db.Users.Include(u => u.Roles).
-                        Include(u => u.Claims).
-                        Include(u => u.Logins).
-                        Include(u => u.Friends).
-                        Include(u => u.Products).
-                        Where(predicate);
-                }
-            }
+            });
         }
 
-        public async Task<IList<string>> GetRolesAsync(UserDB user)
+        public async Task<bool> AddProductAsync(string userId, string productId, int rating, string description)
         {
-            using (var db = GetWasteContext())
+            return await Task.Run(() =>
             {
-                using (var userStore = new UserStore<UserDB>(db))
+                UserDB user = null;
+                ProductDB product = null;
+                try
                 {
-                    return await userStore.GetRolesAsync(user);
+                    user = _context.Users.Include(u => u.ProductDescriptions).First(u => u.Id == userId);
+                    product = _context.Products.FirstOrDefault(p => p.Id == productId);
                 }
-            }
+                catch (InvalidOperationException)
+                {
+                    return false;
+                }
+                var userProdDescr = new UserProductDescriptionDB()
+                {
+                    User = user,
+                    Product = product,
+                    Rating = rating,
+                    Description = description,
+                    Created = DateTime.UtcNow
+                };
+                _context.UserProductDescriptions.Add(userProdDescr);
+                _context.SaveChanges();
+                return true;
+            });
         }
 
-        public async Task UpdateAsync(UserDB user)
+        public async Task<bool> UpdateProductDescriptionAsync(string userId, string productId, int rating, string description)
         {
-            using (var db = GetWasteContext())
+            return await Task.Run(() =>
             {
-                db.Users.Attach(user);
-                var entry = db.Entry(user);
-                entry.State = EntityState.Modified;
-                entry.Property(u => u.Created).IsModified = false;
-                entry.Property(u => u.PasswordHash).IsModified = false;
+                UserProductDescriptionDB descr = _context.UserProductDescriptions.FirstOrDefault(d => d.UserId == userId && d.ProductId == productId);
+                if (descr == null)
+                {
+                    return false;
+                }
+                descr.Rating = rating;
+                descr.Description = description;
 
-                user.Modified = DateTime.UtcNow;
-                await db.SaveChangesAsync();
-            }
+                _context.SaveChanges();
+                return true;
+            });
         }
 
-        public async Task ResetPasswordAsync(UserDB user, string newPassword)
+        public async Task<bool> DeleteProductAsync(string userId, string productId)
         {
-            using (var db = GetWasteContext())
+            return await Task.Run(() =>
             {
-                // TODO исправить, добавить обработку Password и превращение его в PasswordHash
-                user.PasswordHash = newPassword;
-                db.Users.Attach(user);
-                var entry = db.Entry(user);
-                entry.Property(p => p.PasswordHash).IsModified = true;
-
-                user.Modified = DateTime.UtcNow;
-                await db.SaveChangesAsync();
-
-                // вот таким кодом пытался установить новый PasswordHash (заметьте, PasswordHash, не Password)
-                // но он как ни странно даже не работает. Оставил коммент на будущее, до оптимизации кода, как образец
-                //using (var userStore = new UserStore<UserDB>(db))
-                //{
-                //    await userStore.SetPasswordHashAsync(user, newPassword);
-                //    await db.SaveChangesAsync();
-                //}
-            }
+                UserProductDescriptionDB description = null;
+                try
+                {
+                    description = _context.UserProductDescriptions.First(d => d.User.Id == userId && d.Product.Id == productId);
+                }
+                catch (InvalidOperationException)
+                {
+                    return false;
+                }
+                var entry = _context.Entry(description);
+                entry.State = EntityState.Deleted;
+                _context.SaveChanges();
+                return true;
+            });
         }
 
-        private (UserDB user, IList<string> roles) Select(Func<UserDB, bool> predicate, bool lazyInitiation, bool getRoles)
+        private UserDB MapTo<T>(UserDAL user)
+            where T : UserDB
+            =>
+            _mapper.Map<UserDB>(user);
+
+        private UserDAL MapTo<T>(UserDB user)
+            where T : UserDAL
+            =>
+            _mapper.Map<UserDAL>(user);
+
+        
+
+        ~UserRepository()
         {
-            using (var db = GetWasteContext())
-            {
-                (UserDB user, IList<string> roles) result = (null, null);
-                if (lazyInitiation)
-                {
-                    result.user = db.Users.FirstOrDefault(predicate);
-                }
-                else
-                {
-                    // TODO expand with groups when it will be available
-                    db.Configuration.LazyLoadingEnabled = lazyInitiation;
-
-                    result.user = db.Users.Include(u => u.Roles).
-                        Include(u => u.Claims).
-                        Include(u => u.Logins).
-                        Include(u => u.Friends).
-                        Include(u => u.Products).
-                        FirstOrDefault(predicate);
-                }
-
-                if (getRoles)
-                {
-                    using (var userStore = new UserStore<UserDB>(db))
-                    {
-                         result.roles = userStore.GetRolesAsync(result.user).GetAwaiter().GetResult();
-                    }
-                }
-
-                return result;
-            }
-        }
-
-        private WasteContext GetWasteContext()
-        {
-            if (_initiateWithCS)
-            {
-                return new WasteContext(NameOrConnectionString);
-            }
-            else
-            {
-                return new WasteContext();
-            }
+            Dispose();
         }
     }
 }

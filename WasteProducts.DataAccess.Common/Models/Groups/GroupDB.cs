@@ -9,7 +9,7 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         /// <summary>
         /// Primary key
         /// </summary>
-        public virtual int Id { get; set; }
+        public virtual Guid Id { get; set; }
 
         /// <summary>
         /// Group name
@@ -20,6 +20,11 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         /// Additional information
         /// </summary>
         public virtual string Information { get; set; }
+
+        /// <summary>
+        /// Foreign key
+        /// </summary>
+        public virtual string AdminId { get; set; }
 
         /// <summary>
         /// User which created group
@@ -40,7 +45,7 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         /// true - group created;
         /// false - group deleted
         /// </summary>
-        public virtual bool IsDeleted { get; set; }
+        public virtual bool IsNotDeleted { get; set; }
 
         /// <summary>
         /// Group creation time
