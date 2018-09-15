@@ -37,7 +37,8 @@ namespace WasteProducts.Logic.Services
         public IEnumerable<TEntity> Search<TEntity>(BoostedSearchQuery query) where TEntity : class
         {
             CheckQuery(query);
-            UserQuery userQuery = new UserQuery(query.Query);
+            UserQuery userQuery = new UserQuery();
+            userQuery.QueryString = query.Query;
             _repository.Insert(userQuery);
             return _repository.GetAll<TEntity>(query.Query, query.SearchableFields, query.BoostValues, MaxResultCount);
         }
