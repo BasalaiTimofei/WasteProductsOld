@@ -3,16 +3,10 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Security.Claims;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
-using WasteProducts.DataAccess.Contexts;
-using WasteProducts.DataAccess.ModelConfigurations;
-using WasteProducts.DataAccess.Repositories.Groups;
 using WasteProducts.Logic.Common.Models.Groups;
-using WasteProducts.Logic.Common.Services.Groups;
 using WasteProducts.Logic.Mappings.Groups;
 using WasteProducts.Logic.Services.Groups;
 
@@ -39,11 +33,11 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         {
             _groupBoard = new GroupBoard
             {
-                Id = new Guid("00000000-0000-0000-0000-000000000000"),
+                Id = "00000000-0000-0000-0000-000000000000",
                 CreatorId = "2",
                 Information = "Some product",
                 Name = "Best",
-                GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
+                GroupId = "00000000-0000-0000-0000-000000000001",
                 GroupProducts = null
             };
             _groupBoardDB = new GroupBoardDB
