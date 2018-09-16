@@ -10,12 +10,15 @@ import { MaterialModule } from './modules/material/material.module';
 /* Components */
 import { AppComponent } from './app.component';
 import { DatabaseComponent } from './components/database/database.component';
+import { UserMainPageComponent } from './userComponents/user-main-page/user-main-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
 
-    DatabaseComponent
+    DatabaseComponent,
+
+    UserMainPageComponent
   ],
   imports: [
     BrowserModule, FormsModule,
