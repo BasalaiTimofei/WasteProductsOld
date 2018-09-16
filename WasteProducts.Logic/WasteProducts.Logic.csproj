@@ -104,7 +104,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InjectorModule.cs" />
-    <Compile Include="Interceptors\Products\ProductServiceInterceptor.cs" />
     <Compile Include="Mappings\Products\CategoryProfile.cs" />
     <Compile Include="Mappings\Donations\AddressProfile.cs" />
     <Compile Include="Mappings\Donations\DonationProfile.cs" />
