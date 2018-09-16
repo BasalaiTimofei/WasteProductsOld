@@ -10,7 +10,6 @@ import { MaterialModule } from './modules/material/material.module';
 /* Components */
 import { AppComponent } from './app.component';
 import { DatabaseComponent } from './components/database/database.component';
-import { UserMainPageComponent } from './userComponents/user-main-page/user-main-page.component';
 import { MainPageComponent } from './components/user/main-page/main-page.component';
 
 @NgModule({
@@ -18,8 +17,6 @@ import { MainPageComponent } from './components/user/main-page/main-page.compone
     AppComponent,
 
     DatabaseComponent,
-
-    UserMainPageComponent,
 
     MainPageComponent
   ],
