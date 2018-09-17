@@ -25,3 +25,12 @@ input.search-style:focus {
 .example-full-width {
   width: 100%;
 }
+
+.nav-list {
+  width: 350px;
+  background: gray;
+}
+
+.mat-list-item {
+  height: 30px !important;
+}

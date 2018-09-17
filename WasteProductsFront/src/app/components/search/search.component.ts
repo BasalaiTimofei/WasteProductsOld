@@ -32,16 +32,6 @@ export class SearchComponent implements OnInit {
     filteredQueries: Observable<string[]>;
 
     ngOnInit() {
-      /*this.topQueries[0] = '1q111';
-      this.topQueries[1] = '2222';
-      this.topQueries[2] = '3333';
-      this.topQueries[3] = '4444';
-      this.topQueries[4] = '5555';*/
-      // this.searchInTopQueries('');
-      /*this.filteredQueries = this.myControl.valueChanges.pipe(
-        startWith(''),
-        map(value => this._filter(value))
-      );*/
     }
 
     private _filter(value: string): string[] {
