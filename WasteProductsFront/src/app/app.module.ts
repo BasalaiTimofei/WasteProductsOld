@@ -10,13 +10,15 @@ import { AppComponent } from './app.component';
 import { DatabaseComponent } from './components/database/database.component';
 import { SearchComponent } from './components/search/search.component';
 import { SearchresultComponent } from './components/searchresult/search-result.component';
+import { SearchTopQueriesComponent } from './components/search-top-queries/search-top-queries.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DatabaseComponent,
     SearchComponent,
-    SearchresultComponent
+    SearchresultComponent,
+    SearchTopQueriesComponent
   ],
   imports: [
     BrowserModule,

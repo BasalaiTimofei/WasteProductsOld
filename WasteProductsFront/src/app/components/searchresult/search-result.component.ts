@@ -7,8 +7,8 @@ import { SearchProduct } from '../../models/SearchProduct.model';
   styleUrls: ['./search-result.component.css']
 })
 export class SearchresultComponent implements OnInit {
-  searchProducts: SearchProduct[] = [];
-  statusCode: 200;
+  @Input() searchProducts: SearchProduct[];
+  @Input() statusCode: number;
 
   constructor() { }
 

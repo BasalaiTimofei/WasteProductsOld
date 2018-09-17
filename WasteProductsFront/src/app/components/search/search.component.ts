@@ -12,7 +12,8 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 })
 export class SearchComponent implements OnInit {
   query: string;
-  query2: string;
+  topQueries: string[] = [];
+  selectedQuery: string;
   private URL_SEARCH = 'http://localhost:2189/api/search/products';  // URL to web api
   showError = false;
   errorMessage: string;
@@ -41,8 +42,16 @@ export class SearchComponent implements OnInit {
           }
         });*/
       this.searchResult[0] = new SearchProduct('iiii', 'nnnn', 'dddddd');
-      this.searchCollectionEvent.emit(this.searchResult);
-      this.statusCodeEvent.emit(200);
+      // this.searchCollectionEvent.emit(this.searchResult);
+      // this.statusCodeEvent.emit(200);
+    }
+  }
+
+  searchInTopQueries(query: string): void {
+    if (typeof query !== 'undefined' && query) {
+      for (let i = 0; i < 10; i++) {
+        this.topQueries[i] = 'Top query ' + i;
+      }
     }
   }
 
