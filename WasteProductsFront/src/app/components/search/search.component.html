@@ -7,7 +7,7 @@
 </div>
 
 <mat-nav-list *ngIf="topQueries.length > 0" class="nav-list">
-  <a mat-list-item href="#" *ngFor="let item of topQueries" (click)="search(item)">{{item}}</a>
+  <a mat-list-item href="#" *ngFor="let item of topQueries" (click)="search(item)">{{item.QueryString}}</a>
 </mat-nav-list>
 
 <app-search-result *ngIf="searchResult.length > 0" [searchProducts]="searchResult" [statusCode]="errorStatusCode"></app-search-result>

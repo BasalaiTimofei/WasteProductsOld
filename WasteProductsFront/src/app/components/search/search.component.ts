@@ -1,12 +1,12 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { SearchService } from '../../services/search/search.service';
-import { SearchProduct } from '../../models/SearchProduct.model';
+import { SearchProduct } from '../../models/search-product';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { UserQuery } from '../../models/top-query';
 
 import {FormControl} from '@angular/forms';
-import {startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'app-search',
@@ -15,9 +15,8 @@ import {startWith} from 'rxjs/operators';
 })
 export class SearchComponent implements OnInit {
   query: string;
-  topQueries: string[] = [];
+  topQueries: UserQuery[] = [];
   selectedQuery: string;
-  private URL_SEARCH = 'http://localhost:2189/api/search/products';  // URL to web api
   showError = false;
   errorMessage: string;
   errorStatusCode: number;
@@ -32,39 +31,35 @@ export class SearchComponent implements OnInit {
     filteredQueries: Observable<string[]>;
 
     ngOnInit() {
-    }
-
-    private _filter(value: string): string[] {
-      const filterValue = value.toLowerCase();
-      return this.topQueries.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+      this.searchService.gettest().subscribe(console.log);
     }
 
   search(query: string): void {
     if (typeof query !== 'undefined' && query) {
       this.topQueries.length = 0;
-      /*this.searchService.getDefault(query).subscribe(
+      this.searchService.getDefault(query).subscribe(
         data => this.searchResult = data
         , (err: HttpErrorResponse) => {
           this.errorMessage = 'Empty results...';
           if (err.status === 204) {
             this.errorStatusCode = err.status;
           }
-        });*/
-      this.errorStatusCode = 200;
-      this.searchResult[0] = new SearchProduct('iiii', 'nnnn', 'dddddd');
+        });
+      // this.errorStatusCode = 200;
+      // this.searchResult[0] = new SearchProduct('iiii', 'nnnn', 'dddddd');
     }
   }
 
   searchInTopQueries(query: string): void {
-      /*this.searchService.getTopSearchQueries(query).subscribe(
+      this.searchService.getTopSearchQueries(query).subscribe(
         data => this.topQueries = data.slice(0, 10),
                 (err: HttpErrorResponse) => {
           this.errorMessage = 'Empty results...';
           if (err.status === 204) {
             this.errorStatusCode = err.status;
           }
-        });*/
-      this.errorStatusCode = 200;
+        });
+      /*this.errorStatusCode = 200;
       this.topQueries[0] = 'qwe rty';
       this.topQueries[1] = '1qwe zxc';
       this.topQueries[2] = 'zzsd';
@@ -72,7 +67,7 @@ export class SearchComponent implements OnInit {
       this.topQueries[4] = 'qwerty';
       for (let i = 5; i < 10; i++) {
         this.topQueries[i] = 'Top query ' + i;
-    }
+    }*/
   }
 
   clearQueries() {

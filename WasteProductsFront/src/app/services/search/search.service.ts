@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { SearchProduct } from '../../models/SearchProduct.model';
+import { SearchProduct } from '../../models/search-product';
+import { UserQuery } from '../../models/top-query';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment.prod';
@@ -12,7 +13,7 @@ import { LoggingService } from '../logging/logging.service';
 })
 export class SearchService {
   searchProducts: SearchProduct[];
-  private URL_SEARCH = `${environment.apiHostUrl}/api/search/products`;  // URL to web api
+  private URL_SEARCH = `${environment.apiHostUrl}/api/search`;  // URL to web api
 
   constructor(
     private http: HttpClient,
@@ -25,23 +26,27 @@ export class SearchService {
         catchError(this.handleError('', []))
       );
   }
-
+// http://localhost:2189/api/search/products/default?query=soft
   getDefault(query: string): Observable<SearchProduct[]> {
-    return this.http.get<SearchProduct[]>(this.URL_SEARCH + '/default?query=' + query).pipe(
+    return this.http.get<SearchProduct[]>(this.URL_SEARCH + '/products/default?query=' + query, ).pipe(
       map(res => {
         const result: any = res;
-        return result.map((item) => new SearchProduct(item.Id, item.Name, item.Description));
+        return result.map((item) => new SearchProduct(item.Id, item.Name, ''));
       }), catchError(this.handleError('Error response', []))
       );
   }
 
-  getTopSearchQueries(query: string): Observable<string[]> {
-    return this.http.get<string[]>(this.URL_SEARCH + '/queries?query=' + query).pipe(
+  getTopSearchQueries(query: string): Observable<UserQuery[]> {
+    return this.http.get<UserQuery[]>(this.URL_SEARCH + '/queries?query=' + query).pipe(
       map(res => {
         const result: any = res;
-        return result;
+        return result.map(item => new UserQuery(item.QueryString));
       }), catchError(this.handleError('Error response', []))
       );
+  }
+
+  gettest() {
+    return this.http.get('http://localhost:2189/api/search/queries?query=s', {observe: 'response'});
   }
 
   /**

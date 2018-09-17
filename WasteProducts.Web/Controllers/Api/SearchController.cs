@@ -83,13 +83,13 @@ namespace WasteProducts.Web.Controllers.Api
         [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<UserQuery>))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
         [HttpGet, Route("queries")]
-        public async Task<IEnumerable<UserQuery>> GetUserQueries(string query)
+        public Task<IEnumerable<UserQuery>> GetUserQueries(string query)
         {
             if (string.IsNullOrEmpty(query))
             {
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
             }
-            return await _searchService.GetSimilarQueriesAsync(query);
+            return _searchService.GetSimilarQueriesAsync(query);
         }
     }
 }
