@@ -1,0 +1,20 @@
+﻿@{
+    Layout = "~/Views/Shared/Error.cshtml";
+}
+
+@section ErrorTitle {
+    <span class="far fa-ban" style="color: red" aria-hidden="true"></span> Access Forbidden
+}
+
+@section ErrorMessage {
+    Sorry! You don't have access permissions for that on
+    <em>
+        <span>@Request.Url.Host</span>
+    </em>.
+}
+
+@section ActionButtons {
+    <a href="javascript:window.history.back();" class="btn btn-outline-dark text-center">
+        <span class="far fa-arrow-circle-left" aria-hidden="true"></span> Go Back
+    </a>
+}

@@ -1,63 +1,74 @@
 ﻿using System;
 using System.Web;
-using System.Web.Configuration;
-using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Elmah;
+using WasteProducts.Web.Controllers.Mvc;
 
 namespace WasteProducts.Web
 {
     /// <inheritdoc />
     public class Global : HttpApplication
     {
-        private void Application_Start(object sender, EventArgs e)
+
+        /// <summary>
+        /// That code runs on application error
+        /// </summary>
+        protected void Application_Error(object sender, EventArgs e)
         {
-            // Code that runs on application startup
-            AreaRegistration.RegisterAllAreas();
-            GlobalConfiguration.Configure(WebApiConfig.Register);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-        }
+            var httpContext = ((HttpApplication)sender).Context;
+            var currentController = string.Empty;
+            var currentAction = string.Empty;
+            var currentRouteData = RouteTable.Routes.GetRouteData(new HttpContextWrapper(httpContext));
 
-        private void ErrorLog_Logged(object sender, ErrorLoggedEventArgs args)
-        {
-            if (!Context.IsCustomErrorEnabled)
-                return;
-
-            var statusCode = args.Entry.Error.StatusCode;
-            var errorId = args.Entry.Id;
-            var redirectUrl = GetRedirectUrl(statusCode);
-
-            if (string.IsNullOrWhiteSpace(redirectUrl))
-                return;
-
-            redirectUrl += $"?id={errorId}";
-
-            Context.Response.Clear();
-            Context.Response.StatusCode = statusCode;
-            Context.Response.TrySkipIisCustomErrors = true;
-            Context.ClearError();
-
-            //Response.Redirect(redirectUrl, true);
-            Server.TransferRequest(redirectUrl);
-        }
-
-        private string GetRedirectUrl(int statusCode)
-        {
-            string redirectUrl = null;
-            if (WebConfigurationManager.GetSection("system.web/customErrors") is CustomErrorsSection errorsSection)
+            if (currentRouteData != null)
             {
-                redirectUrl = errorsSection.DefaultRedirect;
-
-                if (errorsSection.Errors.Count > 0)
+                if (!string.IsNullOrEmpty(currentRouteData.Values["controller"].ToString()))
                 {
-                    var item = errorsSection.Errors[statusCode.ToString()];
-                    if (item != null && !string.IsNullOrWhiteSpace(item.Redirect))
-                        redirectUrl = item.Redirect;
+                    currentController = currentRouteData.Values["controller"].ToString();
+                }
+
+                if (!string.IsNullOrEmpty(currentRouteData.Values["action"].ToString()))
+                {
+                    currentAction = currentRouteData.Values["action"].ToString();
                 }
             }
 
-            return redirectUrl;
+            var exception = Server.GetLastError();
+
+            var controller = new ErrorController();
+            var routeData = new RouteData();
+            var action = "InternalServerError"; // default error action
+            var statusCode = 500; // default status code
+
+            if (exception is HttpException httpException)
+            {
+                statusCode = httpException.GetHttpCode();
+
+                switch (statusCode)
+                {
+                    case 403:
+                        action = "ForbiddenError";
+                        break;
+                    case 404:
+                        action = "NotFoundError";
+                        break;
+                }
+            }
+
+            httpContext.ClearError();
+            httpContext.Response.Clear();
+            httpContext.Response.StatusCode = statusCode;
+            httpContext.Response.TrySkipIisCustomErrors = true;
+
+            routeData.Values["controller"] = "Error";
+            routeData.Values["action"] = action;
+
+            if (statusCode >= 500)
+            {
+                controller.ViewData.Model = new HandleErrorInfo(exception, currentController, currentAction);
+            }
+
+            ((IController)controller).Execute(new RequestContext(new HttpContextWrapper(httpContext), routeData));
         }
     }
 }

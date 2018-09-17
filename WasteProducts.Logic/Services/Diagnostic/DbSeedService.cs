@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Bogus;
-using NLog;
 using System.Threading.Tasks;
+using Ninject.Extensions.Logging;
 using WasteProducts.Logic.Common.Factories;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Users;
@@ -43,7 +43,6 @@ namespace WasteProducts.Logic.Services
             await AddAdminUser().ConfigureAwait(false);
         }
 
-        /// <inheritdoc />
         /// <summary>
         /// Seeds test data to database
         /// </summary>
@@ -66,25 +65,24 @@ namespace WasteProducts.Logic.Services
 
                 for (int i = 0; i < 10; i++)
                 {
+                    var username = faker.Internet.UserName();
+                    var password = faker.Internet.Password();
                     var email = faker.Internet.Email();
-                    await userService.RegisterAsync(email, $"user{i}", $"password{i}", null).ConfigureAwait(false);
-                }
-                var users = await userService.GetAllUsersAsync();
 
-                foreach (var user in users)
-                {
+                    var user = await userService.RegisterAsync(email, username, password, null).ConfigureAwait(false);
+
                     for (int j = 0; j < categoriesCount; j++)
                     {
                         var productName = faker.Commerce.ProductName();
-                        productService.Add(productName, out  var addedProduct);
+                        productService.Add(productName, out Product product);
 
-                        var product = await productService.GetByNameAsync(productName).ConfigureAwait(false);
                         productService.AddCategory(product, categories[j]);
 
                         var isGoodProduct = faker.Random.Bool();
                         var rating = faker.Random.Int(0, 10);
-                        await userService.AddProductAsync(user.Id, product.Id, rating, $"The '{productName}' is the {(isGoodProduct ? "best" : "most crappy")} product I've ever seen .. bla-bla-bla ...").ConfigureAwait(false);
+                        await userService.AddProductAsync(user.id, product.Id, rating, $"The '{productName}' is the {(isGoodProduct ? "best" : "most crappy")} product I've ever seen .. bla-bla-bla ...").ConfigureAwait(false);
                     }
+
                 }
             }
             finally

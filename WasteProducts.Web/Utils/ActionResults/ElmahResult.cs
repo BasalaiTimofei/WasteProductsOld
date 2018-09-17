@@ -4,10 +4,17 @@ using Elmah;
 
 namespace WasteProducts.Web.Utils.ActionResults
 {
+    /// <summary>
+    /// Elmah errors page ActionResult
+    /// </summary>
     public class ElmahResult : ActionResult
     {
         private const string DetailAction = "Detail";
 
+        /// <summary>
+        /// ExecuteResult for errors list
+        /// </summary>
+        /// <param name="context">controller context</param>
         public override void ExecuteResult(ControllerContext context)
         {
             if (context == null) return;

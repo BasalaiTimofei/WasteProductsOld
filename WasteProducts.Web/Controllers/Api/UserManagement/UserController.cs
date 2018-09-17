@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
-using NLog;
+using Ninject.Extensions.Logging;
 using Swagger.Net.Annotations;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.Users;
@@ -21,8 +21,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
     {
         private readonly IUserService _service;
 
-        private readonly ILogger _logger;
-
         /// <summary>
         /// Creates an Instance of UserController. User controller links frontend and business logic.
         /// </summary>
@@ -31,7 +29,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         public UserController(IUserService userService, ILogger logger) : base(logger)
         {
             _service = userService;
-            _logger = logger;
         }
 
         //GET api/user
