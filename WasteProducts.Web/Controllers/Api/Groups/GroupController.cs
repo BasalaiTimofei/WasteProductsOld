@@ -24,7 +24,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
 
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get group", typeof(Group))]
-        [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect id group")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Incorrect id group")]
         [HttpGet, Route("api/group/{id}")]
         public IHttpActionResult GetGroup(string id)
         {
@@ -38,7 +38,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
 
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get group", typeof(Group))]
-        [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect id group")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Incorrect id group")]
         [HttpGet, Route("api/group/{id}/{userid}")]
         public IHttpActionResult GetGroup(string id, string userid)
         {
