@@ -144,6 +144,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UserResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\Barcods\BarcodeCatalogSearchService.cs" />
+    <Compile Include="Services\Barcods\EDostavkaCatalog.cs" />
+    <Compile Include="Services\Barcods\HttpHelper.cs" />
+    <Compile Include="Services\Barcods\PriceGuardCatalog.cs" />
     <Compile Include="Services\Groups\GroupCommentService.cs" />
     <Compile Include="Services\Groups\GroupUserService.cs" />
     <Compile Include="Services\Groups\GroupProductService.cs" />
