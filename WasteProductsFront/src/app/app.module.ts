@@ -8,8 +8,8 @@ import { MaterialModule } from './modules/material/material.module';
 /* Components */
 import { AppComponent } from './app.component';
 import { DatabaseComponent } from './components/database/database.component';
-import { SearchComponent } from './components/search/component-search.component';
-import { SearchresultComponent } from './components/searchresult/component-searchresult.component';
+import { SearchComponent } from './components/search/search.component';
+import { SearchresultComponent } from './components/searchresult/search-result.component';
 
 @NgModule({
   declarations: [

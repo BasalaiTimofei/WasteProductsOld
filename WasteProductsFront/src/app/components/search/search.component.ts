@@ -1,14 +1,14 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { SearchService } from '../../services/search/service-search.service';
+import { SearchService } from '../../services/search/search.service';
 import { SearchProduct } from '../../models/SearchProduct.model';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-component-search',
-  templateUrl: './component-search.component.html',
-  styleUrls: ['./component-search.component.css']
+  selector: 'app-search',
+  templateUrl: './search.component.html',
+  styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
   query: string;

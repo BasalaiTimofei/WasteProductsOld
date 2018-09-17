@@ -1,6 +1,6 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { SearchresultComponent } from './components/searchresult/component-searchresult.component';
+import { SearchresultComponent } from './components/searchresult/search-result.component';
 import { HttpClientModule, HttpHeaders } from '@angular/common/http';
 
 describe('AppComponent', () => {

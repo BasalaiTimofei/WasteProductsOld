@@ -2,9 +2,9 @@ import { Component, OnInit, Input } from '@angular/core';
 import { SearchProduct } from '../../models/SearchProduct.model';
 
 @Component({
-  selector: 'app-component-searchresult',
-  templateUrl: './component-searchresult.component.html',
-  styleUrls: ['./component-searchresult.component.css']
+  selector: 'app-search-result',
+  templateUrl: './search-result.component.html',
+  styleUrls: ['./search-result.component.css']
 })
 export class SearchresultComponent implements OnInit {
   searchProducts: SearchProduct[] = [];

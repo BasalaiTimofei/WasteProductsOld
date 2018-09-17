@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { SearchService } from './service-search.service';
+import { SearchService } from './search.service';
 
 describe('SearchService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
