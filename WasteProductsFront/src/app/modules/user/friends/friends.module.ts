@@ -1,10 +1,16 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { User } from 'src/app/models/users/user';
 
-@NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: []
+@Injectable({
+  providedIn: 'root'
 })
-export class FriendsModule { }
+export class FriendsModule {
+  baseUrl = 'http:/localhost:2189/api/Currencies';
+
+  constructor(private http: HttpClient) { }
+
+  loadUsers() {
+    return this.http.get<User[]>(this.baseUrl);
+   }
+ }

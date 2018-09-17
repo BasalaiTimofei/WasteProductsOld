@@ -23,23 +23,14 @@ import { RegisterComponent } from './components/user/register/register.component
 @NgModule({
   declarations: [
     AppComponent,
-
     DatabaseComponent,
-
     MainPageComponent,
-
     NotFoundComponent,
-
     DefaultComponent,
-
     FriendsComponent,
-
     ProductsComponent,
-
     GroupsComponent,
-
     SettingsComponent,
-
     RegisterComponent
   ],
   imports: [
