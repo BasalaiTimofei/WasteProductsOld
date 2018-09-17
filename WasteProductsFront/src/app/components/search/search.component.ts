@@ -32,16 +32,16 @@ export class SearchComponent implements OnInit {
     filteredQueries: Observable<string[]>;
 
     ngOnInit() {
-      this.topQueries[0] = '1q111';
+      /*this.topQueries[0] = '1q111';
       this.topQueries[1] = '2222';
       this.topQueries[2] = '3333';
       this.topQueries[3] = '4444';
-      this.topQueries[4] = '5555';
+      this.topQueries[4] = '5555';*/
       // this.searchInTopQueries('');
-      this.filteredQueries = this.myControl.valueChanges.pipe(
+      /*this.filteredQueries = this.myControl.valueChanges.pipe(
         startWith(''),
         map(value => this._filter(value))
-      );
+      );*/
     }
 
     private _filter(value: string): string[] {
@@ -66,8 +66,8 @@ export class SearchComponent implements OnInit {
 
   searchInTopQueries(query: string): void {
       /*this.searchService.getTopSearchQueries(query).subscribe(
-        data => this.topQueries = data
-        , (err: HttpErrorResponse) => {
+        data => this.topQueries = data.slice(0, 10),
+                (err: HttpErrorResponse) => {
           this.errorMessage = 'Empty results...';
           if (err.status === 204) {
             this.errorStatusCode = err.status;
