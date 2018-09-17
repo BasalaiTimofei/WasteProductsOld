@@ -43,8 +43,7 @@ namespace WasteProducts.Logic.Services
         {
             return new Faker<Product>()
                 .RuleFor(product => product.Name, faker => barcode.ProductName)
-                .RuleFor(product => product.Description, faker => $"Product made from {faker.Commerce.ProductMaterial()}")
-                .RuleFor(product => product.Price, faker => decimal.Parse(faker.Commerce.Price()))
+                .RuleFor(product => product.Composition, faker => $"Product made from {faker.Commerce.ProductMaterial()}")
 
                 .RuleFor(product => product.Barcode, faker => barcode)
                 .RuleFor(product => product.Category, faker => category)
@@ -75,7 +74,6 @@ namespace WasteProducts.Logic.Services
 
                 .RuleFor(barcode => barcode.ProductName, faker => faker.Commerce.ProductName())
                 .RuleFor(barcode => barcode.Weight, faker => faker.Random.Double(0.1, 100))
-                .RuleFor(barcode => barcode.Type, faker => faker.Random.Bool() ? "UPC-B" : "UPC-C")
 
                 .FinishWith((faker, barcode) => _logger.Debug($"Created Barcode: {barcode}"))
                 .Generate();

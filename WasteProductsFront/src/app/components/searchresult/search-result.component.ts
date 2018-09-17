@@ -12,16 +12,6 @@ export class SearchresultComponent implements OnInit {
 
   constructor() { }
 
-  resultQuery: string;
-
-  recieveSearchResult($event) {
-    this.searchProducts = $event;
-  }
-
-  recieveStatusCode($event) {
-    this.statusCode = $event;
-  }
-
   ngOnInit() {
   }
 }

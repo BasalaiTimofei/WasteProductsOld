@@ -2,15 +2,16 @@
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using WasteProducts.Logic.Common.Models.Barcods;
-using WasteProducts.Logic.Common.Services;
 using ZXing;
 using Spire.Barcode;
+using WasteProducts.Logic.Common.Services.Barcods;
 
-namespace WasteProducts.Logic.Services.BarcodeService
+namespace WasteProducts.Logic.Services.Barcods
 {
+    /// <inheritdoc />
     public class BarcodeScanService : IBarcodeScanService
     {
+        /// <inheritdoc />
         public Bitmap Resize(Bitmap img, int width, int height)
         {
             Bitmap result = new Bitmap(width, height);
@@ -23,6 +24,7 @@ namespace WasteProducts.Logic.Services.BarcodeService
             return result;
         }
 
+        /// <inheritdoc />
         public string ScanByZxing(Bitmap image)
         {
             string decoded = "";
@@ -33,6 +35,7 @@ namespace WasteProducts.Logic.Services.BarcodeService
             return decoded;
         }
 
+        /// <inheritdoc />
         public string ScanBySpire(Bitmap image)
         {
             string decoded = "";

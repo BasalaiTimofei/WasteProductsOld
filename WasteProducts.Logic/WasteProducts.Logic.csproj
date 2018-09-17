@@ -104,7 +104,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InjectorModule.cs" />
-    <Compile Include="Mappings\CategoryProfile.cs" />
+    <Compile Include="Interceptors\Products\ProductServiceInterceptor.cs" />
+    <Compile Include="Mappings\Products\CategoryProfile.cs" />
     <Compile Include="Mappings\Donations\AddressProfile.cs" />
     <Compile Include="Mappings\Donations\DonationProfile.cs" />
     <Compile Include="Mappings\Donations\DonorProfile.cs" />
@@ -113,7 +114,7 @@
     <Compile Include="Mappings\UserMappings\ProductProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserProductDescriptionProfile.cs" />
     <Compile Include="Mappings\UserMappings\UserProfile.cs" />
-    <Compile Include="Mappings\ProductProfile.cs" />
+    <Compile Include="Mappings\Products\ProductProfile.cs" />
     <Compile Include="Mappings\Groups\GroupUserProfile .cs" />
     <Compile Include="Mappings\Groups\GroupBoardProfile.cs" />
     <Compile Include="Mappings\Groups\GroupProductProfile.cs" />
@@ -142,18 +143,20 @@
     <Compile Include="Services\Groups\GroupService.cs" />
     <Compile Include="Services\AppRoleManagerService.cs" />
     <Compile Include="Services\AppUserManagerService.cs" />
-    <Compile Include="Services\BarcodeService\BarcodeScanService.cs" />
-    <Compile Include="Services\CategoryService.cs" />
+    <Compile Include="Services\Barcods\BarcodeScanService.cs" />
+    <Compile Include="Services\Mail\MailService.cs" />
+    <Compile Include="Services\Products\CategoryService.cs" />
     <Compile Include="Services\Diagnostic\DbSeedService.cs" />
     <Compile Include="Services\Diagnostic\DbService.cs" />
     <Compile Include="Services\Diagnostic\TestModelsService.cs" />
     <Compile Include="Services\LuceneSearchService.cs" />
-    <Compile Include="Services\ProductService.cs" />
-    <Compile Include="Services\Mail\MailService.cs" />
+    <Compile Include="Services\Products\ProductService.cs" />
     <Compile Include="Interceptors\Search\SearchServiceInterceptor.cs" />
     <Compile Include="Services\TestService.cs" />
     <Compile Include="Services\User\UserRoleService.cs" />
     <Compile Include="Services\User\UserService.cs" />
+    <Compile Include="Validators\Products\CategoryValidator.cs" />
+    <Compile Include="Validators\Products\ProductValidator.cs" />
     <Compile Include="Validators\Search\BoostedSearchQueryValidator.cs" />
     <Compile Include="Validators\TestValidator.cs" />
     <Compile Include="Validators\Groups\GroupValidation.cs" />
@@ -167,9 +170,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\Groups\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">
       <Project>{9acbec5d-caa7-4e29-a19c-a247190f6da8}</Project>

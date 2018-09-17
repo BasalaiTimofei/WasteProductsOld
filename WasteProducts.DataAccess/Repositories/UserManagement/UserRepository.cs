@@ -60,28 +60,26 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task<(string id, string token)> AddAsync(string email, string userName, string password)
         {
-            return await Task.Run(() =>
-            {
-                string id = Guid.NewGuid().ToString();
+            string id = Guid.NewGuid().ToString();
 
-                var user = new UserDB
-                {
-                    Id = id,
-                    Email = email,
-                    UserName = userName,
-                    Created = DateTime.UtcNow
-                };
-                _manager.Create(user, password);
-                if (_manager.FindById(id) != null)
-                {
-                    _manager.UserTokenProvider = new EmailTokenProvider<UserDB>();
-                    return (id, _manager.GenerateEmailConfirmationToken(id));
-                }
-                else
-                {
-                    return (null, null);
-                }
-            });
+            var user = new UserDB
+            {
+                Id = id,
+                Email = email,
+                UserName = userName,
+                Created = DateTime.UtcNow
+            };
+            await _manager.CreateAsync(user, password);
+            if (await _manager.FindByIdAsync(id) != null)
+            {
+                _manager.UserTokenProvider = new EmailTokenProvider<UserDB>();
+                var token = await _manager.GenerateEmailConfirmationTokenAsync(id);
+                return (id, token);
+            }
+            else
+            {
+                return (null, null);
+            }
         }
 
         public async Task<bool> ConfirmEmailAsync(string userId, string token)
@@ -100,7 +98,7 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task<(string id, string token)> GeneratePasswordResetTokenAsync(string email)
         {
-            var user = _manager.FindByEmail(email);
+            var user = await _manager.FindByEmailAsync(email);
             _manager.UserTokenProvider = new TotpSecurityStampBasedTokenProvider<UserDB, string>();
             var token = await _manager.GeneratePasswordResetTokenAsync(user.Id);
             return (user.Id, token);

@@ -3,6 +3,9 @@ using WasteProducts.DataAccess.Common.Models.Products;
 
 namespace WasteProducts.DataAccess.Common.Models.Barcods
 {
+    /// <summary>
+    /// DataBase entity of barcode.
+    /// </summary>
     public class BarcodeDB
     {
         /// <summary>
@@ -14,11 +17,6 @@ namespace WasteProducts.DataAccess.Common.Models.Barcods
         /// Barcode number.
         /// </summary>
         public string Code { get; set; }
-
-        /// <summary>
-        /// Barcode type.
-        /// </summary>
-        public string Type { get; set; }
 
         /// <summary>
         /// Product name.
@@ -39,11 +37,6 @@ namespace WasteProducts.DataAccess.Common.Models.Barcods
         /// Product weight.
         /// </summary>
         public double Weight { get; set; }
-
-        /// <summary>
-        /// User ID of the sending photo.
-        /// </summary>
-        public int UserID { get; set; }
 
         /// <summary>
         /// Date of record creation in DB.

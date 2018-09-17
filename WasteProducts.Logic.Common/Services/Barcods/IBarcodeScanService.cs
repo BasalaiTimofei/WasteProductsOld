@@ -1,8 +1,10 @@
 ﻿using System.Drawing;
-using WasteProducts.Logic.Common.Models.Barcods;
 
-namespace WasteProducts.Logic.Common.Services
+namespace WasteProducts.Logic.Common.Services.Barcods
 {
+    /// <summary>
+    /// This interface provides barcodes methods.
+    /// </summary>
     public interface IBarcodeScanService
     {
         /// <summary>

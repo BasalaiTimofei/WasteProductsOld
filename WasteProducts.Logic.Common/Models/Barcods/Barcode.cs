@@ -2,6 +2,9 @@
 
 namespace WasteProducts.Logic.Common.Models.Barcods
 {
+    /// <summary>
+    /// Model for entity barcode.
+    /// </summary>
     public class Barcode
     {
         /// <summary>
@@ -13,11 +16,6 @@ namespace WasteProducts.Logic.Common.Models.Barcods
         /// Barcode number.
         /// </summary>
         public string Code { get; set; }
-
-        /// <summary>
-        /// Barcode type.
-        /// </summary>
-        public string Type { get; set; }
 
         /// <summary>
         /// Product name.
@@ -38,11 +36,6 @@ namespace WasteProducts.Logic.Common.Models.Barcods
         /// Product weight.
         /// </summary>
         public double Weight { get; set; }
-
-        /// <summary>
-        /// User Id of the sending photo.
-        /// </summary>
-        public int UserId { get; set; }
 
         /// <summary>
         /// Specifies the concreat product

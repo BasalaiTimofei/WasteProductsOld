@@ -1,4 +1,6 @@
-﻿using WasteProducts.Logic.Common.Models.Barcods;
+﻿using WasteProducts.DataAccess.Common.Repositories;
+using WasteProducts.Logic.Common.Models.Barcods;
+using WasteProducts.Logic.Common.Models.Users;
 
 namespace WasteProducts.Logic.Common.Models.Products
 {
@@ -28,24 +30,14 @@ namespace WasteProducts.Logic.Common.Models.Products
         public virtual Barcode Barcode { get; set; }
 
         /// <summary>
-        /// Defines the average Product rating based on user ratings.
+        /// Defines the Average Rating of the product.
         /// </summary>
-        public double? AvgRating { get; set; }
-
-        /// <summary>
-        /// Defines the price of the Product.
-        /// </summary>
-        public decimal Price { get; set; }
-
-        /// <summary>
-        /// Defines the number of users who have rated the Product. Is used to determine the property "AvgRating".
-        /// </summary>
-        public int RateCount { get; set; }
+        public decimal? AvgRating { get; }
 
         /// <summary>
         /// Defines the product description
         /// </summary>
-        public string Description { get; set; }
+        public string Composition { get; set; }
 
         /// <summary>
         /// Defines whether the product is in the "hidden" state
