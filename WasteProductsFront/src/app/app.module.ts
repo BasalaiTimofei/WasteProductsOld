@@ -18,6 +18,7 @@ import { FriendsComponent } from './components/user/friends/friends.component';
 import { ProductsComponent } from './components/user/products/products.component';
 import { GroupsComponent } from './components/user/groups/groups.component';
 import { SettingsComponent } from './components/user/settings/settings.component';
+import { RegisterComponent } from './components/user/register/register.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,9 @@ import { SettingsComponent } from './components/user/settings/settings.component
 
     GroupsComponent,
 
-    SettingsComponent
+    SettingsComponent,
+
+    RegisterComponent
   ],
   imports: [
     BrowserModule, FormsModule,
