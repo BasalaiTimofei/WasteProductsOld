@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using NLog;
+using Ninject.Extensions.Logging;
 using System.Net.Http;
 using System.Web.Http;
 using WasteProducts.Logic.Common.Services.Barcods;
