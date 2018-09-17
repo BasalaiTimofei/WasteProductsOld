@@ -1,4 +1,4 @@
-﻿@model string
+﻿@model HandleErrorInfo
 @{
     Layout = "_Layout.cshtml";
 }
@@ -17,14 +17,19 @@
                 @RenderSection("ActionButtons")
             }
         </div>
-
-        @if (!string.IsNullOrWhiteSpace(Model))
-        {
-            <div class="btn-group m-3" role="group">
-                <a href="@Url.Action("Detail", "ErrorManagement", new {Area = "Administration", id = Model})" class="btn btn-outline-danger text-center">
-                    <span class="far fa-bug" style="color: green" aria-hidden="true"></span> See Error Details
-                </a>
-            </div>
-        }
     </div>
+    @if (Model != null && HttpContext.Current.IsDebuggingEnabled)
+    {
+        <div class="jumbotron">
+            <p>
+                <b>Controller:</b> @Model.ControllerName<br />
+                <b>Action:</b> @Model.ActionName<br />
+                <b>Exception:</b> @Model.Exception.Message
+            </p>
+            <p><b>StackTrace:</b></p>
+            <div style="overflow:scroll">
+                <pre>@Model.Exception.StackTrace</pre>
+            </div>
+        </div>
+    }
 </section>

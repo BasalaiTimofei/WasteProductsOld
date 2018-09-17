@@ -1,13 +1,12 @@
-﻿using NLog;
-using Swagger.Net.Annotations;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Ninject.Extensions.Logging;
+using Swagger.Net.Annotations;
 using WasteProducts.Logic.Common.Models.Diagnostic;
 using WasteProducts.Logic.Common.Services.Diagnostic;
-using WasteProducts.Web.Controllers.Api;
 
-namespace WasteProducts.Web.Areas.Administration.Controllers.Api
+namespace WasteProducts.Web.Controllers.Api
 {
     /// <summary>
     /// Api controller for database management

@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Moq;
+using Ninject.Extensions.Logging;
 using NUnit.Framework;
 using WasteProducts.DataAccess.Repositories;
 using WasteProducts.Logic.Services;
 using WasteProducts.Web.Controllers.Api;
-using NLog;
 using WasteProducts.DataAccess.Common.Models.Products;
 
 namespace WasteProducts.Web.Tests.WebApiTests
