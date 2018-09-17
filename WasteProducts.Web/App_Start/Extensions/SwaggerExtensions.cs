@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
 
-namespace WasteProducts.Web.Api
+namespace WasteProducts.Web.Extensions
 {
     /// <summary>
     /// Extension methods for IAppBuilder
@@ -17,20 +17,12 @@ namespace WasteProducts.Web.Api
         /// Enables and configures swagger for http configuration
         /// </summary>
         /// <param name="configuration">http configuration</param>
-        /// <param name="pathPrefix">route prefix</param>
-        public static void ConfigureSwagger(this HttpConfiguration configuration, string pathPrefix = "")
+        public static void ConfigureSwagger(this HttpConfiguration configuration)
         {
-            configuration.Routes.MapHttpRoute(
-                name: "Swagger UI",
-                routeTemplate: pathPrefix + "swagger",
-                defaults: null,
-                constraints: null,
-                handler: new RedirectHandler(message => message.RequestUri.ToString().TrimEnd('/'), "/index"));
-
             var thisAssembly = typeof(SwaggerExtensions).Assembly;
 
             configuration
-                .EnableSwagger(pathPrefix + "/docs/{apiVersion}", c =>
+                .EnableSwagger("api/docs/{apiVersion}", c =>
                     {
                         // By default, the service root url is inferred from the request used to access the docs.
                         // However, there may be situations (e.g. proxy and load-balanced environments) where this does not

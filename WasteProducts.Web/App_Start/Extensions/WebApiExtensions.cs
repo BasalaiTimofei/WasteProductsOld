@@ -2,7 +2,7 @@
 using Ninject.Web.WebApi;
 using Owin;
 
-namespace WasteProducts.Web.Api
+namespace WasteProducts.Web.Extensions
 {
     /// <summary>
     /// Extension methods for IAppBuilder
@@ -14,23 +14,22 @@ namespace WasteProducts.Web.Api
         /// </summary>
         /// <param name="app">Owin app builder</param>
         /// <param name="configuration">http configuration</param>
-        /// <param name="pathPrefix">route prefix</param>
-        public static void ConfigureWebApi(this IAppBuilder app, HttpConfiguration configuration, string pathPrefix = "")
+        public static void ConfigureWebApi(this IAppBuilder app, HttpConfiguration configuration)
         {
             configuration.DependencyResolver = new NinjectDependencyResolver(NinjectWebCommon.Bootstrapper.Kernel);
 
-            RegisterWebApiRoutes(configuration, pathPrefix);
+            RegisterWebApiRoutes(configuration);
 
             app.UseWebApi(configuration);
         }
 
-        private static void RegisterWebApiRoutes(HttpConfiguration configuration, string pathPrefix = "")
+        private static void RegisterWebApiRoutes(HttpConfiguration configuration)
         {
             configuration.MapHttpAttributeRoutes();
 
             configuration.Routes.MapHttpRoute(
                 "DefaultApi",
-                pathPrefix + "/{controller}/{id}",
+                "api/{controller}/{id}",
                 new {id = RouteParameter.Optional}
             );
         }

@@ -223,18 +223,25 @@
     <Content Include="Content\fonts\fa-solid-900.svg" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\Api\SignalRExtensions.cs" />
-    <Compile Include="App_Start\Api\WebApiExtensions.cs" />
+    <Compile Include="App_Start\Extensions\SignalRExtensions.cs" />
+    <Compile Include="App_Start\Extensions\WebApiExtensions.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\Startup.Api.cs" />
     <Compile Include="App_Start\Startup.Mvc.cs" />
-    <Compile Include="App_Start\Api\SwaggerExtensions.cs" />
+    <Compile Include="App_Start\Extensions\SwaggerExtensions.cs" />
     <Compile Include="App_Start\Startup.Cors.cs" />
     <Compile Include="App_Start\Startup.OAuth.cs" />
     <Compile Include="Controllers\Api\BaseApiController.cs" />
+    <Compile Include="Controllers\Api\DatabaseController.cs" />
+    <Compile Include="Controllers\Api\PayPalController.cs" />
+    <Compile Include="Controllers\Api\ProductController.cs" />
+    <Compile Include="Controllers\Api\SearchController.cs" />
+    <Compile Include="Controllers\Api\UserManagement\UserController.cs" />
     <Compile Include="Controllers\Mvc\BaseController.cs" />
     <Compile Include="Controllers\Mvc\ErrorController.cs" />
     <Compile Include="Controllers\Mvc\HomeController.cs" />
@@ -245,6 +252,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="InjectionModule.cs" />
+    <Compile Include="Models\Users\ChangePassword.cs" />
+    <Compile Include="Models\Users\Email.cs" />
+    <Compile Include="Models\Users\LoginByEmail.cs" />
+    <Compile Include="Models\Users\LoginByName.cs" />
+    <Compile Include="Models\Users\ProductDescriprion.cs" />
+    <Compile Include="Models\Users\RegisterUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\ActionResults\ElmahResult.cs" />
@@ -296,6 +309,12 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WasteProducts.Logic.Common\WasteProducts.Logic.Common.csproj">
+      <Project>{643aab59-4858-4e23-9a18-4bbec3ee5f56}</Project>
+      <Name>WasteProducts.Logic.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

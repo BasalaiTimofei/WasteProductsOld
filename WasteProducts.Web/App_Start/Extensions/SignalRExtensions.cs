@@ -2,7 +2,7 @@
 using Microsoft.AspNet.SignalR.Ninject;
 using Owin;
 
-namespace WasteProducts.Web.Api
+namespace WasteProducts.Web.Extensions
 {
     /// <summary>
     /// Extension methods for IAppBuilder
@@ -13,8 +13,7 @@ namespace WasteProducts.Web.Api
         /// Enables and configures SignalR for owin app
         /// </summary>
         /// <param name="app">Owin app builder</param>
-        /// <param name="pathPrefix">route prefix</param>
-        public static void ConfigureSignalR(this IAppBuilder app, string pathPrefix = "")
+        public static void ConfigureSignalR(this IAppBuilder app)
         {
             var dependencyResolver = new NinjectDependencyResolver(NinjectWebCommon.Bootstrapper.Kernel);
 
@@ -25,7 +24,7 @@ namespace WasteProducts.Web.Api
                 EnableDetailedErrors = true
             };
 
-            app.MapSignalR('/' + pathPrefix + "/hubs", hubConfig);
+            app.MapSignalR("/hubs", hubConfig);
         }
     }
 }
