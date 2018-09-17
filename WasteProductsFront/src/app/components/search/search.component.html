@@ -1,7 +1,7 @@
 <div class="search-component">
   <input class="search-style" [(ngModel)]="query" type="text" placeholder="Your search query..."
         (keyup)="searchInTopQueries(query)" (keyup.enter)="search(query)">
-  <button *ngIf="query" matSuffix mat-button mat-icon-button aria-label="Clear" (click)="query=''">
+  <button *ngIf="query" matSuffix mat-button mat-icon-button aria-label="Clear" (click)="clearQueries()">
     <mat-icon>close</mat-icon>
   </button>
 </div>

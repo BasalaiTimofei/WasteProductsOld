@@ -35,6 +35,15 @@ export class SearchService {
       );
   }
 
+  getTopSearchQueries(query: string): Observable<string[]> {
+    return this.http.get<string[]>(this.URL_SEARCH + '/queries?query=' + query).pipe(
+      map(res => {
+        const result: any = res;
+        return result;
+      }), catchError(this.handleError('Error response', []))
+      );
+  }
+
   /**
    * Handle Http operation that failed.
    * Let the app continue.

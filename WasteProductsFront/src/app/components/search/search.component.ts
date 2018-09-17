@@ -20,9 +20,6 @@ export class SearchComponent implements OnInit {
   errorStatusCode: number;
   searchResult: SearchProduct[] = [];
 
-  @Output() searchCollectionEvent = new EventEmitter<SearchProduct[]>();
-  @Output() statusCodeEvent = new EventEmitter<number>();
-
   constructor(
     private http: HttpClient,
     private searchService: SearchService
@@ -33,6 +30,7 @@ export class SearchComponent implements OnInit {
 
   search(query: string): void {
     if (typeof query !== 'undefined' && query) {
+      this.topQueries.length = 0;
       /*this.searchService.getDefault(query).subscribe(
         data => this.searchResult = data
         , (err: HttpErrorResponse) => {
@@ -42,17 +40,28 @@ export class SearchComponent implements OnInit {
           }
         });*/
       this.searchResult[0] = new SearchProduct('iiii', 'nnnn', 'dddddd');
-      // this.searchCollectionEvent.emit(this.searchResult);
-      // this.statusCodeEvent.emit(200);
     }
   }
 
   searchInTopQueries(query: string): void {
     if (typeof query !== 'undefined' && query) {
+      /*this.searchService.getTopSearchQueries(query).subscribe(
+        data => this.topQueries = data
+        , (err: HttpErrorResponse) => {
+          this.errorMessage = 'Empty results...';
+          if (err.status === 204) {
+            this.errorStatusCode = err.status;
+          }
+        });*/
       for (let i = 0; i < 10; i++) {
         this.topQueries[i] = 'Top query ' + i;
       }
     }
+  }
+
+  clearQueries() {
+    this.query = '';
+    this.topQueries.length = 0;
   }
 
   private handleError<T> (operation = 'operation', result?: T) {
