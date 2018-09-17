@@ -5,11 +5,16 @@ using Owin;
 
 namespace WasteProducts.Web
 {
-    public class Startup
+    public partial class Startup
     {
         public void Configuration(IAppBuilder app)
         {
-            
+            ConfigureMvc();
+
+            ConfigureCors(app);
+            ConfigureOAuth(app);
+
+            ConfigureApi(app);
         }
     }
 }
