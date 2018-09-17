@@ -5,8 +5,9 @@ import { NotFoundComponent } from './components/common/not-found/not-found.compo
 import { RegisterComponent } from './components/user/register/register.component';
 import { MainPageComponent } from './components/user/main-page/main-page.component';
 import { FriendsComponent } from './components/user/friends/friends.component';
-import { SettingsComponent } from './components/user/settings/settings.component';
 import { ProductsComponent } from './components/user/products/products.component';
+import { GroupsComponent } from './components/user/groups/groups.component';
+import { SettingsComponent } from './components/user/settings/settings.component';
 
 const routes: Routes = [
   { path: '', component: DefaultComponent },
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'user/mainpage', component: MainPageComponent},
   { path: 'user/friends', component: FriendsComponent},
   { path: 'user/products', component: ProductsComponent},
+  { path: 'user/groups', component: GroupsComponent},
   { path: 'user/settings', component: SettingsComponent},
   { path: '**', component: NotFoundComponent },
 ];
