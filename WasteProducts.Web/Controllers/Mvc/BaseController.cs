@@ -1,12 +1,12 @@
-﻿using System.Web.Http;
+﻿using System.Web.Mvc;
 using Ninject.Extensions.Logging;
 
-namespace WasteProducts.Web.Controllers.Api
+namespace WasteProducts.Web.Controllers.Mvc
 {
     /// <summary>
-    /// Abstract WebApi controller with Logger
+    /// Abstract Mvc controller with Logger
     /// </summary>
-    public abstract class BaseApiController : ApiController
+    public abstract class BaseController : Controller
     {
         /// <summary>
         /// Storage property for ILogger
@@ -17,7 +17,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// Initializes Logger property
         /// </summary>
         /// <param name="logger">abstract logger</param>
-        protected BaseApiController(ILogger logger)
+        protected BaseController(ILogger logger)
         {
             Logger = logger;
         }
