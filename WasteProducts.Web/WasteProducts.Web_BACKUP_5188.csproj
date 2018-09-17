@@ -228,6 +228,16 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
+    <Compile Include="App_Start\Ninject.Web.Common.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\SwaggerConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\Administration\AdministrationAreaRegistration.cs" />
+    <Compile Include="Areas\Administration\Controllers\Api\DatabaseController.cs" />
+    <Compile Include="Areas\Administration\Controllers\ErrorManagementController.cs" />
+    <Compile Include="Controllers\Api\BarcodeController.cs" />
+=======
     <Compile Include="App_Start\Extensions\SignalRExtensions.cs" />
     <Compile Include="App_Start\Extensions\WebApiExtensions.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
@@ -236,8 +246,7 @@
     <Compile Include="App_Start\Extensions\SwaggerExtensions.cs" />
     <Compile Include="App_Start\Startup.Cors.cs" />
     <Compile Include="App_Start\Startup.OAuth.cs" />
-
-    <Compile Include="Controllers\Api\BarcodeController.cs" />
+>>>>>>> f3d7e646ba3444a100500031b6e4eb6001366573
     <Compile Include="Controllers\Api\BaseApiController.cs" />
     <Compile Include="Controllers\Api\DatabaseController.cs" />
     <Compile Include="Controllers\Api\PayPalController.cs" />
