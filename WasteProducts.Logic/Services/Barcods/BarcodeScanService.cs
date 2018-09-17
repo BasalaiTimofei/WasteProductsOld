@@ -5,6 +5,7 @@ using System.IO;
 using ZXing;
 using Spire.Barcode;
 using WasteProducts.Logic.Common.Services.Barcods;
+using System;
 
 namespace WasteProducts.Logic.Services.Barcods
 {
@@ -28,6 +29,7 @@ namespace WasteProducts.Logic.Services.Barcods
         public string ScanByZxing(Bitmap image)
         {
             string decoded = "";
+            image = Resize(image, 400, 400);
             BarcodeReader Reader = new BarcodeReader();
             Result result = Reader.Decode(image);
             decoded = result.ToString().Trim();
@@ -39,6 +41,7 @@ namespace WasteProducts.Logic.Services.Barcods
         public string ScanBySpire(Bitmap image)
         {
             string decoded = "";
+            image = Resize(image, 400, 400);
             using (Stream stream = new MemoryStream())
             {
                 image.Save(stream, ImageFormat.Bmp);

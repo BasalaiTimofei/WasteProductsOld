@@ -401,6 +401,7 @@
     <Compile Include="Areas\Administration\AdministrationAreaRegistration.cs" />
     <Compile Include="Areas\Administration\Controllers\Api\DatabaseController.cs" />
     <Compile Include="Areas\Administration\Controllers\ErrorManagementController.cs" />
+    <Compile Include="Controllers\Api\BarcodeController.cs" />
     <Compile Include="Controllers\Api\BaseApiController.cs" />
     <Compile Include="Controllers\Api\ErrorController.cs" />
     <Compile Include="Controllers\Api\ProductController.cs" />
