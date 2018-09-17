@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Bogus;
-using NLog;
+using Ninject.Extensions.Logging;
 using WasteProducts.Logic.Common.Factories;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
@@ -30,8 +29,7 @@ namespace WasteProducts.Logic.Services
         public User GenerateUser(string email = null, string userName = null)
         {
             return new Faker<User>()
-                .RuleFor(user => user.Email, faker => email ?? faker.Person.Email)
-                .RuleFor(user => user.UserName, faker => userName ?? faker.Person.UserName)
+                .RuleFor(user => user.UserName,faker => userName ?? faker.Person.UserName)
 
                 // TODO: Доделать
 
@@ -44,8 +42,7 @@ namespace WasteProducts.Logic.Services
         {
             return new Faker<Product>()
                 .RuleFor(product => product.Name, faker => barcode.ProductName)
-                .RuleFor(product => product.Description, faker => $"Product made from {faker.Commerce.ProductMaterial()}")
-                .RuleFor(product => product.Price, faker => decimal.Parse(faker.Commerce.Price()))
+                .RuleFor(product => product.Composition, faker => $"Product made from {faker.Commerce.ProductMaterial()}")
 
                 .RuleFor(product => product.Barcode, faker => barcode)
                 .RuleFor(product => product.Category, faker => category)
@@ -76,7 +73,6 @@ namespace WasteProducts.Logic.Services
 
                 .RuleFor(barcode => barcode.ProductName, faker => faker.Commerce.ProductName())
                 .RuleFor(barcode => barcode.Weight, faker => faker.Random.Double(0.1, 100))
-                .RuleFor(barcode => barcode.Type, faker => faker.Random.Bool() ? "UPC-B" : "UPC-C")
 
                 .FinishWith((faker, barcode) => _logger.Debug($"Created Barcode: {barcode}"))
                 .Generate();

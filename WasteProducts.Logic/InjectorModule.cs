@@ -1,26 +1,33 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using Ninject.Extensions.Factory;
-using Ninject.Extensions.Interception.Infrastructure.Language;
 using Ninject.Modules;
 using System;
+using System.Configuration;
+using System.Net;
+using System.Net.Mail;
+using System.Reflection;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.Logic.Common.Factories;
+using WasteProducts.Logic.Common.Models.Groups;
 using WasteProducts.Logic.Common.Models.Products;
+using WasteProducts.Logic.Common.Models.Search;
 using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Common.Services.Diagnostic;
 using WasteProducts.Logic.Common.Services.Groups;
-using WasteProducts.Logic.Common.Services.MailService;
-using WasteProducts.Logic.Common.Services.UserService;
+using WasteProducts.Logic.Common.Services.Mail;
+using WasteProducts.Logic.Common.Services.Products;
+using WasteProducts.Logic.Common.Services.Users;
+using WasteProducts.Logic.Extensions;
 using WasteProducts.Logic.Interceptors;
-using WasteProducts.Logic.Mappings;
+using WasteProducts.Logic.Mappings.Products;
 using WasteProducts.Logic.Mappings.UserMappings;
 using WasteProducts.Logic.Services;
 using WasteProducts.Logic.Services.Groups;
-using WasteProducts.Logic.Services.MailService;
-using WasteProducts.Logic.Services.UserService;
-using WasteProducts.Logic.Validators.Search;
-using ProductProfile = WasteProducts.Logic.Mappings.ProductProfile;
+using WasteProducts.Logic.Services.Mail;
+using WasteProducts.Logic.Services.Products;
+using WasteProducts.Logic.Services.Users;
+using ProductProfile = WasteProducts.Logic.Mappings.Products.ProductProfile;
 
 namespace WasteProducts.Logic
 {
@@ -33,22 +40,32 @@ namespace WasteProducts.Logic
                 return;
             }
 
+            BindInterceptors();
+            BindValidators();
             BindMappers();
 
-            // bind services below
             Bind<IServiceFactory>().ToFactory(); //TODO: Если вы иньектируете дофига сервисов во что то, можно их прописать в интерфейс фабрики и запросить фабрику!
 
-            // database services
-            BindDatabaseServices();
-
-            // user services
+            // bind services below
+            BindDatabaseServices(); 
             BindUserServices();
+            BindGroupServices();
+            BindProductServices();
 
-            Bind<IValidator>().To<BoostedSearchQueryValidator>().WhenInjectedExactlyInto<SearchServiceInterceptor>();
-            Bind<ISearchService>().To<LuceneSearchService>().Intercept().With<SearchServiceInterceptor>();
+            Bind<ISearchService>().To<LuceneSearchService>().ValidateArguments(typeof(BoostedSearchQuery));
+        }
 
-            Bind<IProductService>().To<ProductService>();
-            Bind<ICategoryService>().To<CategoryService>();
+        private void BindInterceptors()
+        {
+            Bind<TraceInterceptor>().ToSelf();
+            Bind<ArgumentValidationInterceptor>().ToSelf();
+        }
+
+        private void BindValidators()
+        {
+            AssemblyScanner
+                .FindValidatorsInAssembly(Assembly.GetExecutingAssembly())
+                .ForEach(result => Kernel.Bind(result.InterfaceType).To(result.ValidatorType).InTransientScope());
         }
 
         private void BindDatabaseServices()
@@ -60,17 +77,44 @@ namespace WasteProducts.Logic
 
         private void BindUserServices()
         {
-            Bind<IMailService>().ToMethod(ctx => new MailService(null, "somevalidemail@mail.ru", null));
+            Bind<IMailService>().ToMethod(ctx =>
+            {
+                var appSettingsReader = new AppSettingsReader();
+
+                string ourEmail = (string)appSettingsReader.GetValue("OurMailAddress", typeof(string));
+                string host = (string)appSettingsReader.GetValue("Host", typeof(string));
+                int port = (int)appSettingsReader.GetValue("Port", typeof(int));
+                SmtpDeliveryMethod method = (SmtpDeliveryMethod)appSettingsReader.GetValue("SMTPDeliveryMethod", typeof(int));
+                string ourMailPassword = (string)appSettingsReader.GetValue("OurMailPassword", typeof(string));
+                bool enableSsl = (bool)appSettingsReader.GetValue("EnableSSL", typeof(bool));
+
+                var client = new SmtpClient(host, port)
+                {
+                    DeliveryMethod = method,
+                    Credentials = new NetworkCredential(ourEmail, ourMailPassword),
+                    EnableSsl = enableSsl
+                };
+
+                return new MailService(client, ourEmail);
+            });
 
             Bind<IUserService>().To<UserService>();
             Bind<IUserRoleService>().To<UserRoleService>();
-            Bind<ISearchService>().To<LuceneSearchService>();
+        }
 
-            Bind<IGroupService>().To<GroupService>();
-            Bind<IGroupBoardService>().To<GroupBoardService>();
-            Bind<IGroupProductService>().To<GroupProductService>();
-            Bind<IGroupUserService>().To<GroupUserService>();
-            Bind<IGroupCommentService>().To<GroupCommentService>();
+        private void BindGroupServices()
+        {
+            Bind<IGroupService>().To<GroupService>().ValidateArguments(typeof(Group));
+            Bind<IGroupBoardService>().To<GroupBoardService>().ValidateArguments(typeof(GroupBoard));
+            Bind<IGroupProductService>().To<GroupProductService>().ValidateArguments(typeof(GroupProduct));
+            Bind<IGroupUserService>().To<GroupUserService>().ValidateArguments(typeof(GroupUser));
+            Bind<IGroupCommentService>().To<GroupCommentService>().ValidateArguments(typeof(GroupComment));
+        }
+
+        private void BindProductServices()
+        {
+            Bind<IProductService>().To<ProductService>().ValidateArguments(typeof(Product), typeof(Category));
+            Bind<ICategoryService>().To<CategoryService>().ValidateArguments(typeof(Category));
         }
 
         private void BindMappers()
@@ -79,9 +123,7 @@ namespace WasteProducts.Logic
                 new Mapper(new MapperConfiguration(cfg =>
                 {
                     cfg.AddProfile<UserProfile>();
-                    cfg.AddProfile<UserClaimProfile>();
-                    cfg.AddProfile<UserLoginProfile>();
-                    cfg.AddProfile<Mappings.UserMappings.ProductProfile>();
+                    cfg.AddProfile<ProductProfile>();
                     cfg.AddProfile<UserProductDescriptionProfile>();
                 }))).WhenInjectedExactlyInto<UserService>();
 
@@ -89,14 +131,17 @@ namespace WasteProducts.Logic
                 new Mapper(new MapperConfiguration(cfg =>
                 {
                     cfg.AddProfile(new UserProfile());
-                    cfg.AddProfile(new UserClaimProfile());
-                    cfg.AddProfile(new UserLoginProfile());
                 }))).WhenInjectedExactlyInto<UserRoleService>();
 
             Bind<IMapper>().ToMethod(ctx =>
                 new Mapper(new MapperConfiguration(cfg =>
                 {
-                    cfg.AddProfile<ProductProfile>();
+                    cfg.CreateMap<Product, ProductDB>()
+                        .ForMember(m => m.Created,
+                            opt => opt.MapFrom(p => p.Name != null ? DateTime.UtcNow : default(DateTime)))
+                        .ForMember(m => m.Modified, opt => opt.UseValue((DateTime?)null))
+                        .ForMember(m => m.Barcode, opt => opt.Ignore())
+                        .ReverseMap();
                     cfg.AddProfile<CategoryProfile>();
                 }))).WhenInjectedExactlyInto<ProductService>();
 

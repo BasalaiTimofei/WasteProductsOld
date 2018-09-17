@@ -1,0 +1,35 @@
+﻿@model HandleErrorInfo
+@{
+    Layout = "_Layout.cshtml";
+}
+
+<section class="py-4">
+    <h1 class="display-4 mb-3">@Response.StatusCode | @RenderSection("ErrorTitle")</h1>
+    <p class="lead">@RenderSection("ErrorMessage")</p>
+    <hr class="my-4">
+    <div class="btn-toolbar" role="toolbar">
+        <div class="btn-group m-3" role="group">
+            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-primary text-center">
+                <span class="far fa-home" aria-hidden="true"></span> Go To Home Page
+            </a>
+            @if (IsSectionDefined("ActionButtons"))
+            {
+                @RenderSection("ActionButtons")
+            }
+        </div>
+    </div>
+    @if (Model != null && HttpContext.Current.IsDebuggingEnabled)
+    {
+        <div class="jumbotron">
+            <p>
+                <b>Controller:</b> @Model.ControllerName<br />
+                <b>Action:</b> @Model.ActionName<br />
+                <b>Exception:</b> @Model.Exception.Message
+            </p>
+            <p><b>StackTrace:</b></p>
+            <div style="overflow:scroll">
+                <pre>@Model.Exception.StackTrace</pre>
+            </div>
+        </div>
+    }
+</section>

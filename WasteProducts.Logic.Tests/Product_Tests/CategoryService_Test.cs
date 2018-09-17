@@ -4,10 +4,12 @@ using AutoMapper;
 using Moq;
 using NUnit.Framework;
 using WasteProducts.DataAccess.Common.Models.Products;
-using WasteProducts.DataAccess.Common.Repositories;
+using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Mappings;
+using WasteProducts.Logic.Mappings.Products;
 using WasteProducts.Logic.Services;
+using WasteProducts.Logic.Services.Products;
 
 namespace WasteProducts.Logic.Tests.Product_Tests
 {
@@ -50,7 +52,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
                 .Returns(selectedList);
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
-            var result = categoryService.AddByName(It.IsAny<string>());
+            var result = categoryService.Add(It.IsAny<string>());
 
             Assert.That(result, Is.EqualTo(true));
         }
@@ -63,7 +65,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
                 .Returns(selectedList);
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
-            var result = categoryService.AddByName(It.IsAny<string>());
+            var result = categoryService.Add(It.IsAny<string>());
 
             Assert.That(result, Is.EqualTo(false));
         }
@@ -75,7 +77,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
                 .Returns(selectedList);
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
-            categoryService.AddByName(It.IsAny<string>());
+            categoryService.Add(It.IsAny<string>());
 
             mockCategoryRepo.Verify(m => m.Add(It.IsAny<CategoryDB>()), Times.Once);
         }
@@ -88,7 +90,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
                 .Returns(selectedList);
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
-            categoryService.AddByName(It.IsAny<string>());
+            categoryService.Add(It.IsAny<string>());
 
             mockCategoryRepo.Verify(m => m.Add(It.IsAny<CategoryDB>()), Times.Never);
         }

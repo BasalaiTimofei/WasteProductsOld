@@ -1,48 +1,57 @@
-﻿using System.Net;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using WasteProducts.Web.Utils.ActionResults;
 
-namespace WasteProducts.Web.Controllers
+namespace WasteProducts.Web.Controllers.Mvc
 {
+    /// <summary>
+    /// Mvc errors controller 
+    /// </summary>
     [AllowAnonymous]
     public class ErrorController : Controller
     {
-        public ActionResult InternalServerError(string id)
+        /// <summary>
+        /// Action for Elmah errors list page
+        /// </summary>
+        /// <returns>ElmahResult</returns>
+        public ActionResult Index(string resource)
         {
-            return GenericError("500-InternalServerError", HttpStatusCode.InternalServerError, id);
+            return new ElmahResult();
         }
 
-        public ActionResult BadGateway(string id)
+        /// <summary>
+        /// Action for Elmah error details page
+        /// </summary>
+        /// <returns>ElmahResult</returns>
+        public ActionResult Detail(string resource)
         {
-            return GenericError("502-BadGateway", HttpStatusCode.BadGateway, id);
+            return new ElmahResult();
         }
 
-        public ActionResult ServiceUnavailable(string id)
+        /// <summary>
+        /// Action for InternalServerError 
+        /// </summary>
+        /// <returns>error page</returns>
+        public ActionResult InternalServerError()
         {
-            return GenericError("503-ServiceUnavailable", HttpStatusCode.ServiceUnavailable, id);
+            return View("500-InternalServerError");
         }
 
-        public ActionResult GatewayTimeout(string id)
+        /// <summary>
+        /// Action for ForbiddenError 
+        /// </summary>
+        /// <returns>error page</returns>
+        public ActionResult ForbiddenError(string id)
         {
-            return GenericError("504-GatewayTimeout", HttpStatusCode.GatewayTimeout, id);
+            return View("403-ForbiddenError");
         }
 
-        public ActionResult Forbidden(string id)
+        /// <summary>
+        /// Action for NotFoundError 
+        /// </summary>
+        /// <returns>error page</returns>
+        public ActionResult NotFoundError(string id)
         {
-            return GenericError("403-Forbidden", HttpStatusCode.Forbidden, id);
-        }
-
-        public ActionResult NotFound(string id)
-        {
-            return GenericError("404-NotFound", HttpStatusCode.NotFound, id);
-        }
-
-        private ActionResult GenericError(string viewName, HttpStatusCode statusCode, string errorId)
-        {
-            if (User.IsInRole("Admin") || HttpContext.Request.IsLocal || HttpContext.IsDebuggingEnabled)
-                ViewData.Model = errorId;
-
-            Response.StatusCode = (int) statusCode;
-            return View(viewName);
+            return View("404-NotFoundError");
         }
     }
 }
