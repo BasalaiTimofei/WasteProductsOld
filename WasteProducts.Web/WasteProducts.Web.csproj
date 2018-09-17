@@ -239,7 +239,7 @@
     <Compile Include="Controllers\Api\BaseApiController.cs" />
     <Compile Include="Controllers\Api\DatabaseController.cs" />
     <Compile Include="Controllers\Api\PayPalController.cs" />
-    <Compile Include="Controllers\Api\ProductController.cs" />
+    <Compile Include="Controllers\Api\ProductsController.cs" />
     <Compile Include="Controllers\Api\SearchController.cs" />
     <Compile Include="Controllers\Api\UserManagement\UserController.cs" />
     <Compile Include="Controllers\Mvc\BaseController.cs" />
