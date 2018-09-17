@@ -60,6 +60,7 @@ export class SearchComponent implements OnInit {
             this.errorStatusCode = err.status;
           }
         });*/
+      this.errorStatusCode = 200;
       this.searchResult[0] = new SearchProduct('iiii', 'nnnn', 'dddddd');
     }
   }
@@ -73,6 +74,7 @@ export class SearchComponent implements OnInit {
             this.errorStatusCode = err.status;
           }
         });*/
+      this.errorStatusCode = 200;
       this.topQueries[0] = 'qwe rty';
       this.topQueries[1] = '1qwe zxc';
       this.topQueries[2] = 'zzsd';

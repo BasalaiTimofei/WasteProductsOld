@@ -6,13 +6,11 @@
   </button>
 </div>
 
-<div *ngIf="topQueries.length > 0">
-  <ul>
-    <li *ngFor="let item of topQueries">
-      <a href="#" (click)="search(item)">{{item}}</a>
-    </li>
-  </ul>
-</div>
+<mat-nav-list>
+  <a mat-list-item href="#" *ngFor="let item of topQueries" (click)="search(item)">{{item}}</a>
+</mat-nav-list>
+
+<app-search-result *ngIf="searchResult.length > 0" [searchProducts]="searchResult" [statusCode]="errorStatusCode"></app-search-result>
 
 <!--form class="search-form">
   <mat-form-field class="example-full-width">
@@ -28,8 +26,6 @@
     </mat-autocomplete>
   </mat-form-field>
 </form-->
-
-<app-search-result *ngIf="searchResult.length > 0" [searchProducts]="searchResult" [statusCode]="200"></app-search-result>
 
 <!--mat-form-field>
   <input matInput type="text" placeholder="Your search query..." [(ngModel)]="query" (keyup.enter)="search(query)">
