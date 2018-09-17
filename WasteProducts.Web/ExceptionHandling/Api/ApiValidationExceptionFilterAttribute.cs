@@ -23,6 +23,7 @@ namespace WasteProducts.Web.ExceptionHandling.Api
                     modelState.AddModelError(validationFailure.PropertyName, validationFailure.ErrorMessage);
                 }
 
+                actionExecutedContext.Response.ReasonPhrase = exception.Message;
                 actionExecutedContext.Response = actionExecutedContext.Request.CreateErrorResponse(HttpStatusCode.BadRequest, modelState);
             }
         }
