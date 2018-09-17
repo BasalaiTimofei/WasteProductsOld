@@ -5,6 +5,9 @@ import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 
+import {FormControl} from '@angular/forms';
+import {startWith} from 'rxjs/operators';
+
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
@@ -25,8 +28,26 @@ export class SearchComponent implements OnInit {
     private searchService: SearchService
     ) { }
 
-  ngOnInit() {
-  }
+    myControl = new FormControl();
+    filteredQueries: Observable<string[]>;
+
+    ngOnInit() {
+      this.topQueries[0] = '1q111';
+      this.topQueries[1] = '2222';
+      this.topQueries[2] = '3333';
+      this.topQueries[3] = '4444';
+      this.topQueries[4] = '5555';
+      // this.searchInTopQueries('');
+      this.filteredQueries = this.myControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
+    }
+
+    private _filter(value: string): string[] {
+      const filterValue = value.toLowerCase();
+      return this.topQueries.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+    }
 
   search(query: string): void {
     if (typeof query !== 'undefined' && query) {
@@ -44,7 +65,6 @@ export class SearchComponent implements OnInit {
   }
 
   searchInTopQueries(query: string): void {
-    if (typeof query !== 'undefined' && query) {
       /*this.searchService.getTopSearchQueries(query).subscribe(
         data => this.topQueries = data
         , (err: HttpErrorResponse) => {
@@ -53,9 +73,13 @@ export class SearchComponent implements OnInit {
             this.errorStatusCode = err.status;
           }
         });*/
-      for (let i = 0; i < 10; i++) {
+      this.topQueries[0] = 'qwe rty';
+      this.topQueries[1] = '1qwe zxc';
+      this.topQueries[2] = 'zzsd';
+      this.topQueries[3] = 'zzsw';
+      this.topQueries[4] = 'qwerty';
+      for (let i = 5; i < 10; i++) {
         this.topQueries[i] = 'Top query ' + i;
-      }
     }
   }
 

@@ -1,4 +1,4 @@
-<div class="search-component">
+<!--div class="search-component">
   <input class="search-style" [(ngModel)]="query" type="text" placeholder="Your search query..."
         (keyup)="searchInTopQueries(query)" (keyup.enter)="search(query)">
   <button *ngIf="query" matSuffix mat-button mat-icon-button aria-label="Clear" (click)="clearQueries()">
@@ -12,7 +12,22 @@
       <a href="#" (click)="search(item)">{{item}}</a>
     </li>
   </ul>
-</div>
+</div-->
+
+<form class="search-form">
+  <mat-form-field class="example-full-width">
+    <input type="text" [(ngModel)]="query" placeholder="Your search query..." aria-label="Number" matInput [formControl]="myControl"
+    (keyup)="searchInTopQueries(query)" [matAutocomplete]="auto" (keyup.enter)="search(query)">
+          <button *ngIf="query" matSuffix mat-button mat-icon-button aria-label="Clear" (click)="query=''">
+            <mat-icon>close</mat-icon>
+          </button>
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      <mat-option *ngFor="let query of filteredQueries | async" [value]="query" (click)="search(query)">
+        {{query}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>
 
 <app-search-result *ngIf="searchResult.length > 0" [searchProducts]="searchResult" [statusCode]="200"></app-search-result>
 
