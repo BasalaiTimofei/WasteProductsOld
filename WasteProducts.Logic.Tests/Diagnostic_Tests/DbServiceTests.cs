@@ -1,9 +1,6 @@
-﻿using System;
-using System.Data.Entity.Core;
-using System.Data.SqlClient;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Moq;
-using NLog;
+using Ninject.Extensions.Logging;
 using NUnit.Framework;
 using WasteProducts.DataAccess.Common.Context;
 using WasteProducts.Logic.Common.Models.Diagnostic;
