@@ -60,7 +60,7 @@ namespace WasteProducts.Web
 
                 return kernel;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 kernel.Dispose();
                 throw;

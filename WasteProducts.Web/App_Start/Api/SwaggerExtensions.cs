@@ -315,13 +315,15 @@ namespace WasteProducts.Web.Api
                     });
         }
 
-        public static bool ResolveVersionSupportByRouteConstraint(ApiDescription apiDesc, string targetApiVersion)
+        private static bool ResolveVersionSupportByRouteConstraint(ApiDescription apiDesc, string targetApiVersion)
         {
             return (apiDesc.Route.RouteTemplate.ToLower().Contains(targetApiVersion.ToLower()));
         }
 
+        /// <inheritdoc />
         private class ApplyDocumentVendorExtensions : IDocumentFilter
         {
+            /// <inheritdoc />
             public void Apply(SwaggerDocument swaggerDoc, SchemaRegistry schemaRegistry, IApiExplorer apiExplorer)
             {
                 // Include the given data type in the final SwaggerDocument
@@ -330,8 +332,10 @@ namespace WasteProducts.Web.Api
             }
         }
 
+        /// <inheritdoc />
         public class AssignOAuth2SecurityRequirements : IOperationFilter
         {
+            /// <inheritdoc />
             public void Apply(Operation operation, SchemaRegistry schemaRegistry, ApiDescription apiDescription)
             {
                 // Correspond each "Authorize" role to an oauth2 scope
@@ -358,8 +362,10 @@ namespace WasteProducts.Web.Api
             }
         }
 
+        /// <inheritdoc />
         private class ApplySchemaVendorExtensions : ISchemaFilter
         {
+            /// <inheritdoc />
             public void Apply(Schema schema, SchemaRegistry schemaRegistry, Type type)
             {
                 // Modify the example values in the final SwaggerDocument

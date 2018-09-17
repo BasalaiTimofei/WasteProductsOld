@@ -10,7 +10,7 @@ namespace WasteProducts.Web
     public class Global : HttpApplication
     {
 
-        // <summary>
+        /// <summary>
         /// That code runs on application error
         /// </summary>
         protected void Application_Error(object sender, EventArgs e)

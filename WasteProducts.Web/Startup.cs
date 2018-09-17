@@ -7,6 +7,10 @@ namespace WasteProducts.Web
 {
     public partial class Startup
     {
+        /// <summary>
+        /// Configures Owin pipeline
+        /// </summary>
+        /// <param name="app"></param>
         public void Configuration(IAppBuilder app)
         {
             ConfigureMvc();

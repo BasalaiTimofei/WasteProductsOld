@@ -8,6 +8,9 @@ namespace WasteProducts.Web.Controllers.Api
     /// </summary>
     public abstract class BaseApiController : ApiController
     {
+        /// <summary>
+        /// Storage property for ILogger
+        /// </summary>
         protected ILogger Logger { get; }
 
         /// <summary>

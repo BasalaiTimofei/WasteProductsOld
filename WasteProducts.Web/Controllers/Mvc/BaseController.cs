@@ -8,6 +8,9 @@ namespace WasteProducts.Web.Controllers.Mvc
     /// </summary>
     public abstract class BaseController : Controller
     {
+        /// <summary>
+        /// Storage property for ILogger
+        /// </summary>
         protected ILogger Logger { get; }
 
         /// <summary>
