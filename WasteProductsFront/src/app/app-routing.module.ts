@@ -15,7 +15,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'user/mainpage', component: MainPageComponent},
   { path: 'user/friends', component: FriendsComponent},
-  { path: 'user/products', component: ProductsComponent},
+  //{ path: './products', component: ProductsComponent},
   { path: 'user/groups', component: GroupsComponent},
   { path: 'user/settings', component: SettingsComponent},
   { path: '**', component: NotFoundComponent },

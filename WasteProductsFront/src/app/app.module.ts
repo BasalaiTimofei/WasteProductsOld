@@ -33,7 +33,7 @@ import { ToListComponent } from './components/products/to-list/to-list.component
     GroupsComponent,
     SettingsComponent,
     RegisterComponent,
-    ToListComponent, //Products to list
+    ToListComponent
   ],
   imports: [
     BrowserModule, FormsModule,
