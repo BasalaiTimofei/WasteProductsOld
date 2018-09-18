@@ -5,7 +5,7 @@ import { NotFoundComponent } from './components/common/not-found/not-found.compo
 import { RegisterComponent } from './components/user/register/register.component';
 import { MainPageComponent } from './components/user/main-page/main-page.component';
 import { FriendsComponent } from './components/user/friends/friends.component';
-import { ProductsComponent } from './components/products/products.component';
+import { ProductsComponent } from './components/user/products/products.component';
 import { GroupsComponent } from './components/user/groups/groups.component';
 import { SettingsComponent } from './components/user/settings/settings.component';
 import { ToListComponent } from './components/user/products/to-list/to-list.component';
