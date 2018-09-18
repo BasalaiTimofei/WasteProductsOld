@@ -8,7 +8,7 @@ using WasteProducts.Logic.Common.Models.Search;
 
 namespace WasteProducts.Logic.Validators.Search
 {
-    class BoostedSearchQueryValidator : AbstractValidator<BoostedSearchQuery>
+    public class BoostedSearchQueryValidator : AbstractValidator<BoostedSearchQuery>
     {
         public BoostedSearchQueryValidator()
         {

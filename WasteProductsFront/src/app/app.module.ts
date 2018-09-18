@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from './modules/material/material.module';
+import { CdkTableModule } from '@angular/cdk/table';
 
 /* Components */
 import { AppComponent } from './app.component';
@@ -42,7 +43,8 @@ import { RegisterComponent } from './components/user/register/register.component
     BrowserAnimationsModule,
     HttpClientModule,
     MaterialModule,
-    AppRoutingModule
+    AppRoutingModule,
+    CdkTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]
