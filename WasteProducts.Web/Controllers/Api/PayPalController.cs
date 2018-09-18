@@ -1,8 +1,8 @@
-﻿using NLog;
-using Swagger.Net.Annotations;
+﻿using Swagger.Net.Annotations;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Results;
+using Ninject.Extensions.Logging;
 using WasteProducts.Logic.Common.Services.Donations;
 
 namespace WasteProducts.Web.Controllers.Api

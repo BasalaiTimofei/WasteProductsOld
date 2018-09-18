@@ -44,6 +44,7 @@ namespace WasteProducts.Logic.Services.Products
             }
 
             product.Id = Guid.NewGuid().ToString();
+            // todo catch exception
             _productRepository.Add(_mapper.Map<ProductDB>(product));
 
             addedProduct = product;
@@ -61,12 +62,17 @@ namespace WasteProducts.Logic.Services.Products
                 p => string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
                 out var products))
             {
-                addedProduct= null;
+                addedProduct = null;
                 return false;
             }
 
-            var newProduct = new Product { Id = Guid.NewGuid()
-                .ToString(), Barcode = barcode, Name = barcode.ProductName };
+            var newProduct = new Product
+            {
+                Id = Guid.NewGuid()
+                .ToString(),
+                Barcode = barcode,
+                Name = barcode.ProductName
+            };
             _productRepository.Add(_mapper.Map<ProductDB>(newProduct));
 
             addedProduct = newProduct;
@@ -194,9 +200,9 @@ namespace WasteProducts.Logic.Services.Products
         /// <inheritdoc />
         public bool Delete(Product product)
         {
-                if (!IsProductsInDB(p =>
-                        string.Equals(p.Id, product.Id, StringComparison.CurrentCultureIgnoreCase),
-                    out var products)) return false;
+            if (!IsProductsInDB(p =>
+                    string.Equals(p.Id, product.Id, StringComparison.CurrentCultureIgnoreCase),
+                out var products)) return false;
             _productRepository.Delete(_mapper.Map<ProductDB>(product));
 
             return true;

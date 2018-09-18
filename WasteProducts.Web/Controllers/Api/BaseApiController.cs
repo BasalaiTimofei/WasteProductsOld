@@ -1,25 +1,25 @@
 ﻿using System.Web.Http;
-using NLog;
+using Ninject.Extensions.Logging;
 
 namespace WasteProducts.Web.Controllers.Api
 {
     /// <summary>
-    /// Abstract class-parent for all API controllers of WasteContext.Web
+    /// Abstract WebApi controller with Logger
     /// </summary>
     public abstract class BaseApiController : ApiController
     {
         /// <summary>
-        /// Constructor needed for logging purposes.
+        /// Storage property for ILogger
         /// </summary>
-        /// <param name="logger"></param>
+        protected ILogger Logger { get; }
+
+        /// <summary>
+        /// Initializes Logger property
+        /// </summary>
+        /// <param name="logger">abstract logger</param>
         protected BaseApiController(ILogger logger)
         {
             Logger = logger;
         }
-
-        /// <summary>
-        /// Logger of the controller.
-        /// </summary>
-        protected ILogger Logger { get; }
     }
 }

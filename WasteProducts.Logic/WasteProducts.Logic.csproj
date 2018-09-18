@@ -47,8 +47,8 @@
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Moq, Version=4.9.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>..\packages\Moq.4.9.0\lib\net45\Moq.dll</HintPath>
+    <Reference Include="Moq, Version=4.10.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.10.0\lib\net45\Moq.dll</HintPath>
     </Reference>
     <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
@@ -62,8 +62,8 @@
     <Reference Include="Ninject.Extensions.Interception.DynamicProxy, Version=3.3.3.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.Extensions.Interception.DynamicProxy.3.3.3\lib\net45\Ninject.Extensions.Interception.DynamicProxy.dll</HintPath>
     </Reference>
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.5.9\lib\net45\NLog.dll</HintPath>
+    <Reference Include="Ninject.Extensions.Logging, Version=3.3.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.Extensions.Logging.3.3.0\lib\net45\Ninject.Extensions.Logging.dll</HintPath>
     </Reference>
     <Reference Include="Spire.Barcode, Version=2.3.0.16040, Culture=neutral, PublicKeyToken=663f351905198cb3, processorArchitecture=MSIL">
       <HintPath>..\packages\FreeSpire.Barcode.2.3\lib\net40\Spire.Barcode.dll</HintPath>
@@ -103,8 +103,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\BindingInterceptionExtensions.cs" />
+    <Compile Include="Extensions\KernelInterceptionExtensions.cs" />
     <Compile Include="InjectorModule.cs" />
-    <Compile Include="Interceptors\Products\ProductServiceInterceptor.cs" />
+    <Compile Include="Interceptors\ArgumentValidationInterceptor.cs" />
+    <Compile Include="Interceptors\TraceInterceptor.cs" />
     <Compile Include="Mappings\Products\CategoryProfile.cs" />
     <Compile Include="Mappings\Donations\AddressProfile.cs" />
     <Compile Include="Mappings\Donations\DonationProfile.cs" />
@@ -125,6 +128,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DbServiceResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\InterceptorResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>InterceptorResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Resources\SearchServiceResources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -151,7 +159,6 @@
     <Compile Include="Services\Diagnostic\TestModelsService.cs" />
     <Compile Include="Services\LuceneSearchService.cs" />
     <Compile Include="Services\Products\ProductService.cs" />
-    <Compile Include="Interceptors\Search\SearchServiceInterceptor.cs" />
     <Compile Include="Services\TestService.cs" />
     <Compile Include="Services\User\UserRoleService.cs" />
     <Compile Include="Services\User\UserService.cs" />
@@ -182,9 +189,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="InterceptorResources.resx" />
     <EmbeddedResource Include="Resources\DbServiceResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>DbServiceResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\InterceptorResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>InterceptorResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\SearchServiceResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
