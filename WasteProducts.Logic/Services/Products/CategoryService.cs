@@ -36,7 +36,7 @@ namespace WasteProducts.Logic.Services.Products
                 out var categories)) return false;
 
             var newCategory = new Category { Name = name };
-            _categoryRepository.Add(_mapper.Map<CategoryDB>(newCategory));
+            _categoryRepository.AddAsync(_mapper.Map<CategoryDB>(newCategory));
 
             return true;
         }
@@ -85,7 +85,7 @@ namespace WasteProducts.Logic.Services.Products
 
             var categoryFromDB = categories.ToList().First();
             categoryFromDB.Description = description;
-            _categoryRepository.Update(categoryFromDB);
+            _categoryRepository.UpdateAsync(categoryFromDB);
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace WasteProducts.Logic.Services.Products
                 out var categories)) return false;
 
             var categoryFromDB = categories.ToList().First();
-            _categoryRepository.Delete(categoryFromDB);
+            _categoryRepository.DeleteAsync(categoryFromDB);
 
             return true;
         }
@@ -124,7 +124,7 @@ namespace WasteProducts.Logic.Services.Products
 
         private bool IsCategoryInDB(Predicate<CategoryDB> conditionPredicate, out IEnumerable<CategoryDB> categories)
         {
-            categories = _categoryRepository.SelectWhere(conditionPredicate);
+            categories = _categoryRepository.SelectWhereAsync(conditionPredicate).Result;
             return categories.Any();
         }
 

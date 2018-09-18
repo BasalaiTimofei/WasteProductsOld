@@ -20,7 +20,6 @@ namespace WasteProducts.Logic.Services.Products
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
         private bool _disposed;
-        private IProductService _productServiceImplementation;
 
         public ProductService(IProductRepository productRepository, IMapper mapper)
         {
@@ -45,7 +44,7 @@ namespace WasteProducts.Logic.Services.Products
 
             product.Id = Guid.NewGuid().ToString();
             // todo catch exception
-            _productRepository.Add(_mapper.Map<ProductDB>(product));
+            _productRepository.AddAsync(_mapper.Map<ProductDB>(product));
 
             addedProduct = product;
             return true;
@@ -73,7 +72,7 @@ namespace WasteProducts.Logic.Services.Products
                 Barcode = barcode,
                 Name = barcode.ProductName
             };
-            _productRepository.Add(_mapper.Map<ProductDB>(newProduct));
+            _productRepository.AddAsync(_mapper.Map<ProductDB>(newProduct));
 
             addedProduct = newProduct;
             return true;
@@ -98,7 +97,7 @@ namespace WasteProducts.Logic.Services.Products
         /// <returns>The product with the specific id.</returns>
         public Product GetById(string id)
         {
-            return _mapper.Map<Product>(_productRepository.GetById(id));
+            return _mapper.Map<Product>(_productRepository.GetByIdAsync(id).Result);
         }
 
         /// <summary>
@@ -108,8 +107,8 @@ namespace WasteProducts.Logic.Services.Products
         /// <returns>The product with the specific barcode.</returns>
         public Product GetByBarcode(Barcode barcode)
         {
-            return _mapper.Map<Product>(_productRepository.SelectWhere(p =>
-                    string.Equals(p.Barcode.Code, barcode.Code, StringComparison.OrdinalIgnoreCase)).First());
+            return _mapper.Map<Product>(_productRepository.SelectWhereAsync(p =>
+                    string.Equals(p.Barcode.Code, barcode.Code, StringComparison.OrdinalIgnoreCase)).Result.First());
         }
 
         /// <summary>
@@ -118,7 +117,7 @@ namespace WasteProducts.Logic.Services.Products
         /// <returns>All product in the application.</returns>
         public IEnumerable<Product> GetAll()
         {
-            return _mapper.Map<IEnumerable<Product>>(_productRepository.SelectAll());
+            return _mapper.Map<IEnumerable<Product>>(_productRepository.SelectAllAsync().Result);
         }
 
         /// <summary>
@@ -127,8 +126,8 @@ namespace WasteProducts.Logic.Services.Products
         /// <param name="name">The name of the product.</param>
         /// <returns>Product with the specific name.</returns>
         public Product GetByName(string name) =>
-            _mapper.Map<Product>(_productRepository.SelectWhere(p =>
-            string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase)).First());
+            _mapper.Map<Product>(_productRepository.SelectWhereAsync(p =>
+            string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase)).Result.First());
 
         /// <summary>
         /// Gets asynchronously product by its name.
@@ -145,7 +144,7 @@ namespace WasteProducts.Logic.Services.Products
         /// <returns>Product collection of the specific category.</returns>
         public IEnumerable<Product> GetByCategory(Category category)
         {
-            return _mapper.Map<IEnumerable<Product>>(_productRepository.SelectByCategory(_mapper.Map<CategoryDB>(category)));
+            return _mapper.Map<IEnumerable<Product>>(_productRepository.SelectByCategoryAsync(_mapper.Map<CategoryDB>(category)));
         }
 
         /// <summary>
@@ -160,7 +159,7 @@ namespace WasteProducts.Logic.Services.Products
                 out var products)) return false;
 
             var productFromDB = products.ToList().First();
-            _productRepository.Delete(productFromDB);
+            _productRepository.DeleteAsync(productFromDB);
 
             return true;
         }
@@ -175,7 +174,7 @@ namespace WasteProducts.Logic.Services.Products
             if (!IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.CurrentCultureIgnoreCase),
                 out IEnumerable<ProductDB> products)) return false;
-            _productRepository.Update(_mapper.Map<ProductDB>(product));
+            _productRepository.UpdateAsync(_mapper.Map<ProductDB>(product));
 
             return true;
         }
@@ -192,7 +191,7 @@ namespace WasteProducts.Logic.Services.Products
                 out var products)) return false;
 
             var productFromDB = products.ToList().First();
-            _productRepository.Delete(productFromDB);
+            _productRepository.DeleteAsync(productFromDB);
 
             return true;
         }
@@ -203,7 +202,7 @@ namespace WasteProducts.Logic.Services.Products
             if (!IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.CurrentCultureIgnoreCase),
                 out var products)) return false;
-            _productRepository.Delete(_mapper.Map<ProductDB>(product));
+            _productRepository.DeleteAsync(_mapper.Map<ProductDB>(product));
 
             return true;
         }
@@ -222,7 +221,7 @@ namespace WasteProducts.Logic.Services.Products
 
             var productFromDB = products.ToList().First();
             productFromDB.Category = _mapper.Map<CategoryDB>(category);
-            _productRepository.Update(productFromDB);
+            _productRepository.UpdateAsync(productFromDB);
 
             return true;
         }
@@ -243,7 +242,7 @@ namespace WasteProducts.Logic.Services.Products
             if (productFromDB.Category == null) return true;
 
             productFromDB.Category = null;
-            _productRepository.Update(productFromDB);
+            _productRepository.UpdateAsync(productFromDB);
 
             return true;
         }
@@ -263,7 +262,7 @@ namespace WasteProducts.Logic.Services.Products
             if (productFromDB.IsHidden) return true;
 
             productFromDB.IsHidden = product.IsHidden = true;
-            _productRepository.Update(productFromDB);
+            _productRepository.UpdateAsync(productFromDB);
 
             return true;
         }
@@ -283,7 +282,7 @@ namespace WasteProducts.Logic.Services.Products
             if (!productFromDB.IsHidden) return true;
 
             productFromDB.IsHidden = false;
-            _productRepository.Update(productFromDB);
+            _productRepository.UpdateAsync(productFromDB);
 
             return true;
         }
@@ -317,12 +316,12 @@ namespace WasteProducts.Logic.Services.Products
 
             var productFromDB = products.ToList().First();
             productFromDB.Composition = composition;
-            _productRepository.Update(productFromDB);
+            _productRepository.UpdateAsync(productFromDB);
         }
 
         private bool IsProductsInDB(Predicate<ProductDB> conditionPredicate, out IEnumerable<ProductDB> products)
         {
-            products = _productRepository.SelectWhere(conditionPredicate);
+            products = _productRepository.SelectWhereAsync(conditionPredicate).Result;
             return products.Any();
         }
 

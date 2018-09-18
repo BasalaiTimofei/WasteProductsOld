@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Moq;
 using NUnit.Framework;
@@ -48,8 +49,8 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         [Test]
         public void AddByName_InsertNewCategory_ReturnsTrue()
         {
-            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
-                .Returns(selectedList);
+            mockCategoryRepo.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(Task.FromResult((IEnumerable<CategoryDB>)selectedList));
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             var result = categoryService.Add(It.IsAny<string>());
@@ -61,8 +62,8 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         public void AddByName_InsertedCategoryExists_ReturnsFalse()
         {
             selectedList.Add(categoryDB);
-            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
-                .Returns(selectedList);
+            mockCategoryRepo.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(Task.FromResult((IEnumerable<CategoryDB>)selectedList));
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             var result = categoryService.Add(It.IsAny<string>());
@@ -73,33 +74,33 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         [Test]
         public void AddByName_InsertNewCategory_AddMethodOfRepoIsCalledOnce()
         {
-            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
-                .Returns(selectedList);
+            mockCategoryRepo.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(Task.FromResult((IEnumerable<CategoryDB>)selectedList));
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             categoryService.Add(It.IsAny<string>());
 
-            mockCategoryRepo.Verify(m => m.Add(It.IsAny<CategoryDB>()), Times.Once);
+            mockCategoryRepo.Verify(m => m.AddAsync(It.IsAny<CategoryDB>()), Times.Once);
         }
 
         [Test]
         public void AddByName_InsertedCategoryExists_AddMethodOfRepoIsNeverCalled()
         {
             selectedList.Add(categoryDB);
-            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
-                .Returns(selectedList);
+            mockCategoryRepo.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(Task.FromResult((IEnumerable<CategoryDB>)selectedList));
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             categoryService.Add(It.IsAny<string>());
 
-            mockCategoryRepo.Verify(m => m.Add(It.IsAny<CategoryDB>()), Times.Never);
+            mockCategoryRepo.Verify(m => m.AddAsync(It.IsAny<CategoryDB>()), Times.Never);
         }
 
         [Test]
         public void AddRange_InsertAtLeastOneNewCategory_ReturnsTrue()
         {
-            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
-                .Returns(selectedList);
+            mockCategoryRepo.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(Task.FromResult((IEnumerable<CategoryDB>)selectedList));
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             var result = categoryService.AddRange(names);
@@ -110,34 +111,34 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         [Test]
         public void AddRange_InsertTwoNewCategories_AddMethodOfRepoIsCalledTwice()
         {
-            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
-                .Returns(selectedList);
+            mockCategoryRepo.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(Task.FromResult((IEnumerable<CategoryDB>)selectedList));
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             categoryService.AddRange(names);
 
-            mockCategoryRepo.Verify(m => m.Add(It.IsAny<CategoryDB>()), Times.Exactly(2));
+            mockCategoryRepo.Verify(m => m.AddAsync(It.IsAny<CategoryDB>()), Times.Exactly(2));
         }
 
         [Test]
         public void AddRange_InsertAllExistingCategories_ReturnsFalseAndAddMethodOfRepoIsNeverCalled()
         {
             selectedList.Add(categoryDB);
-            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
-                .Returns(selectedList);
+            mockCategoryRepo.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(Task.FromResult((IEnumerable<CategoryDB>)selectedList));
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             var result = categoryService.AddRange(names);
 
             Assert.That(result, Is.EqualTo(false));
-            mockCategoryRepo.Verify(m => m.Add(It.IsAny<CategoryDB>()), Times.Never);
+            mockCategoryRepo.Verify(m => m.AddAsync(It.IsAny<CategoryDB>()), Times.Never);
         }
 
         [Test]
         public void Get_CategoryNotFound_ReturnsNull()
         {
-            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
-                .Returns(selectedList);
+            mockCategoryRepo.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(Task.FromResult((IEnumerable<CategoryDB>)selectedList));
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             var result = categoryService.Get(It.IsAny<string>());
@@ -149,8 +150,8 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         public void Get_CategoryWasFound_NamesAreTheSame()
         {
             selectedList.Add(new CategoryDB { Name = "Meat" });
-            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
-                .Returns(selectedList);
+            mockCategoryRepo.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(Task.FromResult((IEnumerable<CategoryDB>)selectedList));
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             var result = categoryService.Get(It.IsAny<string>());
@@ -162,13 +163,13 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         [Test]
         public void SetDescription_CategoryNotFound_UpdateMethodIsNeverCalled()
         {
-            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
-                .Returns(selectedList);
+            mockCategoryRepo.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(Task.FromResult((IEnumerable<CategoryDB>)selectedList));
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             categoryService.SetDescription(category, It.IsAny<string>());
 
-            mockCategoryRepo.Verify(m => m.Update(It.IsAny<CategoryDB>()), Times.Never);
+            mockCategoryRepo.Verify(m => m.UpdateAsync(It.IsAny<CategoryDB>()), Times.Never);
         }
 
         [Test]
@@ -176,21 +177,21 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         {
             selectedList.Add(categoryDB);
             var description = "Some description";
-            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
-                .Returns(selectedList);
+            mockCategoryRepo.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(Task.FromResult((IEnumerable<CategoryDB>)selectedList));
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             categoryService.SetDescription(category, description);
 
             Assert.AreEqual(selectedList[0].Description, description);
-            mockCategoryRepo.Verify(m => m.Update(It.IsAny<CategoryDB>()), Times.Once);
+            mockCategoryRepo.Verify(m => m.UpdateAsync(It.IsAny<CategoryDB>()), Times.Once);
         }
 
         [Test]
         public void Delete_CategoryNotFound_ReturnsFalse()
         {
-            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
-                .Returns(selectedList);
+            mockCategoryRepo.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(Task.FromResult((IEnumerable<CategoryDB>)selectedList));
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             var result = categoryService.Delete(It.IsAny<string>());
@@ -202,8 +203,8 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         public void Delete_CategoryWasFound_ReturnsTrue()
         {
             selectedList.Add(categoryDB);
-            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
-                .Returns(selectedList);
+            mockCategoryRepo.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(Task.FromResult((IEnumerable<CategoryDB>)selectedList));
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             var result = categoryService.Delete(It.IsAny<string>());
@@ -214,34 +215,34 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         [Test]
         public void Delete_CategoryNotFound_DeleteMethodOfRepoIsNeverCalled()
         {
-            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
-                .Returns(selectedList);
+            mockCategoryRepo.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(Task.FromResult((IEnumerable<CategoryDB>)selectedList));
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             categoryService.Delete(It.IsAny<string>());
 
-            mockCategoryRepo.Verify(m => m.Delete(It.IsAny<CategoryDB>()), Times.Never);
+            mockCategoryRepo.Verify(m => m.DeleteAsync(It.IsAny<CategoryDB>()), Times.Never);
         }
 
         [Test]
         public void Delete_CategoryWasFound_DeleteMethodOfRepoIsCalledOnce()
         {
             selectedList.Add(categoryDB);
-            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
-                .Returns(selectedList);
+            mockCategoryRepo.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(Task.FromResult((IEnumerable<CategoryDB>)selectedList));
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             categoryService.Delete(It.IsAny<string>());
 
-            mockCategoryRepo.Verify(m => m.Delete(It.IsAny<CategoryDB>()), Times.Once);
+            mockCategoryRepo.Verify(m => m.DeleteAsync(It.IsAny<CategoryDB>()), Times.Once);
         }
 
         [Test]
         public void DeleteRange_DeleteAtLeastOneExistingCategory_ReturnsTrue()
         {
             selectedList.Add(categoryDB);
-            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
-                .Returns(selectedList);
+            mockCategoryRepo.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(Task.FromResult((IEnumerable<CategoryDB>)selectedList));
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             var result = categoryService.DeleteRange(names);
@@ -253,26 +254,26 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         public void DeleteRange_DeleteTwoExistingCategories_DeleteMethodOfRepoIsCalledTwice()
         {
             selectedList.Add(categoryDB);
-            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
-                .Returns(selectedList);
+            mockCategoryRepo.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(Task.FromResult((IEnumerable<CategoryDB>)selectedList));
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             categoryService.DeleteRange(names);
 
-            mockCategoryRepo.Verify(m => m.Delete(It.IsAny<CategoryDB>()), Times.Exactly(2));
+            mockCategoryRepo.Verify(m => m.DeleteAsync(It.IsAny<CategoryDB>()), Times.Exactly(2));
         }
 
         [Test]
         public void DeleteRange_CategoriesWereNotFound_ReturnFalseAndDeleteMethodOfRepoNeverCalled()
         {
-            mockCategoryRepo.Setup(repo => repo.SelectWhere(It.IsAny<Predicate<CategoryDB>>()))
-                .Returns(selectedList);
+            mockCategoryRepo.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<CategoryDB>>()))
+                .Returns(Task.FromResult((IEnumerable<CategoryDB>)selectedList));
 
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             var result = categoryService.DeleteRange(names);
 
             Assert.That(result, Is.EqualTo(false));
-            mockCategoryRepo.Verify(m => m.Delete(It.IsAny<CategoryDB>()), Times.Never);
+            mockCategoryRepo.Verify(m => m.DeleteAsync(It.IsAny<CategoryDB>()), Times.Never);
         }
     }
 }
