@@ -31,7 +31,7 @@ export class SearchComponent implements OnInit {
     filteredQueries: Observable<string[]>;
 
     ngOnInit() {
-      this.searchService.gettest().subscribe(console.log);
+      // this.searchService.gettest().subscribe(console.log);
     }
 
   search(query: string): void {
@@ -45,12 +45,11 @@ export class SearchComponent implements OnInit {
             this.errorStatusCode = err.status;
           }
         });
-      // this.errorStatusCode = 200;
-      // this.searchResult[0] = new SearchProduct('iiii', 'nnnn', 'dddddd');
     }
   }
 
   searchInTopQueries(query: string): void {
+    if (typeof query !== 'undefined' && query) {
       this.searchService.getTopSearchQueries(query).subscribe(
         data => this.topQueries = data.slice(0, 10),
                 (err: HttpErrorResponse) => {
@@ -59,15 +58,7 @@ export class SearchComponent implements OnInit {
             this.errorStatusCode = err.status;
           }
         });
-      /*this.errorStatusCode = 200;
-      this.topQueries[0] = 'qwe rty';
-      this.topQueries[1] = '1qwe zxc';
-      this.topQueries[2] = 'zzsd';
-      this.topQueries[3] = 'zzsw';
-      this.topQueries[4] = 'qwerty';
-      for (let i = 5; i < 10; i++) {
-        this.topQueries[i] = 'Top query ' + i;
-    }*/
+      }
   }
 
   clearQueries() {

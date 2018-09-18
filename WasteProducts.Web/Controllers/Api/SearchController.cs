@@ -80,7 +80,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="query">Query string</param>
         /// <returns>Product collection</returns>
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<UserQuery>))]
+        [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<UserQuery>))]        
         [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
         [HttpGet, Route("queries")]
         public Task<IEnumerable<UserQuery>> GetUserQueries(string query)
@@ -88,7 +88,7 @@ namespace WasteProducts.Web.Controllers.Api
             if (string.IsNullOrEmpty(query))
             {
                 throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
-            }
+            }            
             return _searchService.GetSimilarQueriesAsync(query);
         }
     }

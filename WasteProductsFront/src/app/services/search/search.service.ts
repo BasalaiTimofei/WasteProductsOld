@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { SearchProduct } from '../../models/search-product';
 import { UserQuery } from '../../models/top-query';
 import { Observable, of } from 'rxjs';
@@ -19,16 +19,8 @@ export class SearchService {
     private http: HttpClient,
     private logService: LoggingService ) { }
 
-  getProductList(): Observable<SearchProduct[]> {
-    return this.http.get<SearchProduct[]>(this.URL_SEARCH + '?query=sssss')
-      .pipe(
-        tap(product => this.log('')),
-        catchError(this.handleError('', []))
-      );
-  }
-// http://localhost:2189/api/search/products/default?query=soft
   getDefault(query: string): Observable<SearchProduct[]> {
-    return this.http.get<SearchProduct[]>(this.URL_SEARCH + '/products/default?query=' + query, ).pipe(
+    return this.http.get<SearchProduct[]>(this.URL_SEARCH + '/products/default', { params: new HttpParams().set('query', query)}).pipe(
       map(res => {
         const result: any = res;
         return result.map((item) => new SearchProduct(item.Id, item.Name, ''));
@@ -37,7 +29,7 @@ export class SearchService {
   }
 
   getTopSearchQueries(query: string): Observable<UserQuery[]> {
-    return this.http.get<UserQuery[]>(this.URL_SEARCH + '/queries?query=' + query).pipe(
+    return this.http.get<UserQuery[]>(this.URL_SEARCH + '/queries', { params: new HttpParams().set('query', query)}).pipe(
       map(res => {
         const result: any = res;
         return result.map(item => new UserQuery(item.QueryString));
