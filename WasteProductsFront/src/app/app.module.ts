@@ -15,11 +15,11 @@ import { AppRoutingModule } from './/app-routing.module';
 import { NotFoundComponent } from './components/common/not-found/not-found.component';
 import { DefaultComponent } from './components/common/default/default.component';
 import { FriendsComponent } from './components/user/friends/friends.component';
-import { ProductsComponent } from './components/user/products/products.component';
+import { ProductsComponent } from './components/products/products.component';
 import { GroupsComponent } from './components/user/groups/groups.component';
 import { SettingsComponent } from './components/user/settings/settings.component';
 import { RegisterComponent } from './components/user/register/register.component';
-import { ProductComponent } from './components/product/product/product.component';
+import { ToListComponent } from './components/products/to-list/to-list.component';
 
 @NgModule({
   declarations: [
@@ -32,8 +32,8 @@ import { ProductComponent } from './components/product/product/product.component
     ProductsComponent,
     GroupsComponent,
     SettingsComponent,
-    RegisterComponent
-    ProductComponent
+    RegisterComponent,
+    ToListComponent, //Products to list
   ],
   imports: [
     BrowserModule, FormsModule,
