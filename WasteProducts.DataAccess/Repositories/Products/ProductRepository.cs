@@ -26,47 +26,58 @@ namespace WasteProducts.DataAccess.Repositories.Products
         /// Allows you to add new product to the products colletion.
         /// </summary>
         /// <param name="product">The specific product for adding</param>
-        public void Add(ProductDB product)
+        public async Task AddAsync(ProductDB product)
         {
             product.Created = DateTime.UtcNow;
             _context.Products.Add(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         /// <summary>
         /// Deleting the specific product
         /// </summary>
         /// <param name="product">The specific product for deleting.</param>
-        public void Delete(ProductDB product)
+        public async Task DeleteAsync(ProductDB product)
         {
-            if (product == null || !_context.Products.Contains(product)) return;
+            if (! (await _context.Products.ContainsAsync(product))) return;
             product.Marked = true;
-            Update(product);
+
+            await UpdateAsync(product);
+            
         }
 
         /// <summary>
         /// The method that delets the product by ID.
         /// </summary>
         /// <param name="id">Product's ID that needs to be deleted.</param>
-        public void DeleteById(string id)
+        public async Task DeleteAsync(string id)
         {
-            var product = _context.Products.Find(id);
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
 
-            if (id == null || product == null) return;
+            if (product == null) return;
+
             product.Marked = true;
-            Update(product);
+
+            await UpdateAsync(product);
+            
         }
 
         public async Task<ProductDB> GetByNameAsync(string name)
         {
-            return await Task.Run(() => _context.Products.Include(p => p.Barcode).Include(p => p.Category).FirstOrDefault(p => p.Name == name));
+            return await _context.Products.FirstOrDefaultAsync(p => p.Name == name); 
         }
 
         /// <summary>
         /// A method that provides a list of all products.
         /// </summary>
         /// <returns>List of products.</returns>
-        public IEnumerable<ProductDB> SelectAll() => _context.Products.ToList();
+        public async Task<IEnumerable<ProductDB>> SelectAllAsync()
+        {
+            return await Task.Run(() =>
+            {
+               return _context.Products.ToList();
+            });
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -74,10 +85,15 @@ namespace WasteProducts.DataAccess.Repositories.Products
         /// </summary>
         /// <param name="predicate">The condition that list of products must satisfy</param>
         /// <returns>Returns list of products.</returns>
-        public IEnumerable<ProductDB> SelectWhere(Predicate<ProductDB> predicate)
+        public async Task <IEnumerable<ProductDB>> SelectWhereAsync(Predicate<ProductDB> predicate)
         {
             var condition = new Func<ProductDB, bool>(predicate);
-            return _context.Products.Where(condition).ToList();
+
+            return await Task.Run(() =>
+            {
+                return _context.Products.Where(condition).ToList();
+            });
+                
         }
 
         /// <summary>
@@ -85,9 +101,12 @@ namespace WasteProducts.DataAccess.Repositories.Products
         /// </summary>
         /// <param name="category">Category for select products</param>
         /// <returns>Returns list of products.</returns>
-        public IEnumerable<ProductDB> SelectByCategory(CategoryDB category)
+        public async Task <IEnumerable<ProductDB>> SelectByCategoryAsync(CategoryDB category)
         {
-            return _context.Products.Where(p => p.Category.Id == category.Id).ToList();
+            return await Task.Run(() =>
+            {
+                return _context.Products.Where(p => p.Category.Id == category.Id).ToList();
+            });
         }
 
         /// <summary>
@@ -95,17 +114,22 @@ namespace WasteProducts.DataAccess.Repositories.Products
         /// </summary>
         /// <param name="id">The specific id of product that was sorted.</param>
         /// <returns>Product by ID.</returns>
-        public ProductDB GetById(string id) => _context.Products.Find(id);
+        public async Task<ProductDB> GetByIdAsync(string id)
+        {
+            return await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+        }
 
         /// <summary>
         /// This method allows you to modify some or all of the product values.
         /// </summary>
         /// <param name="product"></param>
-        public void Update(ProductDB product)
+        public async Task UpdateAsync(ProductDB product)
         {
             _context.Entry(product).State = EntityState.Modified;
-            _context.Products.First(p => p.Id == product.Id).Modified = DateTime.UtcNow;
-            _context.SaveChanges();
+            var productInDB = await _context.Products.FirstAsync(p => p.Id == product.Id);
+            productInDB.Modified = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
         }
 
         /// <summary>
