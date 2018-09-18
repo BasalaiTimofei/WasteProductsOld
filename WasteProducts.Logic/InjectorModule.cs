@@ -27,6 +27,7 @@ using WasteProducts.Logic.Services.Groups;
 using WasteProducts.Logic.Services.Mail;
 using WasteProducts.Logic.Services.Products;
 using WasteProducts.Logic.Services.Users;
+using WasteProducts.Logic.Validators.Search;
 using ProductProfile = WasteProducts.Logic.Mappings.Products.ProductProfile;
 
 namespace WasteProducts.Logic

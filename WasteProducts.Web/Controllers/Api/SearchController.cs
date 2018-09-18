@@ -43,11 +43,6 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpGet, Route("products/default")]
         public async Task<IEnumerable<Product>> GetProductsDefaultFields([FromUri]string query)
         {
-            if (string.IsNullOrEmpty(query))
-            {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
-            }
-
             BoostedSearchQuery searchQuery = new BoostedSearchQuery();
             searchQuery.AddField(DEFAULT_PRODUCT_NAME_FIELD, 1.0f)
                 .AddField(DEFAULT_PRODUCT_COMPOSITION_FIELD, 1.0f)
@@ -84,11 +79,8 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpGet, Route("queries")]
         public async Task<IEnumerable<UserQuery>> GetUserQueries(string query)
         {
-            if (string.IsNullOrEmpty(query))
-            {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
-            }
-            return await _searchService.GetSimilarQueriesAsync(query);
+
+            return await _searchService.GetSimilarQueriesAsync(new BoostedSearchQuery(query));
         }
     }
 }
