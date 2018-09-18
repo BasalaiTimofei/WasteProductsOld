@@ -25,7 +25,7 @@ import { RegisterComponent } from './components/user/register/register.component
     AppComponent,
     DatabaseComponent,
     SearchComponent,
-    SearchresultComponent
+    SearchresultComponent,
     MainPageComponent,
     NotFoundComponent,
     DefaultComponent,
@@ -34,7 +34,6 @@ import { RegisterComponent } from './components/user/register/register.component
     GroupsComponent,
     SettingsComponent,
     RegisterComponent
->>>>>>> develop
   ],
   imports: [
     BrowserModule,
