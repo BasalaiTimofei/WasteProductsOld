@@ -14,6 +14,7 @@ namespace WasteProducts.Web.Controllers.Api
     /// <summary>
     /// Controller that returns full-text search results from Lucene repository.
     /// </summary>
+    [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
     [RoutePrefix("api/search")]
     public class SearchController : BaseApiController
     {
@@ -39,15 +40,9 @@ namespace WasteProducts.Web.Controllers.Api
         /// <returns>Product collection</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "GetById search result collection", typeof(IEnumerable<Product>))]
-        [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
         [HttpGet, Route("products/default")]
         public async Task<IEnumerable<Product>> GetProductsDefaultFields([FromUri]string query)
         {
-            if (string.IsNullOrEmpty(query))
-            {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
-            }
-
             BoostedSearchQuery searchQuery = new BoostedSearchQuery();
             searchQuery.AddField(DEFAULT_PRODUCT_NAME_FIELD, 1.0f)
                 .AddField(DEFAULT_PRODUCT_COMPOSITION_FIELD, 1.0f)
@@ -65,11 +60,9 @@ namespace WasteProducts.Web.Controllers.Api
         /// <returns>Product collection</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "GetById search result collection", typeof(IEnumerable<Product>))]
-        [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
         [HttpGet, Route("products/custom")]
         public async Task<IEnumerable<Product>> GetProducts(BoostedSearchQuery query)
         {
-
             return await  _searchService.SearchProductAsync(query);
         }
 
@@ -79,16 +72,11 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="query">Query string</param>
         /// <returns>Product collection</returns>
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<UserQuery>))]        
-        [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect query string")]
+        [SwaggerResponse(HttpStatusCode.OK, "Get search result collection", typeof(IEnumerable<UserQuery>))]
         [HttpGet, Route("queries")]
-        public Task<IEnumerable<UserQuery>> GetUserQueries(string query)
+        public async Task<IEnumerable<UserQuery>> GetUserQueries(string query)
         {
-            if (string.IsNullOrEmpty(query))
-            {
-                throw new HttpResponseException(Request.CreateResponse(HttpStatusCode.BadRequest));
-            }            
-            return _searchService.GetSimilarQueriesAsync(query);
+            return await _searchService.GetSimilarQueriesAsync(new BoostedSearchQuery(query));
         }
     }
 }
