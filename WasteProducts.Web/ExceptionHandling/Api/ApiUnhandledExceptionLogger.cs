@@ -8,7 +8,7 @@ namespace WasteProducts.Web.ExceptionHandling.Api
     /// <summary>
     /// WebApi exception logger with Ninject and Elmah.
     /// </summary>
-    public class ApiUnhandledExceptionExceptionLogger : ElmahDemystifierExceptionLogger
+    public class ApiUnhandledExceptionLogger : ElmahDemystifierExceptionLogger
     {
         private readonly ILogger _logger;
 
@@ -16,7 +16,7 @@ namespace WasteProducts.Web.ExceptionHandling.Api
         /// Constructor with arguments
         /// </summary>
         /// <param name="logger">Ninject logger</param>
-        public ApiUnhandledExceptionExceptionLogger(ILogger logger)
+        public ApiUnhandledExceptionLogger(ILogger logger)
         {
             _logger = logger;
         }
