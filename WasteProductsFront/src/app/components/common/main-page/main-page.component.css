@@ -1,0 +1,27 @@
+.mat-button {
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    width: 10%;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px
+}
+.mat-button:hover {
+    background-color: #ff5050;
+    color: white;
+}
+.mat-menu-item{
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    display: inline-block;
+    text-align: left;
+    font-size: 14px;
+    width: 60%;
+}
+.mat-menu-item:hover {
+    background-color: #ffcccc;
+    color: whitesmoke;
+}
