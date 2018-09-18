@@ -19,9 +19,13 @@
     display: inline-block;
     text-align: left;
     font-size: 14px;
-    width: 60%;
+    width: 50%;
 }
 .mat-menu-item:hover {
     background-color: #ffcccc;
     color: whitesmoke;
+}
+.mat-menu{
+    width:10%;
+    display: inline-block;
 }
