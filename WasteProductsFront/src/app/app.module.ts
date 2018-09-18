@@ -1,15 +1,16 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-
-
 import { MaterialModule } from './modules/material/material.module';
+import { CdkTableModule } from '@angular/cdk/table';
 
 /* Components */
 import { AppComponent } from './app.component';
 import { DatabaseComponent } from './components/database/database.component';
+import { SearchComponent } from './components/search/search.component';
+import { SearchresultComponent } from './components/searchresult/search-result.component';
 import { MainPageComponent } from './components/common/main-page/main-page.component';
 import { AppRoutingModule } from './/app-routing.module';
 import { NotFoundComponent } from './components/common/not-found/not-found.component';
@@ -28,6 +29,8 @@ import { UpdateProductComponent } from './components/products/update-product/upd
   declarations: [
     AppComponent,
     DatabaseComponent,
+    SearchComponent,
+    SearchresultComponent,
     MainPageComponent,
     NotFoundComponent,
     DefaultComponent,
@@ -42,11 +45,14 @@ import { UpdateProductComponent } from './components/products/update-product/upd
     UpdateProductComponent,
   ],
   imports: [
-    BrowserModule, FormsModule,
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     HttpClientModule,
     MaterialModule,
-    AppRoutingModule
+    AppRoutingModule,
+    CdkTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]
