@@ -17,7 +17,7 @@ namespace WasteProducts.Web
             // mvc filtres
             Kernel.BindFilter<MvUnhandledExceptionFilterAttribute>(System.Web.Mvc.FilterScope.Global, 99);
             // api filtres
-            Kernel.Bind<IExceptionLogger>().To<ApiUnhandledExceptionExceptionLogger>();
+            Kernel.Bind<IExceptionLogger>().To<ApiUnhandledExceptionLogger>();
             Kernel.BindHttpFilter<ApiValidationExceptionFilterAttribute>(System.Web.Http.Filters.FilterScope.Action);
         }
     }
