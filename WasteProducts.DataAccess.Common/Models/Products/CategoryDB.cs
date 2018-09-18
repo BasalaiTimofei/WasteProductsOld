@@ -25,7 +25,7 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         /// <summary>
         /// List of products that belong to a specific Category in database
         /// </summary>
-        public virtual ICollection<ProductDB> Products { get; set; }
+        //public virtual ICollection<ProductDB> Products { get; set; }
 
         /// <summary>
         /// Defines whether the category is marked for deletion

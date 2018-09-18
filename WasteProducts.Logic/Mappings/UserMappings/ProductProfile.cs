@@ -23,7 +23,7 @@ namespace WasteProducts.Logic.Mappings.UserMappings
             CreateMap<Category, CategoryDB>()
                 .ForMember(m => m.Id, opt => opt.Ignore())
                 .ForMember(m => m.Marked, opt => opt.Ignore())
-                .ForMember(m => m.Products, opt => opt.Ignore())
+                //.ForMember(m => m.Products, opt => opt.Ignore())
                 .ReverseMap();
         }
         

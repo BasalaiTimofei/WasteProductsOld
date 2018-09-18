@@ -3,6 +3,7 @@ using Moq;
 using Ninject.Extensions.Logging;
 using NUnit.Framework;
 using WasteProducts.DataAccess.Common.Context;
+using WasteProducts.DataAccess.Common.Repositories.Diagnostic;
 using WasteProducts.Logic.Common.Models.Diagnostic;
 using WasteProducts.Logic.Common.Services.Diagnostic;
 using WasteProducts.Logic.Services;
@@ -16,6 +17,7 @@ namespace WasteProducts.Logic.Tests.Diagnostic_Tests
         private Mock<ILogger> _loggerMoq;
         private Mock<IDatabase> _databaseMoq;
         private Mock<IDbSeedService> _dbSeedServiceMoq;
+        private Mock<ISeedRepository> _seedRepoMoq;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -23,6 +25,7 @@ namespace WasteProducts.Logic.Tests.Diagnostic_Tests
             _loggerMoq = new Mock<ILogger>();
             _databaseMoq = new Mock<IDatabase>();
             _dbSeedServiceMoq = new Mock<IDbSeedService>();
+            _seedRepoMoq = new Mock<ISeedRepository>();
         }
 
         [TearDown]
@@ -101,6 +104,6 @@ namespace WasteProducts.Logic.Tests.Diagnostic_Tests
                 _dbSeedServiceMoq.Verify(seedService => seedService.SeedTestDataAsync(), Times.Never);
         }
 
-        IDbService GetDbService() => new DbService(_dbSeedServiceMoq.Object, _databaseMoq.Object, _loggerMoq.Object);
+        IDbService GetDbService() => new DbService(_seedRepoMoq.Object, _dbSeedServiceMoq.Object, _databaseMoq.Object, _loggerMoq.Object);
     }
 }
