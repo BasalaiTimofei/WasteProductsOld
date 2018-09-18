@@ -106,8 +106,6 @@
     <Compile Include="Extensions\BindingInterceptionExtensions.cs" />
     <Compile Include="Extensions\KernelInterceptionExtensions.cs" />
     <Compile Include="InjectorModule.cs" />
-    <Compile Include="Interceptors\Products\ProductServiceInterceptor.cs" />
-
     <Compile Include="Interceptors\ArgumentValidationInterceptor.cs" />
     <Compile Include="Interceptors\TraceInterceptor.cs" />
     <Compile Include="Mappings\Products\CategoryProfile.cs" />
