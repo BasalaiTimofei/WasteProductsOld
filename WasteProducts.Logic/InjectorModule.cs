@@ -53,7 +53,6 @@ namespace WasteProducts.Logic
             BindGroupServices();
             BindProductServices();
 
-            Bind<IValidator<BoostedSearchQuery>>().To<BoostedSearchQueryValidator>();
             Bind<ISearchService>().To<LuceneSearchService>().ValidateArguments(typeof(BoostedSearchQuery));
         }
 
