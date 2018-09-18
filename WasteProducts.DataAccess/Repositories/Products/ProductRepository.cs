@@ -126,8 +126,9 @@ namespace WasteProducts.DataAccess.Repositories.Products
         public async Task UpdateAsync(ProductDB product)
         {
             _context.Entry(product).State = EntityState.Modified;
-            var productInDB = await _context.Products.FirstAsync(p => p.Id == product.Id);
-            productInDB.Modified = DateTime.UtcNow;
+
+            var productInDb = await _context.Products.FirstOrDefaultAsync(p => p.Id == product.Id);
+            productInDb.Modified = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
         }
