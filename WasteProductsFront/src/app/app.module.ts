@@ -19,7 +19,6 @@ import { ProductsComponent } from './components/products/products.component';
 import { GroupsComponent } from './components/user/groups/groups.component';
 import { SettingsComponent } from './components/user/settings/settings.component';
 import { RegisterComponent } from './components/user/register/register.component';
-import { ToListComponent } from './components/products/to-list/to-list.component';
 
 @NgModule({
   declarations: [
@@ -32,8 +31,7 @@ import { ToListComponent } from './components/products/to-list/to-list.component
     ProductsComponent,
     GroupsComponent,
     SettingsComponent,
-    RegisterComponent,
-    ToListComponent
+    RegisterComponent
   ],
   imports: [
     BrowserModule, FormsModule,
