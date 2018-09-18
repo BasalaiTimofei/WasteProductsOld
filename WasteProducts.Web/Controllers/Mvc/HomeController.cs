@@ -1,16 +1,17 @@
-﻿using System.Threading.Tasks;
-using System.Web.Mvc;
-using NLog;
+﻿using System.Web.Mvc;
 
 namespace WasteProducts.Web.Controllers.Mvc
 {
-    public class HomeController : BaseMvcController
+    /// <summary>
+    /// Mvc Home controller
+    /// </summary>
+    public class HomeController : Controller
     {
-        public HomeController(ILogger logger) : base(logger)
-        {
-        }
-
-        public async Task<ActionResult> Index()
+        /// <summary>
+        /// Index action
+        /// </summary>
+        /// <returns>index view page</returns>
+        public ActionResult Index()
         {
             return View();
         }

@@ -1,11 +1,10 @@
-﻿using System;
-using NLog;
-using Swagger.Net.Annotations;
+﻿using Swagger.Net.Annotations;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Ninject.Extensions.Logging;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Search;
 using WasteProducts.Logic.Common.Services;
