@@ -8,6 +8,7 @@ import { FriendsComponent } from './components/user/friends/friends.component';
 import { ProductsComponent } from './components/user/products/products.component';
 import { GroupsComponent } from './components/user/groups/groups.component';
 import { SettingsComponent } from './components/user/settings/settings.component';
+import { ToListComponent } from './components/user/products/to-list/to-list.component';
 
 const routes: Routes = [
   { path: '', component: DefaultComponent },
@@ -18,6 +19,8 @@ const routes: Routes = [
   { path: 'user/groups', component: GroupsComponent},
   { path: 'user/settings', component: SettingsComponent},
   { path: '**', component: NotFoundComponent },
+  { path: 'user/products/to-list', component: ToListComponent },
+
 ];
 
 @NgModule({

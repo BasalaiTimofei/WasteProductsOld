@@ -1,13 +1,30 @@
 
-<div>
-  <a href="#" routerLink="/user/friends" style="margin: 10px;" routerLinkActive="active">Мои друзья</a>
-</div>
-<div>
-  <a href="#" routerLink="/user/products" style="margin: 10px;" routerLinkActive="active">Мои продукты</a>
-</div>
-<div>
-  <a href="#" routerLink="/user/groups" style="margin: 10px;" routerLinkActive="active">Мои группы</a>
-</div>
-<div>
-  <a href="#" routerLink="/user/settings" style="margin: 10px;" routerLinkActive="active">Настройки</a>
-</div>
+<button mat-button [matMenuTriggerFor]="menu">Личный кабинет</button>
+<mat-menu #menu="matMenu">
+    <button mat-menu-item>
+        <div>
+          <a href="#" routerLink="" style="margin: 10px;" routerLinkActive="active">На главную</a>
+        </div>
+      </button>
+  <button mat-menu-item>
+    <div>
+      <a href="#" routerLink="/user/friends" style="margin: 10px;" routerLinkActive="active">Мои друзья</a>
+    </div>
+  </button>
+  <button mat-menu-item>
+    <div>
+      <a href="#" routerLink="/user/products" style="margin: 10px;" routerLinkActive="active">Мои продукты</a>
+    </div>
+  </button>
+  <button mat-menu-item><div>
+      <a href="#" routerLink="/user/groups" style="margin: 10px;" routerLinkActive="active">Мои группы</a>
+    </div>
+  </button>
+  <button mat-menu-item><div>
+      <a href="#" routerLink="/user/settings" style="margin: 10px;" routerLinkActive="active">Настройки</a>
+    </div>
+  </button>
+</mat-menu>
+
+
+

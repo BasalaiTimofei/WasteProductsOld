@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment.prod';
   providedIn: 'root'
 })
 export class ProductService {
+  [x: string]: any;
 
   private apiUrl = `${environment.apiHostUrl}/api/product/products`;
 
