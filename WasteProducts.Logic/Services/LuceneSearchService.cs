@@ -155,12 +155,10 @@ namespace WasteProducts.Logic.Services
             return result;
         }
 
-        public IEnumerable<UserQuery> GetSimilarQueries(string query)
+        public IEnumerable<UserQuery> GetSimilarQueries(BoostedSearchQuery query)
         {
-            BoostedSearchQuery searchQuery = new BoostedSearchQuery(query);
-            searchQuery.AddField("QueryString");
-            CheckQuery(searchQuery);
-            return _repository.GetAll<UserQuery>(searchQuery.Query, searchQuery.SearchableFields, searchQuery.BoostValues, MAX_SIMILAR_QUERIES_COUNT);
+            CheckQuery(query);
+            return _repository.GetAll<UserQuery>(query.Query, query.SearchableFields, query.BoostValues, MAX_SIMILAR_QUERIES_COUNT);
         }
 
         public Task<IEnumerable<Product>> SearchProductAsync(BoostedSearchQuery query)
@@ -168,7 +166,7 @@ namespace WasteProducts.Logic.Services
             return Task.Run(() => SearchProduct(query));
         }
 
-        public Task<IEnumerable<UserQuery>> GetSimilarQueriesAsync(string query)
+        public Task<IEnumerable<UserQuery>> GetSimilarQueriesAsync(BoostedSearchQuery query)
         {
             return Task.Run(() => GetSimilarQueries(query));
         }
