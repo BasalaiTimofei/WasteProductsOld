@@ -26,11 +26,12 @@ namespace WasteProducts.DataAccess.Repositories.Products
         /// Allows you to add new product to the products colletion.
         /// </summary>
         /// <param name="product">The specific product for adding</param>
-        public async Task AddAsync(ProductDB product)
+        public async Task<string> AddAsync(ProductDB product)
         {
             product.Created = DateTime.UtcNow;
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
+            return product.Id;
         }
 
         /// <summary>

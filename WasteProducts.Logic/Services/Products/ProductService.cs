@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Ninject;
@@ -55,14 +56,13 @@ namespace WasteProducts.Logic.Services.Products
         /// </summary>
         /// <param name="barcode">Barcode of the product to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        public bool Add(Barcode barcode, out Product addedProduct)
+        public Task<string> Add(Barcode barcode)
         {
             if (IsProductsInDB(
                 p => string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
                 out var products))
             {
-                addedProduct = null;
-                return false;
+                return null;
             }
 
             var newProduct = new Product
@@ -72,10 +72,7 @@ namespace WasteProducts.Logic.Services.Products
                 Barcode = barcode,
                 Name = barcode.ProductName
             };
-            _productRepository.AddAsync(_mapper.Map<ProductDB>(newProduct));
-
-            addedProduct = newProduct;
-            return true;
+            return _productRepository.AddAsync(_mapper.Map<ProductDB>(newProduct)).ContinueWith(i=>i.;
         }
 
         /// <summary>
