@@ -59,7 +59,7 @@ namespace WasteProducts.Logic.Common.Services.Products
         Task Delete(string productId);
 
         /// <summary>
-        /// Tries to add the category by specific category and returns whether the addition is successful or not.
+        /// Tries to add the product to specific category.
         /// </summary>
         /// <param name="product">The specific product to add category.</param>
         /// <param name="category">The specific category to be added.</param>
