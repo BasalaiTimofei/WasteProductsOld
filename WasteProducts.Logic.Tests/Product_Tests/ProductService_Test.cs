@@ -584,83 +584,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             }
         }
 
-        [Test]
-        public void Hide_HidesProduct_CallsMethod_HideOfRepository()
-        {
-            selectedList.Add(productDB);
-            mockProductRepository.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(Task.FromResult((IEnumerable<ProductDB>)selectedList));
-
-            using (var productService = new ProductService(mockProductRepository.Object, mapper))
-            {
-                productService.Hide(product);
-
-                mockProductRepository.Verify(m => m.UpdateAsync(It.IsAny<ProductDB>()), Times.Once);
-            }
-        }
-
-        [Test]
-        public void Hide_PassesNull_DoesNotCallMethod_HideOfRepository()
-        {
-            mockProductRepository.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(Task.FromResult((IEnumerable<ProductDB>)selectedList));
-
-            using (var productService = new ProductService(mockProductRepository.Object, mapper))
-            {
-                productService.Hide(null);
-
-                mockProductRepository.Verify(m => m.UpdateAsync(It.IsAny<ProductDB>()), Times.Never);
-            }
-        }
-
-        [Test]
-        public void Hide_PassesProductWichDoesNotExistInDB_DoesNotCallMethod_HideOfRepository()
-        {
-            mockProductRepository.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(Task.FromResult((IEnumerable<ProductDB>)selectedList));
-
-            using (var productService = new ProductService(mockProductRepository.Object, mapper))
-            {
-                productService.Hide(product);
-
-                mockProductRepository.Verify(m => m.UpdateAsync(It.IsAny<ProductDB>()), Times.Never);
-            }
-        }
-
-        [Test]
-        public void IsHidden_PassesHiddenProduct_Returns_True()
-        {
-            productDB.IsHidden = true;
-            product.IsHidden = true;
-            selectedList.Add(productDB);
-            mockProductRepository.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(Task.FromResult((IEnumerable<ProductDB>)selectedList));
-
-            using (var productService = new ProductService(mockProductRepository.Object, mapper))
-            {
-                var result = productService.IsHidden(product);
-
-                Assert.That(result, Is.EqualTo(true));
-            }
-        }
-
-        [Test]
-        public void IsHidden_PassesNotHiddenProduct_Returns_False()
-        {
-            productDB.IsHidden = false;
-            product.IsHidden = false;
-            selectedList.Add(productDB);
-            mockProductRepository.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(Task.FromResult((IEnumerable<ProductDB>)selectedList));
-
-            using (var productService = new ProductService(mockProductRepository.Object, mapper))
-            {
-                var result = productService.IsHidden(product);
-
-                Assert.That(result, Is.EqualTo(false));
-            }
-        }
-
+        
         [Test]
         public void RemoveCategory_Removed_ReturnsTrue()
         {
@@ -701,42 +625,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             }
         }
 
-        [Test]
-        public void Reveal_OpensAProductToDisplaying_CallsOnce()
-        {
-            productDB.Equals(product);
-            selectedList.Add(productDB);
-            mockProductRepository.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(Task.FromResult((IEnumerable<ProductDB>)selectedList));
-
-            productDB.IsHidden = true;
-
-            using (var productService = new ProductService(mockProductRepository.Object, mapper))
-            {
-                productService.Reveal(product);
-
-                mockProductRepository.Verify(m => m.UpdateAsync(It.IsAny<ProductDB>()), Times.Once);
-            }
-        }
-
-        [Test]
-        public void Reveal_IfProductDoesntHidden_CallsNever()
-        {
-            productDB.Equals(product);
-            selectedList.Add(productDB);
-            mockProductRepository.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(Task.FromResult((IEnumerable<ProductDB>)selectedList));
-
-            productDB.IsHidden = false;
-
-            using (var productService = new ProductService(mockProductRepository.Object, mapper))
-            {
-                productService.Reveal(product);
-
-                mockProductRepository.Verify(m => m.UpdateAsync(It.IsAny<ProductDB>()), Times.Never);
-            }
-        }
-
+        
         [Test]
         public void SetDescription_Success()
         {

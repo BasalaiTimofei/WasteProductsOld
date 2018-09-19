@@ -245,62 +245,6 @@ namespace WasteProducts.Logic.Services.Products
         }
 
         /// <summary>
-        /// Hides product for display in product lists.
-        /// </summary>
-        /// <param name="product">The specific product to hide.</param>
-        /// <returns>Boolean represents whether the hiding is successful or not.</returns>
-        public bool Hide(Product product)
-        {
-            if (!IsProductsInDB(p =>
-                    string.Equals(p.Id, product.Id, StringComparison.Ordinal),
-                out var products)) return false;
-
-            var productFromDB = products.ToList().First();
-            if (productFromDB.IsHidden) return true;
-
-            productFromDB.IsHidden = product.IsHidden = true;
-            _productRepository.UpdateAsync(productFromDB);
-
-            return true;
-        }
-
-        /// <summary>
-        /// Reveal product for display in product lists.
-        /// </summary>
-        /// <param name="product">The specific product to reveal.</param>
-        /// <returns>Boolean represents whether the revealing is successful or not.</returns>
-        public bool Reveal(Product product)
-        {
-            if (!IsProductsInDB(p =>
-                    string.Equals(p.Id, product.Id, StringComparison.Ordinal),
-                out var products)) return false;
-
-            var productFromDB = products.ToList().First();
-            if (!productFromDB.IsHidden) return true;
-
-            productFromDB.IsHidden = false;
-            _productRepository.UpdateAsync(productFromDB);
-
-            return true;
-        }
-
-        /// <summary>
-        /// Checks if the specific product is hidden.
-        /// </summary>
-        /// <param name="product">The specific product under checking.</param>
-        /// <returns>Boolean represents whether the product is in the hidden state.</returns>
-        public bool? IsHidden(Product product)
-        {
-            if (!IsProductsInDB(p =>
-                    string.Equals(p.Id, product.Id, StringComparison.Ordinal),
-                out var products)) return null;
-
-            var productFromDB = products.ToList().First();
-
-            return productFromDB.IsHidden;
-        }
-
-        /// <summary>
         /// Sets the description of the specific product.
         /// </summary>
         /// <param name="product">The specific product to set description.</param>
