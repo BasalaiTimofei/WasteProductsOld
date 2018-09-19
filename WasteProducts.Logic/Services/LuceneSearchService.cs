@@ -163,12 +163,12 @@ namespace WasteProducts.Logic.Services
 
         public Task<IEnumerable<Product>> SearchProductAsync(BoostedSearchQuery query)
         {
-            return Task.Run(() => SearchProduct(query));
+            return Task.FromResult(SearchProduct(query));
         }
 
         public Task<IEnumerable<UserQuery>> GetSimilarQueriesAsync(BoostedSearchQuery query)
         {
-            return Task.Run(() => GetSimilarQueries(query));
+            return Task.FromResult(GetSimilarQueries(query));
         }
 
         private void CheckQuery(BoostedSearchQuery query)

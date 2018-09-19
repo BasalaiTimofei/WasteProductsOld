@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace WasteProducts.DataAccess.Common.Models.Products
 {
@@ -25,7 +27,9 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         /// <summary>
         /// List of products that belong to a specific Category in database
         /// </summary>
-        //public virtual ICollection<ProductDB> Products { get; set; }
+        [JsonIgnore]
+        [IgnoreDataMember]
+        public virtual ICollection<ProductDB> Products { get; set; }
 
         /// <summary>
         /// Defines whether the category is marked for deletion
