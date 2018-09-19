@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models.Products;
 
 namespace WasteProducts.Logic.Common.Services.Products
@@ -14,21 +15,14 @@ namespace WasteProducts.Logic.Common.Services.Products
         /// </summary>
         /// <param name="name">The name of the category to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        bool Add(string name);
-
-        /// <summary>
-        /// Tries to add a list of new categories by names and returns whether the addition is successful or not.
-        /// </summary>
-        /// <param name="names">The list of names of the categories to be added.</param>
-        /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        bool AddRange(IEnumerable<string> names);
+        Task<int> Add(string name);
 
         /// <summary>
         /// Returns a spicific category by its name.
         /// </summary>
         /// <param name="name">The name of the category to be gotten.</param>
         /// <returns>The specific category to be returned.</returns>
-        Category Get(string name);
+        Task<Category> Get(string name);
 
         /// <summary>
         /// Adds the description for specific category.
