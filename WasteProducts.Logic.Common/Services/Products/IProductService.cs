@@ -109,26 +109,7 @@ namespace WasteProducts.Logic.Common.Services.Products
         /// <param name="category">The specific category to be removed.</param>
         /// <returns>Boolean represents whether the removal is successful or not.</returns>
         bool RemoveCategory(Product product, Category category);
-
-        /// <summary>
-        /// Hides product for display in product lists.
-        /// </summary>
-        /// <param name="product">The specific product to hide.</param>
-        bool Hide(Product product);
-
-        /// <summary>
-        /// Reveal product for display in product lists.
-        /// </summary>
-        /// <param name="product">The specific product to reveal.</param>
-        bool Reveal(Product product);
-
-        /// <summary>
-        /// Checks whether a specific product is hidden or not.
-        /// </summary>
-        /// <param name="product">Checked specific product.</param>
-        /// <returns>Boolean represents whether the product is in the hidden state.</returns>
-        bool? IsHidden(Product product);
-
+        
         /// <summary>
         /// Updates product if been modyfied.
         /// </summary>
