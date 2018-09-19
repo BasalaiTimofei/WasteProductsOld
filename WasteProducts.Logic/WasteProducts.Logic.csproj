@@ -108,6 +108,7 @@
     <Compile Include="InjectorModule.cs" />
     <Compile Include="Interceptors\ArgumentValidationInterceptor.cs" />
     <Compile Include="Interceptors\TraceInterceptor.cs" />
+    <Compile Include="Mappings\Barcods\BarcodeProfile.cs" />
     <Compile Include="Mappings\Products\CategoryProfile.cs" />
     <Compile Include="Mappings\Donations\AddressProfile.cs" />
     <Compile Include="Mappings\Donations\DonationProfile.cs" />
