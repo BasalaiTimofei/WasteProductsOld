@@ -23,13 +23,33 @@ namespace WasteProducts.DataAccess.Common.Models.Users
         public virtual string UserName { get ; set ; }
 
         /// <summary>
+        /// Email of the user.
+        /// </summary>
+        public virtual string Email { get; set; }
+
+        /// <summary>
+        /// True if email was confirmed by token.
+        /// </summary>
+        public virtual bool EmailConfirmed { get; set; }
+
+        /// <summary>
+        /// Phone number of the user.
+        /// </summary>
+        public virtual string PhoneNumber { get; set; }
+
+        /// <summary>
+        /// True if phone number was confirmed by token.
+        /// </summary>
+        public virtual bool PhoneNumberConfirmed { get; set; }
+
+        /// <summary>
         /// List of Users which belong to group of friends related to current User
         /// </summary>
-        public virtual IList<UserDB> Friends { get; set; }
+        //public virtual IList<UserDB> Friends { get; set; }
 
         /// <summary>
         /// List of products added and described by the user
         /// </summary>
-        public virtual IList<UserProductDescriptionDB> ProductDescriptions { get; set; }
+        //public virtual IList<UserProductDescriptionDB> ProductDescriptions { get; set; }
     }
 }

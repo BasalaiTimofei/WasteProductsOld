@@ -367,7 +367,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
             });
         }
 
-        public async Task<IList<UserProductDescriptionDB>> GetProductDescriptions(string userId)
+        public async Task<IList<UserProductDescriptionDB>> GetProductDescriptionsAsync(string userId)
         {
             return await Task.Run(() =>
             {

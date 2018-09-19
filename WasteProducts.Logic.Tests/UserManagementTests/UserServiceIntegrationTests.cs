@@ -377,34 +377,30 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         [Test]
         public async Task UserIntegrTest_22AddingNewFriendsToUser()
         {
-            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
-            Assert.AreEqual(0, user.Friends.Count);
+            var friends = await _userService.GetFriendsAsync(_usersIds[0]);
+            Assert.AreEqual(0, friends.Count);
 
-            User user2 = await _userService.LogInByEmailAsync("test50someemail@gmail.com", "qwerty2");
-            User user3 = await _userService.LogInByEmailAsync("test51someemail@gmail.com", "qwerty3");
+            await _userService.AddFriendAsync(_usersIds[0], _usersIds[1]);
+            await _userService.AddFriendAsync(_usersIds[0], _usersIds[2]);
 
-            await _userService.AddFriendAsync(user.Id, user2.Id);
-            await _userService.AddFriendAsync(user.Id, user3.Id);
-
-            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
-            Assert.AreEqual(2, user.Friends.Count);
+            friends = await _userService.GetFriendsAsync(_usersIds[0]);
+            Assert.AreEqual(2, friends.Count);
+            Assert.IsTrue(friends.Any(u => u.Id == _usersIds[1]) && friends.Any(u => u.Id == _usersIds[2]));
+            Assert.IsTrue(friends.Any(u => u.UserName == "Anton") && friends.Any(u => u.UserName == "Alexander"));
         }
 
         // тестируем удаление друзей
         [Test]
         public async Task UserIntegrTest_23DeletingFriendsFromUser()
         {
-            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
-            Assert.AreEqual(2, user.Friends.Count);
+            var friends = await _userService.GetFriendsAsync(_usersIds[0]);
+            Assert.AreEqual(2, friends.Count);
 
-            User user2 = await _userService.LogInByEmailAsync("test50someemail@gmail.com", "qwerty2");
-            User user3 = await _userService.LogInByEmailAsync("test51someemail@gmail.com", "qwerty3");
+            await _userService.DeleteFriendAsync(_usersIds[0], _usersIds[1]);
+            await _userService.DeleteFriendAsync(_usersIds[0], _usersIds[2]);
 
-            await _userService.DeleteFriendAsync(user.Id, user2.Id);
-            await _userService.DeleteFriendAsync(user.Id, user3.Id);
-
-            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
-            Assert.AreEqual(0, user.Friends.Count);
+            friends = await _userService.GetFriendsAsync(_usersIds[0]);
+            Assert.AreEqual(0, friends.Count);
         }
 
         // тестируем создание продукта (не относится к юзер сервису, но необходимо для следующего теста)
@@ -430,29 +426,29 @@ namespace WasteProducts.Logic.Tests.UserManagementTests
         {
             string description = "Tastes like garbage, won't buy it ever again.";
 
-            var user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
-            Assert.AreEqual(0, user.ProductDescriptions.Count);
+            var products = await _userService.GetProductDescriptionsAsync(_usersIds[0]);
+            Assert.AreEqual(0, products.Count);
 
-            await _userService.AddProductAsync(user.Id, _productIds[0], 1, description);
-            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
+            await _userService.AddProductAsync(_usersIds[0], _productIds[0], 1, description);
+            products = await _userService.GetProductDescriptionsAsync(_usersIds[0]);
 
-            Assert.AreEqual(1, user.ProductDescriptions.Count);
-            Assert.AreEqual(_productIds[0], user.ProductDescriptions[0].Product.Id);
-            Assert.AreEqual(1, user.ProductDescriptions[0].Rating);
-            Assert.AreEqual(description, user.ProductDescriptions[0].Description);
+            Assert.AreEqual(1, products.Count);
+            Assert.AreEqual(_productIds[0], products[0].Product.Id);
+            Assert.AreEqual(1, products[0].Rating);
+            Assert.AreEqual(description, products[0].Description);
         }
 
         // тестируем удаление продуктов
         [Test]
         public async Task UserIntegrTest_26DeletingProductsFromUser()
         {
-            var user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
-            Assert.AreEqual(1, user.ProductDescriptions.Count);
+            var products = await _userService.GetProductDescriptionsAsync(_usersIds[0]);
+            Assert.AreEqual(1, products.Count);
 
-            await _userService.DeleteProductAsync(user.Id, user.ProductDescriptions[0].Product.Id);
+            await _userService.DeleteProductAsync(_usersIds[0], _productIds[0]);
 
-            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
-            Assert.AreEqual(0, user.ProductDescriptions.Count);
+            products = await _userService.GetProductDescriptionsAsync(_usersIds[0]);
+            Assert.AreEqual(0, products.Count);
         }
 
         // тестируем поиск роли по айди и имени

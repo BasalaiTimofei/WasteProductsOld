@@ -63,7 +63,7 @@ namespace WasteProducts.Logic.Services.Users
         {
             UserRoleDB roleDB = MapTo<UserRoleDB>(role);
             IEnumerable<UserDB> subResult = await _roleRepo.GetRoleUsers(roleDB);
-            IEnumerable<Common.Models.Users.User> result = _mapper.Map<IEnumerable<Common.Models.Users.User>>(subResult);
+            IEnumerable<User> result = _mapper.Map<IEnumerable<User>>(subResult);
             return result;
         }
 
