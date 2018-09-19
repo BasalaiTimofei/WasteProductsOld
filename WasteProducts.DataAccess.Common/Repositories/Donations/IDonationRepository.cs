@@ -12,6 +12,6 @@ namespace WasteProducts.DataAccess.Common.Repositories.Donations
         /// Creates new donation in the repository.
         /// </summary>
         /// <param name="user">New donation to add.</param>
-        void Create(DonationDB donation);
+        void Add(DonationDB donation);
     }
 }

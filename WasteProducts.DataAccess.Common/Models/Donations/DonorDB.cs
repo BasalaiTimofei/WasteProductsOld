@@ -36,7 +36,7 @@ namespace WasteProducts.DataAccess.Common.Models.Donations
         /// <summary>
         /// Specifies the foreign key.
         /// </summary>
-        public string AddressId { get; set; }
+        public Guid AddressId { get; set; }
 
         /// <summary>
         /// Address of donor.

@@ -5,7 +5,7 @@ using WasteProducts.DataAccess.Contexts;
 
 namespace WasteProducts.DataAccess.Repositories.Donations
 {
-    class DonationRepository : IDonationRepository
+    public class DonationRepository : IDonationRepository
     {
         private readonly WasteContext _context;
         private bool _disposed;
@@ -20,10 +20,19 @@ namespace WasteProducts.DataAccess.Repositories.Donations
         /// Allows you to log new donation to the database.
         /// </summary>
         /// <param name="donation">The new donation for adding.</param>
-        public void Create(DonationDB donation)
+        public void Add(DonationDB donation)
         {
             _context.Donations.Add(donation);
             _context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Use ONLY with TestDB!
+        /// </summary>
+        public void RecreateTestDatabase()
+        {
+            _context.Database.Delete();
+            _context.Database.Create();
         }
 
         /// <summary>
