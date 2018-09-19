@@ -11,6 +11,7 @@ using WasteProducts.Logic.Common.Models.Barcods;
 using System.Web;
 using System.IO;
 using System.Drawing;
+using WasteProducts.Logic.Services.Barcods;
 
 namespace WasteProducts.Web.Controllers.Api
 {
@@ -72,14 +73,7 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpPost, Route("{code}")]
         public IHttpActionResult GetBarcode(string code)
         {
-            //CatalogProductInfo catalog = _searcher.Get(code);
-            CatalogProductInfo catalog = new CatalogProductInfo()
-            {
-                Name = "Печеньки",
-                Composition = "Мука, сахар",
-                Brend = "Слодыч",
-                Country = "Беларусь"
-            };
+            CatalogProductInfo catalog = _searcher.Get(code);      
             return Ok(catalog);
         }
     }

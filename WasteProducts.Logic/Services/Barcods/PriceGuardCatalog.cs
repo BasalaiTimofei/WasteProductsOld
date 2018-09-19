@@ -2,7 +2,7 @@
 using WasteProducts.Logic.Common.Services.Barcods;
 using WasteProducts.Logic.Common.Models.Barcods;
 
-namespace BarcodeSearch.Logic.Services.WebCatalogs
+namespace WasteProducts.Logic.Services.Barcods
 {
     public class PriceGuardCatalog : ICatalog
     {

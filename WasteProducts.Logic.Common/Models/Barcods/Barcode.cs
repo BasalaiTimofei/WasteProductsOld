@@ -40,6 +40,6 @@ namespace WasteProducts.Logic.Common.Models.Barcods
         /// <summary>
         /// Specifies the concreat product
         /// </summary>
-        public Product Product { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

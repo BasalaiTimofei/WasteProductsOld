@@ -167,6 +167,7 @@
     <Compile Include="Services\TestService.cs" />
     <Compile Include="Services\User\UserRoleService.cs" />
     <Compile Include="Services\User\UserService.cs" />
+    <Compile Include="Validators\Barcods\BarcodeValidator.cs" />
     <Compile Include="Validators\Products\CategoryValidator.cs" />
     <Compile Include="Validators\Products\ProductValidator.cs" />
     <Compile Include="Validators\Search\BoostedSearchQueryValidator.cs" />
