@@ -72,7 +72,6 @@
     <Compile Include="Models\Barcods\BarcodeDB.cs" />
     <Compile Include="Models\Donations\DonorDB.cs" />
     <Compile Include="Models\Entity.cs" />
-    <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Products\CategoryDB.cs" />
     <Compile Include="Models\Products\ProductDB.cs" />
     <Compile Include="Models\Security\Models\ClaimDb.cs" />
@@ -96,7 +95,7 @@
     <Compile Include="Repositories\Donations\IDonationRepository.cs" />
     <Compile Include="Repositories\Barcods\IBarcodeRepository.cs" />
     <Compile Include="Repositories\Products\ICategoryRepository.cs" />
-    <Compile Include="Repositories\IEntityRepository.cs" />
+    <Compile Include="Repositories\UserManagement\IUserRepository.cs" />
     <Compile Include="Repositories\Products\IProductRepository.cs" />
     <Compile Include="Repositories\Search\ISearchRepository.cs" />
     <Compile Include="Repositories\Security\IRepositoryBase.cs" />
