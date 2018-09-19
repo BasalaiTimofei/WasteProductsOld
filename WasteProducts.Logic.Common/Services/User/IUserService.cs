@@ -109,7 +109,7 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// </summary>
         /// <param name="userId">ID of a user.</param>
         /// <returns>User's friends.</returns>
-        Task<IList<User>> GetFriendsAsync(string userId);
+        Task<IList<Friend>> GetFriendsAsync(string userId);
 
         /// <summary>
         /// Gets the logins for a user.

@@ -169,19 +169,19 @@ namespace WasteProducts.Logic.Services.Users
             return await _repo.UpdateUserNameAsync(userId, newUserName);
         }
 
-        public async Task AddFriendAsync(string userId, string newFriendId)
+        public Task AddFriendAsync(string userId, string newFriendId)
         {
-            await _repo.AddFriendAsync(userId, newFriendId);
+            return _repo.AddFriendAsync(userId, newFriendId);
         }
 
-        public Task<IList<User>> GetFriendsAsync(string userId)
+        public Task<IList<Friend>> GetFriendsAsync(string userId)
         {
-            return _repo.GetFriendsAsync(userId).ContinueWith(t => _mapper.Map<IList<User>>(t.Result));
+            return _repo.GetFriendsAsync(userId).ContinueWith(t => _mapper.Map<IList<Friend>>(t.Result));
         }
 
-        public async Task DeleteFriendAsync(string userId, string deletingFriendId)
+        public Task DeleteFriendAsync(string userId, string deletingFriendId)
         {
-            await _repo.DeleteFriendAsync(userId, deletingFriendId);
+            return _repo.DeleteFriendAsync(userId, deletingFriendId);
         }
 
         public async Task<bool> AddProductAsync(string userId, string productId, int rating, string description)
