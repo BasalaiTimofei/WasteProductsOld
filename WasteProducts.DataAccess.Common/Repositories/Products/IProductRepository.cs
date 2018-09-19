@@ -14,7 +14,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Products
         /// Adding new product
         /// </summary>
         /// <param name="product">The specific product for adding</param>
-        Task AddAsync(ProductDB product);
+        Task<string> AddAsync(ProductDB product);
 
         /// <summary>
         /// Deleting the specific product
