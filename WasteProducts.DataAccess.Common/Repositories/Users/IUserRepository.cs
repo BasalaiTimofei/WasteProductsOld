@@ -100,22 +100,6 @@ namespace WasteProducts.DataAccess.Common.Repositories.Users
         Task<bool> DeleteProductAsync(string userId, string productId);
 
         /// <summary>
-        /// Return a user with the specified email and password or null if there is no match.
-        /// </summary>
-        /// <param name="email">User's Email.</param>
-        /// <param name="password">User's password.</param>
-        /// <returns>Specific user with this ID and password.</returns>
-        Task<UserDAL> FindByEmailAndPasswordAsync(string email, string password);
-
-        /// <summary>
-        /// Return a user with the specified username and password or null if there is no match.
-        /// </summary>
-        /// <param name="userId">User's ID.</param>
-        /// <param name="password">User's password.</param>
-        /// <returns>Specific user with this ID and password.</returns>
-        Task<UserDAL> FindByNameAndPasswordAsync(string userName, string password);
-
-        /// <summary>
         /// Generates a password reset token for the specific user and returns tuple where item1 is ID of the user and item2 is the token.
         /// </summary>
         /// <param name="email">Email of the user.</param>
@@ -138,6 +122,22 @@ namespace WasteProducts.DataAccess.Common.Repositories.Users
         Task<UserDAL> GetAsync(string userId, bool initiateNavigationalProps);
 
         /// <summary>
+        /// Return a user with the specified email and password or null if there is no match.
+        /// </summary>
+        /// <param name="email">User's Email.</param>
+        /// <param name="password">User's password.</param>
+        /// <returns>Specific user with this ID and password.</returns>
+        Task<UserDAL> GetByEmailAndPasswordAsync(string email, string password);
+
+        /// <summary>
+        /// Return a user with the specified username and password or null if there is no match.
+        /// </summary>
+        /// <param name="userId">User's ID.</param>
+        /// <param name="password">User's password.</param>
+        /// <returns>Specific user with this ID and password.</returns>
+        Task<UserDAL> GetByNameAndPasswordAsync(string userName, string password);
+
+        /// <summary>
         /// Get a users's claims
         /// </summary>
         /// <param name="userId">User's ID.</param>
@@ -145,11 +145,25 @@ namespace WasteProducts.DataAccess.Common.Repositories.Users
         Task<IList<Claim>> GetClaimsAsync(string userId);
 
         /// <summary>
+        /// Gets all friends of a user.
+        /// </summary>
+        /// <param name="userId">ID of a user.</param>
+        /// <returns>User's friends.</returns>
+        Task<IList<UserDAL>> GetFriendsAsync(string userId);
+
+        /// <summary>
         /// Gets the logins for a user.
         /// </summary>
         /// <param name="userId">User's ID.</param>
         /// <returns>User's logins.</returns>
         Task<IList<UserLoginDB>> GetLoginsAsync(string userId);
+
+        /// <summary>
+        /// Gets all product descriptions of a user.
+        /// </summary>
+        /// <param name="userId">ID of a user.</param>
+        /// <returns>User's product descriptions.</returns>
+        Task<IList<UserProductDescriptionDB>> GetProductDescriptions(string userId);
 
         /// <summary>
         /// Get the names of the roles a user is a member of.

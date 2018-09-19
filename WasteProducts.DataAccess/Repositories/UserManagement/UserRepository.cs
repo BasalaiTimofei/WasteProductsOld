@@ -110,12 +110,12 @@ namespace WasteProducts.DataAccess.Repositories.Users
             return result.Succeeded;
         }
 
-        public async Task<UserDAL> FindByNameAndPasswordAsync(string userName, string password)
+        public async Task<UserDAL> GetByNameAndPasswordAsync(string userName, string password)
         {
             return MapTo<UserDAL>(await _manager.FindAsync(userName, password));
         }
 
-        public async Task<UserDAL> FindByEmailAndPasswordAsync(string email, string password)
+        public async Task<UserDAL> GetByEmailAndPasswordAsync(string email, string password)
         {
             var user = await _manager.FindByEmailAsync(email);
             if (user != null && await _manager.CheckPasswordAsync(user, password))
@@ -313,6 +313,15 @@ namespace WasteProducts.DataAccess.Repositories.Users
             });
         }
 
+        public async Task<IList<UserDAL>> GetFriendsAsync(string userId)
+        {
+            return await Task.Run(() =>
+            {
+                var user = _context.Users.Include(u => u.Friends).FirstOrDefault(u => u.Id == userId);
+                return _mapper.Map<List<UserDAL>>(user.Friends);
+            });
+        }
+
         public async Task DeleteFriendAsync(string userId, string deletingFriendId)
         {
             await Task.Run(() =>
@@ -355,6 +364,15 @@ namespace WasteProducts.DataAccess.Repositories.Users
                 _context.UserProductDescriptions.Add(userProdDescr);
                 _context.SaveChanges();
                 return true;
+            });
+        }
+
+        public async Task<IList<UserProductDescriptionDB>> GetProductDescriptions(string userId)
+        {
+            return await Task.Run(() =>
+            {
+                var user = _context.Users.Include(u => u.ProductDescriptions).FirstOrDefault(u => u.Id == userId);
+                return user.ProductDescriptions;
             });
         }
 
@@ -404,8 +422,6 @@ namespace WasteProducts.DataAccess.Repositories.Users
             where T : UserDAL
             =>
             _mapper.Map<UserDAL>(user);
-
-        
 
         ~UserRepository()
         {

@@ -65,7 +65,7 @@ namespace WasteProducts.Logic.Services.Users
 
         public async Task<User> LogInByEmailAsync(string email, string password)
         {
-            var userDB = await _userRepo.FindByEmailAndPasswordAsync(email, password);
+            var userDB = await _userRepo.GetByEmailAndPasswordAsync(email, password);
             if (userDB == null)
             {
                 return null;
@@ -77,7 +77,7 @@ namespace WasteProducts.Logic.Services.Users
 
         public async Task<User> LogInByNameAsync(string userName, string password)
         {
-            var userDB = await _userRepo.FindByNameAndPasswordAsync(userName, password);
+            var userDB = await _userRepo.GetByNameAndPasswordAsync(userName, password);
             if (userDB == null)
             {
                 return null;
