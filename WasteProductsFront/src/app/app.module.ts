@@ -24,6 +24,7 @@ import { ToListComponent } from './components/products/to-list/to-list.component
 import { AddProductComponent } from './components/products/add-product/add-product.component';
 import { DeleteProductComponent } from './components/products/delete-product/delete-product.component';
 import { UpdateProductComponent } from './components/products/update-product/update-product.component';
+import { HeaderComponent } from './components/common/header/header.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { UpdateProductComponent } from './components/products/update-product/upd
     AddProductComponent,
     DeleteProductComponent,
     UpdateProductComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,
