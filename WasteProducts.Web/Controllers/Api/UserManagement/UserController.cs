@@ -9,6 +9,7 @@ using Ninject.Extensions.Logging;
 using Swagger.Net.Annotations;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.Users;
+using WasteProducts.Web.ExceptionHandling.Api;
 using WasteProducts.Web.Models.Users;
 
 namespace WasteProducts.Web.Controllers.Api.UserManagement
@@ -17,6 +18,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
     /// API controller for user management.
     /// </summary>
     [RoutePrefix("api/user")]
+    [WasteExceptionFilter]
     public class UserController : BaseApiController
     {
         private readonly IUserService _service;
