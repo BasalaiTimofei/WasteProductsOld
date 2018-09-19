@@ -84,6 +84,18 @@ namespace WasteProducts.DataAccess.Contexts
         /// </summary>
         public IDbSet<DonationDB> Donations { get; set; }
 
+        /// <summary>
+        /// Property added for to use an entity set that is used to perform
+        /// CRUD operations in 'DonationRepository' class.
+        /// </summary>
+        public IDbSet<DonorDB> Donors { get; set; }
+
+        /// <summary>
+        /// Property added for to use an entity set that is used to perform
+        /// CRUD operations in 'DonationRepository' class.
+        /// </summary>
+        public IDbSet<AddressDB> Addresses { get; set; }
+
         public IDbSet<GroupBoardDB> GroupBordDBs { get; set; }
         public IDbSet<GroupDB> GroupDBs { get; set; }
         public IDbSet<GroupUserDB> GroupUserDBs { get; set; }
