@@ -73,7 +73,7 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpPost, Route("{code}")]
         public IHttpActionResult GetBarcode(string code)
         {
-            CatalogProductInfo catalog = _searcher.Get(code);      
+            Barcode catalog = _searcher.Get(code);      
             return Ok(catalog);
         }
     }

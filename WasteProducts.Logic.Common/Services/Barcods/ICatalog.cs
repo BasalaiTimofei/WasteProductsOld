@@ -4,6 +4,6 @@ namespace WasteProducts.Logic.Common.Services.Barcods
 {
     public interface ICatalog
     {
-        CatalogProductInfo Get(string barcode);
+        Barcode Get(string barcode);
     }
 }

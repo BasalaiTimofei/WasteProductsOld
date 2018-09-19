@@ -19,7 +19,7 @@ namespace WasteProducts.Logic.Services.Barcods
             _httpHelper = new HttpHelper();
         }
 
-        public CatalogProductInfo Get(string barcode)
+        public Barcode Get(string barcode)
         {
             foreach(var catalog in _catalogs)
             {

@@ -21,7 +21,7 @@ namespace WasteProducts.Logic.Services.Barcods
             _httpHelper = httpHelper;
         }
 
-        public CatalogProductInfo Get(string barcode)
+        public Barcode Get(string barcode)
         {
             var queryResult = GetPage(barcode);
 
@@ -33,9 +33,10 @@ namespace WasteProducts.Logic.Services.Barcods
                 //минимум что мы хотим знать о товаре, это его имя. если оно найдено - дополняем остальными данными ProductInfo и возвращаем значение
                 if (nameParseResult.Success)
                 {
-                    var result = new CatalogProductInfo();
+                    var result = new Barcode();
 
-                    result.Name = nameParseResult.Value;
+                    result.Code = barcode;
+                    result.ProductName = nameParseResult.Value;
                     result.Composition = ParseComposition(queryResult.Page).Value;
                     result.Brend = ParseBrend(queryResult.Page).Value;
                     result.Country = ParseCountry(queryResult.Page).Value;
