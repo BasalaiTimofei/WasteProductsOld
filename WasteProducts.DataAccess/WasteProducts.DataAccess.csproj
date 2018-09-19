@@ -136,7 +136,7 @@
     <Compile Include="Repositories\Products\CategoryRepository.cs" />
     <Compile Include="Repositories\LuceneSearchRepository.cs" />
     <Compile Include="Repositories\Groups\GroupRepository.cs" />
-    <Compile Include="Repositories\UserManagement\UserRepository.cs" />
+    <Compile Include="Repositories\Users\UserRepository.cs" />
     <Compile Include="Repositories\Products\ProductRepository.cs" />
     <Compile Include="Repositories\Security\DbFactory.cs" />
     <Compile Include="Repositories\Security\RepositoryBase.cs" />
@@ -151,7 +151,7 @@
       <DependentUpon>LuceneSearchRepository.resx</DependentUpon>
     </Compile>
     <Compile Include="UoW\Security\UnitOfWork.cs" />
-    <Compile Include="Repositories\UserManagement\UserRoleRepository.cs" />
+    <Compile Include="Repositories\Users\UserRoleRepository.cs" />
     <Compile Include="UoW\UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>

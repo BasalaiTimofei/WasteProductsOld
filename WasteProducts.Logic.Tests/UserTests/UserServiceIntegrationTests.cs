@@ -11,7 +11,7 @@ using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.Products;
 using WasteProducts.Logic.Common.Services.Users;
 
-namespace WasteProducts.Logic.Tests.UserManagementTests
+namespace WasteProducts.Logic.Tests.UserTests
 {
     [TestFixture]
     public class UserServiceIntegrationTests
