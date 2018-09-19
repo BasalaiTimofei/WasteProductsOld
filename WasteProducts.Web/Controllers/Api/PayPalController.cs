@@ -11,7 +11,6 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
 using WasteProducts.Logic.Common.Models.Donations;
-
 using Ninject.Extensions.Logging;
 using WasteProducts.Logic.Common.Services.Donations;
 
@@ -37,12 +36,19 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public PayPalController(ILogger logger) : base(logger)
+        {
+        }
+
+        /// <summary>
         /// Receives Instant Payment Notifications from PayPal.
         /// </summary>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Instant Payment Notification from PayPal was received.")]
         [HttpPost, Route("donation/log")]
-        public OkResult Receive([FromUri]string query)
+        public OkResult Receive()
         {
             var context = new HttpContextWrapper(HttpContext.Current);
             HttpRequestBase request = context.Request;
@@ -99,7 +105,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// Processes a verification response.
         /// </summary>
         private void ProcessVerificationResponse(string verificationResponse, string payPalRequestString)
-        {            
+        {
             const string COMPLETED = "Completed";
             const string OUR_PAYPAL_EMAIL = "OurPayPalEmail";
             const string INVALID = "INVALID";
@@ -113,7 +119,7 @@ namespace WasteProducts.Web.Controllers.Api
             // check that Payment_amount/Payment_currency are correct
             // process payment
             NameValueCollection payPalArguments = HttpUtility.ParseQueryString(payPalRequestString);
-            if (payPalArguments[IPN.Payment.PAYMENT_STATUS] != COMPLETED || 
+            if (payPalArguments[IPN.Payment.PAYMENT_STATUS] != COMPLETED ||
                 _appSettings[OUR_PAYPAL_EMAIL] != payPalArguments[IPN.Transaction.RECEIVER_EMAIL])
                 return;
 
@@ -166,18 +172,15 @@ namespace WasteProducts.Web.Controllers.Api
 
         private DateTime ConvertPayPalDateTime(string payPalDateTime)
         {
-            const string LOCAL_TIME_ZONE = "LocalTimeZone";
             const string PAYPAL_TIME_FORMAT = "PayPalTimeFormat";
+            const string PAYPAL_SANDBOX_TIME_FORMAT = "ddd MMM dd yyyy HH:mm:ss \"GMT\"zz\"00\"";
 
-            string[] dateFormats = { _appSettings[PAYPAL_TIME_FORMAT] };
-            DateTime outputDateTime;
-            DateTime.TryParseExact(payPalDateTime, dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.None, out outputDateTime);
-
-            // convert to local timezone
-            TimeZoneInfo hwZone = TimeZoneInfo.FindSystemTimeZoneById(_appSettings[LOCAL_TIME_ZONE]);
-
-            outputDateTime = TimeZoneInfo.ConvertTime(outputDateTime, hwZone, TimeZoneInfo.Local);
-
+            string[] dateFormats = { _appSettings[PAYPAL_TIME_FORMAT], PAYPAL_SANDBOX_TIME_FORMAT };
+            DateTime.TryParseExact(
+                payPalDateTime,
+                dateFormats, CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime outputDateTime);
             return outputDateTime;
         }
     }
