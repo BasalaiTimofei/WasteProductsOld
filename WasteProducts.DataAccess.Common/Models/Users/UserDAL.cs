@@ -41,15 +41,5 @@ namespace WasteProducts.DataAccess.Common.Models.Users
         /// True if phone number was confirmed by token.
         /// </summary>
         public virtual bool PhoneNumberConfirmed { get; set; }
-
-        /// <summary>
-        /// List of Users which belong to group of friends related to current User
-        /// </summary>
-        //public virtual IList<UserDB> Friends { get; set; }
-
-        /// <summary>
-        /// List of products added and described by the user
-        /// </summary>
-        //public virtual IList<UserProductDescriptionDB> ProductDescriptions { get; set; }
     }
 }

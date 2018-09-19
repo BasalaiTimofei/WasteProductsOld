@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Repositories.Users;
 using WasteProducts.DataAccess.Repositories.Users;
 using WasteProducts.Logic.Common.Models.Users;
-using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Common.Services.Products;
 using WasteProducts.Logic.Common.Services.Users;
 
