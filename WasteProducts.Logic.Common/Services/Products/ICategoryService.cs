@@ -17,32 +17,22 @@ namespace WasteProducts.Logic.Common.Services.Products
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
         Task<string> Add(string name);
 
-        /// <summary>
+        Task<Category> GetById(string id);
+
+            /// <summary>
         /// Returns a spicific category by its name.
         /// </summary>
         /// <param name="name">The name of the category to be gotten.</param>
         /// <returns>The specific category to be returned.</returns>
-        Task<Category> Get(string name);
+        Task<Category> GetByName(string name);
 
-        /// <summary>
-        /// Adds the description for specific category.
-        /// </summary>
-        /// <param name="category">The specific category for which a description is added.</param>
-        /// <param name="description">The specific description for the specfic category.</param>
-        void SetDescription(Category category, string description);
+        Task Update(Category category);
 
         /// <summary>
         /// Tries to delete the specific category.
         /// </summary>
         /// <param name="name">The name of the category to be deleted.</param>
         /// <returns>Boolean represents whether the deletion is successful or not.</returns>
-        bool Delete(string name);
-
-        /// <summary>
-        /// Tries to delete the list of specific categories.
-        /// </summary>
-        /// <param name="names">The list of names of the categories to be deleted.</param>
-        /// <returns>Boolean represents whether the deletion is successful or not.</returns>
-        bool DeleteRange(IEnumerable<string> names);
+        Task Delete(string id);
     }
 }
