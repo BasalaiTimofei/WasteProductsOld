@@ -1,18 +1,16 @@
 using AutoMapper;
-using Ninject;
 using Ninject.Modules;
 using WasteProducts.DataAccess.Common.Context;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
-using WasteProducts.DataAccess.Common.Repositories;
 using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.DataAccess.Common.Repositories.Search;
-using WasteProducts.DataAccess.Common.Repositories.UserManagement;
+using WasteProducts.DataAccess.Common.Repositories.Users;
 using WasteProducts.DataAccess.Contexts;
 using WasteProducts.DataAccess.Repositories;
 using WasteProducts.DataAccess.Repositories.Products;
 using WasteProducts.DataAccess.Repositories.Groups;
-using WasteProducts.DataAccess.Repositories.UserManagement;
+using WasteProducts.DataAccess.Repositories.Users;
 using WasteProducts.DataAccess.Common.Repositories.Diagnostic;
 using WasteProducts.DataAccess.Repositories.Diagnostic;
 

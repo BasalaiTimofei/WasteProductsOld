@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.Users;
-using WasteProducts.DataAccess.Common.Repositories.UserManagement;
+using WasteProducts.DataAccess.Common.Repositories.Users;
 using WasteProducts.DataAccess.Common.Models.Users;
 using AutoMapper;
 
