@@ -27,8 +27,9 @@ namespace WasteProducts.DataAccess.Repositories.Products
         /// Adds a new category
         /// </summary>
         /// <param name="category">The specific category for adding</param>
-        public async Task<int> AddAsync(CategoryDB category)
+        public async Task<string> AddAsync(CategoryDB category)
         {
+            category.Id = Guid.NewGuid().ToString();
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
 

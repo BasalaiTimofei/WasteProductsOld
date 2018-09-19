@@ -30,7 +30,7 @@ namespace WasteProducts.Logic.Services.Products
         /// </summary>
         /// <param name="name">The name of the category to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        public Task<int> Add(string name)
+        public Task<string> Add(string name)
         {
             if (IsCategoryInDB(p =>
                 string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),

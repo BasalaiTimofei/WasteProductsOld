@@ -15,7 +15,7 @@ namespace WasteProducts.Logic.Common.Services.Products
         /// </summary>
         /// <param name="name">The name of the category to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        Task<int> Add(string name);
+        Task<string> Add(string name);
 
         /// <summary>
         /// Returns a spicific category by its name.
