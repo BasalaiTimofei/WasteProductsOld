@@ -237,6 +237,7 @@
     <Compile Include="App_Start\Startup.Cors.cs" />
     <Compile Include="App_Start\Startup.OAuth.cs" />
     <Compile Include="Controllers\Api\BaseApiController.cs" />
+    <Compile Include="Controllers\Api\CategoryController.cs" />
     <Compile Include="Controllers\Api\DatabaseController.cs" />
     <Compile Include="Controllers\Api\PayPalController.cs" />
     <Compile Include="Controllers\Api\ProductsController.cs" />

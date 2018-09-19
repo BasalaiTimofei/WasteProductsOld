@@ -28,9 +28,12 @@ namespace WasteProducts.DataAccess.Repositories.Products
         /// <param name="product">The specific product for adding</param>
         public async Task<string> AddAsync(ProductDB product)
         {
+            product.Id = Guid.NewGuid().ToString();
             product.Created = DateTime.UtcNow;
             _context.Products.Add(product);
+
             await _context.SaveChangesAsync();
+
             return product.Id;
         }
 

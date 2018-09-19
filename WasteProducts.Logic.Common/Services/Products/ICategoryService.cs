@@ -17,6 +17,8 @@ namespace WasteProducts.Logic.Common.Services.Products
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
         Task<string> Add(string name);
 
+        Task<IEnumerable<Category>> GetAll();
+            
         Task<Category> GetById(string id);
 
             /// <summary>

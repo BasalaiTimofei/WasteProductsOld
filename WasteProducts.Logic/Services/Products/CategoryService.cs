@@ -31,7 +31,14 @@ namespace WasteProducts.Logic.Services.Products
                 out var categories)) return null;
 
             var newCategory = new Category { Name = name };
-            return _categoryRepository.AddAsync(_mapper.Map<CategoryDB>(newCategory)).ContinueWith(c => c.Result);
+            return _categoryRepository.AddAsync(_mapper.Map<CategoryDB>(newCategory))
+                .ContinueWith(c => c.Result);
+        }
+
+        public Task<IEnumerable<Category>> GetAll()
+        {
+            return _categoryRepository.SelectAllAsync()
+                .ContinueWith(t => _mapper.Map<IEnumerable<Category>>(t.Result));
         }
 
         public Task<Category> GetById(string id)
