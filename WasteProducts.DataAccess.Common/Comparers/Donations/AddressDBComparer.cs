@@ -8,7 +8,7 @@ namespace WasteProducts.DataAccess.Common.Comparers.Donations
     {
         public override bool Equals(AddressDB x, AddressDB y)
         {
-            if (x == null && y == null)
+            if (ReferenceEquals(x, y))
                 return true;
             if (x == null ^ y == null)
                 return false;
