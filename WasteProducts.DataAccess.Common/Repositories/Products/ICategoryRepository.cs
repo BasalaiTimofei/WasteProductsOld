@@ -26,7 +26,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Products
         /// Deletes the specific category by id
         /// </summary>
         /// <param name="id">Represents a specific category id to delete</param>
-        Task DeleteAsync(int id);
+        Task DeleteAsync(string id);
 
         /// <summary>
         /// Provides a listing of all categories.
@@ -46,7 +46,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Products
         /// </summary>
         /// <param name="id">The specific id of category that was sorted</param>
         /// <returns>Returns a category chosen by ID</returns>
-        Task<CategoryDB> GetByIdAsync(int id);
+        Task<CategoryDB> GetByIdAsync(string id);
 
         /// <summary>
         /// Gets category by name of the specific category

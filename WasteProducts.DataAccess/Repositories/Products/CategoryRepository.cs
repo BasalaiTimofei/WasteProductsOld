@@ -53,7 +53,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
         /// Deletes the specific category by id
         /// </summary>
         /// <param name="id">Represents a specific category id to delete</param>
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(string id)
         {
             var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
 
@@ -93,7 +93,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
         /// </summary>
         /// <param name="id">The specific id of category that was sorted</param>
         /// <returns>Returns a category chosen by ID</returns>
-        public async Task <CategoryDB> GetByIdAsync(int id)
+        public async Task <CategoryDB> GetByIdAsync(string id)
         {
             return await _context.Categories.FirstOrDefaultAsync(p => p.Id == id);
         }

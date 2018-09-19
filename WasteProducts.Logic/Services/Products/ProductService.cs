@@ -43,9 +43,7 @@ namespace WasteProducts.Logic.Services.Products
                 Barcode = barcode,
                 Name = barcode.ProductName
             };
-            return _productRepository.AddAsync(_mapper.Map<ProductDB>(newProduct)).ContinueWith(i=>i.;
-        }
-
+            
             return _productRepository.AddAsync(_mapper.Map<ProductDB>(newProduct))
                 .ContinueWith(t => t.Result);
         }
