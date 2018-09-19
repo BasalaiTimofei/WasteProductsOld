@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Users;
@@ -65,6 +66,12 @@ namespace WasteProducts.DataAccess.Contexts
         ///  create, read, update, delete and to get product list operations in 'ProductRepository' class.
         /// </summary>
         public IDbSet<ProductDB> Products { get; set; }
+
+        /// <summary>
+        /// Property added for to use an entity set that is used to perform
+        ///  create, read, update, delete and to get barcode list operations in 'BarcodeRepository' class.
+        /// </summary>
+        public IDbSet<BarcodeDB> Barcodes { get; set; }
 
         /// <summary>
         /// Property added for to use an entity set that is used to perform
