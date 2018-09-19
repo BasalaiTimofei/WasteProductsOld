@@ -70,10 +70,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
         /// <returns>Returns list of categories.</returns>
         public async Task <IEnumerable<CategoryDB>> SelectAllAsync()
         {
-            return await Task.Run(() =>
-            {
-                return _context.Categories.ToList();
-            });
+            return await Task.Run(() => _context.Categories.ToList());
         }
 
         /// <summary>
