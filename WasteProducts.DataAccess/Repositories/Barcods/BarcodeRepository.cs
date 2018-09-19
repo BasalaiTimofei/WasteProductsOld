@@ -10,11 +10,18 @@ using WasteProducts.DataAccess.Contexts;
 
 namespace WasteProducts.DataAccess.Repositories.Barcods
 {
+    /// <summary>
+    ///This class is a context class. A binder for the 'BarrcodeDB' class with a data access.
+    /// </summary>
     public class BarcodeRepository : IBarcodeRepository
     {
         private readonly WasteContext _wasteContext;
         private bool _disposed;
 
+        /// <summary>
+        /// Using the context of the WasteContext class through the private field.
+        /// </summary>
+        /// <param name="wasteContext">The specific context of WasteContext</param>
         public BarcodeRepository(WasteContext wasteContext)
         {
             _wasteContext = wasteContext;
