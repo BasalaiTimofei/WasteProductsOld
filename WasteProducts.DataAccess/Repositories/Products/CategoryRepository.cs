@@ -27,10 +27,13 @@ namespace WasteProducts.DataAccess.Repositories.Products
         /// Adds a new category
         /// </summary>
         /// <param name="category">The specific category for adding</param>
-        public async Task AddAsync(CategoryDB category)
+        public async Task<string> AddAsync(CategoryDB category)
         {
+            category.Id = Guid.NewGuid().ToString();
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
+
+            return category.Id;
         }
 
         /// <summary>
@@ -82,10 +85,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
         {
             var condition = new Func<CategoryDB, bool>(predicate);
 
-            return await Task.Run(() =>
-            {
-                return _context.Categories.Where(condition).ToList();
-            });
+            return await Task.Run(() => _context.Categories.Where(condition).ToList());
         }
 
         /// <summary>

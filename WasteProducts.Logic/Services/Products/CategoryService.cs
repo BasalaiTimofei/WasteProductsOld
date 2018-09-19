@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories.Products;
@@ -29,33 +30,14 @@ namespace WasteProducts.Logic.Services.Products
         /// </summary>
         /// <param name="name">The name of the category to be added.</param>
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        public bool Add(string name)
+        public Task<string> Add(string name)
         {
             if (IsCategoryInDB(p =>
                 string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
-                out var categories)) return false;
+                out var categories)) return null;
 
             var newCategory = new Category { Name = name };
-            _categoryRepository.AddAsync(_mapper.Map<CategoryDB>(newCategory));
-
-            return true;
-        }
-
-        /// <summary>
-        /// Tries to add a list of new categories by names and returns whether the addition is successful or not.
-        /// </summary>
-        /// <param name="names">The list of names of the categories to be added.</param>
-        /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        public bool AddRange(IEnumerable<string> names)
-        {
-            var result = false;
-
-            foreach(var name in names)
-            {
-                if (Add(name) && !result) result = true;
-            }
-
-            return result;
+            return _categoryRepository.AddAsync(_mapper.Map<CategoryDB>(newCategory)).ContinueWith(c => c.Result);
         }
 
         /// <summary>
@@ -63,13 +45,9 @@ namespace WasteProducts.Logic.Services.Products
         /// </summary>
         /// <param name="name">The name of the category to be gotten.</param>
         /// <returns>The specific category to be returned.</returns>
-        public Category Get(string name)
+        public Task<Category> Get(string name)
         {
-            if (!IsCategoryInDB(p =>
-                string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
-                out var categories)) return null;
-
-            return _mapper.Map<Category>(categories.ToList().First());
+            return _categoryRepository.GetByNameAsync(name).ContinueWith(t => _mapper.Map<Category>(t.Result));
         }
 
         /// <summary>

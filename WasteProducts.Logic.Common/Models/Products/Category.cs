@@ -8,6 +8,11 @@ namespace WasteProducts.Logic.Common.Models.Products
     public class Category
     {
         /// <summary>
+        /// Unique identifier of concrete Category in database.
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
         /// Unique identifier of concrete Category
         /// </summary>
         public string Name { get; set; }
