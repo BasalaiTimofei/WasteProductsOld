@@ -24,12 +24,6 @@ namespace WasteProducts.Logic.Services.Products
             _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
-
-        /// <summary>
-        /// Tries to add a new category by name and returns whether the addition is successful or not.
-        /// </summary>
-        /// <param name="name">The name of the category to be added.</param>
-        /// <returns>Boolean represents whether the addition is successful or not.</returns>
         public Task<string> Add(string name)
         {
             if (IsCategoryInDB(p =>
@@ -40,64 +34,33 @@ namespace WasteProducts.Logic.Services.Products
             return _categoryRepository.AddAsync(_mapper.Map<CategoryDB>(newCategory)).ContinueWith(c => c.Result);
         }
 
-        /// <summary>
-        /// Returns a spicific category by its name.
-        /// </summary>
-        /// <param name="name">The name of the category to be gotten.</param>
-        /// <returns>The specific category to be returned.</returns>
-        public Task<Category> Get(string name)
+        public Task<Category> GetById(string id)
+        {
+            return _categoryRepository.GetByIdAsync(id).ContinueWith(t => _mapper.Map<Category>(t.Result));
+        }
+
+        public Task<Category> GetByName(string name)
         {
             return _categoryRepository.GetByNameAsync(name).ContinueWith(t => _mapper.Map<Category>(t.Result));
         }
 
-        /// <summary>
-        /// Adds the description for specific category.
-        /// </summary>
-        /// <param name="category">The specific category for which a description is added.</param>
-        /// <param name="description">The specific description for the specfic category.</param>
-        public void SetDescription(Category category, string description)
+        public Task Update(Category category)
         {
-            if (!IsCategoryInDB(p =>
-                    string.Equals(p.Name, category.Name, StringComparison.CurrentCultureIgnoreCase),
-                out var categories)) return;
+            if (!IsCategoryInDB(c =>
+                    string.Equals(c.Id, category.Id, StringComparison.Ordinal),
+                out var categories)) return null;
 
-            var categoryFromDB = categories.ToList().First();
-            categoryFromDB.Description = description;
-            _categoryRepository.UpdateAsync(categoryFromDB);
+            return _categoryRepository.UpdateAsync(_mapper.Map<CategoryDB>(category));
         }
 
-        /// <summary>
-        /// Tries to delete the specific category.
-        /// </summary>
-        /// <param name="name">The name of the category to be deleted.</param>
-        /// <returns>Boolean represents whether the deletion is successful or not.</returns>
-        public bool Delete(string name)
+        public Task Delete(string id)
         {
             if (!IsCategoryInDB(p =>
-                    string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
-                out var categories)) return false;
+                    string.Equals(p.Id, id, StringComparison.Ordinal),
+                out var categories)) return null;
 
             var categoryFromDB = categories.ToList().First();
-            _categoryRepository.DeleteAsync(categoryFromDB);
-
-            return true;
-        }
-
-        /// <summary>
-        /// Tries to delete the list of specific categories.
-        /// </summary>
-        /// <param name="names">The list of names of the categories to be deleted.</param>
-        /// <returns>Boolean represents whether the deletion is successful or not.</returns>
-        public bool DeleteRange(IEnumerable<string> names)
-        {
-            var result = false;
-
-            foreach (var name in names)
-            {
-                if (Delete(name) && !result) result = true;
-            }
-
-            return result;
+            return _categoryRepository.DeleteAsync(categoryFromDB);
         }
 
         private bool IsCategoryInDB(Predicate<CategoryDB> conditionPredicate, out IEnumerable<CategoryDB> categories)
@@ -120,8 +83,6 @@ namespace WasteProducts.Logic.Services.Products
                 _disposed = true;
             }
         }
-
-        
 
         /// <inheritdoc/>
         public void Dispose()
