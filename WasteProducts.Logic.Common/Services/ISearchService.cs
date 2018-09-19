@@ -81,8 +81,15 @@ namespace WasteProducts.Logic.Common.Services
         /// This method provides ability to clear search repository storage
         /// </summary>
 		void ClearSearchIndex();
-		
-		/// <summary>
+
+        /// <summary>
+        /// Returns previous queries similar to query.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<IEnumerable<UserQuery>> GetSimilarQueriesAsync(BoostedSearchQuery query);
+
+        /// <summary>
         /// This method provides ability to optimize search repository storage for faster search
         /// </summary>
         void OptimizeSearchIndex();

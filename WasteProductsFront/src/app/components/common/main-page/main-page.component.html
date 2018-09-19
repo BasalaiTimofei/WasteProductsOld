@@ -1,0 +1,19 @@
+
+<button mat-button [matMenuTriggerFor]="menu">Мой кабинет</button>
+<mat-menu #menu="matMenu" >
+    <button mat-menu-item  href="#" routerLink="" style="margin: 10px;" routerLinkActive="active">
+          <a>На главную</a>
+      </button>
+  <button mat-menu-item  href="#" routerLink="/user/friends" style="margin: 10px;" routerLinkActive="active">
+      <a>Мои друзья</a>
+  </button>
+  <button mat-menu-item href="#" routerLink="/products" style="margin: 10px;" routerLinkActive="active">
+      <a>Мои продукты</a>
+  </button>
+  <button mat-menu-item href="#" routerLink="/groups" style="margin: 10px;" routerLinkActive="active">
+      <a>Мои группы</a>
+  </button>
+  <button mat-menu-item href="#" routerLink="/user/settings" style="margin: 10px;" routerLinkActive="active">
+      <a>Настройки</a>
+  </button>
+</mat-menu>

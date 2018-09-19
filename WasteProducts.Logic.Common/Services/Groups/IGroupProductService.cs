@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using WasteProducts.Logic.Common.Models.Groups;
 
-namespace WasteProducts.Logic.Common.Services
+namespace WasteProducts.Logic.Common.Services.Groups
 {
     /// <summary>
     /// Product administration service
@@ -8,22 +10,28 @@ namespace WasteProducts.Logic.Common.Services
     public interface IGroupProductService
     {
         /// <summary>
-        /// Create - create new product on board
+        /// Create new board
         /// </summary>
-        /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
-        void Create<T>(T item);
+        void Create(GroupProduct item, string userId, Guid groupId);
+
         /// <summary>
-        /// Update - update product information on board
+        /// Add or corect information on board
         /// </summary>
-        /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
-        void Update<T>(T item);
+        void Update(GroupProduct item, string userId, Guid groupId);
+
         /// <summary>
-        /// Delete - delete product from the board
+        /// Product delete
         /// </summary>
-        /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
-        void Delete<T>(T item);
+        void Delete(GroupProduct item, string userId, Guid groupId);
+
+        /// <summary>
+        /// Search Product in board by id
+        /// </summary>
+        /// <param name="id">Primary key</param>
+        /// <return>Object</return>
+        GroupProduct FindById(Guid id);
     }
 }

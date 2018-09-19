@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using System.Drawing;
-using WasteProducts.Logic.Services.BarcodeService;
+using WasteProducts.Logic.Services.Barcods;
 using ZXing;
 using Moq;
 

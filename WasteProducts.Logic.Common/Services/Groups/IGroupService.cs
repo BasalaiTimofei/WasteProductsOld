@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using WasteProducts.Logic.Common.Models.Groups;
 
-namespace WasteProducts.Logic.Common.Services
+namespace WasteProducts.Logic.Common.Services.Groups
 {
     /// <summary>
     /// Group administration service
@@ -8,21 +10,35 @@ namespace WasteProducts.Logic.Common.Services
     public interface IGroupService
     {
         /// <summary>
-        /// Create - create new group
+        /// Create new group
         /// </summary>
-        /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
-        void Create<T>(T item);
+        void Create(Group item);
+
         /// <summary>
-        /// Update - add or corect information in group
+        /// Add or corect information in group
         /// </summary>
-        /// <typeparam name="T">Object</typeparam>
         /// <param name="item">Object</param>
-        void Update<T>(T item);
+        void Update(Group item);
+
         /// <summary>
-        /// Delete - delete group
+        /// Group delete
         /// </summary>
-        /// <param name="id">key</param>
-        void Delete<T>(T id);
+        /// <param name="item">Primary key</param>
+        void Delete(Group item);
+
+        /// <summary>
+        /// Search group by id
+        /// </summary>
+        /// <param name="Id">Primary key</param>
+        /// <returns>Object</returns>
+        Group FindById(Guid Id);
+
+        /// <summary>
+        /// Search group by userId
+        /// </summary>
+        /// <param name="userId">Primary key</param>
+        /// <returns>Object</returns>
+        Group FindByAdmin(string userId);
     }
 }

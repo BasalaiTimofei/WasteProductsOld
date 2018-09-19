@@ -9,6 +9,9 @@ namespace WasteProducts.Logic.Mappings.Groups
         public GroupUserProfile()
         {
             CreateMap<GroupUser, GroupUserDB>()
+                .ForMember(x => x.Modified, y => y.Ignore())
+                .ForMember(x => x.RightToCreateBoards, y => y.Ignore())
+                .ForMember(x => x.IsInvited, y => y.Ignore())
                 .ReverseMap();
         }
     }

@@ -18,6 +18,7 @@ namespace WasteProducts.Logic.Services
     {
 
         public const int DEFAULT_MAX_LUCENE_RESULTS = 1000;
+        public const int MAX_SIMILAR_QUERIES_COUNT = 10;
         public int MaxResultCount { get; set; } = DEFAULT_MAX_LUCENE_RESULTS;
 
         private readonly ISearchRepository _repository;
@@ -36,6 +37,9 @@ namespace WasteProducts.Logic.Services
         public IEnumerable<TEntity> Search<TEntity>(BoostedSearchQuery query) where TEntity : class
         {
             CheckQuery(query);
+            UserQuery userQuery = new UserQuery();
+            userQuery.QueryString = query.Query;
+            _repository.Insert(userQuery);
             return _repository.GetAll<TEntity>(query.Query, query.SearchableFields, query.BoostValues, MaxResultCount);
         }
 
@@ -151,9 +155,20 @@ namespace WasteProducts.Logic.Services
             return result;
         }
 
+        public IEnumerable<UserQuery> GetSimilarQueries(BoostedSearchQuery query)
+        {
+            CheckQuery(query);
+            return _repository.GetAll<UserQuery>(query.Query, query.SearchableFields, query.BoostValues, MAX_SIMILAR_QUERIES_COUNT);
+        }
+
         public Task<IEnumerable<Product>> SearchProductAsync(BoostedSearchQuery query)
         {
-            return Task.Run(() => SearchProduct(query));
+            return Task.FromResult(SearchProduct(query));
+        }
+
+        public Task<IEnumerable<UserQuery>> GetSimilarQueriesAsync(BoostedSearchQuery query)
+        {
+            return Task.FromResult(GetSimilarQueries(query));
         }
 
         private void CheckQuery(BoostedSearchQuery query)
@@ -163,5 +178,6 @@ namespace WasteProducts.Logic.Services
                 throw new ArgumentException(SearchServiceResources.IncorrectQueryStr);
             }
         }
+
     }
 }

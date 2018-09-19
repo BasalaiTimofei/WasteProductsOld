@@ -69,12 +69,12 @@
     <Compile Include="Models\Donations\Address.cs" />
     <Compile Include="Models\Donations\Donation.cs" />
     <Compile Include="Models\Barcods\Barcode.cs" />
-    <Compile Include="Models\Barcods\BarcodeInfo.cs" />
     <Compile Include="Models\Donations\Donor.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Search\BoostedSearchQuery.cs" />
     <Compile Include="Models\Products\Category.cs" />
     <Compile Include="Models\Search\BoostedSearchQueryConverter.cs" />
+    <Compile Include="Models\Search\UserQuery.cs" />
     <Compile Include="Models\Security\Infrastructure\IAppRole.cs" />
     <Compile Include="Models\Security\Infrastructure\IAppUser.cs" />
     <Compile Include="Models\Security\Infrastructure\IUserClaim.cs" />
@@ -104,25 +104,24 @@
     <Compile Include="Services\Diagnostic\IDbSeedService.cs" />
     <Compile Include="Services\Diagnostic\IDbService.cs" />
     <Compile Include="Services\Diagnostic\ITestModelsService.cs" />
-    <Compile Include="Services\ICategoryService.cs" />
+    <Compile Include="Services\Products\ICategoryService.cs" />
     <Compile Include="Services\Donations\IDonationService.cs" />
-    <Compile Include="Services\IProductService.cs" />
+    <Compile Include="Services\Products\IProductService.cs" />
     <Compile Include="Services\ISearchService.cs" />
-    <Compile Include="Services\IBarcodeScanService.cs" />
+    <Compile Include="Services\Barcods\IBarcodeScanService.cs" />
     <Compile Include="Models\Groups\GroupBoard.cs" />
     <Compile Include="Models\Groups\Group.cs" />
     <Compile Include="Models\Groups\GroupProduct.cs" />
     <Compile Include="Models\Groups\GroupComment.cs" />
     <Compile Include="Models\Groups\GroupUser.cs" />
-    <Compile Include="Services\Groups\IGroupDataService.cs" />
-    <Compile Include="Services\Groups\IGroupUserManagerService.cs" />
+    <Compile Include="Services\Groups\IGroupCommentService.cs" />
+    <Compile Include="Services\Groups\IGroupUserService.cs" />
     <Compile Include="Services\Groups\IGroupProductService.cs" />
     <Compile Include="Services\Groups\IGroupBoardService.cs" />
     <Compile Include="Services\Groups\IGroupService.cs" />
-    <Compile Include="Services\MailService\IMailFactory.cs" />
-    <Compile Include="Services\MailService\IMailService.cs" />
-    <Compile Include="Services\UserService\IUserRoleService.cs" />
-    <Compile Include="Services\UserService\IUserService.cs" />
+    <Compile Include="Services\Mail\IMailService.cs" />
+    <Compile Include="Services\User\IUserRoleService.cs" />
+    <Compile Include="Services\User\IUserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">

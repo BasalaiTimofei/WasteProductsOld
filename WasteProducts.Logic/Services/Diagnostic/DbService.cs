@@ -1,6 +1,6 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Ninject.Extensions.Logging;
 using WasteProducts.DataAccess.Common.Context;
 using WasteProducts.Logic.Common.Models.Diagnostic;
 using WasteProducts.Logic.Common.Services.Diagnostic;
@@ -43,7 +43,7 @@ namespace WasteProducts.Logic.Services
 
             return new DatabaseState(isExist, isCompatibleWithModel);
         }
-
+        
         /// <inheritdoc />
         public Task DeleteAsync()
         {

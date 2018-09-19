@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using WasteProducts.Logic.Common.Models.Users;
 
 namespace WasteProducts.Logic.Common.Models.Groups
@@ -8,7 +9,7 @@ namespace WasteProducts.Logic.Common.Models.Groups
         /// <summary>
         /// Primary key
         /// </summary>
-        public virtual int Id { get; set; }
+        public virtual Guid Id { get; set; }
 
         /// <summary>
         /// Board name
@@ -21,14 +22,14 @@ namespace WasteProducts.Logic.Common.Models.Groups
         public virtual string Information { get; set; }
 
         /// <summary>
-        /// This board
+        /// Foreign key
         /// </summary>
-        public virtual Group Group { get; set; }
+        public virtual Guid GroupId { get; set; }
 
         /// <summary>
-        /// User which created board
+        /// Foreign key
         /// </summary>
-        public virtual User Creator { get; set; }
+        public virtual string CreatorId { get; set; }
 
         /// <summary>
         /// Products which add at board
