@@ -29,10 +29,12 @@ namespace WasteProducts.Web.Controllers.Api
         /// Constructor.
         /// </summary>
         /// <param name="scanner">BarcodeScan service.</param>
+        /// <param name="searcher"></param>
         /// <param name="logger">NLog logger.</param>
-        public BarcodeController(IBarcodeScanService scanner, ILogger logger) : base(logger)
+        public BarcodeController(IBarcodeScanService scanner, IBarcodeCatalogSearchService searcher, ILogger logger) : base(logger)
         {
             _scanner = scanner;
+            _searcher = searcher;
         }
 
         /// <summary>
@@ -43,13 +45,13 @@ namespace WasteProducts.Web.Controllers.Api
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get numerical barcode", typeof(string))]
         [HttpPost, Route("getcode")]
-        public IHttpActionResult PostCode([FromBody]HttpPostedFileBase upload)
+        public IHttpActionResult PostCode(HttpPostedFileBase upload)
         {
             string code = "";
             using (Stream barcodeStream = upload.InputStream)
             {
                 code = _scanner.ScanBySpire(new Bitmap(barcodeStream));
-                if(code.Length != 8 || code.Length != 4)
+                if (code.Length != 8 || code.Length != 4)
                 {
                     return BadRequest();
                 }
@@ -58,6 +60,27 @@ namespace WasteProducts.Web.Controllers.Api
                     return Ok(code);
                 }
             }
+        }
+
+        /// <summary>
+        /// Parsing e-dostavca.
+        /// </summary>
+        /// <param name="code">Numerical barcode.</param>
+        /// <returns>Model of Barcode.</returns>
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Get barcode", typeof(Barcode))]
+        [HttpPost, Route("{code}")]
+        public IHttpActionResult GetBarcode(string code)
+        {
+            //CatalogProductInfo catalog = _searcher.Get(code);
+            CatalogProductInfo catalog = new CatalogProductInfo()
+            {
+                Name = "Печеньки",
+                Composition = "Мука, сахар",
+                Brend = "Слодыч",
+                Country = "Беларусь"
+            };
+            return Ok(catalog);
         }
     }
 }
