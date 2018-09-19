@@ -4,12 +4,14 @@ using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Donations;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Contexts.Config;
 using WasteProducts.DataAccess.ModelConfigurations;
+using WasteProducts.DataAccess.ModelConfigurations.Donations;
 using WasteProducts.DataAccess.ModelConfigurations.UserManagement;
 
 namespace WasteProducts.DataAccess.Contexts
@@ -53,6 +55,10 @@ namespace WasteProducts.DataAccess.Contexts
             modelBuilder.Configurations.Add(new GroupUserConfiguration());
             modelBuilder.Configurations.Add(new GroupCommentConfiguration());
             modelBuilder.Configurations.Add(new GroupProductConfiguration());
+
+            modelBuilder.Configurations.Add(new DonationEntityConfiguration());
+            modelBuilder.Configurations.Add(new DonorEntityConfiguration());
+            modelBuilder.Configurations.Add(new AddressEntityConfiguration());
         }
 
         /// <summary>
@@ -71,6 +77,12 @@ namespace WasteProducts.DataAccess.Contexts
         ///  create, read, update, delete and to get category list operations in 'CategoryRepository' class.
         /// </summary>
         public IDbSet<CategoryDB> Categories { get; set; }
+
+        /// <summary>
+        /// Property added for to use an entity set that is used to perform
+        /// CRUD operations in 'DonationRepository' class.
+        /// </summary>
+        public IDbSet<DonationDB> Donations { get; set; }
 
         public IDbSet<GroupBoardDB> GroupBordDBs { get; set; }
         public IDbSet<GroupDB> GroupDBs { get; set; }
