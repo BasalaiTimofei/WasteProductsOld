@@ -1,7 +1,7 @@
 .mat-button {
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
-    width: 10%;
+    width:100%;
     border: none;
     padding: 10px 20px;
     text-align: center;
