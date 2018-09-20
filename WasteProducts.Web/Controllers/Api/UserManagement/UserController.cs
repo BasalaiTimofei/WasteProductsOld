@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
@@ -8,8 +9,10 @@ using System.Web.Http;
 using Ninject.Extensions.Logging;
 using Swagger.Net.Annotations;
 using WasteProducts.Logic.Common.Models.Users;
+using WasteProducts.Logic.Common.Models.Users.WebUsers;
 using WasteProducts.Logic.Common.Services.Users;
 using WasteProducts.Web.ExceptionHandling.Api;
+using WasteProducts.Web.ExceptionHandling.Exceptions;
 using WasteProducts.Web.Models.Users;
 
 namespace WasteProducts.Web.Controllers.Api.UserManagement
@@ -44,9 +47,16 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.NotFound, "There are no Users.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the search.")]
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<IHttpActionResult> GetUsers()
         {
-            return await _service.GetAllUsersAsync();
+            var users = await _service.GetAllUsersAsync();
+
+            if (!users.Any())
+            {
+                throw new WasteException("There are no Users.", HttpStatusCode.NotFound);
+            }
+
+            return Ok(users);
         }
 
         // GET api/user/5
@@ -58,12 +68,17 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [HttpGet, Route("{id}")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "User is found.")]
-        [SwaggerResponse(HttpStatusCode.NotFound, "There are no User with such ID.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such ID.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the search.")]
-        public async Task<User> GetUserById(string id)
+        public async Task<IHttpActionResult> GetUserById(string id)
         {
-            return await _service.GetUserAsync(id);
+            var user = await _service.GetUserAsync(id);
+            if (user is null)
+            {
+                throw new WasteException("There is no User with such ID.", HttpStatusCode.NotFound);
+            }
+            return Ok(user);
         }
 
         /// <summary>
@@ -71,16 +86,22 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// </summary>
         /// <param name="user">PLL model, contains UserNameOREmail (for this method it would be email), password (Password of the user).</param>
         /// <returns>User with the specific email and password or null if there is no matches.</returns>
-        [HttpGet, Route("loginbyemail")]
+        [HttpPost, Route("loginbyemail")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "User was successfully logged in.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "Please provide correct Email and Password.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules.")]
         [SwaggerResponse(HttpStatusCode.Conflict, "Already logged in.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the logging in.")]
-        public async Task<User> LoginByEmailAndPassword([FromBody]LoginByEmail user)
+        public async Task<IHttpActionResult> LoginByEmailAndPassword([FromBody]LoginByEmail user)
         {
-            return await _service.LogInByEmailAsync(user.Email, user.Password);
+            var returnUser = await _service.LogInByEmailAsync(user.Email, user.Password);
+            if (returnUser is null)
+            {
+                throw new WasteException("Please provide correct Email and Password.", HttpStatusCode.Unauthorized);
+            }
+
+            return Ok(returnUser);
         }
 
         /// <summary>
@@ -88,7 +109,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// </summary>
         /// <param name="user">PLL model, contains UserName (User's name) and password (Password of the user).</param>
         /// <returns>User with the specific email and password or null if there is no matches.</returns>
-        [HttpGet, Route("loginbyusername")]
+        [HttpPost, Route("loginbyusername")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "User was successfully logged in.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "Please provide correct UserName and Password.")]

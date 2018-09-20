@@ -167,6 +167,7 @@
     <Compile Include="Validators\Search\BoostedSearchQueryValidator.cs" />
     <Compile Include="Validators\TestValidator.cs" />
     <Compile Include="Validators\Groups\GroupValidation.cs" />
+    <Compile Include="Validators\Users\LoginByEmailValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

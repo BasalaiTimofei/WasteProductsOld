@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization;
 using System.Web;
 
 namespace WasteProducts.Web.ExceptionHandling.Exceptions
@@ -12,10 +13,28 @@ namespace WasteProducts.Web.ExceptionHandling.Exceptions
 
         public string Message { get; set; }
 
-        public WasteException(string message, HttpStatusCode code) : base (message)
+        public WasteException(string message, HttpStatusCode code) : this (message)
         {
-            Message = message;
             Code = code;
         }
+
+        public WasteException() : base ()
+        {
+        }
+
+        public WasteException(string message) : base (message)
+        {
+            Message = message;
+        }
+
+        public WasteException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+
+        public WasteException(string message, Exception inner) : base (message, inner)
+        {
+        }
+
+        
     }
 }
