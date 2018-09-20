@@ -14,6 +14,8 @@ using WasteProducts.Logic.Common.Services.Users;
 using WasteProducts.Web.ExceptionHandling.Api;
 using WasteProducts.Web.ExceptionHandling.Exceptions;
 using WasteProducts.Web.Models.Users;
+using WasteProducts.Web.Validators.Users;
+using FluentValidation;
 
 namespace WasteProducts.Web.Controllers.Api.UserManagement
 {
@@ -95,6 +97,10 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the logging in.")]
         public async Task<IHttpActionResult> LoginByEmailAndPassword([FromBody]LoginByEmail user)
         {
+            // throws 400
+            LoginByEmailValidator validator = new LoginByEmailValidator();
+            validator.ValidateAndThrow(user);
+
             var returnUser = await _service.LogInByEmailAsync(user.Email, user.Password);
             if (returnUser is null)
             {
@@ -116,9 +122,19 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules.")]
         [SwaggerResponse(HttpStatusCode.Conflict, "Already logged in.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the logging in.")]
-        public async Task<User> LoginByNameAndPassword([FromBody]LoginByName user)
+        public async Task<IHttpActionResult> LoginByNameAndPassword([FromBody]LoginByName user)
         {
-            return await _service.LogInByNameAsync(user.UserName, user.Password);
+            //throws 400
+            LoginByNameValidator validator = new LoginByNameValidator();
+            validator.ValidateAndThrow(user);
+
+            var returnedUser = await _service.LogInByNameAsync(user.UserName, user.Password);
+
+            if (returnedUser is null)
+            {
+                throw new WasteException("Please provide correct User Name and Password.", HttpStatusCode.Unauthorized);
+            }
+            return Ok(user);
         }
 
         /// <summary>
@@ -166,11 +182,22 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.Conflict, "Please provide unique UserName and Email.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the registration.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules.")]
-        public async Task Register([FromBody] RegisterUser model)
+        public async Task<IHttpActionResult> Register([FromBody] RegisterUser model)
         {
             StringBuilder sb = new StringBuilder(Request.RequestUri.GetLeftPart(UriPartial.Authority));
             sb.Append("/api/user/{0}/confirmemail/{1}");
-            await _service.RegisterAsync(model.Email, model.UserName, model.Password, sb.ToString());
+
+            //throws 400
+            RegisterUserValidator validator = new RegisterUserValidator();
+            validator.ValidateAndThrow(model);
+
+            var idToken = await _service.RegisterAsync(model.Email, model.UserName, model.Password, sb.ToString());
+
+            if (idToken.id is null && idToken.token is null)
+            {
+                throw new WasteException("Please provide unique UserName and Email.", HttpStatusCode.Conflict);
+            }
+            return Ok(idToken);
         }
 
         // DELETE api/user/5

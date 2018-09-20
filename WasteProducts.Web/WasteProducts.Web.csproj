@@ -263,6 +263,9 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\ActionResults\ElmahResult.cs" />
     <Compile Include="Utils\Logging\SingleEventAsArrayWrapper.cs" />
+    <Compile Include="Validators\Users\LoginByEmailValidator.cs" />
+    <Compile Include="Validators\Users\LoginByNameValidator.cs" />
+    <Compile Include="Validators\Users\RegisterUserValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="NLog.config">
