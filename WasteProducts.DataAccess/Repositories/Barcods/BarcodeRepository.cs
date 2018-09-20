@@ -31,9 +31,20 @@ namespace WasteProducts.DataAccess.Repositories.Barcods
         /// </summary>
         /// <param name="id">Id of the barcode.</param>
         /// <returns>Barcode with the specific ID.</returns>
-        public BarcodeDB GetById(string id)
+        public async Task<BarcodeDB> GetByIdAsync(string id)
         {
-            var barcode = _wasteContext.Barcodes.Find(id);
+            var barcode = await _wasteContext.Barcodes.FirstOrDefaultAsync(b => b.Id == id);
+            return barcode;
+        }
+
+        /// <summary>
+        /// Return the barcode by its numerical barcode.
+        /// </summary>
+        /// <param name="code">Code of the barcode.</param>
+        /// <returns>Barcode with the specific code.</returns>
+        public async Task<BarcodeDB> GetByCodeAsync(string code)
+        {
+            var barcode = await _wasteContext.Barcodes.SingleOrDefaultAsync(c => c.Code == code);
             return barcode;
         }
 
@@ -41,59 +52,48 @@ namespace WasteProducts.DataAccess.Repositories.Barcods
         /// Returns the entire list of records.
         /// </summary>
         /// <returns>A list of all barcodes.</returns>
-        public IEnumerable<BarcodeDB> SelectAll() => _wasteContext.Barcodes.ToList();
-
-        /// <summary>
-        /// Return the barcode by its numerical barcode.
-        /// </summary>
-        /// <param name="code">Code of the barcode.</param>
-        /// <returns>Barcode with the specific code.</returns>
-        public BarcodeDB GetByCode(string code)
+        public async Task<IEnumerable<BarcodeDB>> SelectAllAsync()
         {
-            var barcode = _wasteContext.Barcodes.SingleOrDefault(c => c.Code == code);
-            return barcode;
+            return await Task.Run(() =>
+            {
+                return _wasteContext.Barcodes.ToList();
+            });
         }
 
         /// <summary>
         /// Add new barcode in the repository.
         /// </summary>
         /// <param name="barcode">New barcode to add.</param>
-        public void Add(BarcodeDB barcode)
+        public async Task<string> AddAsync(BarcodeDB barcode)
         {
+            barcode.Id = Guid.NewGuid().ToString();
+            barcode.Created = DateTime.UtcNow;
             _wasteContext.Barcodes.Add(barcode);
-            _wasteContext.SaveChanges();
+
+            await _wasteContext.SaveChangesAsync();
+
+            return barcode.Id;
         }
 
         /// <summary>
         /// Update record of the barcode in the repository.
         /// </summary>
         /// <param name="barcode">New barcode to Update.</param>
-        public void Update(BarcodeDB barcode)
+        public async Task UpdateAsync(BarcodeDB barcode)
         {
             _wasteContext.Entry(barcode).State = EntityState.Modified;
-            _wasteContext.Barcodes.First(i => i.Id == barcode.Id);
-            _wasteContext.SaveChanges();
+            var barcodeDB = await _wasteContext.Barcodes.FirstOrDefaultAsync(b => b.Id == barcode.Id);
+            barcodeDB.Modified = DateTime.UtcNow;
+            await _wasteContext.SaveChangesAsync();
         }
 
         /// <summary>
         /// Delete record of the barcode in the repository.
         /// </summary>
         /// <param name="id">ID of the barcode.</param>
-        public void DeleteById(string id)
+        public void DeleteById(BarcodeDB barcode)
         {
-            var barcode = _wasteContext.Barcodes.Find(id);
-            if (barcode != null) _wasteContext.Barcodes.Remove(barcode);
-            _wasteContext.SaveChanges();
-        }
-
-        /// <summary>
-        /// Delete record of the barcode in the repository.
-        /// </summary>
-        /// <param name="code">ID of the barcode.</param>
-        public void DeleteByCode(string code)
-        {
-            var barcode = _wasteContext.Barcodes.SingleOrDefault(c => c.Code == code);
-            if (barcode != null) _wasteContext.Barcodes.Remove(barcode);
+            if (barcode != null)  _wasteContext.Barcodes.Remove(barcode);
             _wasteContext.SaveChanges();
         }
 
