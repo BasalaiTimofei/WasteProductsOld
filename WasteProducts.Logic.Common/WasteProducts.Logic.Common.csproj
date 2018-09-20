@@ -70,7 +70,6 @@
     <Compile Include="Models\Donations\Donation.cs" />
     <Compile Include="Models\Barcods\Barcode.cs" />
     <Compile Include="Models\Donations\Donor.cs" />
-    <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Search\BoostedSearchQuery.cs" />
     <Compile Include="Models\Products\Category.cs" />
     <Compile Include="Models\Search\BoostedSearchQueryConverter.cs" />
