@@ -43,7 +43,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Groups
         /// </summary>
         /// <param name="groupId">ID of the group.</param>
         /// <param name="userId">ID of the user.</param>
-        Task DeleteUserFromGroupAsync(Guid groupId, string userId);
+        Task DeleteUserFromGroupAsync(string groupId, string userId);
 
         /// <summary>
         /// Delete object from db by object

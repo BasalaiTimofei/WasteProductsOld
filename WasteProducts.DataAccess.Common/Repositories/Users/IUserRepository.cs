@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Models.Users;
 
 namespace WasteProducts.DataAccess.Common.Repositories.Users
@@ -152,6 +153,13 @@ namespace WasteProducts.DataAccess.Common.Repositories.Users
         Task<IList<UserDAL>> GetFriendsAsync(string userId);
 
         /// <summary>
+        /// Gets all user's groups.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<IEnumerable<GroupUserDB>> GetGroups(string userId);
+
+        /// <summary>
         /// Gets the logins for a user.
         /// </summary>
         /// <param name="userId">User's ID.</param>
@@ -211,6 +219,15 @@ namespace WasteProducts.DataAccess.Common.Repositories.Users
         /// <param name="newPassword">New password of the user.</param>
         /// <returns>Boolean represents whether operation succeed or no.</returns>
         Task<bool> ResetPasswordAsync(string userId, string token, string newPassword);
+
+        /// <summary>
+        /// Confirms group invitation if isConfirmed == true or deletes invite if isConfirmed == false.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <param name="groupId">ID of the group.</param>
+        /// <param name="isConfirmed">True if invitation accepted or false if not.</param>
+        /// <returns></returns>
+        Task RespondToGroupInvitation(string userId, string groupId, bool isConfirmed);
 
         /// <summary>
         /// Updates the record of the specific user.

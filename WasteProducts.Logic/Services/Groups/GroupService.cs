@@ -90,7 +90,7 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public Group FindById(Guid groupId)
+        public Group FindById(string groupId)
         {
             var model = _dataBase.GetWithInclude<GroupDB>(
                     x => x.Id == groupId,

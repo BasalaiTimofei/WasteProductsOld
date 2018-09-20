@@ -40,21 +40,21 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         {
             _groupComment = new GroupComment
             {
-                Id = new Guid("00000000-0000-0000-0000-000000000000"),
+                Id = "00000000-0000-0000-0000-000000000000",
                 Comment ="comment",
                 CommentatorId ="2",
-                GroupBoardId = new Guid("00000000-0000-0000-0000-000000000000")
+                GroupBoardId = "00000000-0000-0000-0000-000000000000"
             };
             _groupCommentDB = new GroupCommentDB
             {
-                Id = new Guid("00000000-0000-0000-0000-000000000000"),
+                Id = "00000000-0000-0000-0000-000000000000",
                 Comment = "comment",
                 CommentatorId = "2",
-                GroupBoardId = new Guid("00000000-0000-0000-0000-000000000000")
+                GroupBoardId = "00000000-0000-0000-0000-000000000000"
             };
             _groupBoardDB = new GroupBoardDB
             {
-                Id = new Guid("00000000-0000-0000-0000-000000000000"),
+                Id = "00000000-0000-0000-0000-000000000000",
                 CreatorId = "2",
                 Information = "Some product",
                 Name = "Best",
@@ -62,12 +62,12 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
                 Deleted = null,
                 IsNotDeleted = true,
                 Modified = DateTime.UtcNow,
-                GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
+                GroupId = "00000000-0000-0000-0000-000000000001",
                 GroupProducts = null
             };
             _groupUserDB = new GroupUserDB
             {
-                GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
+                GroupId = "00000000-0000-0000-0000-000000000001",
                 RightToCreateBoards = true
             };
             _groupRepositoryMock = new Mock<IGroupRepository>();
@@ -98,7 +98,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
                 .Returns(_selectedBoardList);
 
-            _groupCommentService.Create(_groupComment, new Guid("00000000-0000-0000-0000-000000000001"));
+            _groupCommentService.Create(_groupComment, "00000000-0000-0000-0000-000000000001");
 
             _groupRepositoryMock.Verify(m => m.Create(It.IsAny<GroupCommentDB>()), Times.Once);
         }
@@ -110,7 +110,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
                 .Returns(_selectedBoardList);
 
-            _groupCommentService.Create(_groupComment, new Guid("00000000-0000-0000-0000-000000000001"));
+            _groupCommentService.Create(_groupComment, "00000000-0000-0000-0000-000000000001");
 
             _groupRepositoryMock.Verify(m => m.Create(It.IsAny<GroupCommentDB>()), Times.Never);
         }
@@ -128,7 +128,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupCommentDB, Boolean>>()))
                 .Returns(_selectedCommentList);
 
-            _groupCommentService.Update(_groupComment, new Guid("00000000-0000-0000-0000-000000000001"));
+            _groupCommentService.Update(_groupComment, "00000000-0000-0000-0000-000000000001");
 
             _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupCommentDB>()), Times.Once);
         }
@@ -142,7 +142,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupCommentDB, Boolean>>()))
                 .Returns(_selectedCommentList);
 
-            _groupCommentService.Update(_groupComment, new Guid("00000000-0000-0000-0000-000000000001"));
+            _groupCommentService.Update(_groupComment, "00000000-0000-0000-0000-000000000001");
 
             _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupCommentDB>()), Times.Never);
         }
@@ -160,7 +160,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupCommentDB, Boolean>>()))
                 .Returns(_selectedCommentList);
 
-            _groupCommentService.Delete(_groupComment, new Guid("00000000-0000-0000-0000-000000000002"));
+            _groupCommentService.Delete(_groupComment, "00000000-0000-0000-0000-000000000002");
 
             _groupRepositoryMock.Verify(m => m.Delete(It.IsAny<GroupCommentDB>()), Times.Once);
         }
@@ -174,7 +174,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupCommentDB, Boolean>>()))
                 .Returns(_selectedCommentList);
 
-            _groupCommentService.Delete(_groupComment, new Guid("00000000-0000-0000-0000-000000000001"));
+            _groupCommentService.Delete(_groupComment, "00000000-0000-0000-0000-000000000001");
 
             _groupRepositoryMock.Verify(m => m.Delete(It.IsAny<GroupCommentDB>()), Times.Never);
         }
@@ -186,7 +186,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupCommentDB, Boolean>>()))
                 .Returns(_selectedCommentList);
 
-            var result = _groupCommentService.FindById(new Guid("00000000-0000-0000-0000-000000000001"));
+            var result = _groupCommentService.FindById("00000000-0000-0000-0000-000000000001");
 
             Assert.AreEqual(_groupComment.Id, result.Id);
             Assert.AreEqual(_groupComment.CommentatorId, result.CommentatorId);
@@ -198,7 +198,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupCommentDB, Boolean>>()))
                 .Returns(_selectedCommentList);
 
-            var result = _groupCommentService.FindById(new Guid("00000000-0000-0000-0000-000000000001"));
+            var result = _groupCommentService.FindById("00000000-0000-0000-0000-000000000001");
 
             Assert.AreEqual(null, result);
         }
@@ -210,7 +210,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupCommentDB, Boolean>>()))
                 .Returns(_selectedCommentList);
 
-            var result = _groupCommentService.FindtBoardComment(new Guid("00000000-0000-0000-0000-000000000001"))
+            var result = _groupCommentService.FindtBoardComment("00000000-0000-0000-0000-000000000001")
                 .FirstOrDefault();
 
             Assert.AreEqual(_groupComment.Id, result.Id);
@@ -223,7 +223,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupCommentDB, Boolean>>()))
                 .Returns(_selectedCommentList);
 
-            var result = _groupCommentService.FindtBoardComment(new Guid("00000000-0000-0000-0000-000000000001"));
+            var result = _groupCommentService.FindtBoardComment("00000000-0000-0000-0000-000000000001");
 
             Assert.AreEqual(null, result);
         }

@@ -32,7 +32,7 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// </summary>
         /// <param name="Id">Primary key</param>
         /// <returns>Object</returns>
-        Group FindById(Guid Id);
+        Group FindById(string Id);
 
         /// <summary>
         /// Search group by userId

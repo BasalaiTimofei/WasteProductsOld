@@ -84,7 +84,7 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public GroupBoard FindById(Guid id)
+        public GroupBoard FindById(string id)
         {
             var model = _dataBase.Find<GroupBoardDB>(
                 x => x.Id == id).FirstOrDefault();

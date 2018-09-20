@@ -50,7 +50,7 @@ namespace WasteProducts.DataAccess.Repositories.Groups
             _context.Entry(item).State = EntityState.Deleted;
         }
 
-        public async Task DeleteUserFromGroupAsync(Guid groupId, string userId)
+        public async Task DeleteUserFromGroupAsync(string groupId, string userId)
         {
             await Task.Run(() =>
             {

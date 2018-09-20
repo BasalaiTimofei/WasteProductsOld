@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using WasteProducts.Logic.Common.Models.Groups;
 using WasteProducts.Logic.Common.Models.Users;
 
 namespace WasteProducts.Logic.Common.Services.Users
@@ -112,6 +113,13 @@ namespace WasteProducts.Logic.Common.Services.Users
         Task<IList<Friend>> GetFriendsAsync(string userId);
 
         /// <summary>
+        /// Gets all user's groups.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<IEnumerable<GroupOfUser>> GetGroups(string userId);
+
+        /// <summary>
         /// Gets the logins for a user.
         /// </summary>
         /// <param name="userId">User's ID.</param>
@@ -206,6 +214,15 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// <param name="path">Layout of the path to the GeneratePassword reference.</param>
         /// <returns>Data containing in the email, returns for test purposes.</returns>
         Task<(string id, string token)> ResetPasswordRequestAsync(string email, string path);
+
+        /// <summary>
+        /// Confirms group invitation if isConfirmed == true or deletes invite if isConfirmed == false.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <param name="groupId">ID of the group.</param>
+        /// <param name="isConfirmed">True if invitation accepted or false if not.</param>
+        /// <returns></returns>
+        Task RespondToGroupInvitation(string userId, string groupId, bool isConfirmed);
 
         /// <summary>
         /// Updates the specific user in the Database. You can't update email, Id, UserName and Password by this method.

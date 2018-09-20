@@ -79,7 +79,7 @@ namespace WasteProducts.Logic.Services.Groups
                 x => x.UserId == item.UserId
                 && x.GroupId == item.GroupId).FirstOrDefault();
 
-            if (model == null) return;
+            if (model == null || model.RightToCreateBoards) return;
 
             model.RightToCreateBoards = true;
             model.Modified = DateTime.UtcNow;
@@ -100,7 +100,7 @@ namespace WasteProducts.Logic.Services.Groups
                 x => x.UserId == item.UserId
                 && x.GroupId == item.GroupId).FirstOrDefault();
 
-            if (model == null) return;
+            if (model == null || !model.RightToCreateBoards) return;
 
             model.RightToCreateBoards = false;
             model.Modified = DateTime.UtcNow;

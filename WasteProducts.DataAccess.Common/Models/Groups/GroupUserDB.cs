@@ -11,7 +11,7 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         /// <summary>
         /// ID of the group.
         /// </summary>
-        public virtual Guid GroupId { get; set; }
+        public virtual string GroupId { get; set; }
 
         /// <summary>
         /// Group entity.

@@ -7,6 +7,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.Users;
@@ -397,19 +398,49 @@ namespace WasteProducts.DataAccess.Repositories.Users
         {
             return await Task.Run(() =>
             {
-                UserProductDescriptionDB description = null;
-                try
+                var description = _context.UserProductDescriptions.FirstOrDefault(d => d.User.Id == userId && d.Product.Id == productId);
+                if (description != null)
                 {
-                    description = _context.UserProductDescriptions.First(d => d.User.Id == userId && d.Product.Id == productId);
+                    var entry = _context.Entry(description);
+                    entry.State = EntityState.Deleted;
+                    _context.SaveChanges();
+                    return true;
                 }
-                catch (InvalidOperationException)
+                else return false;
+            });
+        }
+
+        public async Task RespondToGroupInvitation(string userId, string groupId, bool isConfirmed)
+        {
+            await Task.Run(() =>
+            {
+                var groupUser = _context.GroupUsers.FirstOrDefault(u => u.UserId == userId && u.GroupId == groupId);
+                if (groupUser != null)
                 {
-                    return false;
+                    var entry = _context.Entry(groupUser);
+                    if (isConfirmed)
+                    {
+                        groupUser.IsConfirmed = true;
+                        groupUser.Modified = DateTime.UtcNow;
+                        entry.State = EntityState.Unchanged;
+                        entry.Property(p => p.Modified).IsModified = true;
+                        entry.Property(p => p.IsConfirmed).IsModified = true;
+                    }
+                    else
+                    {
+                        entry.State = EntityState.Deleted;
+                    }
+                    _context.SaveChanges();
                 }
-                var entry = _context.Entry(description);
-                entry.State = EntityState.Deleted;
-                _context.SaveChanges();
-                return true;
+            });
+        }
+
+        public async Task<IEnumerable<GroupUserDB>> GetGroups(string userId)
+        {
+            return await Task.Run(() =>
+            {
+                var user = _context.Users.Include(u => u.Groups.Select(g => g.Group)).FirstOrDefault(u => u.Id == userId);
+                return user.Groups.Where(g => g.Group.IsNotDeleted);
             });
         }
 

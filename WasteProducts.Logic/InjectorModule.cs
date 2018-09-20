@@ -27,7 +27,6 @@ using WasteProducts.Logic.Services.Groups;
 using WasteProducts.Logic.Services.Mail;
 using WasteProducts.Logic.Services.Products;
 using WasteProducts.Logic.Services.Users;
-using WasteProducts.Logic.Validators.Search;
 using ProductProfile = WasteProducts.Logic.Mappings.Products.ProductProfile;
 
 namespace WasteProducts.Logic
@@ -128,14 +127,16 @@ namespace WasteProducts.Logic
                     cfg.AddProfile<UserProductDescriptionProfile>();
                     cfg.AddProfile<FriendProfile>();
                     cfg.AddProfile<ProductDescriptionProfile>();
-
-                }))).WhenInjectedExactlyInto<UserService>();
+                    cfg.AddProfile<GroupOfUserProfile>();
+                })))
+                .WhenInjectedExactlyInto<UserService>();
 
             Bind<IMapper>().ToMethod(ctx =>
                 new Mapper(new MapperConfiguration(cfg =>
                 {
                     cfg.AddProfile(new UserProfile());
-                }))).WhenInjectedExactlyInto<UserRoleService>();
+                })))
+                .WhenInjectedExactlyInto<UserRoleService>();
 
             Bind<IMapper>().ToMethod(ctx =>
                 new Mapper(new MapperConfiguration(cfg =>
@@ -147,14 +148,16 @@ namespace WasteProducts.Logic
                         .ForMember(m => m.Barcode, opt => opt.Ignore())
                         .ReverseMap();
                     cfg.AddProfile<CategoryProfile>();
-                }))).WhenInjectedExactlyInto<ProductService>();
+                })))
+                .WhenInjectedExactlyInto<ProductService>();
 
             Bind<IMapper>().ToMethod(ctx =>
                 new Mapper(new MapperConfiguration(cfg =>
                 {
                     cfg.AddProfile<ProductProfile>();
                     cfg.AddProfile<CategoryProfile>();
-                }))).WhenInjectedExactlyInto<CategoryService>();
+                })))
+                .WhenInjectedExactlyInto<CategoryService>();
         }
     }
 }

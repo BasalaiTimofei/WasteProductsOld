@@ -1,7 +1,4 @@
-﻿using System;
-using WasteProducts.Logic.Common.Models.Users;
-
-namespace WasteProducts.Logic.Common.Models.Groups
+﻿namespace WasteProducts.Logic.Common.Models.Groups
 {
     /// <summary>
     /// Model representing many-to-many relationship between User and Group entities.
@@ -11,7 +8,7 @@ namespace WasteProducts.Logic.Common.Models.Groups
         /// <summary>
         /// ID of the group.
         /// </summary>
-        public virtual Guid GroupId { get; set; }
+        public virtual string GroupId { get; set; }
 
         /// <summary>
         /// ID of the user.

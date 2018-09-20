@@ -11,8 +11,8 @@ namespace WasteProducts.DataAccess.ModelConfigurations
             ToTable("GroupUsers");
             HasKey(x => new { x.GroupId, x.UserId });
 
-            Property(x => x.GroupId).IsRequired();
-            Property(x => x.UserId).IsRequired();
+            HasRequired(g => g.User).WithMany(u => u.Groups).HasForeignKey(k => k.UserId);
+            HasRequired(g => g.Group).WithMany(g => g.GroupUsers).HasForeignKey(k => k.GroupId);
 
             Property(x => x.Created).IsRequired();
             Property(x => x.Modified).IsOptional();

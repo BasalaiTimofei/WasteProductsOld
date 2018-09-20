@@ -39,12 +39,12 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         {
             _groupUser = new GroupUser
             {
-                GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
+                GroupId = "00000000-0000-0000-0000-000000000001",
                 UserId = "2"
             };
             _groupUserDB = new GroupUserDB
             {
-                GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
+                GroupId = "00000000-0000-0000-0000-000000000001",
                 RightToCreateBoards = true,
                 UserId = "2",
                 IsConfirmed = false
@@ -52,7 +52,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
 
             _groupDB = new GroupDB
             {
-                Id = (new Guid("00000000-0000-0000-0000-000000000001")),
+                Id = "00000000-0000-0000-0000-000000000001",
                 AdminId = "2",
                 Information = "Some product",
                 Name = "Best",
@@ -137,7 +137,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
 
             _groupUserService.Kick(_groupUser, "2");
 
-            _groupRepositoryMock.Verify(m => m.DeleteUserFromGroupAsync(It.IsAny<Guid>(), It.IsAny<string>()), Times.Once);
+            _groupRepositoryMock.Verify(m => m.DeleteUserFromGroupAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
         [Test]
         public void SendInvite_05_DismissUser_02_User_Unavalible_or_Group_Unavalible()

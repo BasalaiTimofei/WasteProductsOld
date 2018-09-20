@@ -72,7 +72,7 @@ namespace WasteProducts.DataAccess.Contexts
         /// </summary>
         public IDbSet<CategoryDB> Categories { get; set; }
 
-        public IDbSet<GroupBoardDB> GroupBords { get; set; }
+        public IDbSet<GroupBoardDB> GroupBoards { get; set; }
         public IDbSet<GroupDB> Groups { get; set; }
         public IDbSet<GroupUserDB> GroupUsers { get; set; }
         public IDbSet<GroupCommentDB> GroupComments { get; set; }
