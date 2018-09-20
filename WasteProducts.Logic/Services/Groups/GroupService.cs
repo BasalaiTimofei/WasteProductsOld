@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
@@ -20,14 +21,14 @@ namespace WasteProducts.Logic.Services.Groups
             _mapper = mapper;
         }
 
-        public void Create(Group item)
+        public string Create(Group item)
         {
             var result = _mapper.Map<GroupDB>(item);
 
             var model = _dataBase.Find<GroupDB>(
                 x => x.AdminId == result.AdminId).FirstOrDefault();
             if (model != null)
-                return;
+                throw new ValidationException("Group created");
 
             result.Created = DateTime.UtcNow;
             result.Deleted = null;
@@ -43,6 +44,7 @@ namespace WasteProducts.Logic.Services.Groups
 
             _dataBase.Create(result);
             _dataBase.Save();
+            return result.Id.ToString();
         }
 
         public void Update(Group item)
@@ -53,7 +55,7 @@ namespace WasteProducts.Logic.Services.Groups
                 x => x.Id == result.Id
                 && x.AdminId == result.AdminId).FirstOrDefault();
             if (model == null)
-                return;
+                throw new ValidationException("Group did not created");
 
             model.Information = result.Information;
             model.Name = result.Name;
@@ -73,7 +75,7 @@ namespace WasteProducts.Logic.Services.Groups
                 y => y.GroupBoards.Select(z => z.GroupProducts),
                 m => m.GroupUsers).FirstOrDefault();
             if (model == null)
-                return;
+                throw new ValidationException("Group did not created");
 
             model.IsNotDeleted = false;
             model.Deleted = DateTime.UtcNow;

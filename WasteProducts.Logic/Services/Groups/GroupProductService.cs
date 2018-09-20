@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
@@ -19,7 +20,7 @@ namespace WasteProducts.Logic.Services.Groups
             _mapper = mapper;
         }
 
-        public void Create(GroupProduct item, string userId, Guid groupId)
+        public string Create(GroupProduct item, string userId, Guid groupId)
         {
             var result = _mapper.Map<GroupProductDB>(item);
 
@@ -30,12 +31,13 @@ namespace WasteProducts.Logic.Services.Groups
                 x => x.Id == result.GroupBoardId
                 && x.GroupId == groupId).FirstOrDefault();
             if (modelUser == null || modelBoard == null)
-                return;
+                throw new ValidationException("User or board not found");
 
             result.Modified = DateTime.UtcNow;
 
             _dataBase.Create(result);
             _dataBase.Save();
+            return result.Id.ToString();
         }
 
         public void Update(GroupProduct item, string userId, Guid groupId)
@@ -51,7 +53,7 @@ namespace WasteProducts.Logic.Services.Groups
             var model = _dataBase.Find<GroupProductDB>(
                 x => x.Id == result.Id).FirstOrDefault();
             if (modelUser == null || modelBoard == null || model == null)
-                return;
+                throw new ValidationException("User or board or comment or product not found");
 
             model.ProductId = result.ProductId;
             model.Information = result.Information;
@@ -74,7 +76,7 @@ namespace WasteProducts.Logic.Services.Groups
             var model = _dataBase.Find<GroupProductDB>(
                 x => x.Id == result.Id).FirstOrDefault();
             if (modelUser == null || modelBoard == null || model == null)
-                return;
+                throw new ValidationException("User or board or comment or product not found");
 
             _dataBase.Delete(model);
             _dataBase.Save();

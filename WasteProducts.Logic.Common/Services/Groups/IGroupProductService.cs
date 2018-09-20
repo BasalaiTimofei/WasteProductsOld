@@ -13,7 +13,7 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// Create new board
         /// </summary>
         /// <param name="item">Object</param>
-        void Create(GroupProduct item, string userId, Guid groupId);
+        string Create(GroupProduct item, string userId, Guid groupId);
 
         /// <summary>
         /// Add or corect information on board

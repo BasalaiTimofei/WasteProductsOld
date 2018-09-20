@@ -3,6 +3,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
@@ -116,10 +117,8 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
                 .Returns(_selectedUserList);
 
-            _groupUserService.SendInvite(_groupUser, "2");
-
-            _groupRepositoryMock.Verify(m => m.Create(It.IsAny<GroupUserDB>()), Times.Never);
-            _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupUserDB>()), Times.Never);
+            Assert.Throws(typeof(ValidationException),
+                    delegate () { _groupUserService.SendInvite(_groupUser, "2"); });
         }
 
         [Test]
@@ -144,9 +143,8 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
                 .Returns(_selectedUserList);
 
-            _groupUserService.DismissUser(_groupUser, "2");
-
-            _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupUserDB>()), Times.Never);
+            Assert.Throws(typeof(ValidationException),
+                    delegate () { _groupUserService.DismissUser(_groupUser, "2"); });
         }
 
         [Test]
@@ -171,9 +169,8 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
                 .Returns(_selectedUserList);
 
-            _groupUserService.Enter(_groupUser, "2");
-
-            _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupUserDB>()), Times.Never);
+            Assert.Throws(typeof(ValidationException),
+                    delegate () { _groupUserService.Enter(_groupUser, "2"); });
         }
 
         [Test]
@@ -198,9 +195,8 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
                 .Returns(_selectedUserList);
 
-            _groupUserService.Leave(_groupUser, "2");
-
-            _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupUserDB>()), Times.Never);
+            Assert.Throws(typeof(ValidationException),
+                    delegate () { _groupUserService.Leave(_groupUser, "2"); });
         }
 
         [Test]
@@ -225,9 +221,8 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
                 .Returns(_selectedUserList);
 
-            _groupUserService.GetEntitle(_groupUser, "2");
-
-            _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupUserDB>()), Times.Never);
+            Assert.Throws(typeof(ValidationException),
+                    delegate () { _groupUserService.GetEntitle(_groupUser, "2"); });
         }
 
         [Test]

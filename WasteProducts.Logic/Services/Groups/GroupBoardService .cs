@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
@@ -19,7 +20,7 @@ namespace WasteProducts.Logic.Services.Groups
             _mapper = mapper;
         }
 
-        public void Create(GroupBoard item)
+        public string Create(GroupBoard item)
         {
             var result = _mapper.Map<GroupBoardDB>(item);
 
@@ -28,7 +29,7 @@ namespace WasteProducts.Logic.Services.Groups
                 && x.UserId == result.CreatorId
                 && x.GroupId == result.GroupId).FirstOrDefault();
             if (modelUser == null)
-                return;
+                throw new ValidationException("User not found");
 
             result.IsNotDeleted = true;
             result.Created = DateTime.UtcNow;
@@ -37,6 +38,7 @@ namespace WasteProducts.Logic.Services.Groups
 
             _dataBase.Create(result);
             _dataBase.Save();
+            return result.Id.ToString();
         }
 
         public void Update(GroupBoard item)
@@ -50,7 +52,7 @@ namespace WasteProducts.Logic.Services.Groups
                 && x.UserId == result.CreatorId
                 && x.GroupId == result.GroupId).FirstOrDefault();
             if (modelUser == null || model == null)
-                return;
+                throw new ValidationException("User or board not found");
 
             model.Information = result.Information;
             model.Name = result.Name;
@@ -73,7 +75,7 @@ namespace WasteProducts.Logic.Services.Groups
                 && x.UserId == result.CreatorId
                 && x.GroupId == result.GroupId).FirstOrDefault();
             if (model == null || modelUser == null)
-                return;
+                throw new ValidationException("User or board not found");
 
             model.IsNotDeleted = false;
             model.Deleted = DateTime.UtcNow;

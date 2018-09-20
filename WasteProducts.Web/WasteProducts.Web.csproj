@@ -238,6 +238,11 @@
     <Compile Include="App_Start\Startup.OAuth.cs" />
     <Compile Include="Controllers\Api\BaseApiController.cs" />
     <Compile Include="Controllers\Api\DatabaseController.cs" />
+    <Compile Include="Controllers\Api\Groups\GroupBoardControlle.cs" />
+    <Compile Include="Controllers\Api\Groups\GroupUserController.cs" />
+    <Compile Include="Controllers\Api\Groups\GroupProductController .cs" />
+    <Compile Include="Controllers\Api\Groups\GroupCommentController.cs" />
+    <Compile Include="Controllers\Api\Groups\GroupController.cs" />
     <Compile Include="Controllers\Api\PayPalController.cs" />
     <Compile Include="Controllers\Api\ProductsController.cs" />
     <Compile Include="Controllers\Api\SearchController.cs" />

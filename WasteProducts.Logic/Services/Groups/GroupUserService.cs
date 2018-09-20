@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
@@ -29,7 +30,7 @@ namespace WasteProducts.Logic.Services.Groups
                 && x.AdminId == adminId
                 && x.IsNotDeleted == true).FirstOrDefault();
             if (modelGroupDB == null)
-                return;
+                throw new ValidationException("Group not create");
 
             var model = _dataBase.Find<GroupUserDB>(
                 x => x.UserId == result.UserId
@@ -66,7 +67,7 @@ namespace WasteProducts.Logic.Services.Groups
                 && x.IsInvited == 1
                 && x.GroupId == result.GroupId).FirstOrDefault();
             if (modelGroupDB == null || model == null)
-                return;
+                throw new ValidationException("Group not create or user not found");
 
             model.IsInvited = 2;
             model.Modified = DateTime.UtcNow;
@@ -88,7 +89,7 @@ namespace WasteProducts.Logic.Services.Groups
                 && x.IsInvited == 0
                 && x.GroupId == result.GroupId).FirstOrDefault();
             if (modelGroupDB == null || model == null)
-                return;
+                throw new ValidationException("Group not create or user not found");
 
             model.IsInvited = 1;
             model.Modified = DateTime.UtcNow;
@@ -110,7 +111,29 @@ namespace WasteProducts.Logic.Services.Groups
                 && x.IsInvited == 1
                 && x.GroupId == result.GroupId).FirstOrDefault();
             if (modelGroupDB == null || model == null)
-                return;
+                throw new ValidationException("Group not create or user not found");
+
+            model.IsInvited = 2;
+            model.Modified = DateTime.UtcNow;
+
+            _dataBase.Update(model);
+            _dataBase.Save();
+        }
+
+        public void DiscardInvite(GroupUser item, string adminId)
+        {
+            var result = _mapper.Map<GroupUserDB>(item);
+
+            var modelGroupDB = _dataBase.Find<GroupDB>(
+                x => x.Id == result.GroupId
+                && x.AdminId == adminId
+                && x.IsNotDeleted == true).FirstOrDefault();
+            var model = _dataBase.Find<GroupUserDB>(
+                x => x.UserId == result.UserId
+                && x.IsInvited == 0
+                && x.GroupId == result.GroupId).FirstOrDefault();
+            if (modelGroupDB == null || model == null)
+                throw new ValidationException("Group not create or user not found");
 
             model.IsInvited = 2;
             model.Modified = DateTime.UtcNow;
@@ -130,9 +153,9 @@ namespace WasteProducts.Logic.Services.Groups
                 x => x.UserId == result.UserId
                 && x.GroupId == result.GroupId).FirstOrDefault();
             if (modelGroupDB == null || model == null)
-                return;
+                throw new ValidationException("Group not create or user not found");
 
-            if(result.RightToCreateBoards)
+            if (result.RightToCreateBoards)
             {
                 model.RightToCreateBoards = false;
             }

@@ -3,6 +3,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
 using WasteProducts.Logic.Common.Models.Groups;
@@ -106,9 +107,11 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
                 .Returns(_selectedUserList);
 
-            _groupProductService.Create(_groupProduct, "2", new Guid("00000000-0000-0000-0000-000000000003"));
-
-            _groupRepositoryMock.Verify(m => m.Create(It.IsAny<GroupProductDB>()), Times.Never);
+            Assert.Throws(typeof(ValidationException),
+                    delegate () {
+                        _groupProductService.Create(_groupProduct, "2", 
+                            new Guid("00000000-0000-0000-0000-000000000003"));
+                    });
         }
 
         [Test]
@@ -138,9 +141,11 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
                 .Returns(_selectedUserList);
 
-            _groupProductService.Update(_groupProduct, "2", new Guid("00000000-0000-0000-0000-000000000003"));
-
-            _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupProductDB>()), Times.Never);
+            Assert.Throws(typeof(ValidationException),
+                    delegate () {
+                        _groupProductService.Update(_groupProduct, "2",
+                            new Guid("00000000-0000-0000-0000-000000000003"));
+                    });
         }
 
         [Test]
@@ -170,9 +175,11 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
                 .Returns(_selectedUserList);
 
-            _groupProductService.Delete(_groupProduct, "2", new Guid("00000000-0000-0000-0000-000000000003"));
-
-            _groupRepositoryMock.Verify(m => m.Delete(_groupProductDB), Times.Never);
+            Assert.Throws(typeof(ValidationException),
+                    delegate () {
+                        _groupProductService.Delete(_groupProduct, "2",
+                            new Guid("00000000-0000-0000-0000-000000000003"));
+                    });
         }
 
         [Test]

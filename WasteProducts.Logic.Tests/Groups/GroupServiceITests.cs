@@ -3,6 +3,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
@@ -107,9 +108,8 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupDB, Boolean>>()))
                 .Returns(_selectedList);
 
-            _groupService.Create(_group);
-
-            _groupRepositoryMock.Verify(m => m.Create(It.IsAny<GroupDB>()), Times.Never);
+            Assert.Throws(typeof(ValidationException),
+                    delegate () {_groupService.Create(_group);});
         }
 
         [Test]
@@ -129,9 +129,8 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupDB, Boolean>>()))
                 .Returns(_selectedList);
 
-            _groupService.Update(_group);
-
-            _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupDB>()), Times.Never);
+            Assert.Throws(typeof(ValidationException),
+                    delegate () { _groupService.Update(_group); });
         }
 
         [Test]
@@ -156,10 +155,8 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
                 It.IsAny<Expression<Func<GroupDB, object>>[]>()))
                 .Returns(_selectedList);
 
-            _groupService.Delete(_group);
-
-            _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupDB>()), Times.Never);
-            _groupRepositoryMock.Verify(m => m.DeleteAll(It.IsAny<List<GroupProductDB>>()), Times.Never);
+            Assert.Throws(typeof(ValidationException),
+                    delegate () { _groupService.Delete(_group); });
         }
 
         [Test]

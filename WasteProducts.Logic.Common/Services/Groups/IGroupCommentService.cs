@@ -15,7 +15,7 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// </summary>
         /// <param name="item">Object</param>
         /// <param name="groupId">Primary key</param>
-        void Create(GroupComment item, Guid groupId);
+        string Create(GroupComment item, Guid groupId);
 
         /// <summary>
         /// Update comment

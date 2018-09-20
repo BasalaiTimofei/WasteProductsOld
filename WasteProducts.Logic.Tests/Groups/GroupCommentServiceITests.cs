@@ -3,6 +3,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
@@ -106,9 +107,9 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
                 .Returns(_selectedBoardList);
 
-            _groupCommentService.Create(_groupComment, new Guid("00000000-0000-0000-0000-000000000001"));
-
-            _groupRepositoryMock.Verify(m => m.Create(It.IsAny<GroupCommentDB>()), Times.Never);
+            Assert.Throws(typeof(ValidationException),
+                    delegate () { _groupCommentService.Create(_groupComment, 
+                        new Guid("00000000-0000-0000-0000-000000000001")); });
         }
 
         [Test]
@@ -138,9 +139,11 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupCommentDB, Boolean>>()))
                 .Returns(_selectedCommentList);
 
-            _groupCommentService.Update(_groupComment, new Guid("00000000-0000-0000-0000-000000000001"));
-
-            _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupCommentDB>()), Times.Never);
+            Assert.Throws(typeof(ValidationException),
+                    delegate () {
+                        _groupCommentService.Update(_groupComment,
+              new Guid("00000000-0000-0000-0000-000000000001"));
+                    });
         }
 
         [Test]
@@ -170,9 +173,11 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupCommentDB, Boolean>>()))
                 .Returns(_selectedCommentList);
 
-            _groupCommentService.Delete(_groupComment, new Guid("00000000-0000-0000-0000-000000000001"));
-
-            _groupRepositoryMock.Verify(m => m.Delete(It.IsAny<GroupCommentDB>()), Times.Never);
+            Assert.Throws(typeof(ValidationException),
+                    delegate () {
+                        _groupCommentService.Delete(_groupComment,
+              new Guid("00000000-0000-0000-0000-000000000001"));
+                    });
         }
 
         [Test]

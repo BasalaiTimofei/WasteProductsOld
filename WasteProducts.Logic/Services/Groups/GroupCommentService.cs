@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
@@ -20,7 +21,7 @@ namespace WasteProducts.Logic.Services.Groups
             _mapper = mapper;
         }
 
-        public void Create(GroupComment item, Guid groupId)
+        public string Create(GroupComment item, Guid groupId)
         {
             var result = _mapper.Map<GroupCommentDB>(item);
 
@@ -31,12 +32,13 @@ namespace WasteProducts.Logic.Services.Groups
                 x => x.Id == result.GroupBoardId
                 && x.GroupId == groupId).FirstOrDefault();
             if (modelUser == null || modelBoard == null)
-                return;
+                throw new ValidationException("User or board not found");
 
             result.Modified = DateTime.UtcNow;
 
             _dataBase.Create(result);
             _dataBase.Save();
+            return result.Id.ToString();
         }
 
         public void Update(GroupComment item, Guid groupId)
@@ -53,7 +55,7 @@ namespace WasteProducts.Logic.Services.Groups
                 x => x.Id == result.Id
                 && x.CommentatorId == result.CommentatorId).FirstOrDefault();
             if (modelUser == null || modelBoard == null || model == null)
-                return;
+                throw new ValidationException("User or board or comment not found");
 
             model.Comment = result.Comment;
             model.Modified = DateTime.UtcNow;
@@ -76,7 +78,7 @@ namespace WasteProducts.Logic.Services.Groups
                 x => x.Id == result.Id
                 && x.CommentatorId == result.CommentatorId).FirstOrDefault();
             if (modelUser == null || modelBoard == null || model == null)
-                return;
+                throw new ValidationException("User or board or comment not found");
 
             _dataBase.Delete(model);
             _dataBase.Save();

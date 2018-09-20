@@ -1,91 +1,104 @@
-﻿using NLog;
-using Swagger.Net.Annotations;
-using System;
-using System.Linq;
+﻿using System;
 using System.Net;
-using System.Security.Claims;
 using System.Web.Http;
 using WasteProducts.Logic.Common.Models.Groups;
 using WasteProducts.Logic.Common.Services.Groups;
+using WasteProducts.Web.ExceptionHandling.Api;
+using Ninject.Extensions.Logging;
+using Swagger.Net.Annotations;
+using System.Threading.Tasks;
 
 namespace WasteProducts.Web.Controllers.Api.Groups
 {
     /// <summary>
-    /// Controller create Group.
+    /// ApiController management Group.
     /// </summary>
+    [RoutePrefix("api/groups")]
     public class GroupController : BaseApiController
     {
-        private readonly IGroupService _groupService;
+        private IGroupService _groupService;
 
+        /// <summary>
+        /// Creates an Instance of GroupController.
+        /// </summary>
+        /// <param name="groupService">Instance of GroupService from business logic</param>
+        /// <param name="logger">Instance of logger</param>
         public GroupController(IGroupService groupService, ILogger logger) : base(logger)
         {
             _groupService = groupService;
         }
 
+        /// <summary>
+        /// Get group object by id group
+        /// </summary>
+        /// <param name="groupId">Primary key</param>
+        /// <returns>200(Object) || 404</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get group", typeof(Group))]
         [SwaggerResponse(HttpStatusCode.NotFound, "Incorrect id group")]
-        [HttpGet, Route("api/group/{id}")]
-        public IHttpActionResult GetGroup(string id)
+        [HttpGet, Route("{groupId}", Name = "GetGroup")]
+        public async Task<IHttpActionResult> GetGroupById(string groupId)
         {
-            var item = _groupService.FindById(new Guid(id));
+            var item = _groupService.FindById(new Guid(groupId));
             if (item == null)
             {
                 return NotFound();
             }
-            return Ok(item);
+            return await Task.FromResult(Ok(item));
         }
 
+        /// <summary>
+        /// Group create
+        /// </summary>
+        /// <param name="item">Object</param>
+        /// <returns>201(Group id, Object)</returns>
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Get group", typeof(Group))]
-        [SwaggerResponse(HttpStatusCode.NotFound, "Incorrect id group")]
-        [HttpGet, Route("api/group/{id}/{userid}")]
-        public IHttpActionResult GetGroup(string id, string userid)
-        {
-            var item = _groupService.FindByAdmin(userid);
-            if (item == null)
-            {
-                return NotFound();
-            }
-            return Ok(item);
-        }
-
-        [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Request processed", typeof(Group))]
-        [HttpPost, Route("api/group")]
-        public IHttpActionResult CreateGroup([FromBody]Group item)
+        [SwaggerResponse(HttpStatusCode.Created, "Group create", typeof(Group))]
+        [ApiValidationExceptionFilter]
+        [HttpPost, Route("")]
+        public IHttpActionResult Create(Group item)
         {
             item.GroupBoards = null;
             item.GroupUsers = null;
-            _groupService.Create(item);
+            var groupId = _groupService.Create(item);
 
-            return Ok();
+            return Created($"{groupId}", item);
         }
 
+        /// <summary>
+        /// Group update
+        /// </summary>
+        /// <param name="item">Object</param>
+        /// <returns>200(Object)</returns>
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Request processed", typeof(Group))]
-        [HttpPut, Route("api/group/{id}")]
-        public IHttpActionResult UpdateGroup(string id, [FromBody]Group item)
+        [ApiValidationExceptionFilter]
+        [SwaggerResponse(HttpStatusCode.OK, "Group update", typeof(Group))]
+        [HttpPut, Route("{groupId}")]
+        public IHttpActionResult Update(Group item)
         {
-            item.Id = id.ToString();
             item.GroupBoards = null;
             item.GroupUsers = null;
             _groupService.Update(item);
 
-            return Ok();
+            return Ok(item);
         }
 
+        /// <summary>
+        /// Group delete
+        /// </summary>
+        /// <param name="item">Object</param>
+        /// <returns>302(url)</returns>
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Request processed")]
-        [HttpDelete, Route("api/group/{id}")]
-        public IHttpActionResult DeleteGroup(string id, [FromBody]Group item)
+        [ApiValidationExceptionFilter]
+        [SwaggerResponse(HttpStatusCode.Redirect, "Group delete")]
+        [HttpDelete, Route("{groupId}")]
+        public IHttpActionResult Delete(Group item)
         {
-            item.Id = id.ToString();
             item.GroupBoards = null;
             item.GroupUsers = null;
             _groupService.Delete(item);
 
-            return Ok();
+            return Redirect($"");
         }
     }
 }

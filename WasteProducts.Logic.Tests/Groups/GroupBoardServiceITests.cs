@@ -3,6 +3,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
@@ -101,9 +102,8 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
                 .Returns(_selectedUserList);
 
-            _groupBoardService.Create(_groupBoard);
-
-            _groupRepositoryMock.Verify(m => m.Create(It.IsAny<GroupBoardDB>()), Times.Never);
+            Assert.Throws(typeof(ValidationException),
+                    delegate () { _groupBoardService.Create(_groupBoard); });
         }
 
         [Test]
@@ -128,9 +128,8 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
                 .Returns(_selectedUserList);
 
-            _groupBoardService.Update(_groupBoard);
-
-            _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupBoardDB>()), Times.Never);
+            Assert.Throws(typeof(ValidationException),
+                    delegate () { _groupBoardService.Update(_groupBoard); });
         }
 
         [Test]
@@ -160,10 +159,8 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
                 .Returns(_selectedUserList);
 
-            _groupBoardService.Delete(_groupBoard);
-
-            _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupBoardDB>()), Times.Never);
-            _groupRepositoryMock.Verify(m => m.DeleteAll(It.IsAny<List<GroupProductDB>>()), Times.Never);
+            Assert.Throws(typeof(ValidationException),
+                    delegate () { _groupBoardService.Delete(_groupBoard); });
         }
 
         [Test]

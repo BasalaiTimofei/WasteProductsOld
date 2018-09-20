@@ -38,6 +38,13 @@ namespace WasteProducts.Logic.Common.Services.Groups
         void Leave(GroupUser item, string adminId);
 
         /// <summary>
+        /// Refusal of the user from the invitation
+        /// </summary>
+        /// <param name="item">Object</param>
+        /// <param name="adminId">Primary key</param>
+        void DiscardInvite(GroupUser item, string adminId);
+
+        /// <summary>
         /// Get entitle user
         /// </summary>
         /// <param name="item">Object</param>
