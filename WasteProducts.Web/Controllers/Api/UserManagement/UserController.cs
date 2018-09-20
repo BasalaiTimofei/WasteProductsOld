@@ -101,33 +101,33 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <summary>
         /// Gets all user's friends.
         /// </summary>
-        /// <param name="userId">ID of the user.</param>
+        /// <param name="id">ID of the user.</param>
         /// <returns></returns>
-        [HttpGet, Route("{userId}/getfriends")]
+        [HttpGet, Route("{id}/friends")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Friends of the user returned.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such Id.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
-        public async Task<IHttpActionResult> GetFriends([FromUri] string userId)
+        public async Task<IHttpActionResult> GetFriends([FromUri] string id)
         {
-            return Ok(await _service.GetFriendsAsync(userId));
+            return Ok(await _service.GetFriendsAsync(id));
         }
 
         /// <summary>
         /// Gets all user's products.
         /// </summary>
-        /// <param name="userId">ID of the user.</param>
+        /// <param name="id">ID of the user.</param>
         /// <returns></returns>
-        [HttpGet, Route("{userId}/getproducts")]
+        [HttpGet, Route("{id}/products")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Products of the user returned.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such Id.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
-        public async Task<IHttpActionResult> GetProductDescriptionss([FromUri] string userId)
+        public async Task<IHttpActionResult> GetProductDescriptionss([FromUri] string id)
         {
-            return Ok(await _service.GetProductDescriptionsAsync(userId));
+            return Ok(await _service.GetProductDescriptionsAsync(id));
         }
 
         /// <summary>

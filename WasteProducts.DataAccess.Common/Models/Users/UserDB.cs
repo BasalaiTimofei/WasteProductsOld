@@ -26,12 +26,12 @@ namespace WasteProducts.DataAccess.Common.Models.Users
         //public virtual List<Group> GroupMembership { get; set; }
 
         /// <summary>
-        /// Specifies timestamp of creation of concrete User in Database.
+        /// Specifies timestamp of creation of the User in Database.
         /// </summary>
         public virtual DateTime Created { get; set; }
 
         /// <summary>
-        /// Specifies timestamp of modifying of any Property of User in Database.
+        /// Specifies timestamp of modifying of any Property of the User in Database.
         /// </summary>
         public virtual DateTime? Modified { get; set; }
     }

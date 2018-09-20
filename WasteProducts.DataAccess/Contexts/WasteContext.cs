@@ -10,7 +10,7 @@ using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Contexts.Config;
 using WasteProducts.DataAccess.ModelConfigurations;
-using WasteProducts.DataAccess.ModelConfigurations.UserManagement;
+using WasteProducts.DataAccess.ModelConfigurations.Users;
 
 namespace WasteProducts.DataAccess.Contexts
 {
