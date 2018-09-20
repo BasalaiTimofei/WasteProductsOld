@@ -257,14 +257,18 @@
     <Compile Include="Models\Users\ChangePassword.cs" />
     <Compile Include="Models\Users\Email.cs" />
     <Compile Include="Models\Users\LoginByName.cs" />
+    <Compile Include="Models\Users\NewPassword.cs" />
     <Compile Include="Models\Users\ProductDescriprion.cs" />
     <Compile Include="Models\Users\RegisterUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\ActionResults\ElmahResult.cs" />
     <Compile Include="Utils\Logging\SingleEventAsArrayWrapper.cs" />
+    <Compile Include="Validators\Users\ChangePasswordValidator.cs" />
+    <Compile Include="Validators\Users\EmailValidator.cs" />
     <Compile Include="Validators\Users\LoginByEmailValidator.cs" />
     <Compile Include="Validators\Users\LoginByNameValidator.cs" />
+    <Compile Include="Validators\Users\NewPasswordValidator.cs" />
     <Compile Include="Validators\Users\RegisterUserValidator.cs" />
   </ItemGroup>
   <ItemGroup>

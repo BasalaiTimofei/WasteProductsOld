@@ -11,8 +11,8 @@ namespace WasteProducts.Web.Validators.Users
     {
         public LoginByEmailValidator()
         {
-            RuleFor(x => x.Email).NotEmpty().EmailAddress().WithMessage("A valid email address is required.");
-            RuleFor(x => x.Password).NotEmpty().WithMessage("Password cannot be empty");
+            RuleFor(x => x.Email).NotNull().NotEmpty().EmailAddress().WithMessage("A valid email address is required.");
+            RuleFor(x => x.Password).NotNull().NotEmpty().WithMessage("Password cannot be empty");
         }
     }
 }

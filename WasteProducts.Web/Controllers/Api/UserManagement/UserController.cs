@@ -98,7 +98,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         public async Task<IHttpActionResult> LoginByEmailAndPassword([FromBody]LoginByEmail user)
         {
             // throws 400
-            LoginByEmailValidator validator = new LoginByEmailValidator();
+            var validator = new LoginByEmailValidator();
             validator.ValidateAndThrow(user);
 
             var returnUser = await _service.LogInByEmailAsync(user.Email, user.Password);
@@ -125,7 +125,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         public async Task<IHttpActionResult> LoginByNameAndPassword([FromBody]LoginByName user)
         {
             //throws 400
-            LoginByNameValidator validator = new LoginByNameValidator();
+            var validator = new LoginByNameValidator();
             validator.ValidateAndThrow(user);
 
             var returnedUser = await _service.LogInByNameAsync(user.UserName, user.Password);
@@ -184,11 +184,11 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules.")]
         public async Task<IHttpActionResult> Register([FromBody] RegisterUser model)
         {
-            StringBuilder sb = new StringBuilder(Request.RequestUri.GetLeftPart(UriPartial.Authority));
+            var sb = new StringBuilder(Request.RequestUri.GetLeftPart(UriPartial.Authority));
             sb.Append("/api/user/{0}/confirmemail/{1}");
 
             //throws 400
-            RegisterUserValidator validator = new RegisterUserValidator();
+            var validator = new RegisterUserValidator();
             validator.ValidateAndThrow(model);
 
             var idToken = await _service.RegisterAsync(model.Email, model.UserName, model.Password, sb.ToString());
@@ -209,12 +209,12 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [HttpDelete, Route("{id}")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.NoContent, "User is deleted.")]
-        [SwaggerResponse(HttpStatusCode.NotFound, "There is no such User.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the deletion.")]
-        public async Task Delete([FromUri] string id)
+        public async Task<IHttpActionResult> Delete([FromUri] string id)
         {
             await _service.DeleteUserAsync(id);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -243,9 +243,18 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
-        public async Task<bool> ChangePassword([FromUri] string id, [FromBody] ChangePassword model)
+        public async Task<IHttpActionResult> ChangePassword([FromUri] string id, [FromBody] ChangePassword model)
         {
-            return await _service.ChangePasswordAsync(id, model.OldPassword, model.NewPassword);
+            // throws 400
+            var validator = new ChangePasswordValidator();
+            validator.ValidateAndThrow(model);
+
+            // throws 404
+            var user = await this.GetUserById(id);
+
+            var isChanged = await _service.ChangePasswordAsync(id, model.OldPassword, model.NewPassword);
+
+            return Ok(isChanged);
         }
 
         // POST api/user/resetpassword
@@ -257,15 +266,19 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [HttpPut, Route("resetpasswordrequest")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.NoContent, "Request is sent")]
-        [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such Email.")]
-        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
-        public async Task ResetPasswordRequest([FromBody] Email email)
+        public async Task<IHttpActionResult> ResetPasswordRequest([FromBody] Email email)
         {
-            StringBuilder sb = new StringBuilder(Request.RequestUri.GetLeftPart(UriPartial.Authority));
+            //throws 400
+            var validator = new EmailValidator();
+            validator.ValidateAndThrow(email);
+
+            var sb = new StringBuilder(Request.RequestUri.GetLeftPart(UriPartial.Authority));
             sb.Append("/api/user/{0}/resetpasswordresponse/{1}");
             await _service.ResetPasswordRequestAsync(email.EmailOfTheUser, sb.ToString());
+
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -276,9 +289,24 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <param name="newPassword"></param>
         /// <returns>Boolean represents whether operation succeed or no.</returns>
         [HttpPut, Route("{id}/resetpasswordresponse/{token}")]
-        public async Task<bool> ResetPasswordResponse([FromUri] string id, [FromUri] string token, [FromBody] string newPassword)
+        [SwaggerResponse(HttpStatusCode.NoContent, "Password is changed.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "Invalid token or id.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
+        public async Task<IHttpActionResult> ResetPasswordResponse([FromUri] string id, [FromUri] string token, [FromBody] NewPassword newPassword)
         {
-            return await _service.ResetPasswordAsync(id, token, newPassword);
+            //throws 400
+            var validator = new NewPasswordValidator();
+            validator.ValidateAndThrow(newPassword);
+
+            var isSucceed = await _service.ResetPasswordAsync(id, token, newPassword.Password);
+
+
+            if (isSucceed)
+            {
+                return StatusCode(HttpStatusCode.NoContent);
+            }
+            return StatusCode(HttpStatusCode.Unauthorized);
         }
 
         // POST api/user/updateemail
