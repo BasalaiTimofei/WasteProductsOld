@@ -67,7 +67,6 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             };
             _groupUserDB = new GroupUserDB
             {
-                Id = new Guid("00000000-0000-0000-0000-000000000002"),
                 GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
                 RightToCreateBoards = true
             };
