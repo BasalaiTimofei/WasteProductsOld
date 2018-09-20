@@ -69,7 +69,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// </summary>
         /// <param name="user">PLL model, contains UserNameOREmail (for this method it would be email), password (Password of the user).</param>
         /// <returns>User with the specific email and password or null if there is no matches.</returns>
-        [HttpGet, Route("loginbyemail")]
+        [HttpPost, Route("loginbyemail")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "User was successfully logged in.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "Please provide correct Email and Password.")]
@@ -86,7 +86,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// </summary>
         /// <param name="user">PLL model, contains UserName (User's name) and password (Password of the user).</param>
         /// <returns>User with the specific email and password or null if there is no matches.</returns>
-        [HttpGet, Route("loginbyusername")]
+        [HttpPost, Route("loginbyusername")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "User was successfully logged in.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "Please provide correct UserName and Password.")]
@@ -96,6 +96,38 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         public async Task<User> LoginByNameAndPassword([FromBody]LoginByName user)
         {
             return await _service.LogInByNameAsync(user.UserName, user.Password);
+        }
+
+        /// <summary>
+        /// Gets all user's friends.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <returns></returns>
+        [HttpGet, Route("{userId}/getfriends")]
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Friends of the user returned.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such Id.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
+        public async Task<IHttpActionResult> GetFriends([FromUri] string userId)
+        {
+            return Ok(await _service.GetFriendsAsync(userId));
+        }
+
+        /// <summary>
+        /// Gets all user's products.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <returns></returns>
+        [HttpGet, Route("{userId}/getproducts")]
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Products of the user returned.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such Id.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
+        public async Task<IHttpActionResult> GetProductDescriptionss([FromUri] string userId)
+        {
+            return Ok(await _service.GetProductDescriptionsAsync(userId));
         }
 
         /// <summary>
@@ -131,7 +163,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             return await _service.GetLoginsAsync(id);
         }
 
-        // POST api/user
         /// <summary>
         /// Registers a new user with the specific email, name and password.
         /// </summary>
@@ -150,7 +181,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             await _service.RegisterAsync(model.Email, model.UserName, model.Password, sb.ToString());
         }
 
-        // DELETE api/user/5
         /// <summary>
         /// Deletes user from the application.
         /// </summary>
@@ -179,7 +209,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             return await _service.ConfirmEmailAsync(id, token);
         }
 
-        // POST api/user/resetpassword
         /// <summary>
         /// Changes old password of the user with the specific ID to the new password.
         /// </summary>
@@ -198,7 +227,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             return await _service.ChangePasswordAsync(id, model.OldPassword, model.NewPassword);
         }
 
-        // POST api/user/resetpassword
         /// <summary>
         /// Requests for the email with a hyperlink which will reset password of the user with this email.
         /// </summary>
@@ -231,7 +259,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             return await _service.ResetPasswordAsync(id, token, newPassword);
         }
 
-        // POST api/user/updateemail
         /// <summary>
         /// Updates email of the user to the new email.
         /// </summary>
@@ -250,7 +277,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             return await _service.UpdateEmailAsync(id, newEmail);
         }
 
-        //PUT api/user/UpdateUserName
         /// <summary>
         /// Updates user name of the user with the specific ID.
         /// </summary>
@@ -269,7 +295,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             return await _service.UpdateUserNameAsync(id, newUserName);
         }
 
-        // PUT api/User/Friends
         /// <summary>
         /// Adds a new friend to the friendlist of the user with the specific ID.
         /// </summary>
@@ -288,7 +313,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             await _service.AddFriendAsync(userId, friendId);
         }
 
-        //POST api/user/deletefriend
         /// <summary>
         /// Deletes a friend with the specific friendId ID from the friendlist of the user with the userId ID.
         /// </summary>
@@ -306,7 +330,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             await _service.DeleteFriendAsync(userId, friendId);
         }
 
-        //PUT api/User/addproduct
         /// <summary>
         /// Adds product with its rating and description to the user's list of products.
         /// </summary>

@@ -3,15 +3,10 @@
 namespace WasteProducts.Logic.Common.Models.Users
 {
     /// <summary>
-    /// Description of the specific product given by the specific user.
+    /// Description of the specific product.
     /// </summary>
-    public class UserProductDescription
+    public class ProductDescription
     {
-        /// <summary>
-        /// User who set this description on the product.
-        /// </summary>
-        public virtual User User { get; set; }
-
         /// <summary>
         /// Product of this description.
         /// </summary>

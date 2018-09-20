@@ -21,7 +21,7 @@ using WasteProducts.Logic.Common.Services.Users;
 using WasteProducts.Logic.Extensions;
 using WasteProducts.Logic.Interceptors;
 using WasteProducts.Logic.Mappings.Products;
-using WasteProducts.Logic.Mappings.UserMappings;
+using WasteProducts.Logic.Mappings.Users;
 using WasteProducts.Logic.Services;
 using WasteProducts.Logic.Services.Groups;
 using WasteProducts.Logic.Services.Mail;
@@ -126,6 +126,9 @@ namespace WasteProducts.Logic
                     cfg.AddProfile<UserProfile>();
                     cfg.AddProfile<ProductProfile>();
                     cfg.AddProfile<UserProductDescriptionProfile>();
+                    cfg.AddProfile<FriendProfile>();
+                    cfg.AddProfile<ProductDescriptionProfile>();
+
                 }))).WhenInjectedExactlyInto<UserService>();
 
             Bind<IMapper>().ToMethod(ctx =>

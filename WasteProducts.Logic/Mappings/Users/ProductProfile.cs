@@ -4,7 +4,7 @@ using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
 
-namespace WasteProducts.Logic.Mappings.UserMappings
+namespace WasteProducts.Logic.Mappings.Users
 {
     public class ProductProfile : Profile
     {
@@ -23,7 +23,7 @@ namespace WasteProducts.Logic.Mappings.UserMappings
             CreateMap<Category, CategoryDB>()
                 .ForMember(m => m.Id, opt => opt.Ignore())
                 .ForMember(m => m.Marked, opt => opt.Ignore())
-                //.ForMember(m => m.Products, opt => opt.Ignore())
+                .ForMember(m => m.Products, opt => opt.Ignore())
                 .ReverseMap();
         }
         

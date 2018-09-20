@@ -3,13 +3,11 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.Diagnostic;
 using WasteProducts.DataAccess.Contexts;
-using AutoMapper;
 using System.Data.Entity;
 
 namespace WasteProducts.DataAccess.Repositories.Diagnostic
@@ -70,12 +68,7 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                 var category2 = _context.Categories.Find(1);
                 for (int i = 0; i < 6; i++)
                 {
-                    var sb = new StringBuilder();
-                    for (int j = 0; j < 6; j++)
-                    {
-                        sb.Append(i);
-                    }
-                    var name = sb.ToString();
+                    var name = $"Product number {i}";
                     var prod = new ProductDB
                     {
                         Id = i.ToString(),
@@ -122,12 +115,7 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    var sb = new StringBuilder();
-                    for (int j = 0; j < 6; j++)
-                    {
-                        sb.Append(i);
-                    }
-                    var nameAndPassword = sb.ToString();
+                    var nameAndPassword = $"{i}{i}{i}{i}{i}{i}";
                     var userToCreate = new UserDB
                     {
                         Id = i.ToString(),
