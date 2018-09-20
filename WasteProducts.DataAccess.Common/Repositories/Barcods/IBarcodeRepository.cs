@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Barcods;
 
@@ -27,27 +25,34 @@ namespace WasteProducts.DataAccess.Common.Repositories.Barcods
         Task<BarcodeDB> GetByCodeAsync(string code);
 
         /// <summary>
+        /// Returns the entire list of records.
+        /// </summary>
+        /// <returns>A list of all barcodes.</returns>
+        Task<IEnumerable<BarcodeDB>> SelectAllAsync();
+
+        /// <summary>
         /// Add new barcode in the repository.
         /// </summary>
         /// <param name="barcode">New barcode to add.</param>
+        /// <returns>string Id</returns>
         Task<string> AddAsync(BarcodeDB barcode);
 
         /// <summary>
         /// Update record of the barcode in the repository.
         /// </summary>
         /// <param name="barcode">New barcode to Update.</param>
-        void Update(BarcodeDB barcode);
+        Task UpdateAsync(BarcodeDB barcode);
 
         /// <summary>
         /// Delete record of the barcode in the repository.
         /// </summary>
         /// <param name="id">ID of the barcode.</param>
-        void DeleteById(string id);
+        Task DeleteById(string id);
 
         /// <summary>
         /// Delete record of the barcode in the repository.
         /// </summary>
         /// <param name="code">ID of the barcode.</param>
-        void DeleteByCode(string code);
+        Task DeleteByCode(string code);
     }
 }
