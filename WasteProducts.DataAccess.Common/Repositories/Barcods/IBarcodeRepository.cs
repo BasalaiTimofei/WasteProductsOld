@@ -17,20 +17,20 @@ namespace WasteProducts.DataAccess.Common.Repositories.Barcods
         /// </summary>
         /// <param name="id">Id of the barcode.</param>
         /// <returns>Barcode with the specific ID.</returns>
-        BarcodeDB GetById(string id);
+        Task<BarcodeDB> GetByIdAsync(string id);
 
         /// <summary>
         /// Return the barcode by its numerical barcode.
         /// </summary>
         /// <param name="code">Code of the barcode.</param>
         /// <returns>Barcode with the specific code.</returns>
-        BarcodeDB GetByCode(string code);
+        Task<BarcodeDB> GetByCodeAsync(string code);
 
         /// <summary>
         /// Add new barcode in the repository.
         /// </summary>
         /// <param name="barcode">New barcode to add.</param>
-        void Add(BarcodeDB barcode);
+        Task<string> AddAsync(BarcodeDB barcode);
 
         /// <summary>
         /// Update record of the barcode in the repository.
