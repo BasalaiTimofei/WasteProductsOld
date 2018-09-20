@@ -76,7 +76,7 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpGet, Route("queries")]
         public async Task<IEnumerable<UserQuery>> GetUserQueries(string query)
         {
-            return await _searchService.GetSimilarQueriesAsync(new BoostedSearchQuery(query));
+            return await _searchService.GetSimilarQueriesAsync(query);
         }
     }
 }
