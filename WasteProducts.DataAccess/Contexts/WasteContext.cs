@@ -72,11 +72,11 @@ namespace WasteProducts.DataAccess.Contexts
         /// </summary>
         public IDbSet<CategoryDB> Categories { get; set; }
 
-        public IDbSet<GroupBoardDB> GroupBordDBs { get; set; }
-        public IDbSet<GroupDB> GroupDBs { get; set; }
-        public IDbSet<GroupUserDB> GroupUserDBs { get; set; }
-        public IDbSet<GroupCommentDB> GroupCommentDBs { get; set; }
-        public IDbSet<GroupProductDB> GroupProductDBs { get; set; }
+        public IDbSet<GroupBoardDB> GroupBords { get; set; }
+        public IDbSet<GroupDB> Groups { get; set; }
+        public IDbSet<GroupUserDB> GroupUsers { get; set; }
+        public IDbSet<GroupCommentDB> GroupComments { get; set; }
+        public IDbSet<GroupProductDB> GroupProducts { get; set; }
 
         public override int SaveChanges()
         {

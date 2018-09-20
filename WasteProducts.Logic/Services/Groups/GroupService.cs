@@ -36,7 +36,7 @@ namespace WasteProducts.Logic.Services.Groups
 
             result.GroupUsers.Add(new GroupUserDB
             {
-                IsInvited = 1,
+                IsConfirmed = true,
                 RightToCreateBoards = true,
                 Modified = DateTime.UtcNow,
             });
@@ -85,11 +85,7 @@ namespace WasteProducts.Logic.Services.Groups
                 groupBoard.Modified = DateTime.UtcNow;
                 _dataBase.DeleteAll(groupBoard.GroupProducts);
             }
-            foreach (var groupUser in model.GroupUsers)
-            {
-                groupUser.IsInvited = 2;
-                groupUser.Modified = DateTime.UtcNow;
-            }
+            _dataBase.DeleteAll(model.GroupUsers);
             _dataBase.Update(model);
             _dataBase.Save();
         }

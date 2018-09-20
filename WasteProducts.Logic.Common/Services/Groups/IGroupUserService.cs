@@ -10,59 +10,31 @@ namespace WasteProducts.Logic.Common.Services.Groups
     public interface IGroupUserService
     {
         /// <summary>
-        /// Send invite to the user
+        /// Sends invite to the user.
         /// </summary>
         /// <param name="item">Object</param>
         /// <param name="adminId">Primary key</param>
-        void SendInvite(GroupUser item, string adminId);
+        void Invite(GroupUser item, string adminId);
 
         /// <summary>
-        /// Dismiss user from the group
+        /// Kicks user from the group.
         /// </summary>
         /// <param name="item">Object</param>
         /// <param name="adminId">Primary key</param>
-        void DismissUser(GroupUser item, string adminId);
+        void Kick(GroupUser item, string adminId);
 
         /// <summary>
-        /// Join the group by invitation
+        /// Entitles user to create boards in the group.
         /// </summary>
         /// <param name="item">Object</param>
         /// <param name="adminId">Primary key</param>
-        void Enter(GroupUser item, string adminId);
+        void GiveRightToCreateBoards(GroupUser item, string adminId);
 
         /// <summary>
-        /// Leave from group
+        /// Takes away right to create boards from the user.
         /// </summary>
         /// <param name="item">Object</param>
         /// <param name="adminId">Primary key</param>
-        void Leave(GroupUser item, string adminId);
-
-        /// <summary>
-        /// Get entitle user
-        /// </summary>
-        /// <param name="item">Object</param>
-        /// <param name="adminId">Primary key</param>
-        void GetEntitle(GroupUser item, string adminId);
-
-        /// <summary>
-        /// Get user invites
-        /// </summary>
-        /// <param name="userId">Primary key</param>
-        /// <returns>IEnumerable<Object></returns>
-        IEnumerable<GroupUser> FindReceivedInvites(string userId);
-
-        /// <summary>
-        /// Get all users in the group
-        /// </summary>
-        /// <param name="groupId">Primary key</param>
-        /// <returns>IEnumerable<Object></returns>
-        IEnumerable<GroupUser> FindUsersByGroupId(Guid groupId);
-
-        /// <summary>
-        /// Get the user group in which it is composed
-        /// </summary>
-        /// <param name="userId">Primary key</param>
-        /// <returns>IEnumerable<Object></returns>
-        IEnumerable<GroupUser> FindGroupsById(string userId);
+        void TakeAwayRightToCreateBoards(GroupUser item, string adminId);
     }
 }

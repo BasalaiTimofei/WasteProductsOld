@@ -5,15 +5,17 @@ using WasteProducts.DataAccess.Common.Repositories.Groups;
 using System.Data.Entity;
 using System.Linq.Expressions;
 using Microsoft.AspNet.Identity.EntityFramework;
+using WasteProducts.DataAccess.Contexts;
+using System.Threading.Tasks;
 
 namespace WasteProducts.DataAccess.Repositories.Groups
 {
     public class GroupRepository : IGroupRepository
     {
-        IdentityDbContext _context;
+        private readonly WasteContext _context;
         private bool _disposed = false;
 
-        public GroupRepository(IdentityDbContext context)
+        public GroupRepository(WasteContext context)
         {
             _context = context;
         }
@@ -48,6 +50,16 @@ namespace WasteProducts.DataAccess.Repositories.Groups
             _context.Entry(item).State = EntityState.Deleted;
         }
 
+        public async Task DeleteUserFromGroupAsync(Guid groupId, string userId)
+        {
+            await Task.Run(() =>
+            {
+                var item = _context.GroupUsers.FirstOrDefault(gu => gu.GroupId == groupId && gu.UserId == userId);
+                var entry = _context.Entry(item);
+                entry.State = EntityState.Deleted;
+            });
+        }
+
         public void DeleteAll<T>(IList<T> items) where T : class
         {
             while (items.Count > 0)
@@ -68,7 +80,7 @@ namespace WasteProducts.DataAccess.Repositories.Groups
 
         public IEnumerable<T> Find<T>(Func<T, bool> predicate) where T : class
         {
-            return _context.Set<T>().Where(predicate).ToList();
+            return _context.Set<T>().Where(predicate);
         }
 
         public IEnumerable<T> GetWithInclude<T>(
@@ -81,7 +93,7 @@ namespace WasteProducts.DataAccess.Repositories.Groups
             params Expression<Func<T, object>>[] includeProperties) where T : class
         {
             var query = Include(includeProperties);
-            return query.Where(predicate).ToList();
+            return query.Where(predicate);
         }
 
         public void Save()
