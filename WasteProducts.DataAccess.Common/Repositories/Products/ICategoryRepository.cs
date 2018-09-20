@@ -16,6 +16,8 @@ namespace WasteProducts.DataAccess.Common.Repositories.Products
         /// <param name="category">The specific category for adding</param>
         Task<string> AddAsync(CategoryDB category);
 
+        Task<IEnumerable<string>> AddRangeAsync(IEnumerable<CategoryDB> categories);
+
         /// <summary>
         /// Deletes the specific category
         /// </summary>

@@ -36,6 +36,28 @@ namespace WasteProducts.DataAccess.Repositories.Products
             return category.Id;
         }
 
+        public async Task<IEnumerable<string>> AddRangeAsync(IEnumerable<CategoryDB> categories)
+        {
+            var ids = new List<string>();
+            categories.Select(c =>
+            {
+                c.Id = Guid.NewGuid().ToString();
+                ids.Add(c.Id);
+                return c;
+            });
+
+            _context.Configuration.AutoDetectChangesEnabled = false;
+            foreach (var categoryDb in categories)
+            {
+                _context.Categories.Add(categoryDb);
+            }
+            _context.Configuration.AutoDetectChangesEnabled = true;
+
+            await _context.SaveChangesAsync();
+
+            return ids;
+        }
+
         /// <summary>
         /// Deletes the specific category
         /// </summary>

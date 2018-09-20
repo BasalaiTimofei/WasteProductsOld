@@ -24,6 +24,7 @@ namespace WasteProducts.Logic.Services.Products
             _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
+
         public Task<string> Add(string name)
         {
             if (IsCategoryInDB(p =>
@@ -33,6 +34,25 @@ namespace WasteProducts.Logic.Services.Products
             var newCategory = new Category { Name = name };
             return _categoryRepository.AddAsync(_mapper.Map<CategoryDB>(newCategory))
                 .ContinueWith(c => c.Result);
+        }
+
+        public Task<IEnumerable<string>> AddRange(IEnumerable<string> nameRange)
+        {
+            var categoriesDB = _categoryRepository.SelectAllAsync().Result;
+            if (nameRange.All(name =>
+            {
+                return categoriesDB.All(c =>
+                    !string.Equals(c.Name, name, StringComparison.CurrentCultureIgnoreCase));
+            })) return null;
+
+            var newCategoies = new List<Category>();
+            nameRange.Select(c =>
+            {
+                newCategoies.Add(new Category {Name = c});
+                return c;
+            });
+
+            return _categoryRepository.AddRangeAsync(_mapper.Map<IEnumerable<CategoryDB>>(newCategoies));
         }
 
         public Task<IEnumerable<Category>> GetAll()
