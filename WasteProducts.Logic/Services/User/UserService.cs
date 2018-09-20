@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Security.Claims;
 using WasteProducts.Logic.Resources;
-using WasteProducts.Logic.Common.Models.Groups;
 
 namespace WasteProducts.Logic.Services.Users
 {
@@ -220,14 +219,14 @@ namespace WasteProducts.Logic.Services.Users
             return await _repo.DeleteProductAsync(userId, productId);
         }
 
-        public Task<IEnumerable<GroupOfUser>> GetGroups(string userId)
+        public Task<IEnumerable<GroupOfUser>> GetGroupsAsync(string userId)
         {
-            return _repo.GetGroups(userId).ContinueWith(t => _mapper.Map<IEnumerable<GroupOfUser>>(t.Result));
+            return _repo.GetGroupsAsync(userId).ContinueWith(t => _mapper.Map<IEnumerable<GroupOfUser>>(t.Result));
         }
 
-        public Task RespondToGroupInvitation(string userId, string groupId, bool isConfirmed)
+        public Task RespondToGroupInvitationAsync(string userId, string groupId, bool isConfirmed)
         {
-            return _repo.RespondToGroupInvitation(userId, groupId, isConfirmed);
+            return _repo.RespondToGroupInvitationAsync(userId, groupId, isConfirmed);
         }
 
         public async Task AddToRoleAsync(string userId, string roleName)

@@ -157,7 +157,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Users
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<IEnumerable<GroupUserDB>> GetGroups(string userId);
+        Task<IEnumerable<GroupUserDB>> GetGroupsAsync(string userId);
 
         /// <summary>
         /// Gets the logins for a user.
@@ -227,7 +227,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Users
         /// <param name="groupId">ID of the group.</param>
         /// <param name="isConfirmed">True if invitation accepted or false if not.</param>
         /// <returns></returns>
-        Task RespondToGroupInvitation(string userId, string groupId, bool isConfirmed);
+        Task RespondToGroupInvitationAsync(string userId, string groupId, bool isConfirmed);
 
         /// <summary>
         /// Updates the record of the specific user.

@@ -410,7 +410,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
             });
         }
 
-        public async Task RespondToGroupInvitation(string userId, string groupId, bool isConfirmed)
+        public async Task RespondToGroupInvitationAsync(string userId, string groupId, bool isConfirmed)
         {
             await Task.Run(() =>
             {
@@ -435,7 +435,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
             });
         }
 
-        public async Task<IEnumerable<GroupUserDB>> GetGroups(string userId)
+        public async Task<IEnumerable<GroupUserDB>> GetGroupsAsync(string userId)
         {
             return await Task.Run(() =>
             {

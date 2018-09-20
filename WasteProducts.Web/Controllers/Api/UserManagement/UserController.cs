@@ -125,9 +125,25 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such Id.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
-        public async Task<IHttpActionResult> GetProductDescriptionss([FromUri] string id)
+        public async Task<IHttpActionResult> GetProductDescriptions([FromUri] string id)
         {
             return Ok(await _service.GetProductDescriptionsAsync(id));
+        }
+
+        /// <summary>
+        /// Gets all user's groups.
+        /// </summary>
+        /// <param name="id">ID of the user.</param>
+        /// <returns></returns>
+        [HttpGet, Route("{id}/groups")]
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Groups of the user returned.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such Id.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
+        public async Task<IHttpActionResult> GetGroups([FromUri] string id)
+        {
+            return Ok(await _service.GetGroupsAsync(id));
         }
 
         /// <summary>
@@ -136,6 +152,11 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <param name="id">ID of the user.</param>
         /// <returns>IList of roles of the user.</returns>
         [HttpGet, Route("{id}/roles")]
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Roles of the user returned.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such Id.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task<IList<string>> GetRoles(string id)
         {
             return await _service.GetRolesAsync(id);
@@ -147,6 +168,11 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <param name="id">ID of the user.</param>
         /// <returns>IList of claims of the user.</returns>
         [HttpGet, Route("{id}/claims")]
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Claims of the user returned.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such Id.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task<IList<Claim>> GetClaims(string id)
         {
             return await _service.GetClaimsAsync(id);
@@ -158,6 +184,11 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <param name="id">ID of the user.</param>
         /// <returns>IList of logins of the user.</returns>
         [HttpGet, Route("{id}/logins")]
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Logins of the user returned.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such Id.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task<IList<UserLogin>> GetLogins(string id)
         {
             return await _service.GetLoginsAsync(id);
@@ -383,6 +414,25 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         public async Task DeleteProduct([FromUri] string userId, [FromUri] string productId)
         {
             await _service.DeleteProductAsync(userId, productId);
+        }
+
+        /// <summary>
+        /// Confirms group invitation if isConfirmed == true or deletes invite if isConfirmed == false.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <param name="groupId">ID of the group.</param>
+        /// <param name="isConfirmed">True if invitation accepted or false if not.</param>
+        /// <returns></returns>
+        [HttpPut, Route("{userId}/respondtogroupinvitation/{groupId}")]
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.NoContent, "Respond given back.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There is no user or group with such Id.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
+        public async Task<HttpStatusCode> RespondToGroupInvitationAsync([FromUri] string userId, [FromUri] string groupId, [FromBody] bool isConfirmed)
+        {
+            await _service.RespondToGroupInvitationAsync(userId, groupId, isConfirmed);
+            return HttpStatusCode.NoContent;
         }
 
         /// <summary>

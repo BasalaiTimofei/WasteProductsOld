@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using WasteProducts.Logic.Common.Models.Groups;
 using WasteProducts.Logic.Common.Models.Users;
 
 namespace WasteProducts.Logic.Common.Services.Users
@@ -117,7 +116,7 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<IEnumerable<GroupOfUser>> GetGroups(string userId);
+        Task<IEnumerable<GroupOfUser>> GetGroupsAsync(string userId);
 
         /// <summary>
         /// Gets the logins for a user.
@@ -222,7 +221,7 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// <param name="groupId">ID of the group.</param>
         /// <param name="isConfirmed">True if invitation accepted or false if not.</param>
         /// <returns></returns>
-        Task RespondToGroupInvitation(string userId, string groupId, bool isConfirmed);
+        Task RespondToGroupInvitationAsync(string userId, string groupId, bool isConfirmed);
 
         /// <summary>
         /// Updates the specific user in the Database. You can't update email, Id, UserName and Password by this method.
