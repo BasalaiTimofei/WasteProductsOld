@@ -72,7 +72,7 @@ namespace WasteProducts.Logic
         private void BindDatabaseServices()
         {
             Bind<IDbService>().To<DbService>();
-            Bind<IDbSeedService>().To<DbSeedService>();
+            //Bind<IDbSeedService>().To<DbSeedService>();
             Bind<ITestModelsService>().To<TestModelsService>();
         }
 
