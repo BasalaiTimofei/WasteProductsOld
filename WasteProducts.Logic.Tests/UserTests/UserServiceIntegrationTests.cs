@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Repositories.Users;
 using WasteProducts.DataAccess.Repositories.Users;
 using WasteProducts.Logic.Common.Models.Users;
+using WasteProducts.Logic.Common.Services.Groups;
 using WasteProducts.Logic.Common.Services.Products;
 using WasteProducts.Logic.Common.Services.Users;
 
@@ -274,16 +275,11 @@ namespace WasteProducts.Logic.Tests.UserTests
         [Test]
         public async Task UserIntegrTest_15AddingToTheUserDBNewRole()
         {
-            User user1 = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
-            User user2 = await _userService.LogInByEmailAsync("test50someemail@gmail.com", "qwerty2");
-            User user3 = await _userService.LogInByEmailAsync("test51someemail@gmail.com", "qwerty3");
+            await _userService.AddToRoleAsync(_usersIds[0], "Simple user");
+            await _userService.AddToRoleAsync(_usersIds[1], "Simple user");
+            await _userService.AddToRoleAsync(_usersIds[2], "Simple user");
 
-            await _userService.AddToRoleAsync(user1.Id, "Simple user");
-            await _userService.AddToRoleAsync(user2.Id, "Simple user");
-            await _userService.AddToRoleAsync(user3.Id, "Simple user");
-
-            user1 = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
-            var rolesOfUser1 = await _userService.GetRolesAsync(user1.Id);
+            var rolesOfUser1 = await _userService.GetRolesAsync(_usersIds[0]);
             Assert.AreEqual("Simple user", rolesOfUser1.FirstOrDefault());
         }
 
@@ -300,7 +296,7 @@ namespace WasteProducts.Logic.Tests.UserTests
             Assert.IsNull(userRoles.FirstOrDefault());
         }
 
-        // Тестируем добавление утверждения (Claim) в юзера
+        // Тестируем добавление утверждения (Claim) в юзера + получение Claims через GetClaimsAsync
         [Test]
         public async Task UserIntegrTest_17AddingClaimToUser()
         {
@@ -330,7 +326,7 @@ namespace WasteProducts.Logic.Tests.UserTests
             Assert.AreEqual(0, userClaims.Count);
         }
 
-        // тестируем добавление логина в юзера
+        // тестируем добавление логина в юзера+ получение Loginss через GetLoginsAsync
         [Test]
         public async Task UserIntegrTest_19AddingLoginToUser()
         {
@@ -372,7 +368,7 @@ namespace WasteProducts.Logic.Tests.UserTests
             await _userService.ChangePasswordAsync(user.Id, "New password", "qwerty1");
         }
 
-        // тестируем добавление друзей
+        // тестируем добавление друзей + метод получения списка друзей GetFriendsAsync
         [Test]
         public async Task UserIntegrTest_22AddingNewFriendsToUser()
         {
@@ -419,7 +415,7 @@ namespace WasteProducts.Logic.Tests.UserTests
             }
         }
 
-        // тестируем добавление продукта
+        // тестируем добавление продукта + метод получения списка продуктов GetProductDescriptionsAsync
         [Test]
         public async Task UserIntegrTest_25AddingNewProductsToUser()
         {
@@ -448,6 +444,17 @@ namespace WasteProducts.Logic.Tests.UserTests
 
             products = await _userService.GetProductDescriptionsAsync(_usersIds[0]);
             Assert.AreEqual(0, products.Count);
+        }
+
+        // тестируем создание группы (не относится к юзер сервису, но необходимо для следующего теста)
+        [Test]
+        public async Task UserIntegrTest_27AddingNewGroupToDB()
+        {
+            var groupName = "Test group";
+            using (var groupService = _kernel.Get<IGroupService>())
+            {
+
+            }
         }
 
         // тестируем поиск роли по айди и имени

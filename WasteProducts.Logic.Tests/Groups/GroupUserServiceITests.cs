@@ -156,6 +156,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         public void SendInvite_06_GetEntitle_01_Get_Entitle()
         {
             _selectedList.Add(_groupDB);
+            _groupUserDB.RightToCreateBoards = false;
             _selectedUserList.Add(_groupUserDB);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupDB, bool>>()))
                 .Returns(_selectedList);
