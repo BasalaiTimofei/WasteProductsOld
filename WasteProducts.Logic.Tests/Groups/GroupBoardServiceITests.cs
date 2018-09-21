@@ -39,7 +39,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         {
             _groupBoard = new GroupBoard
             {
-                Id = new Guid("00000000-0000-0000-0000-000000000000"),
+                Id = "00000000-0000-0000-0000-000000000000",
                 CreatorId = "2",
                 Information = "Some product",
                 Name = "Best",
@@ -48,7 +48,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             };
             _groupBoardDB = new GroupBoardDB
             {
-                Id = new Guid("00000000-0000-0000-0000-000000000000"),
+                Id = "00000000-0000-0000-0000-000000000000",
                 CreatorId = "2",
                 Information = "Some product",
                 Name = "Best",
@@ -56,7 +56,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
                 Deleted = null,
                 IsNotDeleted = true,
                 Modified = DateTime.UtcNow,
-                GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
+                GroupId = "00000000-0000-0000-0000-000000000001",
                 GroupProducts = null
             };
             _groupBoardDB.GroupProducts = new List<GroupProductDB>
@@ -68,8 +68,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             };
             _groupUserDB = new GroupUserDB
             {
-                Id = new Guid("00000000-0000-0000-0000-000000000002"),
-                GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
+                GroupId = "00000000-0000-0000-0000-000000000001",
                 RightToCreateBoards = true
             };
             _groupRepositoryMock = new Mock<IGroupRepository>();
@@ -180,7 +179,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
                 It.IsAny<Func<GroupBoardDB, Boolean>>()))
                 .Returns(_selectedBoardList);
 
-            var result = _groupBoardService.FindById(new Guid("00000000-0000-0000-0000-000000000000"));
+            var result = _groupBoardService.FindById("00000000-0000-0000-0000-000000000000");
             Assert.AreEqual(_groupBoard.Id, result.Id);
             Assert.AreEqual(_groupBoard.Name, result.Name);
             Assert.AreEqual(_groupBoard.Information, result.Information);
@@ -193,7 +192,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
                 It.IsAny<Func<GroupBoardDB, Boolean>>()))
                 .Returns(_selectedBoardList);
 
-            var result = _groupBoardService.FindById(new Guid("00000000-0000-0000-0000-000000000000"));
+            var result = _groupBoardService.FindById("00000000-0000-0000-0000-000000000000");
             Assert.AreEqual(null, result);
         }
     }
