@@ -12,6 +12,7 @@ namespace WasteProducts.Logic.Services.Groups
     {
         private IGroupRepository _dataBase;
         private readonly IMapper _mapper;
+        private bool _disposed;
 
         public GroupUserService(IGroupRepository dataBase, IMapper mapper)
         {
@@ -35,7 +36,7 @@ namespace WasteProducts.Logic.Services.Groups
                 && x.GroupId == result.GroupId).FirstOrDefault();
 
             result.IsConfirmed = false;
-            result.Modified = DateTime.UtcNow;
+            result.Created = DateTime.UtcNow;
             if (model == null)
             {
                 _dataBase.Create(result);
@@ -107,6 +108,21 @@ namespace WasteProducts.Logic.Services.Groups
 
             _dataBase.Update(model);
             _dataBase.Save();
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                _dataBase.Dispose();
+                _disposed = true;
+                GC.SuppressFinalize(this);
+            }
+        }
+
+        ~GroupUserService()
+        {
+            Dispose();
         }
     }
 }

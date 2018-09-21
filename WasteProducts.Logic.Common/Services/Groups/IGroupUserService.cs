@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using WasteProducts.Logic.Common.Models.Groups;
 
 namespace WasteProducts.Logic.Common.Services.Groups
@@ -7,7 +6,7 @@ namespace WasteProducts.Logic.Common.Services.Groups
     /// <summary>
     /// User access service in group
     /// </summary>
-    public interface IGroupUserService
+    public interface IGroupUserService : IDisposable
     {
         /// <summary>
         /// Sends invite to the user.

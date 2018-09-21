@@ -226,7 +226,12 @@ namespace WasteProducts.Logic.Services.Users
 
         public Task RespondToGroupInvitationAsync(string userId, string groupId, bool isConfirmed)
         {
-            return _repo.RespondToGroupInvitationAsync(userId, groupId, isConfirmed);
+            return _repo.ChangeGroupInvitationStatusAsync(userId, groupId, isConfirmed);
+        }
+
+        public Task LeaveGroupAsync(string userId, string groupId)
+        {
+            return _repo.ChangeGroupInvitationStatusAsync(userId, groupId, false);
         }
 
         public async Task AddToRoleAsync(string userId, string roleName)

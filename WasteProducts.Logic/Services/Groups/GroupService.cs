@@ -20,7 +20,7 @@ namespace WasteProducts.Logic.Services.Groups
             _mapper = mapper;
         }
 
-        public string Create(Group item)
+        public void Create(Group item)
         {
             var result = _mapper.Map<GroupDB>(item);
 
@@ -28,7 +28,7 @@ namespace WasteProducts.Logic.Services.Groups
                 x => x.AdminId == result.AdminId).FirstOrDefault();
             if (model != null)
             {
-                return null;
+                return;
             }
 
             result.Id = Guid.NewGuid().ToString();
@@ -47,7 +47,6 @@ namespace WasteProducts.Logic.Services.Groups
 
             _dataBase.Create(result);
             _dataBase.Save();
-            return result.Id;
         }
 
         public void Update(Group item)
@@ -139,7 +138,6 @@ namespace WasteProducts.Logic.Services.Groups
 
             return result;
         }
-
 
         public void Dispose()
         {

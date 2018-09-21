@@ -152,8 +152,27 @@ namespace WasteProducts.DataAccess.Repositories.Users
 
         public async Task DeleteAsync(string userId)
         {
-            var user = await _manager.FindByIdAsync(userId);
-            await _manager.DeleteAsync(user);
+            await Task.Run(() =>
+            {
+                var user = _context.Users.
+                            Include(u => u.Friends).
+                            Include(u => u.ProductDescriptions).
+                            Include(u => u.Groups.Select(g => g.Group))
+                            .FirstOrDefault(u => u.Id == userId);
+
+                user.Groups.Clear();
+                user.ProductDescriptions.Clear();
+                user.Friends.Clear();
+
+                var group = _context.Groups.FirstOrDefault(g => g.AdminId == user.Id);
+                if(group != null)
+                {
+                    _context.Groups.Remove(group);
+                }
+
+                _context.SaveChanges();
+                _manager.Delete(user);
+            });
         }
 
         public async Task RemoveClaimAsync(string userId, Claim claim)
@@ -410,7 +429,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
             });
         }
 
-        public async Task RespondToGroupInvitationAsync(string userId, string groupId, bool isConfirmed)
+        public async Task ChangeGroupInvitationStatusAsync(string userId, string groupId, bool isConfirmed)
         {
             await Task.Run(() =>
             {

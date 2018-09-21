@@ -147,6 +147,14 @@ namespace WasteProducts.Logic.Common.Services.Users
         Task<User> GetUserAsync(string id);
 
         /// <summary>
+        /// Deletes user from the group.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <param name="groupId">ID of the group.</param>
+        /// <returns></returns>
+        Task LeaveGroupAsync(string userId, string groupId);
+
+        /// <summary>
         /// Tries to login as a user with the specific email and password.
         /// </summary>
         /// <param name="email">Email of the logging in user.</param>

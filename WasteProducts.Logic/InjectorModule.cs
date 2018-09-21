@@ -170,6 +170,14 @@ namespace WasteProducts.Logic
                     cfg.AddProfile<GroupUserProfile>();
                 })))
             .WhenInjectedExactlyInto<GroupService>();
+
+            Bind<IMapper>().ToMethod(ctx =>
+                new Mapper(new MapperConfiguration(cfg =>
+                {
+                    cfg.AddProfile<GroupProfile>();
+                    cfg.AddProfile<GroupUserProfile>();
+                })))
+            .WhenInjectedExactlyInto<GroupUserService>();
         }
     }
 }
