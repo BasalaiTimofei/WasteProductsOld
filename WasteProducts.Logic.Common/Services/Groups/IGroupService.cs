@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using WasteProducts.Logic.Common.Models.Groups;
 
 namespace WasteProducts.Logic.Common.Services.Groups
@@ -7,13 +6,15 @@ namespace WasteProducts.Logic.Common.Services.Groups
     /// <summary>
     /// Group administration service
     /// </summary>
-    public interface IGroupService
+    public interface IGroupService : IDisposable
     {
+
         /// <summary>
         /// Create new group
         /// </summary>
         /// <param name="item">Object</param>
-        void Create(Group item);
+        /// <returns>ID of the created group, need for tests.</returns>
+        string Create(Group item);
 
         /// <summary>
         /// Add or corect information in group
@@ -40,5 +41,12 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// <param name="userId">Primary key</param>
         /// <returns>Object</returns>
         Group FindByAdmin(string userId);
+
+        /// <summary>
+        /// Search group by its name
+        /// </summary>
+        /// <param name="name">Name of the group</param>
+        /// <returns>Object</returns>
+        Group FindByName(string name);
     }
 }

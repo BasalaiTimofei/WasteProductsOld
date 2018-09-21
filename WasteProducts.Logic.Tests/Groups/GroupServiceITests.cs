@@ -38,7 +38,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         {
             _group = new Group
             {
-                Id = (new Guid("00000000-0000-0000-0000-000000000000")),
+                Id = "00000000-0000-0000-0000-000000000000",
                 AdminId = "2",
                 Information = "Some product",
                 Name = "Best",

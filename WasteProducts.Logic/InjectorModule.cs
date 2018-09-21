@@ -20,6 +20,7 @@ using WasteProducts.Logic.Common.Services.Products;
 using WasteProducts.Logic.Common.Services.Users;
 using WasteProducts.Logic.Extensions;
 using WasteProducts.Logic.Interceptors;
+using WasteProducts.Logic.Mappings.Groups;
 using WasteProducts.Logic.Mappings.Products;
 using WasteProducts.Logic.Mappings.Users;
 using WasteProducts.Logic.Services;
@@ -47,11 +48,11 @@ namespace WasteProducts.Logic
             Bind<IServiceFactory>().ToFactory(); //TODO: Если вы иньектируете дофига сервисов во что то, можно их прописать в интерфейс фабрики и запросить фабрику!
 
             // bind services below
-            BindDatabaseServices(); 
+            BindDatabaseServices();
             BindUserServices();
             BindGroupServices();
             BindProductServices();
-                        
+
             Bind<ISearchService>().To<LuceneSearchService>().ValidateArguments(typeof(BoostedSearchQuery));
         }
 
@@ -104,7 +105,7 @@ namespace WasteProducts.Logic
 
         private void BindGroupServices()
         {
-            Bind<IGroupService>().To<GroupService>().ValidateArguments(typeof(Group));
+            Bind<IGroupService>().To<GroupService>()/*.ValidateArguments(typeof(Group))*/;
             Bind<IGroupBoardService>().To<GroupBoardService>();
             Bind<IGroupProductService>().To<GroupProductService>();
             Bind<IGroupUserService>().To<GroupUserService>();
@@ -158,6 +159,17 @@ namespace WasteProducts.Logic
                     cfg.AddProfile<CategoryProfile>();
                 })))
                 .WhenInjectedExactlyInto<CategoryService>();
+
+            Bind<IMapper>().ToMethod(ctx =>
+                new Mapper(new MapperConfiguration(cfg =>
+                {
+                    cfg.AddProfile<GroupBoardProfile>();
+                    cfg.AddProfile<GroupCommentProfile>();
+                    cfg.AddProfile<GroupProductProfile>();
+                    cfg.AddProfile<GroupProfile>();
+                    cfg.AddProfile<GroupUserProfile>();
+                })))
+            .WhenInjectedExactlyInto<GroupService>();
         }
     }
 }

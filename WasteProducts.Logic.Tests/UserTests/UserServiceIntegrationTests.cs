@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Repositories.Users;
 using WasteProducts.DataAccess.Repositories.Users;
+using WasteProducts.Logic.Common.Models.Groups;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.Groups;
 using WasteProducts.Logic.Common.Services.Products;
@@ -448,13 +449,30 @@ namespace WasteProducts.Logic.Tests.UserTests
 
         // тестируем создание группы (не относится к юзер сервису, но необходимо для следующего теста)
         [Test]
-        public async Task UserIntegrTest_27AddingNewGroupToDB()
+        public void UserIntegrTest_27AddingNewGroupToDB()
         {
-            var groupName = "Test group";
+            var name = "Some group";
+            var info = "Info about the group";
+            var group = new Group
+            {
+                Name = name,
+                Information = info,
+                AdminId = _usersIds[0]
+            };
             using (var groupService = _kernel.Get<IGroupService>())
             {
-
+                groupService.Create(group);
+                var groupFromDB = groupService.FindByName(name);
+                Assert.IsNotNull(groupFromDB);
+                Assert.AreEqual(info, groupFromDB.Information);
             }
+        }
+
+        //
+        [Test]
+        public async Task UserIntegrTest_28TestingRespondToInvitationToGroup()
+        {
+
         }
 
         // тестируем поиск роли по айди и имени

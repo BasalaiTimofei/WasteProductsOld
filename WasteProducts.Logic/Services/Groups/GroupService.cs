@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
@@ -13,6 +12,7 @@ namespace WasteProducts.Logic.Services.Groups
     {
         private IGroupRepository _dataBase;
         private readonly IMapper _mapper;
+        private bool _disposed;
 
         public GroupService(IGroupRepository dataBase, IMapper mapper)
         {
@@ -20,29 +20,34 @@ namespace WasteProducts.Logic.Services.Groups
             _mapper = mapper;
         }
 
-        public void Create(Group item)
+        public string Create(Group item)
         {
             var result = _mapper.Map<GroupDB>(item);
 
             var model = _dataBase.Find<GroupDB>(
                 x => x.AdminId == result.AdminId).FirstOrDefault();
             if (model != null)
-                return;
+            {
+                return null;
+            }
 
+            result.Id = Guid.NewGuid().ToString();
             result.Created = DateTime.UtcNow;
             result.Deleted = null;
             result.IsNotDeleted = true;
-            result.Modified = DateTime.UtcNow;
 
             result.GroupUsers.Add(new GroupUserDB
             {
+                GroupId = result.Id,
+                UserId = result.AdminId,
                 IsConfirmed = true,
                 RightToCreateBoards = true,
-                Modified = DateTime.UtcNow,
+                Created = DateTime.UtcNow,
             });
 
             _dataBase.Create(result);
             _dataBase.Save();
+            return result.Id;
         }
 
         public void Update(Group item)
@@ -118,6 +123,37 @@ namespace WasteProducts.Logic.Services.Groups
             var result = _mapper.Map<Group>(model);
 
             return result;
+        }
+
+        public Group FindByName(string name)
+        {
+            var model = _dataBase.GetWithInclude<GroupDB>(
+                    x => x.Name == name,
+                    y => y.GroupBoards.Select(z => z.GroupProducts),
+                    k => k.GroupBoards.Select(e => e.GroupComments),
+                    m => m.GroupUsers).FirstOrDefault();
+            if (model == null)
+                return null;
+
+            var result = _mapper.Map<Group>(model);
+
+            return result;
+        }
+
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                _dataBase.Dispose();
+                _disposed = true;
+                GC.SuppressFinalize(this);
+            }
+        }
+
+        ~GroupService()
+        {
+            Dispose();
         }
     }
 }
