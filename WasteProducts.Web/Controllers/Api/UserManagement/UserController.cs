@@ -429,9 +429,27 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no user or group with such Id.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
-        public async Task<HttpStatusCode> RespondToGroupInvitationAsync([FromUri] string userId, [FromUri] string groupId, [FromBody] bool isConfirmed)
+        public async Task<HttpStatusCode> RespondToGroupInvitation([FromUri] string userId, [FromUri] string groupId, [FromBody] bool isConfirmed)
         {
             await _service.RespondToGroupInvitationAsync(userId, groupId, isConfirmed);
+            return HttpStatusCode.NoContent;
+        }
+
+        /// <summary>
+        /// Leave from group by the user. 
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <param name="groupId">ID of the group.</param>
+        /// <returns></returns>
+        [HttpPut, Route("{userId}/leavegroup/{groupId}")]
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.NoContent, "Group have been left.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "There is no user or group with such Id.")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
+        public async Task<HttpStatusCode> LeaveGroup([FromUri] string userId, [FromUri] string groupId)
+        {
+            await _service.LeaveGroupAsync(userId, groupId);
             return HttpStatusCode.NoContent;
         }
 
