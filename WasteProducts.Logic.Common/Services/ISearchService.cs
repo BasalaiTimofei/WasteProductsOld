@@ -87,7 +87,7 @@ namespace WasteProducts.Logic.Common.Services
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        Task<IEnumerable<UserQuery>> GetSimilarQueriesAsync(BoostedSearchQuery query);
+        Task<IEnumerable<UserQuery>> GetSimilarQueriesAsync(string query);
 
         /// <summary>
         /// This method provides ability to optimize search repository storage for faster search
