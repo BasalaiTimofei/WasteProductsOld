@@ -8,7 +8,7 @@ namespace WasteProducts.DataAccess.ModelConfigurations
     {
         public GroupBoardConfiguration()
         {
-            ToTable("GroupBoard");
+            ToTable("GroupBoards");
 
             HasKey(x => x.Id);
             Property(x => x.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);

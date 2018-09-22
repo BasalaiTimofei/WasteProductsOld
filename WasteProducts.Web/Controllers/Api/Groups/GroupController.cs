@@ -39,7 +39,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [HttpGet, Route("{groupId}", Name = "GetGroup")]
         public async Task<IHttpActionResult> GetGroupById(string groupId)
         {
-            var item = _groupService.FindById(new Guid(groupId));
+            var item = _groupService.FindById(groupId);
             if (item == null)
             {
                 return NotFound();
@@ -54,7 +54,6 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <returns>201(Group id, Object)</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.Created, "Group create", typeof(Group))]
-        [ApiValidationExceptionFilter]
         [HttpPost, Route("")]
         public IHttpActionResult Create(Group item)
         {
@@ -69,7 +68,6 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <param name="item">Object</param>
         /// <returns>200(Object)</returns>
         [SwaggerResponseRemoveDefaults]
-        [ApiValidationExceptionFilter]
         [SwaggerResponse(HttpStatusCode.OK, "Group update", typeof(Group))]
         [HttpPut, Route("{groupId}")]
         public IHttpActionResult Update(Group item)
@@ -85,7 +83,6 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <param name="item">Object</param>
         /// <returns>302(url)</returns>
         [SwaggerResponseRemoveDefaults]
-        [ApiValidationExceptionFilter]
         [SwaggerResponse(HttpStatusCode.Redirect, "Group delete")]
         [HttpDelete, Route("{groupId}")]
         public IHttpActionResult Delete(Group item)

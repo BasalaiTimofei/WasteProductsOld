@@ -33,7 +33,6 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <param name="item">Object</param>
         /// <returns>200(Object)</returns>
         [SwaggerResponseRemoveDefaults]
-        [ApiValidationExceptionFilter]
         [SwaggerResponse(HttpStatusCode.OK, "Board create", typeof(GroupBoard))]
         [HttpPost, Route("{groupId}/board")]
         public IHttpActionResult Create(GroupBoard item)
@@ -49,7 +48,6 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <param name="item">Object</param>
         /// <returns>200(Object)</returns>
         [SwaggerResponseRemoveDefaults]
-        [ApiValidationExceptionFilter]
         [SwaggerResponse(HttpStatusCode.OK, "Board update", typeof(GroupBoard))]
         [HttpPut, Route("{groupId}/board")]
         public IHttpActionResult Update(GroupBoard item)
@@ -65,7 +63,6 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <param name="item">Object</param>
         /// <returns>200()</returns>
         [SwaggerResponseRemoveDefaults]
-        [ApiValidationExceptionFilter]
         [SwaggerResponse(HttpStatusCode.OK, "Board delete")]
         [HttpDelete, Route("{groupId}/board")]
         public IHttpActionResult Delete(GroupBoard item)

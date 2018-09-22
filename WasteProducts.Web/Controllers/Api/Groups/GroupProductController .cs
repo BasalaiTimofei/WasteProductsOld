@@ -36,12 +36,11 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <param name="userId">Primary key</param>
         /// <returns>200(Object)</returns>
         [SwaggerResponseRemoveDefaults]
-        [ApiValidationExceptionFilter]
         [SwaggerResponse(HttpStatusCode.OK, "Product create", typeof(GroupProduct))]
         [HttpPost, Route("{groupId}/product/{userId}")]
         public IHttpActionResult Create(GroupProduct item, [FromUri]string groupId, [FromUri]string userId)
         {
-            item.Id = _groupProductService.Create(item, userId, new Guid(groupId));
+            item.Id = _groupProductService.Create(item, userId, groupId);
 
             return Ok(item);
         }
@@ -54,12 +53,11 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <param name="userId">Primary key</param>
         /// <returns>200(Object)</returns>
         [SwaggerResponseRemoveDefaults]
-        [ApiValidationExceptionFilter]
         [SwaggerResponse(HttpStatusCode.OK, "Product update", typeof(GroupProduct))]
         [HttpPut, Route("{groupId}/product/{userId}")]
         public IHttpActionResult Update(GroupProduct item, [FromUri] string groupId, [FromUri] string userId)
         {
-            _groupProductService.Update(item, userId, new Guid(groupId));
+            _groupProductService.Update(item, userId, groupId);
 
             return Ok(item);
         }
@@ -72,12 +70,11 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <param name="userId">Primary key</param>
         /// <returns>200()</returns>
         [SwaggerResponseRemoveDefaults]
-        [ApiValidationExceptionFilter]
         [SwaggerResponse(HttpStatusCode.OK, "Product delete")]
         [HttpDelete, Route("{groupId}/product/{userId}")]
         public IHttpActionResult Delete(GroupProduct item, [FromUri] string groupId, [FromUri] string userId)
         {
-            _groupProductService.Delete(item, userId, new Guid(groupId));
+            _groupProductService.Delete(item, userId, groupId);
 
             return Ok();
         }

@@ -21,7 +21,7 @@ namespace WasteProducts.Logic.Services.Groups
             _mapper = mapper;
         }
 
-        public string Create(GroupComment item, Guid groupId)
+        public string Create(GroupComment item, string groupId)
         {
             var result = _mapper.Map<GroupCommentDB>(item);
 
@@ -41,7 +41,7 @@ namespace WasteProducts.Logic.Services.Groups
             return result.Id.ToString();
         }
 
-        public void Update(GroupComment item, Guid groupId)
+        public void Update(GroupComment item, string groupId)
         {
             var result = _mapper.Map<GroupCommentDB>(item);
 
@@ -64,7 +64,7 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public void Delete(GroupComment item, Guid groupId)
+        public void Delete(GroupComment item, string groupId)
         {
             var result = _mapper.Map<GroupCommentDB>(item);
 
@@ -84,7 +84,7 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public GroupComment FindById(Guid id)
+        public GroupComment FindById(string id)
         {
             var model = _dataBase.Find<GroupCommentDB>(
                 x => x.Id == id).FirstOrDefault();
@@ -96,7 +96,7 @@ namespace WasteProducts.Logic.Services.Groups
             return result;
         }
 
-        public IEnumerable<GroupComment> FindtBoardComment(Guid boardId)
+        public IEnumerable<GroupComment> FindtBoardComment(string boardId)
         {
             var model = _dataBase.Find<GroupCommentDB>(
                 x => x.GroupBoardId == boardId);

@@ -20,14 +20,14 @@ using WasteProducts.Logic.Common.Services.Products;
 using WasteProducts.Logic.Common.Services.Users;
 using WasteProducts.Logic.Extensions;
 using WasteProducts.Logic.Interceptors;
+using WasteProducts.Logic.Mappings.Groups;
 using WasteProducts.Logic.Mappings.Products;
-using WasteProducts.Logic.Mappings.UserMappings;
+using WasteProducts.Logic.Mappings.Users;
 using WasteProducts.Logic.Services;
 using WasteProducts.Logic.Services.Groups;
 using WasteProducts.Logic.Services.Mail;
 using WasteProducts.Logic.Services.Products;
 using WasteProducts.Logic.Services.Users;
-using WasteProducts.Logic.Validators.Search;
 using ProductProfile = WasteProducts.Logic.Mappings.Products.ProductProfile;
 
 namespace WasteProducts.Logic
@@ -48,11 +48,11 @@ namespace WasteProducts.Logic
             Bind<IServiceFactory>().ToFactory(); //TODO: Если вы иньектируете дофига сервисов во что то, можно их прописать в интерфейс фабрики и запросить фабрику!
 
             // bind services below
-            BindDatabaseServices(); 
+            BindDatabaseServices();
             BindUserServices();
             BindGroupServices();
             BindProductServices();
-                        
+
             Bind<ISearchService>().To<LuceneSearchService>().ValidateArguments(typeof(BoostedSearchQuery));
         }
 
@@ -126,13 +126,18 @@ namespace WasteProducts.Logic
                     cfg.AddProfile<UserProfile>();
                     cfg.AddProfile<ProductProfile>();
                     cfg.AddProfile<UserProductDescriptionProfile>();
-                }))).WhenInjectedExactlyInto<UserService>();
+                    cfg.AddProfile<FriendProfile>();
+                    cfg.AddProfile<ProductDescriptionProfile>();
+                    cfg.AddProfile<GroupOfUserProfile>();
+                })))
+                .WhenInjectedExactlyInto<UserService>();
 
             Bind<IMapper>().ToMethod(ctx =>
                 new Mapper(new MapperConfiguration(cfg =>
                 {
                     cfg.AddProfile(new UserProfile());
-                }))).WhenInjectedExactlyInto<UserRoleService>();
+                })))
+                .WhenInjectedExactlyInto<UserRoleService>();
 
             Bind<IMapper>().ToMethod(ctx =>
                 new Mapper(new MapperConfiguration(cfg =>
@@ -144,14 +149,35 @@ namespace WasteProducts.Logic
                         .ForMember(m => m.Barcode, opt => opt.Ignore())
                         .ReverseMap();
                     cfg.AddProfile<CategoryProfile>();
-                }))).WhenInjectedExactlyInto<ProductService>();
+                })))
+                .WhenInjectedExactlyInto<ProductService>();
 
             Bind<IMapper>().ToMethod(ctx =>
                 new Mapper(new MapperConfiguration(cfg =>
                 {
                     cfg.AddProfile<ProductProfile>();
                     cfg.AddProfile<CategoryProfile>();
-                }))).WhenInjectedExactlyInto<CategoryService>();
+                })))
+                .WhenInjectedExactlyInto<CategoryService>();
+
+            Bind<IMapper>().ToMethod(ctx =>
+                new Mapper(new MapperConfiguration(cfg =>
+                {
+                    cfg.AddProfile<GroupBoardProfile>();
+                    cfg.AddProfile<GroupCommentProfile>();
+                    cfg.AddProfile<GroupProductProfile>();
+                    cfg.AddProfile<GroupProfile>();
+                    cfg.AddProfile<GroupUserProfile>();
+                })))
+            .WhenInjectedExactlyInto<GroupService>();
+
+            Bind<IMapper>().ToMethod(ctx =>
+                new Mapper(new MapperConfiguration(cfg =>
+                {
+                    cfg.AddProfile<GroupProfile>();
+                    cfg.AddProfile<GroupUserProfile>();
+                })))
+            .WhenInjectedExactlyInto<GroupUserService>();
         }
     }
 }

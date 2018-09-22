@@ -9,7 +9,7 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         /// <summary>
         /// Primary key
         /// </summary>
-        public virtual Guid Id { get; set; }
+        public virtual string Id { get; set; }
 
         /// <summary>
         /// Board name
@@ -24,7 +24,7 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         /// <summary>
         /// Foreign key
         /// </summary>
-        public virtual Guid GroupId { get; set; }
+        public virtual string GroupId { get; set; }
 
         /// <summary>
         /// This board

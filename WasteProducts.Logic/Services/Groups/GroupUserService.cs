@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using WasteProducts.DataAccess.Common.Models.Groups;
@@ -14,6 +13,7 @@ namespace WasteProducts.Logic.Services.Groups
     {
         private IGroupRepository _dataBase;
         private readonly IMapper _mapper;
+        private bool _disposed;
 
         public GroupUserService(IGroupRepository dataBase, IMapper mapper)
         {
@@ -21,7 +21,7 @@ namespace WasteProducts.Logic.Services.Groups
             _mapper = mapper;
         }
 
-        public void SendInvite(GroupUser item, string adminId)
+        public void Invite(GroupUser item, string adminId)
         {
             var result = _mapper.Map<GroupUserDB>(item);
 
@@ -36,15 +36,11 @@ namespace WasteProducts.Logic.Services.Groups
                 x => x.UserId == result.UserId
                 && x.GroupId == result.GroupId).FirstOrDefault();
 
-            result.IsInvited = 0;
-            result.Modified = DateTime.UtcNow;
+            result.IsConfirmed = false;
+            result.Created = DateTime.UtcNow;
             if (model == null)
             {
                 _dataBase.Create(result);
-            }
-            else if (model.IsInvited == 2)
-            {
-                _dataBase.Update(result);
             }
             else
             {
@@ -54,157 +50,86 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public void DismissUser(GroupUser item, string adminId)
+        public async void Kick(GroupUser groupUser, string adminId)
         {
-            var result = _mapper.Map<GroupUserDB>(item);
-
-            var modelGroupDB = _dataBase.Find<GroupDB>(
-                x => x.Id == result.GroupId
+            var group = _dataBase.Find<GroupDB>(
+                x => x.Id == groupUser.GroupId
                 && x.AdminId == adminId
                 && x.IsNotDeleted == true).FirstOrDefault();
-            var model = _dataBase.Find<GroupUserDB>(
-                x => x.UserId == result.UserId
-                && x.IsInvited == 1
-                && x.GroupId == result.GroupId).FirstOrDefault();
-            if (modelGroupDB == null || model == null)
-                throw new ValidationException("Group not create or user not found");
 
-            model.IsInvited = 2;
-            model.Modified = DateTime.UtcNow;
+            if (group == null)
+                throw new ValidationException("Group not create");
 
-            _dataBase.Update(model);
+            var groupUserDB = _dataBase.Find<GroupUserDB>(x =>
+                x.UserId == groupUser.UserId &&
+                x.GroupId == groupUser.GroupId).FirstOrDefault();
+
+            if (groupUser == null)
+                throw new ValidationException("User not found");
+
+            await _dataBase.DeleteUserFromGroupAsync(groupUser.GroupId, groupUser.UserId);
             _dataBase.Save();
         }
 
-        public void Enter(GroupUser item, string adminId)
+        public void GiveRightToCreateBoards(GroupUser item, string adminId)
         {
-            var result = _mapper.Map<GroupUserDB>(item);
-
             var modelGroupDB = _dataBase.Find<GroupDB>(
-                x => x.Id == result.GroupId
-                && x.AdminId == adminId
-                && x.IsNotDeleted == true).FirstOrDefault();
-            var model = _dataBase.Find<GroupUserDB>(
-                x => x.UserId == result.UserId
-                && x.IsInvited == 0
-                && x.GroupId == result.GroupId).FirstOrDefault();
-            if (modelGroupDB == null || model == null)
-                throw new ValidationException("Group not create or user not found");
-
-            model.IsInvited = 1;
-            model.Modified = DateTime.UtcNow;
-
-            _dataBase.Update(model);
-            _dataBase.Save();
-        }
-
-        public void Leave(GroupUser item, string adminId)
-        {
-            var result = _mapper.Map<GroupUserDB>(item);
-
-            var modelGroupDB = _dataBase.Find<GroupDB>(
-                x => x.Id == result.GroupId
-                && x.AdminId == adminId
-                && x.IsNotDeleted == true).FirstOrDefault();
-            var model = _dataBase.Find<GroupUserDB>(
-                x => x.UserId == result.UserId
-                && x.IsInvited == 1
-                && x.GroupId == result.GroupId).FirstOrDefault();
-            if (modelGroupDB == null || model == null)
-                throw new ValidationException("Group not create or user not found");
-
-            model.IsInvited = 2;
-            model.Modified = DateTime.UtcNow;
-
-            _dataBase.Update(model);
-            _dataBase.Save();
-        }
-
-        public void DiscardInvite(GroupUser item, string adminId)
-        {
-            var result = _mapper.Map<GroupUserDB>(item);
-
-            var modelGroupDB = _dataBase.Find<GroupDB>(
-                x => x.Id == result.GroupId
-                && x.AdminId == adminId
-                && x.IsNotDeleted == true).FirstOrDefault();
-            var model = _dataBase.Find<GroupUserDB>(
-                x => x.UserId == result.UserId
-                && x.IsInvited == 0
-                && x.GroupId == result.GroupId).FirstOrDefault();
-            if (modelGroupDB == null || model == null)
-                throw new ValidationException("Group not create or user not found");
-
-            model.IsInvited = 2;
-            model.Modified = DateTime.UtcNow;
-
-            _dataBase.Update(model);
-            _dataBase.Save();
-        }
-
-        public void GetEntitle(GroupUser item, string adminId)
-        {
-            var result = _mapper.Map<GroupUserDB>(item);
-
-            var modelGroupDB = _dataBase.Find<GroupDB>(
-                x => x.Id == result.GroupId
+                x => x.Id == item.GroupId
                 && x.AdminId == adminId).FirstOrDefault();
-            var model = _dataBase.Find<GroupUserDB>(
-                x => x.UserId == result.UserId
-                && x.GroupId == result.GroupId).FirstOrDefault();
-            if (modelGroupDB == null || model == null)
-                throw new ValidationException("Group not create or user not found");
 
-            if (result.RightToCreateBoards)
-            {
-                model.RightToCreateBoards = false;
-            }
-            else
-            {
-                model.RightToCreateBoards = true;
-            }
+            if (modelGroupDB == null)
+              throw new ValidationException("Group not create");
+
+            var model = _dataBase.Find<GroupUserDB>(
+                x => x.UserId == item.UserId
+                && x.GroupId == item.GroupId).FirstOrDefault();
+
+            if (model == null || model.RightToCreateBoards)
+              throw new ValidationException("User not found");
+
+            model.RightToCreateBoards = true;
             model.Modified = DateTime.UtcNow;
 
             _dataBase.Update(model);
             _dataBase.Save();
         }
 
-        public IEnumerable<GroupUser> FindReceivedInvites(string userId)
+        public void TakeAwayRightToCreateBoards(GroupUser item, string adminId)
         {
+            var modelGroupDB = _dataBase.Find<GroupDB>(
+                x => x.Id == item.GroupId
+                && x.AdminId == adminId).FirstOrDefault();
+
+            if (modelGroupDB == null)
+              throw new ValidationException("User not found");
+
             var model = _dataBase.Find<GroupUserDB>(
-                x => x.UserId == userId 
-                && x.IsInvited == 0);
-            if (model.FirstOrDefault() == null)
-                return null;
+                x => x.UserId == item.UserId
+                && x.GroupId == item.GroupId).FirstOrDefault();
 
-            var result = _mapper.Map<IEnumerable<GroupUser>>(model);
+            if (model == null || !model.RightToCreateBoards)
+              throw new ValidationException("User not found");
 
-            return result;
+            model.RightToCreateBoards = false;
+            model.Modified = DateTime.UtcNow;
+
+            _dataBase.Update(model);
+            _dataBase.Save();
         }
 
-        public IEnumerable<GroupUser> FindGroupsById(string userId)
+        public void Dispose()
         {
-            var model = _dataBase.Find<GroupUserDB>(
-                x => x.UserId == userId
-                && x.IsInvited == 1);
-            if (model.FirstOrDefault() == null)
-                return null;
-
-            var result = _mapper.Map<IEnumerable<GroupUser>>(model);
-
-            return result;
+            if (!_disposed)
+            {
+                _dataBase.Dispose();
+                _disposed = true;
+                GC.SuppressFinalize(this);
+            }
         }
 
-        public IEnumerable<GroupUser> FindUsersByGroupId(Guid groupId)
+        ~GroupUserService()
         {
-            var model = _dataBase.Find<GroupUserDB>(
-                x => x.GroupId == groupId);
-            if (model.FirstOrDefault() == null)
-                return null;
-
-            var result = _mapper.Map<IEnumerable<GroupUser>>(model);
-
-            return result;
+            Dispose();
         }
     }
 }

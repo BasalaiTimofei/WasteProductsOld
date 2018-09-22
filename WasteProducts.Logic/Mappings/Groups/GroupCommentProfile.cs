@@ -10,8 +10,8 @@ namespace WasteProducts.Logic.Mappings.Groups
         public GroupCommentProfile()
         {
             CreateMap<GroupComment, GroupCommentDB>()
-                .ForMember(x => x.Id, y => y.MapFrom(z => Guid.Parse(z.Id)))
-                .ForMember(x => x.GroupBoardId, y => y.MapFrom(z => Guid.Parse(z.GroupBoardId)))
+                .ForMember(x => x.Id, y => y.MapFrom(z => z.Id))
+                .ForMember(x => x.GroupBoardId, y => y.MapFrom(z => z.GroupBoardId))
                 .ForMember(x => x.Modified, y => y.Ignore())
                 .ReverseMap();
         }

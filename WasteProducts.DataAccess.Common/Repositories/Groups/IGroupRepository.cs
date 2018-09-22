@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace WasteProducts.DataAccess.Common.Repositories.Groups
@@ -38,7 +36,14 @@ namespace WasteProducts.DataAccess.Common.Repositories.Groups
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="id">Primary key object</param>
-        void Delete<T>(Guid id) where T : class;
+        void Delete<T>(string id) where T : class;
+
+        /// <summary>
+        /// Deletess user from the group.
+        /// </summary>
+        /// <param name="groupId">ID of the group.</param>
+        /// <param name="userId">ID of the user.</param>
+        Task DeleteUserFromGroupAsync(string groupId, string userId);
 
         /// <summary>
         /// Delete object from db by object

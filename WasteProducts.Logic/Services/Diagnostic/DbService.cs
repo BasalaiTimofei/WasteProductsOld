@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Ninject.Extensions.Logging;
 using WasteProducts.DataAccess.Common.Context;
+using WasteProducts.DataAccess.Common.Repositories.Diagnostic;
 using WasteProducts.Logic.Common.Models.Diagnostic;
 using WasteProducts.Logic.Common.Services.Diagnostic;
 using WasteProducts.Logic.Resources;
@@ -11,6 +12,7 @@ namespace WasteProducts.Logic.Services
     /// <inheritdoc />
     public class DbService : IDbService
     {
+        private readonly ISeedRepository _seedRepo;
         private readonly IDbSeedService _dbSeedService;
         private readonly IDatabase _database;
         private readonly ILogger _logger;
@@ -23,8 +25,9 @@ namespace WasteProducts.Logic.Services
         /// <param name="dbSeedService">IDbSeedService implementation that seeds into database</param>
         /// <param name="database">IDatabase implementation, for operations with database</param>
         /// <param name="logger">NLog logger</param>
-        public DbService(IDbSeedService dbSeedService, IDatabase database, ILogger logger)
+        public DbService(ISeedRepository seedRepo, IDbSeedService dbSeedService, IDatabase database, ILogger logger)
         {
+            _seedRepo = seedRepo;
             _dbSeedService = dbSeedService;
             _database = database;
             _logger = logger;
@@ -75,10 +78,16 @@ namespace WasteProducts.Logic.Services
                 if (disposing)
                 {
                     _database.Dispose();
+                    _seedRepo?.Dispose();
                 }
 
                 _disposed = true;
             }
+        }
+
+        public Task ReCreateAndSeedAsync()
+        {
+            return _seedRepo.RecreateAndSeedAsync();
         }
 
         ~DbService()

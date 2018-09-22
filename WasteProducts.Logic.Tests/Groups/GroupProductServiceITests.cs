@@ -35,8 +35,8 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         {
             _groupProductDB = new GroupProductDB
             {
-                Id = new Guid("00000000-0000-0000-0000-000000000004"),
-                GroupBoardId = new Guid("00000000-0000-0000-0000-000000000003"),
+                Id = "00000000-0000-0000-0000-000000000004",
+                GroupBoardId = "00000000-0000-0000-0000-000000000003",
                 Information = "Information",
                 ProductId = "2"
             };
@@ -49,7 +49,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             };
             _groupBoardDB = new GroupBoardDB
             {
-                Id = new Guid("00000000-0000-0000-0000-000000000003"),
+                Id = "00000000-0000-0000-0000-000000000003",
                 CreatorId = "2",
                 Information = "Some product",
                 Name = "Best",
@@ -57,13 +57,12 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
                 Deleted = null,
                 IsNotDeleted = true,
                 Modified = DateTime.UtcNow,
-                GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
+                GroupId ="00000000-0000-0000-0000-000000000001",
                 GroupProducts = null
             };
             _groupUserDB = new GroupUserDB
             {
-                Id = new Guid("00000000-0000-0000-0000-000000000002"),
-                GroupId = new Guid("00000000-0000-0000-0000-000000000001"),
+                GroupId = "00000000-0000-0000-0000-000000000001",
                 RightToCreateBoards = true
             };
             _groupRepositoryMock = new Mock<IGroupRepository>();
@@ -95,7 +94,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
                 .Returns(_selectedUserList);
 
-            _groupProductService.Create(_groupProduct, "2", new Guid("00000000-0000-0000-0000-000000000003"));
+            _groupProductService.Create(_groupProduct, "2", "00000000-0000-0000-0000-000000000003");
 
             _groupRepositoryMock.Verify(m => m.Create(It.IsAny<GroupProductDB>()), Times.Once);
         }
@@ -109,9 +108,10 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
 
             Assert.Throws(typeof(ValidationException),
                     delegate () {
-                        _groupProductService.Create(_groupProduct, "2", 
-                            new Guid("00000000-0000-0000-0000-000000000003"));
+                        _groupProductService.Create(_groupProduct, "2",
+                            "00000000-0000-0000-0000-000000000003");
                     });
+
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
                 .Returns(_selectedUserList);
 
-            _groupProductService.Update(_groupProduct, "2", new Guid("00000000-0000-0000-0000-000000000003"));
+            _groupProductService.Update(_groupProduct, "2", "00000000-0000-0000-0000-000000000003");
 
             _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupProductDB>()), Times.Once);
         }
@@ -144,7 +144,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             Assert.Throws(typeof(ValidationException),
                     delegate () {
                         _groupProductService.Update(_groupProduct, "2",
-                            new Guid("00000000-0000-0000-0000-000000000003"));
+                            "00000000-0000-0000-0000-000000000003");
                     });
         }
 
@@ -161,7 +161,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
                 .Returns(_selectedUserList);
 
-            _groupProductService.Delete(_groupProduct, "2", new Guid("00000000-0000-0000-0000-000000000003"));
+            _groupProductService.Delete(_groupProduct, "2", "00000000-0000-0000-0000-000000000003");
 
             _groupRepositoryMock.Verify(m => m.Delete(_groupProductDB), Times.Once);
         }
@@ -178,7 +178,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             Assert.Throws(typeof(ValidationException),
                     delegate () {
                         _groupProductService.Delete(_groupProduct, "2",
-                            new Guid("00000000-0000-0000-0000-000000000003"));
+                            "00000000-0000-0000-0000-000000000003");
                     });
         }
 
@@ -189,7 +189,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupProductDB, Boolean>>()))
                 .Returns(_selectedProductList);
 
-            var result = _groupProductService.FindById(new Guid("00000000-0000-0000-0000-000000000000"));
+            var result = _groupProductService.FindById("00000000-0000-0000-0000-000000000000");
             Assert.AreEqual(_groupProduct.Id, result.Id);
             Assert.AreEqual(_groupProduct.Information, result.Information);
         }
@@ -199,7 +199,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupProductDB, Boolean>>()))
                 .Returns(_selectedProductList);
 
-            var result = _groupProductService.FindById(new Guid("00000000-0000-0000-0000-000000000000"));
+            var result = _groupProductService.FindById("00000000-0000-0000-0000-000000000000");
             Assert.AreEqual(null, result);
         }
     }

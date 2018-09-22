@@ -35,12 +35,11 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <param name="item">Object</param>
         /// <returns>200(Object)</returns>
         [SwaggerResponseRemoveDefaults]
-        [ApiValidationExceptionFilter]
         [SwaggerResponse(HttpStatusCode.OK, "Comment create", typeof(GroupComment))]
         [HttpPost, Route("{groupId}/comment")]
         public IHttpActionResult Create([FromUri]string groupId, GroupComment item)
         {
-            item.Id = _groupCommentService.Create(item, new Guid(groupId));
+            item.Id = _groupCommentService.Create(item, groupId);
 
             return Ok(item);
         }
@@ -52,12 +51,11 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <param name="item">Object</param>
         /// <returns>200(Object)</returns>
         [SwaggerResponseRemoveDefaults]
-        [ApiValidationExceptionFilter]
         [SwaggerResponse(HttpStatusCode.OK, "Comment update", typeof(GroupComment))]
         [HttpPut, Route("{groupId}/comment")]
         public IHttpActionResult Update([FromUri] string groupId, GroupComment item)
         {
-            _groupCommentService.Update(item, new Guid(groupId));
+            _groupCommentService.Update(item, groupId);
 
             return Ok(item);
         }
@@ -69,12 +67,11 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <param name="item">Object</param>
         /// <returns>200()</returns>
         [SwaggerResponseRemoveDefaults]
-        [ApiValidationExceptionFilter]
         [SwaggerResponse(HttpStatusCode.OK, "Comment delete")]
         [HttpDelete, Route("{groupId}/comment")]
         public IHttpActionResult Delete([FromUri] string groupId, GroupComment item)
         {
-            _groupCommentService.Delete(item, new Guid(groupId));
+            _groupCommentService.Delete(item, groupId);
 
             return Ok();
         }

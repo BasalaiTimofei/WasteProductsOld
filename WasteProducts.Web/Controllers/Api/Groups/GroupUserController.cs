@@ -35,12 +35,11 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <param name="adminId">Primary key</param>
         /// <returns>200</returns>
         [SwaggerResponseRemoveDefaults]
-        [ApiValidationExceptionFilter]
         [SwaggerResponse(HttpStatusCode.OK, "Invite send", typeof(GroupUser))]
         [HttpPost, Route("{groupId}/invite/{adminId}")]
-        public IHttpActionResult SendInvite(GroupUser item, [FromUri]string adminId)
+        public IHttpActionResult Invite(GroupUser item, [FromUri]string adminId)
         {
-            _groupUserService.SendInvite(item, adminId);
+            _groupUserService.Invite(item, adminId);
 
             return Ok();
         }
@@ -52,12 +51,11 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <param name="adminId">Primary key</param>
         /// <returns>200</returns>
         [SwaggerResponseRemoveDefaults]
-        [ApiValidationExceptionFilter]
         [SwaggerResponse(HttpStatusCode.OK, "User delete", typeof(GroupUser))]
         [HttpPost, Route("{groupId}/dismiss/{adminId}")]
-        public IHttpActionResult DismissUser(GroupUser item, [FromUri]string adminId)
+        public IHttpActionResult Kick(GroupUser item, [FromUri]string adminId)
         {
-            _groupUserService.DismissUser(item, adminId);
+            _groupUserService.Kick(item, adminId);
 
             return Ok();
         }
@@ -69,12 +67,11 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <param name="adminId">Primary key</param>
         /// <returns>200</returns>
         [SwaggerResponseRemoveDefaults]
-        [ApiValidationExceptionFilter]
         [SwaggerResponse(HttpStatusCode.OK, "Get entitle", typeof(GroupUser))]
         [HttpPut, Route("{groupId}/entitle/{adminId}")]
-        public IHttpActionResult GetEntitle(GroupUser item, [FromUri]string adminId)
+        public IHttpActionResult TakeAwayRightToCreateBoards(GroupUser item, [FromUri]string adminId)
         {
-            _groupUserService.GetEntitle(item, adminId);
+            _groupUserService.TakeAwayRightToCreateBoards(item, adminId);
 
             return Ok();
         }

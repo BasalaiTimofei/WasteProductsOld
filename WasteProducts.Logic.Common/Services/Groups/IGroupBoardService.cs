@@ -32,6 +32,6 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// </summary>
         /// <param name="id">Primary key</param>
         /// <return>Object</return>
-        GroupBoard FindById(Guid id);
+        GroupBoard FindById(string id);
     }
 }

@@ -7,12 +7,13 @@ using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Users;
-using WasteProducts.DataAccess.Common.Repositories.UserManagement;
+using WasteProducts.DataAccess.Common.Repositories.Users;
 using WasteProducts.DataAccess.Contexts;
 
-namespace WasteProducts.DataAccess.Repositories.UserManagement
+namespace WasteProducts.DataAccess.Repositories.Users
 {
     public class UserRepository : IUserRepository
     {
@@ -110,12 +111,12 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             return result.Succeeded;
         }
 
-        public async Task<UserDAL> FindByNameAndPasswordAsync(string userName, string password)
+        public async Task<UserDAL> GetByNameAndPasswordAsync(string userName, string password)
         {
             return MapTo<UserDAL>(await _manager.FindAsync(userName, password));
         }
 
-        public async Task<UserDAL> FindByEmailAndPasswordAsync(string email, string password)
+        public async Task<UserDAL> GetByEmailAndPasswordAsync(string email, string password)
         {
             var user = await _manager.FindByEmailAsync(email);
             if (user != null && await _manager.CheckPasswordAsync(user, password))
@@ -151,8 +152,27 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
 
         public async Task DeleteAsync(string userId)
         {
-            var user = await _manager.FindByIdAsync(userId);
-            await _manager.DeleteAsync(user);
+            await Task.Run(() =>
+            {
+                var user = _context.Users.
+                            Include(u => u.Friends).
+                            Include(u => u.ProductDescriptions).
+                            Include(u => u.Groups.Select(g => g.Group))
+                            .FirstOrDefault(u => u.Id == userId);
+
+                user.Groups.Clear();
+                user.ProductDescriptions.Clear();
+                user.Friends.Clear();
+
+                var group = _context.Groups.FirstOrDefault(g => g.AdminId == user.Id);
+                if(group != null)
+                {
+                    _context.Groups.Remove(group);
+                }
+
+                _context.SaveChanges();
+                _manager.Delete(user);
+            });
         }
 
         public async Task RemoveClaimAsync(string userId, Claim claim)
@@ -313,6 +333,15 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             });
         }
 
+        public async Task<IList<UserDAL>> GetFriendsAsync(string userId)
+        {
+            return await Task.Run(() =>
+            {
+                var user = _context.Users.Include(u => u.Friends).FirstOrDefault(u => u.Id == userId);
+                return _mapper.Map<List<UserDAL>>(user.Friends);
+            });
+        }
+
         public async Task DeleteFriendAsync(string userId, string deletingFriendId)
         {
             await Task.Run(() =>
@@ -358,6 +387,15 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             });
         }
 
+        public async Task<IList<UserProductDescriptionDB>> GetProductDescriptionsAsync(string userId)
+        {
+            return await Task.Run(() =>
+            {
+                var user = _context.Users.Include(u => u.ProductDescriptions).FirstOrDefault(u => u.Id == userId);
+                return user.ProductDescriptions;
+            });
+        }
+
         public async Task<bool> UpdateProductDescriptionAsync(string userId, string productId, int rating, string description)
         {
             return await Task.Run(() =>
@@ -379,19 +417,49 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
         {
             return await Task.Run(() =>
             {
-                UserProductDescriptionDB description = null;
-                try
+                var description = _context.UserProductDescriptions.FirstOrDefault(d => d.User.Id == userId && d.Product.Id == productId);
+                if (description != null)
                 {
-                    description = _context.UserProductDescriptions.First(d => d.User.Id == userId && d.Product.Id == productId);
+                    var entry = _context.Entry(description);
+                    entry.State = EntityState.Deleted;
+                    _context.SaveChanges();
+                    return true;
                 }
-                catch (InvalidOperationException)
+                else return false;
+            });
+        }
+
+        public async Task ChangeGroupInvitationStatusAsync(string userId, string groupId, bool isConfirmed)
+        {
+            await Task.Run(() =>
+            {
+                var groupUser = _context.GroupUsers.FirstOrDefault(u => u.UserId == userId && u.GroupId == groupId);
+                if (groupUser != null)
                 {
-                    return false;
+                    var entry = _context.Entry(groupUser);
+                    if (isConfirmed)
+                    {
+                        groupUser.IsConfirmed = true;
+                        groupUser.Modified = DateTime.UtcNow;
+                        entry.State = EntityState.Unchanged;
+                        entry.Property(p => p.Modified).IsModified = true;
+                        entry.Property(p => p.IsConfirmed).IsModified = true;
+                    }
+                    else
+                    {
+                        entry.State = EntityState.Deleted;
+                    }
+                    _context.SaveChanges();
                 }
-                var entry = _context.Entry(description);
-                entry.State = EntityState.Deleted;
-                _context.SaveChanges();
-                return true;
+            });
+        }
+
+        public async Task<IEnumerable<GroupUserDB>> GetGroupsAsync(string userId)
+        {
+            return await Task.Run(() =>
+            {
+                var user = _context.Users.Include(u => u.Groups.Select(g => g.Group)).FirstOrDefault(u => u.Id == userId);
+                return user.Groups.Where(g => g.Group.IsNotDeleted);
             });
         }
 
@@ -404,8 +472,6 @@ namespace WasteProducts.DataAccess.Repositories.UserManagement
             where T : UserDAL
             =>
             _mapper.Map<UserDAL>(user);
-
-        
 
         ~UserRepository()
         {

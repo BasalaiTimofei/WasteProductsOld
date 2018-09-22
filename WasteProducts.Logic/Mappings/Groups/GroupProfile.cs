@@ -10,7 +10,7 @@ namespace WasteProducts.Logic.Mappings.Groups
         public GroupProfile()
         {
             CreateMap<Group, GroupDB>()
-                .ForMember(x => x.Id, y => y.MapFrom(z=>Guid.Parse(z.Id)))
+                .ForMember(x => x.Id, y => y.MapFrom(z=>z.Id))
                 .ForMember(x => x.Created, y => y.Ignore())
                 .ForMember(x => x.Deleted, y => y.Ignore())
                 .ForMember(x => x.Modified, y => y.Ignore())
