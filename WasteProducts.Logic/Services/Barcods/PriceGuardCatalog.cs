@@ -1,9 +1,12 @@
 ﻿using System.Text.RegularExpressions;
 using WasteProducts.Logic.Common.Services.Barcods;
 using WasteProducts.Logic.Common.Models.Barcods;
+using System.Threading.Tasks;
+using System;
 
 namespace WasteProducts.Logic.Services.Barcods
 {
+    /// <inheritdoc />
     public class PriceGuardCatalog : ICatalog
     {
         const string SEARCH_URI_FORMATTER = "https://priceguard.ru/search?q={0}";
@@ -21,9 +24,10 @@ namespace WasteProducts.Logic.Services.Barcods
             _httpHelper = httpHelper;
         }
 
-        public CatalogProductInfo Get(string barcode)
+        /// <inheritdoc />
+        public async Task<Barcode> GetAsync(string barcode)
         {
-            var queryResult = GetPage(barcode);
+            var queryResult = await GetPageAsync(barcode);
 
             //если страница с товаром найдена
             if (queryResult.StatusCode >= 200 && queryResult.StatusCode < 300)
@@ -33,9 +37,11 @@ namespace WasteProducts.Logic.Services.Barcods
                 //минимум что мы хотим знать о товаре, это его имя. если оно найдено - дополняем остальными данными ProductInfo и возвращаем значение
                 if (nameParseResult.Success)
                 {
-                    var result = new CatalogProductInfo();
-                    
-                    result.Name = nameParseResult.Value;
+                    var result = new Barcode();
+
+                    result.Id = Guid.NewGuid().ToString();
+                    result.Code = barcode;
+                    result.ProductName = nameParseResult.Value;
                     result.Composition = ParseComposition(queryResult.Page).Value;
                     result.Brend = ParseBrend(queryResult.Page).Value;
                     result.Country = ParseCountry(queryResult.Page).Value;
@@ -43,7 +49,7 @@ namespace WasteProducts.Logic.Services.Barcods
                     var picturePathParseResult = ParsePicturePath(queryResult.Page);
                     if (picturePathParseResult.Success)
                     {
-                        result.Picture = _httpHelper.DownloadPicture(picturePathParseResult.Value);
+                        result.Picture = await _httpHelper.DownloadPictureAsync(picturePathParseResult.Value);
                     }
 
                     return result;
@@ -53,7 +59,12 @@ namespace WasteProducts.Logic.Services.Barcods
             return null;
         }
 
-        HttpQueryResult GetPage(string barcode)
+        /// <summary>
+        /// Gets page.
+        /// </summary>
+        /// <param name="barcode">String code.</param>
+        /// <returns>Model of HttpQueryResult</returns>
+        private async Task<HttpQueryResult> GetPageAsync(string barcode)
         {
             var result = new HttpQueryResult()
             {
@@ -61,7 +72,7 @@ namespace WasteProducts.Logic.Services.Barcods
             };
 
             var searchPageURI = string.Format(SEARCH_URI_FORMATTER, barcode);
-            var searchPageResult = _httpHelper.SendGET(searchPageURI);
+            var searchPageResult = await _httpHelper.SendGETAsync(searchPageURI);
 
             if(searchPageResult.StatusCode >= 200 && searchPageResult.StatusCode < 300)
             {
@@ -70,7 +81,7 @@ namespace WasteProducts.Logic.Services.Barcods
                 if(descriptionPageURIParseResult.Success)
                 {
                     var descriptionPageURI = string.Format(DESCRIPTION_URI_FORMATTER, descriptionPageURIParseResult.Value);
-                    var descriptionPageResult = _httpHelper.SendGET(descriptionPageURI);
+                    var descriptionPageResult = await _httpHelper.SendGETAsync(descriptionPageURI);
 
                     if (descriptionPageResult.StatusCode >= 200 && descriptionPageResult.StatusCode < 300)
                     {
@@ -82,7 +93,12 @@ namespace WasteProducts.Logic.Services.Barcods
             return result;
         }
 
-        ParseResult ParseName(string page)
+        /// <summary>
+        /// Gets product name.
+        /// </summary>
+        /// <param name="page">String page.</param>
+        /// <returns>Product name</returns>
+        private ParseResult ParseName(string page)
         {
             var result = new ParseResult();
 
@@ -98,12 +114,22 @@ namespace WasteProducts.Logic.Services.Barcods
             return result;
         }
 
-        ParseResult ParseComposition(string page)
+        /// <summary>
+        /// Gets product name.
+        /// </summary>
+        /// <param name="page">String page.</param>
+        /// <returns>Product composition</returns>
+        private ParseResult ParseComposition(string page)
         {
             return new ParseResult(); ;
         }
 
-        ParseResult ParseBrend(string page)
+        /// <summary>
+        /// Gets product name.
+        /// </summary>
+        /// <param name="page">String page.</param>
+        /// <returns>Product brand</returns>
+        private ParseResult ParseBrend(string page)
         {
             var result = new ParseResult();
 
@@ -119,7 +145,12 @@ namespace WasteProducts.Logic.Services.Barcods
             return result;
         }
 
-        ParseResult ParseCountry(string page)
+        /// <summary>
+        /// Gets product name.
+        /// </summary>
+        /// <param name="page">String page.</param>
+        /// <returns>Product country</returns>
+        private ParseResult ParseCountry(string page)
         {
             var result = new ParseResult();
 
@@ -135,7 +166,12 @@ namespace WasteProducts.Logic.Services.Barcods
             return result;
         }
 
-        ParseResult ParsePicturePath(string page)
+        /// <summary>
+        /// Gets product name.
+        /// </summary>
+        /// <param name="page">String page.</param>
+        /// <returns>Product picture path</returns>
+        private ParseResult ParsePicturePath(string page)
         {
             var result = new ParseResult();
 
@@ -150,8 +186,13 @@ namespace WasteProducts.Logic.Services.Barcods
 
             return result;
         }
-        
-        ParseResult ParseDescriptionPageURI(string pageHTML)
+
+        /// <summary>
+        /// Gets product name.
+        /// </summary>
+        /// <param name="page">String page.</param>
+        /// <returns>Product Description Page URI</returns>
+        private ParseResult ParseDescriptionPageURI(string pageHTML)
         {
             var result = new ParseResult();
 

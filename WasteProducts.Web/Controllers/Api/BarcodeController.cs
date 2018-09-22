@@ -12,6 +12,7 @@ using System.Web;
 using System.IO;
 using System.Drawing;
 using WasteProducts.Logic.Services.Barcods;
+using System.Threading.Tasks;
 
 namespace WasteProducts.Web.Controllers.Api
 {
@@ -21,6 +22,7 @@ namespace WasteProducts.Web.Controllers.Api
     [RoutePrefix("api/barcode")]
     public class BarcodeController : BaseApiController
     {
+        private Barcode _barcode = null;
         private readonly IBarcodeScanService _scanner;
         private readonly IBarcodeCatalogSearchService _searcher;
         private readonly ICatalog _catalog;
@@ -41,26 +43,19 @@ namespace WasteProducts.Web.Controllers.Api
         /// <summary>
         /// Scan photo of barcode.
         /// </summary>
-        /// <param name="upload">The photo of barcode.</param>
+        /// <param name="uploadStream">The photo of barcode.</param>
         /// <returns>Numerical code of barcode.</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get numerical barcode", typeof(string))]
-        [HttpPost, Route("getcode")]
-        public IHttpActionResult PostCode(HttpPostedFileBase upload)
+        [HttpPost, Route("onlyread")]
+        public async Task<IHttpActionResult> GetCodeByStreamPhotoAsync(Stream uploadStream)
         {
             string code = "";
-            using (Stream barcodeStream = upload.InputStream)
-            {
-                code = _scanner.ScanBySpire(new Bitmap(barcodeStream));
-                if (code.Length != 8 || code.Length != 4)
-                {
-                    return BadRequest();
-                }
-                else
-                {
-                    return Ok(code);
-                }
-            }
+            await Task.Run(() =>
+            {  
+                code = _scanner.ScanBySpire(uploadStream);
+            });
+            return Ok(code);
         }
 
         /// <summary>
@@ -71,10 +66,29 @@ namespace WasteProducts.Web.Controllers.Api
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get barcode", typeof(Barcode))]
         [HttpPost, Route("{code}")]
-        public IHttpActionResult GetBarcode(string code)
+        public async Task<IHttpActionResult> GetBarcodeByCodeAsync(string code)
         {
-            CatalogProductInfo catalog = _searcher.Get(code);      
-            return Ok(catalog);
+            _barcode = await _searcher.GetAsync(code);      
+            return Ok(_barcode);
+        }
+
+        /// <summary>
+        /// Scan photo of barcode and return a model of Barcode.
+        /// </summary>
+        /// <param name="uploadStream">Photo stream barcode.</param>
+        /// <returns>Model of Barcode.</returns>
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Get barcode", typeof(Barcode))]
+        [HttpPost, Route("read")]
+        public async Task<IHttpActionResult> GetBarcodeAsync(Stream uploadStream)
+        {
+            string code = "";
+            await Task.Run(() =>
+            {
+                code = _scanner.ScanBySpire(uploadStream);
+            });
+            _barcode = await _searcher.GetAsync(code);
+            return Ok(_barcode);
         }
     }
 }

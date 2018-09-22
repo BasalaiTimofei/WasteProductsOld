@@ -3,6 +3,8 @@ using System.Drawing;
 using WasteProducts.Logic.Services.Barcods;
 using ZXing;
 using Moq;
+using System.IO;
+using System.Drawing.Imaging;
 
 namespace WasteProducts.Logic.Tests.Barcode_Tests
 {
@@ -12,6 +14,8 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
     [TestFixture]
     public class BarcodeScanService_Tests
     {
+        private Stream _stream;
+        private Bitmap _image;
         private Bitmap _imageGood = Properties.Resources.IMG_GoodImage;
         private Bitmap _imageBad = Properties.Resources.IMG_BadImage;
         private Bitmap _imageOriginal = Properties.Resources.IMG_NotResize;
@@ -22,10 +26,15 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
         public void TestMethod_Spire_WithGoodImage()
         {
             //Arrange
+            string result = "";
             var service = new BarcodeScanService();
 
             //Act
-            string result = service.ScanBySpire(_imageGood);
+            using (_stream = new MemoryStream())
+            {
+                _imageGood.Save(_stream, ImageFormat.Bmp);
+                result = service.ScanBySpire(_stream);
+            }
 
             //Assert
             Assert.AreEqual(_verified, result);
@@ -35,10 +44,15 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
         public void TestMethod_Spire_WithBadImage()
         {
             //Arrange
+            string result = "";
             var service = new BarcodeScanService();
 
             //Act
-            string result = service.ScanBySpire(_imageBad);
+            using (_stream = new MemoryStream())
+            {
+                _imageBad.Save(_stream, ImageFormat.Bmp);
+                result = service.ScanBySpire(_stream);
+            }
 
             //Assert
             Assert.AreNotEqual(_verified, result);
