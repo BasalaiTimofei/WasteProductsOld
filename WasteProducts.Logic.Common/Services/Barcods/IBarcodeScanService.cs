@@ -20,14 +20,14 @@ namespace WasteProducts.Logic.Common.Services.Barcods
         /// <summary>
         /// get a numerical barcode on the photo
         /// </summary>
-        /// <param name="image"> image of barcode photo</param>
+        /// <param name="stream"> image of barcode photo</param>
         /// <returns>string of a numerical barcode</returns>
         string ScanByZxing(Stream stream);
 
         /// <summary>
         /// get a numeric barcode from the photo
         /// </summary>
-        /// <param name="image"> image of barcode photo</param>
+        /// <param name="stream"> image of barcode photo</param>
         /// <returns>string of a numerical barcode</returns>
         string ScanBySpire(Stream stream);
     }

@@ -2,9 +2,11 @@
 using WasteProducts.Logic.Common.Services.Barcods;
 using WasteProducts.Logic.Common.Models.Barcods;
 using System.Threading.Tasks;
+using System;
 
 namespace WasteProducts.Logic.Services.Barcods
 {
+    /// <inheritdoc />
     public class EDostavkaCatalog : ICatalog
     {
         const string SEARCH_URI_FORMATTER = "https://e-dostavka.by/search/?searchtext={0}";
@@ -22,6 +24,7 @@ namespace WasteProducts.Logic.Services.Barcods
             _httpHelper = httpHelper;
         }
 
+        /// <inheritdoc />
         public async Task<Barcode> GetAsync(string barcode)
         {
             var queryResult = await GetPageAsync(barcode);
@@ -36,6 +39,7 @@ namespace WasteProducts.Logic.Services.Barcods
                 {
                     var result = new Barcode();
 
+                    result.Id = Guid.NewGuid().ToString();
                     result.Code = barcode;
                     result.ProductName = nameParseResult.Value;
                     result.Composition = ParseComposition(queryResult.Page).Value;
@@ -55,7 +59,12 @@ namespace WasteProducts.Logic.Services.Barcods
             return null;
         }
 
-        async Task<HttpQueryResult> GetPageAsync(string barcode)
+        /// <summary>
+        /// Gets page.
+        /// </summary>
+        /// <param name="barcode">String code.</param>
+        /// <returns>Model of HttpQueryResult</returns>
+        private async Task<HttpQueryResult> GetPageAsync(string barcode)
         {
             var result = new HttpQueryResult()
             {
@@ -83,7 +92,12 @@ namespace WasteProducts.Logic.Services.Barcods
             return result;
         }
 
-        ParseResult ParseName(string page)
+        /// <summary>
+        /// Gets product name.
+        /// </summary>
+        /// <param name="page">String page.</param>
+        /// <returns>Product name</returns>
+        private ParseResult ParseName(string page)
         {
             var result = new ParseResult();
 
@@ -99,7 +113,12 @@ namespace WasteProducts.Logic.Services.Barcods
             return result;
         }
 
-        ParseResult ParseComposition(string page)
+        /// <summary>
+        /// Gets product name.
+        /// </summary>
+        /// <param name="page">String page.</param>
+        /// <returns>Product composition</returns>
+        private ParseResult ParseComposition(string page)
         {
             var result = new ParseResult();
 
@@ -114,8 +133,13 @@ namespace WasteProducts.Logic.Services.Barcods
 
             return result;
         }
-        
-        ParseResult ParseBrend(string page)
+
+        /// <summary>
+        /// Gets product name.
+        /// </summary>
+        /// <param name="page">String page.</param>
+        /// <returns>Product brand</returns>
+        private ParseResult ParseBrend(string page)
         {
             var result = new ParseResult();
 
@@ -131,7 +155,12 @@ namespace WasteProducts.Logic.Services.Barcods
             return result;
         }
 
-        ParseResult ParseCountry(string page)
+        /// <summary>
+        /// Gets product name.
+        /// </summary>
+        /// <param name="page">String page.</param>
+        /// <returns>Product country</returns>
+        private ParseResult ParseCountry(string page)
         {
             var result = new ParseResult();
 
@@ -147,7 +176,12 @@ namespace WasteProducts.Logic.Services.Barcods
             return result;
         }
 
-        ParseResult ParsePicturePath(string page)
+        /// <summary>
+        /// Gets product name.
+        /// </summary>
+        /// <param name="page">String page.</param>
+        /// <returns>Product picture path</returns>
+        private ParseResult ParsePicturePath(string page)
         {
             var result = new ParseResult();
 
@@ -163,7 +197,12 @@ namespace WasteProducts.Logic.Services.Barcods
             return result;
         }
 
-        ParseResult ParseDescriptionPageURI(string pageHTML)
+        /// <summary>
+        /// Gets product name.
+        /// </summary>
+        /// <param name="page">String page.</param>
+        /// <returns>Product Description Page URI</returns>
+        private ParseResult ParseDescriptionPageURI(string pageHTML)
         {
             var result = new ParseResult();
 

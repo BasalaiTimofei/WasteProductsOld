@@ -8,6 +8,7 @@ using WasteProducts.Logic.Common.Services.Barcods;
 
 namespace WasteProducts.Logic.Services.Barcods
 {
+    /// <inheritdoc />
     public class BarcodeCatalogSearchService: IBarcodeCatalogSearchService
     {
         IEnumerable<ICatalog> _catalogs;
@@ -19,6 +20,7 @@ namespace WasteProducts.Logic.Services.Barcods
             _httpHelper = new HttpHelper();
         }
 
+        /// <inheritdoc />
         public async Task<Barcode> GetAsync(string barcode)
         {
             foreach(var catalog in _catalogs)

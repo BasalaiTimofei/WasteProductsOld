@@ -8,10 +8,12 @@ using WasteProducts.Logic.Common.Services.Barcods;
 
 namespace WasteProducts.Logic.Services.Barcods
 {
+    /// <inheritdoc />
     public class HttpHelper: IHttpHelper
     {
         private  Image _image;
 
+        /// <inheritdoc />
         public async Task<HttpQueryResult> SendGETAsync(string uri)
         {
             try
@@ -32,6 +34,7 @@ namespace WasteProducts.Logic.Services.Barcods
             }
         }
 
+        /// <inheritdoc />
         public async Task<Image> DownloadPictureAsync(string uri)
         {
             try
