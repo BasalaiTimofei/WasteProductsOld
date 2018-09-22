@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using WasteProducts.Logic.Common.Services.Barcods;
 using WasteProducts.Logic.Common.Models.Barcods;
+using System.Threading.Tasks;
 
 namespace WasteProducts.Logic.Services.Barcods
 {
@@ -21,9 +22,9 @@ namespace WasteProducts.Logic.Services.Barcods
             _httpHelper = httpHelper;
         }
 
-        public Barcode Get(string barcode)
+        public async Task<Barcode> GetAsync(string barcode)
         {
-            var queryResult = GetPage(barcode);
+            var queryResult = await GetPageAsync(barcode);
 
             //если страница с товаром найдена
             if (queryResult.StatusCode >= 200 && queryResult.StatusCode < 300)
@@ -44,7 +45,7 @@ namespace WasteProducts.Logic.Services.Barcods
                     var picturePathParseResult = ParsePicturePath(queryResult.Page);
                     if (picturePathParseResult.Success)
                     {
-                        result.Picture = _httpHelper.DownloadPicture(picturePathParseResult.Value);//замокать
+                        result.Picture = await _httpHelper.DownloadPictureAsync(picturePathParseResult.Value);//замокать
                     }
 
                     return result;
@@ -54,7 +55,7 @@ namespace WasteProducts.Logic.Services.Barcods
             return null;
         }
 
-        HttpQueryResult GetPage(string barcode)
+        async Task<HttpQueryResult> GetPageAsync(string barcode)
         {
             var result = new HttpQueryResult()
             {
@@ -62,7 +63,7 @@ namespace WasteProducts.Logic.Services.Barcods
             };
 
             var searchPageURI = string.Format(SEARCH_URI_FORMATTER, barcode);
-            var searchPageResult = _httpHelper.SendGET(searchPageURI);
+            var searchPageResult = await _httpHelper.SendGETAsync(searchPageURI);
 
             if (searchPageResult.StatusCode >= 200 && searchPageResult.StatusCode < 300)
             {
@@ -70,7 +71,7 @@ namespace WasteProducts.Logic.Services.Barcods
 
                 if(descriptionPageURIParseResult.Success)
                 {
-                    var descriptionPageResult = _httpHelper.SendGET(descriptionPageURIParseResult.Value);
+                    var descriptionPageResult = await _httpHelper.SendGETAsync(descriptionPageURIParseResult.Value);
 
                     if (descriptionPageResult.StatusCode >= 200 && descriptionPageResult.StatusCode < 300)
                     {

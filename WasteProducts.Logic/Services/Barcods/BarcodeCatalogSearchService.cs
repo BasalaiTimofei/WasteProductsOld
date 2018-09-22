@@ -19,11 +19,11 @@ namespace WasteProducts.Logic.Services.Barcods
             _httpHelper = new HttpHelper();
         }
 
-        public Barcode Get(string barcode)
+        public async Task<Barcode> GetAsync(string barcode)
         {
             foreach(var catalog in _catalogs)
             {
-                var productInfo = catalog.Get(barcode);
+                var productInfo = await catalog.GetAsync(barcode);
 
                 if(productInfo != null)
                 {

@@ -12,6 +12,7 @@ using System.Web;
 using System.IO;
 using System.Drawing;
 using WasteProducts.Logic.Services.Barcods;
+using System.Threading.Tasks;
 
 namespace WasteProducts.Web.Controllers.Api
 {
@@ -71,9 +72,9 @@ namespace WasteProducts.Web.Controllers.Api
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get barcode", typeof(Barcode))]
         [HttpPost, Route("{code}")]
-        public IHttpActionResult GetBarcode(string code)
+        public async Task<IHttpActionResult> GetBarcodeAsync(string code)
         {
-            Barcode catalog = _searcher.Get(code);      
+            Barcode catalog = await _searcher.GetAsync(code);      
             return Ok(catalog);
         }
     }
