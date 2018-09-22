@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { UserQuery } from '../../models/top-query';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import {FormControl} from '@angular/forms';
 
@@ -24,7 +25,9 @@ export class SearchComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private route: ActivatedRoute,
+    private router: Router
     ) { }
 
     myControl = new FormControl();
@@ -47,6 +50,10 @@ export class SearchComponent implements OnInit {
         });
     }
   }
+
+  link_search(search: string) {
+    this.router.navigateByUrl('/searchresults/' + search);
+}
 
   searchInTopQueries(query: string): void {
     if (typeof query !== 'undefined' && query) {

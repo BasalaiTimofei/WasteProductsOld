@@ -4,7 +4,7 @@
 
 input.search-style {
   width: 180px;
-  height: 35px;
+  height: 42px;
   padding-left: 15px;
   border-radius: 42px;
   border: 2px solid #5c5d5e;
@@ -13,7 +13,7 @@ input.search-style {
   transition: .3s ease-in-out;
 }
 input.search-style:focus {
-  width: 350px;
+  width: 320px;
 }
 
 .search-form {
@@ -27,10 +27,10 @@ input.search-style:focus {
 }
 
 .nav-list {
-  width: 350px;
+  width: 320px;
   background: gray;
 }
 
 .mat-list-item {
-  height: 30px !important;
+  height: 35px !important;
 }
