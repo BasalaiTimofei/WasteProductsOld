@@ -2,7 +2,7 @@
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.Logic.Common.Models.Users;
 
-namespace WasteProducts.Logic.Mappings.UserMappings
+namespace WasteProducts.Logic.Mappings.Users
 {
     public class UserProductDescriptionProfile : Profile
     {
