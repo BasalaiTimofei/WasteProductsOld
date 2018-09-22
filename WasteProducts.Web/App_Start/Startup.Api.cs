@@ -10,6 +10,7 @@ namespace WasteProducts.Web
         {
             var configuration = new HttpConfiguration();
             configuration.ConfigureSwagger();
+            configuration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 
             app.ConfigureSignalR();
 

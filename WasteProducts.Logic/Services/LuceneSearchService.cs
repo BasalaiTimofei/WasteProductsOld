@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using WasteProducts.DataAccess.Common.Models.Products;
@@ -37,9 +38,14 @@ namespace WasteProducts.Logic.Services
         public IEnumerable<TEntity> Search<TEntity>(BoostedSearchQuery query) where TEntity : class
         {
             CheckQuery(query);
-            UserQuery userQuery = new UserQuery();
-            userQuery.QueryString = query.Query;
-            _repository.Insert(userQuery);
+            var similarQueries = this.GetSimilarQueries(query.Query);
+            var coincidentQuery = similarQueries.FirstOrDefault(t => t.QueryString.Equals(query.Query, StringComparison.InvariantCultureIgnoreCase));
+            if (coincidentQuery == null)
+            {
+                UserQuery userQuery = new UserQuery();
+                userQuery.QueryString = query.Query;
+                _repository.Insert(userQuery);
+            }
             return _repository.GetAll<TEntity>(query.Query, query.SearchableFields, query.BoostValues, MaxResultCount);
         }
 
@@ -157,10 +163,10 @@ namespace WasteProducts.Logic.Services
 
         public IEnumerable<UserQuery> GetSimilarQueries(string query)
         {
-            BoostedSearchQuery searchQuery = new BoostedSearchQuery(query);
-            searchQuery.AddField("QueryString");
-            CheckQuery(searchQuery);
-            return _repository.GetAll<UserQuery>(searchQuery.Query, searchQuery.SearchableFields, searchQuery.BoostValues, MAX_SIMILAR_QUERIES_COUNT);
+            var userQuery = new BoostedSearchQuery(query);
+            userQuery.AddField("QueryString", 1.0f);
+            CheckQuery(userQuery);
+            return _repository.GetAll<UserQuery>(userQuery.Query, userQuery.SearchableFields, userQuery.BoostValues, MAX_SIMILAR_QUERIES_COUNT);
         }
 
         public Task<IEnumerable<Product>> SearchProductAsync(BoostedSearchQuery query)

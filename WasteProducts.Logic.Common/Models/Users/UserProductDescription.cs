@@ -3,7 +3,7 @@
 namespace WasteProducts.Logic.Common.Models.Users
 {
     /// <summary>
-    /// Description of the specific product by the specific user.
+    /// Description of the specific product given by the specific user.
     /// </summary>
     public class UserProductDescription
     {
@@ -20,7 +20,7 @@ namespace WasteProducts.Logic.Common.Models.Users
         /// <summary>
         /// Rating of this product pescription.
         /// </summary>
-        public virtual int? Rating { get; set; }
+        public virtual int Rating { get; set; }
 
         /// <summary>
         /// Description contains opinion of the user about the product.

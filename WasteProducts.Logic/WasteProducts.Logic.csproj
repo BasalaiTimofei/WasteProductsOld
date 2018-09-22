@@ -114,10 +114,12 @@
     <Compile Include="Mappings\Donations\DonationProfile.cs" />
     <Compile Include="Mappings\Donations\DonorProfile.cs" />
     <Compile Include="Mappings\SearchProfile.cs" />
-    <Compile Include="Mappings\TestProfile.cs" />
-    <Compile Include="Mappings\UserMappings\ProductProfile.cs" />
-    <Compile Include="Mappings\UserMappings\UserProductDescriptionProfile.cs" />
-    <Compile Include="Mappings\UserMappings\UserProfile.cs" />
+    <Compile Include="Mappings\Users\FriendProfile.cs" />
+    <Compile Include="Mappings\Users\GroupOfUserProfile.cs" />
+    <Compile Include="Mappings\Users\ProductDescriptionProfile.cs" />
+    <Compile Include="Mappings\Users\ProductProfile.cs" />
+    <Compile Include="Mappings\Users\UserProductDescriptionProfile.cs" />
+    <Compile Include="Mappings\Users\UserProfile.cs" />
     <Compile Include="Mappings\Products\ProductProfile.cs" />
     <Compile Include="Mappings\Groups\GroupUserProfile .cs" />
     <Compile Include="Mappings\Groups\GroupBoardProfile.cs" />
@@ -164,14 +166,12 @@
     <Compile Include="Services\Diagnostic\TestModelsService.cs" />
     <Compile Include="Services\LuceneSearchService.cs" />
     <Compile Include="Services\Products\ProductService.cs" />
-    <Compile Include="Services\TestService.cs" />
     <Compile Include="Services\User\UserRoleService.cs" />
     <Compile Include="Services\User\UserService.cs" />
     <Compile Include="Validators\Barcods\BarcodeValidator.cs" />
     <Compile Include="Validators\Products\CategoryValidator.cs" />
     <Compile Include="Validators\Products\ProductValidator.cs" />
     <Compile Include="Validators\Search\BoostedSearchQueryValidator.cs" />
-    <Compile Include="Validators\TestValidator.cs" />
     <Compile Include="Validators\Groups\GroupValidation.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -183,7 +183,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">
       <Project>{9acbec5d-caa7-4e29-a19c-a247190f6da8}</Project>

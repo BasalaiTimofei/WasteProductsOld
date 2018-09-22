@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentValidation;
+﻿using FluentValidation;
 using WasteProducts.Logic.Common.Models.Search;
 
 namespace WasteProducts.Logic.Validators.Search
 {
-    class BoostedSearchQueryValidator : AbstractValidator<BoostedSearchQuery>
+    public class BoostedSearchQueryValidator : AbstractValidator<BoostedSearchQuery>
     {
         public BoostedSearchQueryValidator()
         {

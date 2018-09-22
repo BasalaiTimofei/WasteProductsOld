@@ -61,6 +61,19 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Recreates and seeds database with ISeedRepository.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, Route("recreateandseed")]
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.NoContent, "Database was recreated and seeded.")]
+        public async Task<IHttpActionResult> ReCreateAndSeed()
+        {
+            await _dbService.ReCreateAndSeedAsync();
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        /// <summary>
         /// Deletes database if database exist, otherwise does nothing
         /// </summary>
         /// <returns>Task</returns>
