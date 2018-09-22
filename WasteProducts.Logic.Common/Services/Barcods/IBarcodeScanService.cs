@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.IO;
 
 namespace WasteProducts.Logic.Common.Services.Barcods
 {
@@ -21,13 +22,13 @@ namespace WasteProducts.Logic.Common.Services.Barcods
         /// </summary>
         /// <param name="image"> image of barcode photo</param>
         /// <returns>string of a numerical barcode</returns>
-        string ScanByZxing(Bitmap image);
+        string ScanByZxing(Stream stream);
 
         /// <summary>
         /// get a numeric barcode from the photo
         /// </summary>
         /// <param name="image"> image of barcode photo</param>
         /// <returns>string of a numerical barcode</returns>
-        string ScanBySpire(Bitmap image);
+        string ScanBySpire(Stream stream);
     }
 }
