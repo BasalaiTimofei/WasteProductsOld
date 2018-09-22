@@ -15,34 +15,34 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// </summary>
         /// <param name="item">Object</param>
         /// <param name="groupId">Primary key</param>
-        void Create(GroupComment item, Guid groupId);
+        void Create(GroupComment item, string groupId);
 
         /// <summary>
         /// Update comment
         /// </summary>
         /// <param name="item">Object</param>
         /// <param name="groupId">Primary key</param>
-        void Update(GroupComment item, Guid groupId);
+        void Update(GroupComment item, string groupId);
 
         /// <summary>
         /// Delete comment
         /// </summary>
         /// <param name="item">Object</param>
         /// <param name="groupId">Primary key</param>
-        void Delete(GroupComment item, Guid groupId);
+        void Delete(GroupComment item, string groupId);
 
         /// <summary>
         /// Get comment by id
         /// </summary>
         /// <param name="id">Primary key</param>
         /// <returns>Object</returns>
-        GroupComment FindById(Guid id);
+        GroupComment FindById(string id);
 
         /// <summary>
         /// Get all comments  by boardId
         /// </summary>
         /// <param name="boardId">Primary key</param>
         /// <returns>IEnumerable<Object></returns>
-        IEnumerable<GroupComment> FindtBoardComment(Guid boardId);
+        IEnumerable<GroupComment> FindtBoardComment(string boardId);
     }
 }

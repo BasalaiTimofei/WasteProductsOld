@@ -8,16 +8,14 @@ namespace WasteProducts.DataAccess.ModelConfigurations
     {
         public GroupUserConfiguration()
         {
-            ToTable("GroupUser");
+            ToTable("GroupUsers");
+            HasKey(x => new { x.GroupId, x.UserId });
 
-            HasKey(x => x.Id);
-            Property(x => x.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
-            Property(x => x.IsInvited).IsOptional();
-            Property(x => x.RightToCreateBoards).IsOptional();
+            HasRequired(g => g.User).WithMany(u => u.Groups).HasForeignKey(k => k.UserId);
+            HasRequired(g => g.Group).WithMany(g => g.GroupUsers).HasForeignKey(k => k.GroupId);
+
+            Property(x => x.Created).IsRequired();
             Property(x => x.Modified).IsOptional();
-            Property(x => x.GroupId).IsRequired();
-            Property(x => x.UserId).IsRequired();
         }
-
     }
 }

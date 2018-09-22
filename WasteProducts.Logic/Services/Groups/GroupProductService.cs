@@ -19,7 +19,7 @@ namespace WasteProducts.Logic.Services.Groups
             _mapper = mapper;
         }
 
-        public void Create(GroupProduct item, string userId, Guid groupId)
+        public void Create(GroupProduct item, string userId, string groupId)
         {
             var result = _mapper.Map<GroupProductDB>(item);
 
@@ -38,7 +38,7 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public void Update(GroupProduct item, string userId, Guid groupId)
+        public void Update(GroupProduct item, string userId, string groupId)
         {
             var result = _mapper.Map<GroupProductDB>(item);
 
@@ -61,7 +61,7 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public void Delete(GroupProduct item, string userId, Guid groupId)
+        public void Delete(GroupProduct item, string userId, string groupId)
         {
             var result = _mapper.Map<GroupProductDB>(item);
 
@@ -80,7 +80,7 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public GroupProduct FindById(Guid id)
+        public GroupProduct FindById(string id)
         {
             var model = _dataBase.Find<GroupProductDB>(
                 x => x.Id == id).FirstOrDefault();

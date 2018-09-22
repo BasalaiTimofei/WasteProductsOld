@@ -246,7 +246,7 @@
     <Compile Include="Controllers\Mvc\BaseController.cs" />
     <Compile Include="Controllers\Mvc\ErrorController.cs" />
     <Compile Include="Controllers\Mvc\HomeController.cs" />
-    <Compile Include="ExceptionHandling\Api\ApiUnhandledExceptionExceptionLogger.cs" />
+    <Compile Include="ExceptionHandling\Api\ApiUnhandledExceptionLogger.cs" />
     <Compile Include="ExceptionHandling\Api\ApiValidationExceptionFilterAttribute.cs" />
     <Compile Include="ExceptionHandling\Mvc\MvUnhandledExceptionFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">

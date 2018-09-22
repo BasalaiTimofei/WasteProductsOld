@@ -72,7 +72,6 @@
     <Compile Include="Models\Donations\Donation.cs" />
     <Compile Include="Models\Barcods\Barcode.cs" />
     <Compile Include="Models\Donations\Donor.cs" />
-    <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Search\BoostedSearchQuery.cs" />
     <Compile Include="Models\Products\Category.cs" />
     <Compile Include="Models\Search\BoostedSearchQueryConverter.cs" />
@@ -91,6 +90,9 @@
     <Compile Include="Models\Security\Stores\AppUserStore.cs" />
     <Compile Include="Models\Security\Infrastructure\IAppRoleStore.cs" />
     <Compile Include="Models\Security\Infrastructure\IAppUserStore.cs" />
+    <Compile Include="Models\Users\Friend.cs" />
+    <Compile Include="Models\Users\GroupOfUser.cs" />
+    <Compile Include="Models\Users\ProductDescription.cs" />
     <Compile Include="Models\Users\User.cs" />
     <Compile Include="Models\Products\Product.cs" />
     <Compile Include="Models\Users\UserClaim.cs" />

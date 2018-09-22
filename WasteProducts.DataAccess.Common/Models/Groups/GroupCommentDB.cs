@@ -8,12 +8,12 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         /// <summary>
         /// Primary key
         /// </summary>
-        public virtual Guid Id { get; set; }
+        public virtual string Id { get; set; }
 
         /// <summary>
         /// Foreign key
         /// </summary>
-        public virtual Guid GroupBoardId { get; set; }
+        public virtual string GroupBoardId { get; set; }
 
         /// <summary>
         /// This board
