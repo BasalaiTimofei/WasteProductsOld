@@ -3,13 +3,13 @@ using WasteProducts.Logic.Common.Models.Groups;
 
 namespace WasteProducts.Logic.Validators.Groups
 {
-    public class GroupValidation : AbstractValidator<Group>
+    public class GroupBoardValidation : AbstractValidator<GroupBoard>
     {
-        public GroupValidation()
+        public GroupBoardValidation()
         {
-            RuleFor(x => x.AdminId)
+            RuleFor(x => x.GroupId)
             .NotNull();
-            RuleFor(x => x.AdminId)
+            RuleFor(x => x.CreatorId)
             .NotNull();
 
             RuleFor(x => x.Name)
@@ -19,9 +19,9 @@ namespace WasteProducts.Logic.Validators.Groups
             RuleFor(x => x.Information)
                 .Length(5, 255);
 
-            RuleFor(x => x.GroupBoards)
+            RuleFor(x => x.GroupProductComments)
                 .Null();
-            RuleFor(x => x.GroupUsers)
+            RuleFor(x => x.GroupProducts)
                 .Null();
         }
     }

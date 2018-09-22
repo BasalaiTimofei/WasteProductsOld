@@ -58,8 +58,6 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [HttpPost, Route("")]
         public IHttpActionResult Create(Group item)
         {
-            item.GroupBoards = null;
-            item.GroupUsers = null;
             var groupId = _groupService.Create(item);
 
             return Created($"{groupId}", item);
@@ -76,8 +74,6 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [HttpPut, Route("{groupId}")]
         public IHttpActionResult Update(Group item)
         {
-            item.GroupBoards = null;
-            item.GroupUsers = null;
             _groupService.Update(item);
 
             return Ok(item);
@@ -94,8 +90,6 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [HttpDelete, Route("{groupId}")]
         public IHttpActionResult Delete(Group item)
         {
-            item.GroupBoards = null;
-            item.GroupUsers = null;
             _groupService.Delete(item);
 
             return Redirect($"");

@@ -160,6 +160,10 @@
     <Compile Include="Services\Products\ProductService.cs" />
     <Compile Include="Services\User\UserRoleService.cs" />
     <Compile Include="Services\User\UserService.cs" />
+    <Compile Include="Validators\Groups\GroupProductValidation.cs" />
+    <Compile Include="Validators\Groups\GroupBoardValidation.cs" />
+    <Compile Include="Validators\Groups\GroupCommentValidation.cs" />
+    <Compile Include="Validators\Groups\GroupUserValidation.cs" />
     <Compile Include="Validators\Products\CategoryValidator.cs" />
     <Compile Include="Validators\Products\ProductValidator.cs" />
     <Compile Include="Validators\Search\BoostedSearchQueryValidator.cs" />
