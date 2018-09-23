@@ -38,6 +38,13 @@ namespace WasteProducts.DataAccess.Common.Repositories.Barcods
         Task<string> AddAsync(BarcodeDB barcode);
 
         /// <summary>
+        /// Add list barcode in the repository.
+        /// </summary>
+        /// <param name="barcodes">List barcodes to add.</param>
+        /// <returns>List Barcode Id.</returns>
+        Task<IEnumerable<string>> AddRangeAsync(IEnumerable<BarcodeDB> barcodes);
+
+        /// <summary>
         /// Update record of the barcode in the repository.
         /// </summary>
         /// <param name="barcode">New barcode to Update.</param>
