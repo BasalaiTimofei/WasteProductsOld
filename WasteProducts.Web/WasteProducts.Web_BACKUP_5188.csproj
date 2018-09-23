@@ -228,6 +228,16 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
+    <Compile Include="App_Start\Ninject.Web.Common.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\SwaggerConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\Administration\AdministrationAreaRegistration.cs" />
+    <Compile Include="Areas\Administration\Controllers\Api\DatabaseController.cs" />
+    <Compile Include="Areas\Administration\Controllers\ErrorManagementController.cs" />
+    <Compile Include="Controllers\Api\BarcodeController.cs" />
+=======
     <Compile Include="App_Start\Extensions\SignalRExtensions.cs" />
     <Compile Include="App_Start\Extensions\WebApiExtensions.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
@@ -236,17 +246,17 @@
     <Compile Include="App_Start\Extensions\SwaggerExtensions.cs" />
     <Compile Include="App_Start\Startup.Cors.cs" />
     <Compile Include="App_Start\Startup.OAuth.cs" />
-    <Compile Include="Controllers\Api\BarcodeController.cs" />
+>>>>>>> f3d7e646ba3444a100500031b6e4eb6001366573
     <Compile Include="Controllers\Api\BaseApiController.cs" />
     <Compile Include="Controllers\Api\DatabaseController.cs" />
     <Compile Include="Controllers\Api\PayPalController.cs" />
-    <Compile Include="Controllers\Api\ProductsController.cs" />
+    <Compile Include="Controllers\Api\ProductController.cs" />
     <Compile Include="Controllers\Api\SearchController.cs" />
     <Compile Include="Controllers\Api\UserManagement\UserController.cs" />
     <Compile Include="Controllers\Mvc\BaseController.cs" />
     <Compile Include="Controllers\Mvc\ErrorController.cs" />
     <Compile Include="Controllers\Mvc\HomeController.cs" />
-    <Compile Include="ExceptionHandling\Api\ApiUnhandledExceptionLogger.cs" />
+    <Compile Include="ExceptionHandling\Api\ApiUnhandledExceptionExceptionLogger.cs" />
     <Compile Include="ExceptionHandling\Api\ApiValidationExceptionFilterAttribute.cs" />
     <Compile Include="ExceptionHandling\Mvc\MvUnhandledExceptionFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -315,10 +325,6 @@
     <ProjectReference Include="..\WasteProducts.Logic.Common\WasteProducts.Logic.Common.csproj">
       <Project>{643aab59-4858-4e23-9a18-4bbec3ee5f56}</Project>
       <Name>WasteProducts.Logic.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WasteProducts.Logic\WasteProducts.Logic.csproj">
-      <Project>{6CF2C1B1-05E5-412F-8AF5-5D2F6E2450E9}</Project>
-      <Name>WasteProducts.Logic</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

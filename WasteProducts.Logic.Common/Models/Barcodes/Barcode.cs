@@ -1,7 +1,6 @@
-﻿using System.Drawing;
-using WasteProducts.Logic.Common.Models.Products;
+﻿using WasteProducts.Logic.Common.Models.Products;
 
-namespace WasteProducts.Logic.Common.Models.Barcods
+namespace WasteProducts.Logic.Common.Models.Barcodes
 {
     /// <summary>
     /// Model for entity barcode.
@@ -24,11 +23,6 @@ namespace WasteProducts.Logic.Common.Models.Barcods
         public string ProductName { get; set; }
 
         /// <summary>
-        /// Product сomposition.
-        /// </summary>
-        public string Composition { get; set; }
-
-        /// <summary>
         /// Product brand.
         /// </summary>
         public string Brend { get; set; }
@@ -44,13 +38,8 @@ namespace WasteProducts.Logic.Common.Models.Barcods
         public double Weight { get; set; }
 
         /// <summary>
-        /// Link to picture.
-        /// </summary>
-        public Image Picture { get; set; }
-
-        /// <summary>
         /// Specifies the concreat product
         /// </summary>
-        public virtual Product Product { get; set; }
+        public Product Product { get; set; }
     }
 }
