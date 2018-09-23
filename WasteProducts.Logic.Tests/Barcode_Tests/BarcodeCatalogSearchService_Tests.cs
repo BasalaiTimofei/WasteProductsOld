@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using Moq;
@@ -24,7 +21,7 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
         /// 2) результат был возвращен ПЕРВЫМ каталогом
         /// </summary>
         [Test]
-        public void Get_Test01()
+        public async Task Call_GetAsync_Only_First_Catalog()
         {
             //Arrange
 
@@ -32,24 +29,26 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
             {
                 ProductName = "Catalog_1"
             };
+
             var catalog_1 = new Mock<ICatalog>();
+
             catalog_1.Setup(f => f.GetAsync("")).
-                Returns(productInfo_1);
+            Returns(Task.FromResult(productInfo_1));
 
             Barcode productInfo_2 = null;
             var catalog_2 = new Mock<ICatalog>();
             catalog_2.Setup(f => f.GetAsync("")).
-                Returns(productInfo_2);
+                Returns(Task.FromResult(productInfo_2));
 
             var catalogs = new List<ICatalog>();
             catalogs.Add(catalog_1.Object);
             catalogs.Add(catalog_2.Object);
-            
+
             var calaogSearcher = new BarcodeCatalogSearchService(catalogs);
 
             //Act
 
-            var result = calaogSearcher.Get("");
+            var result = await calaogSearcher.GetAsync("");
 
             //Assert
 
@@ -69,14 +68,14 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
         /// 2) результат был возвращен ВТОРЫМ каталогом
         /// </summary>
         [Test]
-        public void Get_Test02()
+        public async Task Call_GetAsync_First_And_Second_Catalogs()
         {
             //Arrange
 
             Barcode productInfo_1 = null;
             var catalog_1 = new Mock<ICatalog>();
             catalog_1.Setup(f => f.GetAsync("")).
-                Returns(productInfo_1);
+                Returns(Task.FromResult(productInfo_1));
 
             Barcode productInfo_2 = new Barcode()
             {
@@ -84,7 +83,7 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
             };
             var catalog_2 = new Mock<ICatalog>();
             catalog_2.Setup(f => f.GetAsync("")).
-                Returns(productInfo_2);
+                Returns(Task.FromResult(productInfo_2));
 
             var catalogs = new List<ICatalog>();
             catalogs.Add(catalog_1.Object);
@@ -94,7 +93,7 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
 
             //Act
 
-            var result = calaogSearcher.GetAsync("");
+            var result = await calaogSearcher.GetAsync("");
 
             //Assert
 
@@ -114,19 +113,19 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
         /// 2) результат равен null
         /// </summary>
         [Test]
-        public void Get_Test03()
+        public async Task Call_GetAsync_Twice_Catalog()
         {
             //Arrange
 
             Barcode productInfo_1 = null;
             var catalog_1 = new Mock<ICatalog>();
             catalog_1.Setup(f => f.GetAsync("")).
-                Returns(productInfo_1);
+                Returns(Task.FromResult(productInfo_1));
 
             Barcode productInfo_2 = null;
             var catalog_2 = new Mock<ICatalog>();
             catalog_2.Setup(f => f.GetAsync("")).
-                Returns(productInfo_2);
+                Returns(Task.FromResult(productInfo_2));
 
             var catalogs = new List<ICatalog>();
             catalogs.Add(catalog_1.Object);
@@ -136,7 +135,7 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
 
             //Act
 
-            var result = calaogSearcher.GetAsync("");
+            var result = await calaogSearcher.GetAsync("");
 
             //Assert
 

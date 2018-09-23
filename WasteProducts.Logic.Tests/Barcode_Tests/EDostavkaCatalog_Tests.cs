@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using NUnit.Framework;
 using Moq;
-using System.Drawing;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Services.Barcods;
 using WasteProducts.Logic.Services.Barcods;
@@ -24,7 +19,7 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
         /// 1) результат равен null 
         /// </summary>
         [Test]
-        public void Get_Test01()
+        public async Task TestMethod_Search_On_The_Site_There_Is_No_Product_Response_404_Result_Is_Null()
         {
             //Arrange
 
@@ -36,13 +31,13 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
 
             var httpHelper = new Mock<IHttpHelper>();
             httpHelper.SetupSequence(f => f.SendGETAsync("https://e-dostavka.by/search/?searchtext="))
-                .Returns(emptySearchOutput);
+                .Returns(Task.FromResult(emptySearchOutput));
 
             EDostavkaCatalog catalog = new EDostavkaCatalog(httpHelper.Object);
 
             //Act
 
-            var result = catalog.GetAsync("");
+            var result = await catalog.GetAsync("");
 
             //Assert
 
@@ -58,7 +53,7 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
         /// 1) результат равен null 
         /// </summary>
         [Test]
-        public void Get_Test02()
+        public async Task TestMethod_Search_On_The_Site_There_Is_No_Produc_Response_200_Result_Is_Null()
         {
             //Arrange
 
@@ -70,13 +65,13 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
 
             var httpHelper = new Mock<IHttpHelper>();
             httpHelper.SetupSequence(f => f.SendGETAsync("https://e-dostavka.by/search/?searchtext="))
-                .Returns(emptySearchOutput);
+                .Returns(Task.FromResult(emptySearchOutput));
 
             EDostavkaCatalog catalog = new EDostavkaCatalog(httpHelper.Object);
 
             //Act
 
-            var result = catalog.GetAsync("");
+            var result = await catalog.GetAsync("");
 
             //Assert
 
@@ -94,7 +89,7 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
         /// 1) результат равен null 
         /// </summary>
         [Test]
-        public void Get_Test03()
+        public async Task TestMethod_Search_On_The_Site_There_Is_Product_Response_200_Then_502_Result_Is_Null()
         {
             //Arrange
 
@@ -112,15 +107,15 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
 
             var httpHelper = new Mock<IHttpHelper>();
             httpHelper.Setup(f => f.SendGETAsync("https://e-dostavka.by/search/?searchtext="))
-                .Returns(searchOutput);
+                .Returns(Task.FromResult(searchOutput));
             httpHelper.Setup(f => f.SendGETAsync("https://e-dostavka.by/catalog/item_628616.html"))
-                .Returns(productPage);
+                .Returns(Task.FromResult(productPage));
 
             EDostavkaCatalog catalog = new EDostavkaCatalog(httpHelper.Object);
 
             //Act
 
-            var result = catalog.GetAsync("");
+            var result = await catalog.GetAsync("");
 
             //Assert
 
@@ -138,7 +133,7 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
         /// 1) результат равен null 
         /// </summary>
         [Test]
-        public void Get_Test04()
+        public async Task TestMethod_Search_On_The_Site_There_Is_Product_Response_200_No_ProductName_Result_Is_Null()
         {
             //Arrange
 
@@ -156,15 +151,15 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
 
             var httpHelper = new Mock<IHttpHelper>();
             httpHelper.Setup(f => f.SendGETAsync("https://e-dostavka.by/search/?searchtext="))
-                .Returns(searchOutput);
+                .Returns(Task.FromResult(searchOutput));
             httpHelper.Setup(f => f.SendGETAsync("https://e-dostavka.by/catalog/item_628616.html"))
-                .Returns(productPage);
+                .Returns(Task.FromResult(productPage));
 
             EDostavkaCatalog catalog = new EDostavkaCatalog(httpHelper.Object);
 
             //Act
 
-            var result = catalog.GetAsync("");
+            var result = await catalog.GetAsync("");
 
             //Assert
 
@@ -180,7 +175,7 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
         /// 3) метод IHttpHelper.DownloadPicture() был вызван 1 раз
         /// </summary>
         [Test]
-        public void Get_Test05()
+        public async Task TestMethod_Search_On_The_Site_Successful_Search()
         {
             //Arrange
 
@@ -201,15 +196,15 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
             
             var httpHelper = new Mock<IHttpHelper>();
             httpHelper.Setup(f => f.SendGETAsync("https://e-dostavka.by/search/?searchtext="))
-                .Returns(searchOutput);
+                .Returns(Task.FromResult(searchOutput));
             httpHelper.Setup(f => f.SendGETAsync("https://e-dostavka.by/catalog/item_628616.html"))
-                .Returns(productPage);
+                .Returns(Task.FromResult(productPage));
 
             EDostavkaCatalog catalog = new EDostavkaCatalog(httpHelper.Object);
 
             //Act
 
-            var result = catalog.GetAsync("");
+            var result = await catalog.GetAsync("");
 
             //Assert
 
