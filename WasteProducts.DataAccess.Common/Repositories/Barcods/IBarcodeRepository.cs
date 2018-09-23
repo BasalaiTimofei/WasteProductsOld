@@ -54,6 +54,6 @@ namespace WasteProducts.DataAccess.Common.Repositories.Barcods
         /// Delete record of the barcode in the repository.
         /// </summary>
         /// <param name="barcode">Barcode for delete.</param>
-        void DeleteById(BarcodeDB barcode);
+        void Delete(BarcodeDB barcode);
     }
 }
