@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using WasteProducts.Logic.Common.Models.Products;
+﻿using System.Collections.Generic;
 
 namespace WasteProducts.Logic.Common.Models.Users
 {
-    // Удалим лишние проперти когда разберемся, а какие из них вообще лишние на бизнес-слое
     /// <summary>
-    /// Full BL version of UserDB.
+    /// Standart BLL level version of UserDB.
     /// </summary>
     public class User
     {
@@ -22,13 +18,23 @@ namespace WasteProducts.Logic.Common.Models.Users
         public virtual string UserName { get; set; }
 
         /// <summary>
-        /// List of Users which belong to group of friends related to current User.
+        /// Email of the user.
         /// </summary>
-        public virtual IList<User> Friends { get; set; }
+        public virtual string Email { get; set; }
 
         /// <summary>
-        /// List of products added and described by the user.
+        /// True if email was confirmed by token.
         /// </summary>
-        public virtual IList<UserProductDescription> ProductDescriptions { get; set; }
+        public virtual bool EmailConfirmed { get; set; }
+
+        /// <summary>
+        /// Phone number of the user.
+        /// </summary>
+        public virtual string PhoneNumber { get; set; }
+
+        /// <summary>
+        /// True if phone number was confirmed by token.
+        /// </summary>
+        public virtual bool PhoneNumberConfirmed { get; set; }
     }
 }

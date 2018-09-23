@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Users;
 
-namespace WasteProducts.DataAccess.Common.Repositories.UserManagement
+namespace WasteProducts.DataAccess.Common.Repositories.Users
 {
     /// <summary>
     /// Standart DAL level interface using to make CRUD operations with UserRoleDB models.

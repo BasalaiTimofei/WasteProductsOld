@@ -4,7 +4,7 @@ using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
 
-namespace WasteProducts.Logic.Mappings.UserMappings
+namespace WasteProducts.Logic.Mappings.Users
 {
     public class ProductProfile : Profile
     {

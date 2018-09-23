@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WasteProducts.DataAccess.Common.Models.Users;
-using WasteProducts.DataAccess.Common.Repositories.UserManagement;
+using WasteProducts.DataAccess.Common.Repositories.Users;
 using WasteProducts.DataAccess.Contexts;
 using System.Data.Entity;
 using Microsoft.AspNet.Identity;
 
-namespace WasteProducts.DataAccess.Repositories.UserManagement
+namespace WasteProducts.DataAccess.Repositories.Users
 {
     public class UserRoleRepository : IUserRoleRepository
     {

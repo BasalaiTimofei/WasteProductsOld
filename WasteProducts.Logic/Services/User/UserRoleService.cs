@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.Users;
-using WasteProducts.DataAccess.Common.Repositories.UserManagement;
+using WasteProducts.DataAccess.Common.Repositories.Users;
 using WasteProducts.DataAccess.Common.Models.Users;
 using AutoMapper;
 
@@ -63,7 +63,7 @@ namespace WasteProducts.Logic.Services.Users
         {
             UserRoleDB roleDB = MapTo<UserRoleDB>(role);
             IEnumerable<UserDB> subResult = await _roleRepo.GetRoleUsers(roleDB);
-            IEnumerable<Common.Models.Users.User> result = _mapper.Map<IEnumerable<Common.Models.Users.User>>(subResult);
+            IEnumerable<User> result = _mapper.Map<IEnumerable<User>>(subResult);
             return result;
         }
 
