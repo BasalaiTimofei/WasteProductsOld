@@ -17,8 +17,9 @@ namespace WasteProducts.Logic.Services.Barcods
         private Graphics _graphics;
 
         /// <inheritdoc />
-        public Bitmap Resize(Bitmap img, int width, int height)
+        public Bitmap Resize(Stream stream, int width, int height)
         {
+            Bitmap img = new Bitmap(stream);
             Bitmap result = new Bitmap(width, height);
             using (_graphics = Graphics.FromImage(result))
             {
@@ -33,8 +34,7 @@ namespace WasteProducts.Logic.Services.Barcods
         public string ScanByZxing(Stream stream)
         {
             string decoded = "";
-            _image = new Bitmap(stream);
-            _image = Resize(_image, 400, 400);
+            _image = Resize(stream, 400, 400);
 
             BarcodeReader Reader = new BarcodeReader();
             Result result = Reader.Decode(_image);
@@ -47,8 +47,7 @@ namespace WasteProducts.Logic.Services.Barcods
         public string ScanBySpire(Stream stream)
         {
             string decoded = "";
-            _image = new Bitmap(stream);
-            _image = Resize(_image, 400, 400);
+            _image = Resize(stream, 400, 400);
 
             using (_stream = new MemoryStream())
             {

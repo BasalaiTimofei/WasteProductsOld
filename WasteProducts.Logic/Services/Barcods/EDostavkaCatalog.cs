@@ -19,6 +19,10 @@ namespace WasteProducts.Logic.Services.Barcods
 
         IHttpHelper _httpHelper;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="httpHelper"></param>
         public EDostavkaCatalog(IHttpHelper httpHelper)
         {
             _httpHelper = httpHelper;

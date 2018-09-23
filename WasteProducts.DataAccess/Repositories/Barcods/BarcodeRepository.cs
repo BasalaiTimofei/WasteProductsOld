@@ -64,6 +64,7 @@ namespace WasteProducts.DataAccess.Repositories.Barcods
         /// Add new barcode in the repository.
         /// </summary>
         /// <param name="barcode">New barcode to add.</param>
+        /// <returns>Barcode Id.</returns>
         public async Task<string> AddAsync(BarcodeDB barcode)
         {
             barcode.Id = Guid.NewGuid().ToString();
@@ -73,6 +74,33 @@ namespace WasteProducts.DataAccess.Repositories.Barcods
             await _wasteContext.SaveChangesAsync();
 
             return barcode.Id;
+        }
+
+        /// <summary>
+        /// Add list barcode in the repository.
+        /// </summary>
+        /// <param name="barcodes">List barcodes to add.</param>
+        /// <returns>List Barcode Id.</returns>
+        public async Task<IEnumerable<string>> AddRangeAsync(IEnumerable<BarcodeDB> barcodes)
+        {
+            var ids = new List<string>();
+            barcodes.Select(b =>
+            {
+                b.Id = Guid.NewGuid().ToString();
+                ids.Add(b.Id);
+                return b;
+            });
+
+            _wasteContext.Configuration.AutoDetectChangesEnabled = false;
+            foreach (var barcodeDB in barcodes)
+            {
+                _wasteContext.Barcodes.Add(barcodeDB);
+            }
+            _wasteContext.Configuration.AutoDetectChangesEnabled = true;
+
+            await _wasteContext.SaveChangesAsync();
+
+            return ids;
         }
 
         /// <summary>

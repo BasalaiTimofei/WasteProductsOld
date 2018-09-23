@@ -99,9 +99,14 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
         {
             //Arrange
             var service = new BarcodeScanService();
+            Image result;
 
             //Act
-            Image result = service.Resize(_imageOriginal, 400, 400);
+            using (_stream = new MemoryStream())
+            {
+                _imageOriginal.Save(_stream, ImageFormat.Bmp);
+                result = service.Resize(_stream, 400, 400);
+            }
 
             //Assert
             Assert.AreEqual(_imageGood.Width, result.Width);
