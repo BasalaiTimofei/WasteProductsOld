@@ -6,7 +6,6 @@ using AutoMapper;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.Logic.Common.Models.Products;
-using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Common.Services.Products;
 
 namespace WasteProducts.Logic.Services.Products
@@ -39,7 +38,7 @@ namespace WasteProducts.Logic.Services.Products
         public Task<IEnumerable<string>> AddRange(IEnumerable<string> nameRange)
         {
             var categoriesDB = _categoryRepository.SelectAllAsync().Result;
-            if (nameRange.All(name =>
+            if (!nameRange.All(name =>
             {
                 return categoriesDB.All(c =>
                     !string.Equals(c.Name, name, StringComparison.CurrentCultureIgnoreCase));

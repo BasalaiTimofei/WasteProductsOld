@@ -46,12 +46,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
                 return c;
             });
 
-            _context.Configuration.AutoDetectChangesEnabled = false;
-            foreach (var categoryDb in categories)
-            {
-                _context.Categories.Add(categoryDb);
-            }
-            _context.Configuration.AutoDetectChangesEnabled = true;
+            (_context.Categories as DbSet).AddRange(categories);
 
             await _context.SaveChangesAsync();
 

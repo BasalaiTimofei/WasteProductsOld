@@ -72,8 +72,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             {
                 Id = new Guid().ToString(),
                 Name = "Vegetables",
-                Description = "Some description",
-                Products = new List<Product>()
+                Description = "Some description"
             };
 
             product = new Product { Id = new Guid().ToString(), Name = "Some name" };
