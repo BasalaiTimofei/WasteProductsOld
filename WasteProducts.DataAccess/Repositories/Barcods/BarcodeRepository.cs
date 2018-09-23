@@ -118,8 +118,8 @@ namespace WasteProducts.DataAccess.Repositories.Barcods
         /// <summary>
         /// Delete record of the barcode in the repository.
         /// </summary>
-        /// <param name="id">ID of the barcode.</param>
-        public void DeleteById(BarcodeDB barcode)
+        /// <param name="barcode">Barcode model.</param>
+        public void Delete(BarcodeDB barcode)
         {
             if (barcode != null)  _wasteContext.Barcodes.Remove(barcode);
             _wasteContext.SaveChanges();
