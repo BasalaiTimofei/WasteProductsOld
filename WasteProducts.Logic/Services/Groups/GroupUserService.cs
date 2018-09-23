@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
 using WasteProducts.Logic.Common.Models.Groups;
@@ -30,7 +31,7 @@ namespace WasteProducts.Logic.Services.Groups
                 && x.AdminId == adminId
                 && x.IsNotDeleted == true).FirstOrDefault();
             if (modelGroupDB == null)
-                throw new ValidationException("Group not create");
+                throw new ValidationException("Group not found");
 
             var model = _dataBase.Find<GroupUserDB>(
                 x => x.UserId == result.UserId
@@ -50,7 +51,7 @@ namespace WasteProducts.Logic.Services.Groups
             _dataBase.Save();
         }
 
-        public async void Kick(GroupUser groupUser, string adminId)
+        public async Task Kick(GroupUser groupUser, string adminId)
         {
             var group = _dataBase.Find<GroupDB>(
                 x => x.Id == groupUser.GroupId
@@ -58,7 +59,7 @@ namespace WasteProducts.Logic.Services.Groups
                 && x.IsNotDeleted == true).FirstOrDefault();
 
             if (group == null)
-                throw new ValidationException("Group not create");
+                throw new ValidationException("Group not found");
 
             var groupUserDB = _dataBase.Find<GroupUserDB>(x =>
                 x.UserId == groupUser.UserId &&
@@ -75,10 +76,11 @@ namespace WasteProducts.Logic.Services.Groups
         {
             var modelGroupDB = _dataBase.Find<GroupDB>(
                 x => x.Id == item.GroupId
-                && x.AdminId == adminId).FirstOrDefault();
+                && x.AdminId == adminId
+                && x.IsNotDeleted == true).FirstOrDefault();
 
             if (modelGroupDB == null)
-              throw new ValidationException("Group not create");
+              throw new ValidationException("Group not found");
 
             var model = _dataBase.Find<GroupUserDB>(
                 x => x.UserId == item.UserId
@@ -98,17 +100,18 @@ namespace WasteProducts.Logic.Services.Groups
         {
             var modelGroupDB = _dataBase.Find<GroupDB>(
                 x => x.Id == item.GroupId
-                && x.AdminId == adminId).FirstOrDefault();
+                && x.AdminId == adminId
+                && x.IsNotDeleted == true).FirstOrDefault();
 
             if (modelGroupDB == null)
-              throw new ValidationException("User not found");
+                throw new ValidationException("Group not found");
 
             var model = _dataBase.Find<GroupUserDB>(
                 x => x.UserId == item.UserId
                 && x.GroupId == item.GroupId).FirstOrDefault();
 
             if (model == null || !model.RightToCreateBoards)
-              throw new ValidationException("User not found");
+                throw new ValidationException("User not found");
 
             model.RightToCreateBoards = false;
             model.Modified = DateTime.UtcNow;

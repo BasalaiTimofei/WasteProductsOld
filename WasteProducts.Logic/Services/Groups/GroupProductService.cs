@@ -27,11 +27,14 @@ namespace WasteProducts.Logic.Services.Groups
             var modelUser = _dataBase.Find<GroupUserDB>(
                 x => x.UserId == userId
                 && x.GroupId == groupId).FirstOrDefault();
+            if (modelUser == null)
+                throw new ValidationException("User not found");
+
             var modelBoard = _dataBase.Find<GroupBoardDB>(
                 x => x.Id == result.GroupBoardId
                 && x.GroupId == groupId).FirstOrDefault();
-            if (modelUser == null || modelBoard == null)
-                throw new ValidationException("User or board not found");
+            if (modelBoard == null)
+                throw new ValidationException("Board not found");
 
             result.Modified = DateTime.UtcNow;
 
@@ -47,13 +50,19 @@ namespace WasteProducts.Logic.Services.Groups
             var modelUser = _dataBase.Find<GroupUserDB>(
                 x => x.UserId == userId
                 && x.GroupId == groupId).FirstOrDefault();
+            if (modelUser == null)
+                throw new ValidationException("User not found");
+
             var modelBoard = _dataBase.Find<GroupBoardDB>(
                 x => x.Id == result.GroupBoardId
                 && x.GroupId == groupId).FirstOrDefault();
+            if (modelBoard == null)
+                throw new ValidationException("Board not found");
+
             var model = _dataBase.Find<GroupProductDB>(
                 x => x.Id == result.Id).FirstOrDefault();
-            if (modelUser == null || modelBoard == null || model == null)
-                throw new ValidationException("User or board or comment or product not found");
+            if (model == null)
+                throw new ValidationException("Product not found");
 
             model.ProductId = result.ProductId;
             model.Information = result.Information;
@@ -70,13 +79,19 @@ namespace WasteProducts.Logic.Services.Groups
             var modelUser = _dataBase.Find<GroupUserDB>(
                 x => x.UserId == userId
                 && x.GroupId == groupId).FirstOrDefault();
+            if (modelUser == null)
+                throw new ValidationException("User not found");
+
             var modelBoard = _dataBase.Find<GroupBoardDB>(
                 x => x.Id == result.GroupBoardId
                 && x.GroupId == groupId).FirstOrDefault();
+            if (modelBoard == null)
+                throw new ValidationException("Board not found");
+
             var model = _dataBase.Find<GroupProductDB>(
                 x => x.Id == result.Id).FirstOrDefault();
-            if (modelUser == null || modelBoard == null || model == null)
-                throw new ValidationException("User or board or comment or product not found");
+            if (model == null)
+                throw new ValidationException("Product not found");
 
             _dataBase.Delete(model);
             _dataBase.Save();

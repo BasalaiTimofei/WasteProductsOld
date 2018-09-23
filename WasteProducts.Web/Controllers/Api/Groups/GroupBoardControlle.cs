@@ -1,11 +1,9 @@
 ﻿using Ninject.Extensions.Logging;
 using Swagger.Net.Annotations;
-using System;
 using System.Net;
 using System.Web.Http;
 using WasteProducts.Logic.Common.Models.Groups;
 using WasteProducts.Logic.Common.Services.Groups;
-using WasteProducts.Web.ExceptionHandling.Api;
 
 namespace WasteProducts.Web.Controllers.Api.Groups
 {
@@ -34,6 +32,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <returns>200(Object)</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Board create", typeof(GroupBoard))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpPost, Route("{groupId}/board")]
         public IHttpActionResult Create(GroupBoard item)
         {
@@ -49,6 +48,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <returns>200(Object)</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Board update", typeof(GroupBoard))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpPut, Route("{groupId}/board")]
         public IHttpActionResult Update(GroupBoard item)
         {
@@ -64,6 +64,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <returns>200()</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Board delete")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpDelete, Route("{groupId}/board")]
         public IHttpActionResult Delete(GroupBoard item)
         {

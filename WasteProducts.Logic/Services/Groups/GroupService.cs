@@ -28,7 +28,7 @@ namespace WasteProducts.Logic.Services.Groups
             var model = _dataBase.Find<GroupDB>(
                 x => x.AdminId == result.AdminId).FirstOrDefault();
             if (model != null)
-                throw new ValidationException("Group created");
+                throw new ValidationException("Group already exists");
 
             result.Id = Guid.NewGuid().ToString();
             result.Created = DateTime.UtcNow;
@@ -55,9 +55,10 @@ namespace WasteProducts.Logic.Services.Groups
 
             var model = _dataBase.Find<GroupDB>(
                 x => x.Id == result.Id
-                && x.AdminId == result.AdminId).FirstOrDefault();
+                && x.AdminId == result.AdminId
+                && x.IsNotDeleted == true).FirstOrDefault();
             if (model == null)
-                throw new ValidationException("Group did not created");
+                throw new ValidationException("Group not found");
 
             model.Information = result.Information;
             model.Name = result.Name;
@@ -74,10 +75,11 @@ namespace WasteProducts.Logic.Services.Groups
             var model = _dataBase.GetWithInclude<GroupDB>(
                 x => x.Id == result.Id,
                 a => a.AdminId == result.AdminId,
+                b=>b.IsNotDeleted == true,
                 y => y.GroupBoards.Select(z => z.GroupProducts),
                 m => m.GroupUsers).FirstOrDefault();
             if (model == null)
-                throw new ValidationException("Group did not created");
+                throw new ValidationException("Group not found");
 
             model.IsNotDeleted = false;
             model.Deleted = DateTime.UtcNow;

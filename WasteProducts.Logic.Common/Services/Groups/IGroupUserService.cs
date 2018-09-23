@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models.Groups;
 
 namespace WasteProducts.Logic.Common.Services.Groups
@@ -20,7 +21,7 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// </summary>
         /// <param name="item">Object</param>
         /// <param name="adminId">Primary key</param>
-        void Kick(GroupUser item, string adminId);
+        Task Kick(GroupUser item, string adminId);
 
         /// <summary>
         /// Entitles user to create boards in the group.

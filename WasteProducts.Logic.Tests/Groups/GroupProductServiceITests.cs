@@ -194,7 +194,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             Assert.AreEqual(_groupProduct.Information, result.Information);
         }
         [Test]
-        public void GroupService_04_FindById_02_Obtainment_Unavalible_GroupBoard_By_Id()
+        public void GroupProductService_04_FindById_02_Obtainment_Unavalible_GroupBoard_By_Id()
         {
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupProductDB, Boolean>>()))
                 .Returns(_selectedProductList);

@@ -44,15 +44,18 @@ namespace WasteProducts.Logic.Services.Groups
         public void Update(GroupBoard item)
         {
             var result = _mapper.Map<GroupBoardDB>(item);
+
             var model = _dataBase.Find<GroupBoardDB>(
                 x => x.Id == result.Id).FirstOrDefault();
+            if (model == null)
+                throw new ValidationException("Board not found");
 
             var modelUser = _dataBase.Find<GroupUserDB>(
                 x => x.RightToCreateBoards == true
                 && x.UserId == result.CreatorId
                 && x.GroupId == result.GroupId).FirstOrDefault();
-            if (modelUser == null || model == null)
-                throw new ValidationException("User or board not found");
+            if (modelUser == null)
+                throw new ValidationException("User not found");
 
             model.Information = result.Information;
             model.Name = result.Name;
@@ -70,12 +73,15 @@ namespace WasteProducts.Logic.Services.Groups
                 x => x.Id == result.Id
                 &&x.GroupId == result.GroupId,
                 z => z.GroupProducts).FirstOrDefault();
+            if (model == null)
+                throw new ValidationException("Board not found");
+
             var modelUser = _dataBase.Find<GroupUserDB>(
                 x => x.RightToCreateBoards == true
                 && x.UserId == result.CreatorId
                 && x.GroupId == result.GroupId).FirstOrDefault();
-            if (model == null || modelUser == null)
-                throw new ValidationException("User or board not found");
+            if (modelUser == null)
+                throw new ValidationException("User not found");
 
             model.IsNotDeleted = false;
             model.Deleted = DateTime.UtcNow;

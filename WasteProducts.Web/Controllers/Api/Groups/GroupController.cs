@@ -1,9 +1,7 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Web.Http;
 using WasteProducts.Logic.Common.Models.Groups;
 using WasteProducts.Logic.Common.Services.Groups;
-using WasteProducts.Web.ExceptionHandling.Api;
 using Ninject.Extensions.Logging;
 using Swagger.Net.Annotations;
 using System.Threading.Tasks;
@@ -54,6 +52,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <returns>201(Group id, Object)</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.Created, "Group create", typeof(Group))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpPost, Route("")]
         public IHttpActionResult Create(Group item)
         {
@@ -69,6 +68,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <returns>200(Object)</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Group update", typeof(Group))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpPut, Route("{groupId}")]
         public IHttpActionResult Update(Group item)
         {
@@ -84,6 +84,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <returns>302(url)</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.Redirect, "Group delete")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpDelete, Route("{groupId}")]
         public IHttpActionResult Delete(Group item)
         {

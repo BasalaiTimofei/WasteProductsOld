@@ -28,11 +28,14 @@ namespace WasteProducts.Logic.Services.Groups
             var modelUser = _dataBase.Find<GroupUserDB>(
                 x => x.UserId == result.CommentatorId
                 && x.GroupId == groupId).FirstOrDefault();
+            if (modelUser == null)
+                throw new ValidationException("User not found");
+
             var modelBoard = _dataBase.Find<GroupBoardDB>(
                 x => x.Id == result.GroupBoardId
                 && x.GroupId == groupId).FirstOrDefault();
-            if (modelUser == null || modelBoard == null)
-                throw new ValidationException("User or board not found");
+            if (modelBoard == null)
+                throw new ValidationException("Board not found");
 
             result.Modified = DateTime.UtcNow;
 
@@ -48,14 +51,20 @@ namespace WasteProducts.Logic.Services.Groups
             var modelUser = _dataBase.Find<GroupUserDB>(
                 x => x.UserId == result.CommentatorId
                 && x.GroupId == groupId).FirstOrDefault();
+            if (modelUser == null)
+                throw new ValidationException("User not found");
+
             var modelBoard = _dataBase.Find<GroupBoardDB>(
                 x => x.Id == result.GroupBoardId
                 && x.GroupId == groupId).FirstOrDefault();
+            if (modelBoard == null)
+                throw new ValidationException("Board not found");
+
             var model = _dataBase.Find<GroupCommentDB>(
                 x => x.Id == result.Id
                 && x.CommentatorId == result.CommentatorId).FirstOrDefault();
-            if (modelUser == null || modelBoard == null || model == null)
-                throw new ValidationException("User or board or comment not found");
+            if (model == null)
+                throw new ValidationException("Comment not found");
 
             model.Comment = result.Comment;
             model.Modified = DateTime.UtcNow;
@@ -71,14 +80,20 @@ namespace WasteProducts.Logic.Services.Groups
             var modelUser = _dataBase.Find<GroupUserDB>(
                 x => x.UserId == result.CommentatorId
                 && x.GroupId == groupId).FirstOrDefault();
+            if (modelUser == null)
+                throw new ValidationException("User not found");
+
             var modelBoard = _dataBase.Find<GroupBoardDB>(
                 x => x.Id == result.GroupBoardId
                 && x.GroupId == groupId).FirstOrDefault();
+            if (modelBoard == null)
+                throw new ValidationException("Board not found");
+
             var model = _dataBase.Find<GroupCommentDB>(
                 x => x.Id == result.Id
                 && x.CommentatorId == result.CommentatorId).FirstOrDefault();
-            if (modelUser == null || modelBoard == null || model == null)
-                throw new ValidationException("User or board or comment not found");
+            if (model == null)
+                throw new ValidationException("Comment not found");
 
             _dataBase.Delete(model);
             _dataBase.Save();

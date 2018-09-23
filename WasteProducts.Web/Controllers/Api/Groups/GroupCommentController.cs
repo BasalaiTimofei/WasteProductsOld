@@ -1,12 +1,9 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Web.Http;
 using WasteProducts.Logic.Common.Models.Groups;
 using WasteProducts.Logic.Common.Services.Groups;
-using WasteProducts.Web.ExceptionHandling.Api;
 using Ninject.Extensions.Logging;
 using Swagger.Net.Annotations;
-using System.Threading.Tasks;
 
 namespace WasteProducts.Web.Controllers.Api.Groups
 {
@@ -36,6 +33,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <returns>200(Object)</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Comment create", typeof(GroupComment))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpPost, Route("{groupId}/comment")]
         public IHttpActionResult Create([FromUri]string groupId, GroupComment item)
         {
@@ -52,6 +50,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <returns>200(Object)</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Comment update", typeof(GroupComment))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpPut, Route("{groupId}/comment")]
         public IHttpActionResult Update([FromUri] string groupId, GroupComment item)
         {
@@ -68,6 +67,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <returns>200()</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Comment delete")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpDelete, Route("{groupId}/comment")]
         public IHttpActionResult Delete([FromUri] string groupId, GroupComment item)
         {

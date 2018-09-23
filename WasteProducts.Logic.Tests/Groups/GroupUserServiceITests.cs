@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
 using WasteProducts.Logic.Common.Models.Groups;
@@ -77,7 +78,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         }
 
         [Test]
-        public void GroupUser_01_SendInvite_01_Send_Invite_New_User()
+        public void GroupUserService_01_Invite_01_Send_Invite_New_User()
         {
             _selectedList.Add(_groupDB);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupDB, bool>>()))
@@ -90,7 +91,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Verify(m => m.Create(It.IsAny<GroupUserDB>()), Times.Once);
         }
         [Test]
-        public void GroupUser_03_SendInvite_03_Send_Invite_Where_Group_Unavalible_or_User_In_Group()
+        public void GroupUserService_01_Invite_02_Send_Invite_Where_Group_Unavalible_or_User_In_Group()
         {
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupDB, bool>>()))
                 .Returns(_selectedList);
@@ -102,7 +103,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         }
 
         [Test]
-        public void GroupUser_04_DismissUser_01_Dismiss_User()
+        public void GroupUserService_02_Kick_01_Dismiss_User()
         {
             _selectedList.Add(_groupDB);
             _selectedUserList.Add(_groupUserDB);
@@ -116,18 +117,18 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Verify(m => m.DeleteUserFromGroupAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
         [Test]
-        public void GroupUser_05_DismissUser_02_User_Unavalible_or_Group_Unavalible()
+        public void GroupUserService_02_Kick_02_User_Unavalible_or_Group_Unavalible()
         {
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupDB, bool>>()))
                 .Returns(_selectedList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, bool>>()))
                 .Returns(_selectedUserList);
 
-            _groupRepositoryMock.Verify(m => m.DeleteUserFromGroupAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            Assert.ThrowsAsync<ValidationException>(async () => await _groupUserService.Kick(_groupUser, "2"));
         }
 
         [Test]
-        public void GroupUser_06_GetEntitle_01_Get_Entitle()
+        public void GroupUserService_03_GiveRightToCreateBoards_01_Get_Entitle()
         {
             _selectedList.Add(_groupDB);
             _groupUserDB.RightToCreateBoards = false;
@@ -142,7 +143,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupUserDB>()), Times.Once);
         }
         [Test]
-        public void GroupUser_07_GetEntitle_02_Group_Unavalible_or_User_Unavalible()
+        public void GroupUserService_03_GiveRightToCreateBoards_02_Group_Unavalible_or_User_Unavalible()
         {
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupDB, bool>>()))
                 .Returns(_selectedList);
@@ -152,5 +153,33 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
                 Assert.Throws(typeof(ValidationException),
                         delegate () { _groupUserService.GiveRightToCreateBoards(_groupUser, "2"); });
         }
+
+        [Test]
+        public void GroupUserService_04_TakeAwayRightToCreateBoards_01_Get_Entitle()
+        {
+            _selectedList.Add(_groupDB);
+            _groupUserDB.RightToCreateBoards = true;
+            _selectedUserList.Add(_groupUserDB);
+            _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupDB, bool>>()))
+                .Returns(_selectedList);
+            _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, bool>>()))
+                .Returns(_selectedUserList);
+
+            _groupUserService.TakeAwayRightToCreateBoards(_groupUser, "2");
+
+            _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupUserDB>()), Times.Once);
+        }
+        [Test]
+        public void GroupUserService_04_TakeAwayRightToCreateBoards_02_Group_Unavalible_or_User_Unavalible()
+        {
+            _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupDB, bool>>()))
+                .Returns(_selectedList);
+            _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, bool>>()))
+                .Returns(_selectedUserList);
+
+            Assert.Throws(typeof(ValidationException),
+                    delegate () { _groupUserService.TakeAwayRightToCreateBoards(_groupUser, "2"); });
+        }
+
     }
 }
