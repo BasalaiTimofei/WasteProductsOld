@@ -19,12 +19,14 @@ namespace WasteProducts.Logic.Services.Products
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IMapper _mapper;
         private bool _disposed;
 
-        public ProductService(IProductRepository productRepository, IMapper mapper)
+        public ProductService(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper)
         {
             _productRepository = productRepository;
+            _categoryRepository = categoryRepository;
             _mapper = mapper;
         }
 
@@ -43,7 +45,7 @@ namespace WasteProducts.Logic.Services.Products
                 Barcode = barcode,
                 Name = barcode.ProductName
             };
-
+            
             return _productRepository.AddAsync(_mapper.Map<ProductDB>(newProduct))
                 .ContinueWith(t => t.Result);
         }
@@ -106,7 +108,7 @@ namespace WasteProducts.Logic.Services.Products
 
             var productFromDB = products.ToList().First();
 
-            //productFromDB.Category = ??
+            productFromDB.Category = _categoryRepository.GetByIdAsync(categoryId).Result;
 
             return _productRepository.UpdateAsync(productFromDB);
         }
