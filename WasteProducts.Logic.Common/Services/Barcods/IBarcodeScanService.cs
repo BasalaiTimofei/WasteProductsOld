@@ -15,7 +15,7 @@ namespace WasteProducts.Logic.Common.Services.Barcods
         /// <param name="width"> width of barcode image result</param>
         /// <param name="height"> height of barcode image result</param>
         /// <returns>Resized image</returns>
-        Bitmap Resize(Bitmap img, int width, int height);
+        Bitmap Resize(Stream stream, int width, int height);
 
         /// <summary>
         /// get a numerical barcode on the photo
