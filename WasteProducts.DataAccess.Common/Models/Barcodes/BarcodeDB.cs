@@ -1,12 +1,12 @@
-﻿using System.Drawing;
-using WasteProducts.Logic.Common.Models.Products;
+﻿using System;
+using WasteProducts.DataAccess.Common.Models.Products;
 
-namespace WasteProducts.Logic.Common.Models.Barcods
+namespace WasteProducts.DataAccess.Common.Models.Barcodes
 {
     /// <summary>
-    /// Model for entity barcode.
+    /// DataBase entity of barcode.
     /// </summary>
-    public class Barcode
+    public class BarcodeDB
     {
         /// <summary>
         /// Id.
@@ -24,12 +24,7 @@ namespace WasteProducts.Logic.Common.Models.Barcods
         public string ProductName { get; set; }
 
         /// <summary>
-        /// Product сomposition.
-        /// </summary>
-        public string Composition { get; set; }
-
-        /// <summary>
-        /// Product brand.
+        /// Product brend.
         /// </summary>
         public string Brend { get; set; }
 
@@ -44,13 +39,18 @@ namespace WasteProducts.Logic.Common.Models.Barcods
         public double Weight { get; set; }
 
         /// <summary>
-        /// Link to picture.
+        /// Date of record creation in DB.
         /// </summary>
-        public Image Picture { get; set; }
+        public DateTime Created { get; set; }
+
+        /// <summary>
+        /// Date of record modified in DB.
+        /// </summary>
+        public DateTime? Modified { get; set; }
 
         /// <summary>
         /// Specifies the concreat product
         /// </summary>
-        public virtual Product Product { get; set; }
+        public virtual ProductDB Product { get; set; }
     }
 }

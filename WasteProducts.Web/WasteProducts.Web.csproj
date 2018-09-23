@@ -236,6 +236,7 @@
     <Compile Include="App_Start\Extensions\SwaggerExtensions.cs" />
     <Compile Include="App_Start\Startup.Cors.cs" />
     <Compile Include="App_Start\Startup.OAuth.cs" />
+    <Compile Include="Controllers\Api\BarcodeController.cs" />
     <Compile Include="Controllers\Api\BaseApiController.cs" />
     <Compile Include="Controllers\Api\CategoryController.cs" />
     <Compile Include="Controllers\Api\DatabaseController.cs" />
@@ -315,6 +316,10 @@
     <ProjectReference Include="..\WasteProducts.Logic.Common\WasteProducts.Logic.Common.csproj">
       <Project>{643aab59-4858-4e23-9a18-4bbec3ee5f56}</Project>
       <Name>WasteProducts.Logic.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WasteProducts.Logic\WasteProducts.Logic.csproj">
+      <Project>{6CF2C1B1-05E5-412F-8AF5-5D2F6E2450E9}</Project>
+      <Name>WasteProducts.Logic</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
