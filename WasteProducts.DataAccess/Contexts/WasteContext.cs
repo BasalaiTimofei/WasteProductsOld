@@ -8,6 +8,7 @@ using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Models.Notifications;
 using WasteProducts.DataAccess.Common.Models.Products;
+using WasteProducts.DataAccess.Common.Models.Security.Models;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Contexts.Config;
@@ -40,7 +41,10 @@ namespace WasteProducts.DataAccess.Contexts
 
             modelBuilder.ComplexType<NotificationSettingsDB>();
 
-            modelBuilder.Configurations.Add(new UserConfiguration());
+            modelBuilder.Entity<UserDB>().HasMany(u => u.Friends).WithMany()
+                .Map(t => t.MapLeftKey("UserId").MapRightKey("FriendId").ToTable("UserFriends"));
+
+            modelBuilder.Entity<UserDB>().HasMany(u => u.Notifications).WithRequired(n => n.User);
 
             modelBuilder.Entity<ProductDB>()
                 .HasOptional(p => p.Barcode)
