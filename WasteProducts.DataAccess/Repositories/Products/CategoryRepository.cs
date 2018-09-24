@@ -17,16 +17,10 @@ namespace WasteProducts.DataAccess.Repositories.Products
         private readonly WasteContext _context;
         private bool _disposed;
 
-        /// <summary>
-        /// Using the context of the WasteContext class through the private field.
-        /// </summary>
-        /// <param name="context">The specific context of WasteContext</param>
+        /// <inheritdoc/>
         public CategoryRepository(WasteContext context) => _context = context;
 
-        /// <summary>
-        /// Adds a new category
-        /// </summary>
-        /// <param name="category">The specific category for adding</param>
+        /// <inheritdoc/>
         public async Task<string> AddAsync(CategoryDB category)
         {
             category.Id = Guid.NewGuid().ToString();
@@ -36,6 +30,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
             return category.Id;
         }
 
+        /// <inheritdoc/>
         public async Task<IEnumerable<string>> AddRangeAsync(IEnumerable<CategoryDB> categories)
         {
             var ids = new List<string>();
@@ -53,10 +48,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
             return ids;
         }
 
-        /// <summary>
-        /// Deletes the specific category
-        /// </summary>
-        /// <param name="category">The specific category for deleting</param>
+        /// <inheritdoc/>
         public async Task DeleteAsync(CategoryDB category)
         {
             if (!(await _context.Categories.ContainsAsync(category))) return;
@@ -66,10 +58,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
             
         }
 
-        /// <summary>
-        /// Deletes the specific category by id
-        /// </summary>
-        /// <param name="id">Represents a specific category id to delete</param>
+        /// <inheritdoc/>
         public async Task DeleteAsync(string id)
         {
             var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
@@ -81,20 +70,13 @@ namespace WasteProducts.DataAccess.Repositories.Products
             await UpdateAsync(category);
         }
 
-        /// <summary>
-        /// Provides a listing of all categories.
-        /// </summary>
-        /// <returns>Returns list of categories.</returns>
+        /// <inheritdoc/>
         public async Task <IEnumerable<CategoryDB>> SelectAllAsync()
         {
             return await Task.Run(() => _context.Categories.ToList());
         }
 
-        /// <summary>
-        /// Provides a listing of categories that satisfy the condition.
-        /// </summary>
-        /// <param name="predicate">The condition that list of categories must satisfy</param>
-        /// <returns>Returns list of categories.</returns>
+        /// <inheritdoc/>
         public async Task <IEnumerable<CategoryDB>> SelectWhereAsync(Predicate<CategoryDB> predicate)
         {
             var condition = new Func<CategoryDB, bool>(predicate);
@@ -102,29 +84,19 @@ namespace WasteProducts.DataAccess.Repositories.Products
             return await Task.Run(() => _context.Categories.Where(condition).ToList());
         }
 
-        /// <summary>
-        /// Gets category by ID
-        /// </summary>
-        /// <param name="id">The specific id of category that was sorted</param>
-        /// <returns>Returns a category chosen by ID</returns>
+        /// <inheritdoc/>
         public async Task <CategoryDB> GetByIdAsync(string id)
         {
             return await _context.Categories.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        /// <summary>
-        /// Gets category by name
-        /// </summary>
-        /// <param name="name">The specific category for updating</param>
+        /// <inheritdoc/>
         public async Task <CategoryDB> GetByNameAsync(string name)
         {
             return await _context.Categories.FirstOrDefaultAsync(p => p.Name == name);
         }
 
-        /// <summary>
-        /// Updates the specific category
-        /// </summary>
-        /// <param name="category">The specific category for updating</param>
+        /// <inheritdoc/>
         public async Task UpdateAsync(CategoryDB category)
         {
             _context.Entry(category).State = EntityState.Modified;
