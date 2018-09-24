@@ -1,9 +1,8 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SearchService } from '../../services/search/search.service';
 import { SearchProduct } from '../../models/search-product';
 import { Observable, of } from 'rxjs';
-import { catchError, tap, map } from 'rxjs/operators';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { UserQuery } from '../../models/top-query';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -17,8 +16,6 @@ import {FormControl} from '@angular/forms';
 export class SearchComponent implements OnInit {
   query: string;
   topQueries: UserQuery[] = [];
-  selectedQuery: string;
-  showError = false;
   errorMessage: string;
   errorStatusCode: number;
   searchResult: SearchProduct[] = [];
@@ -34,26 +31,19 @@ export class SearchComponent implements OnInit {
     filteredQueries: Observable<string[]>;
 
     ngOnInit() {
-      // this.searchService.gettest().subscribe(console.log);
+      // this.searchService.gettest().subscribe(console.log); // for test
     }
 
   search(query: string): void {
     if (typeof query !== 'undefined' && query) {
-      this.topQueries.length = 0;
-      this.searchService.getDefault(query).subscribe(
-        data => this.searchResult = data
-        , (err: HttpErrorResponse) => {
-          this.errorMessage = 'Empty results...';
-          if (err.status === 204) {
-            this.errorStatusCode = err.status;
-          }
-        });
+      this.router.navigate(['searchresults', query]);
     }
   }
 
-  link_search(search: string) {
-    // this.router.navigateByUrl('/searchresults/' + search);
-    this.router.navigate(['searchresults', search]);
+  public searchOn(query: string) {
+    this.query = query;
+    this.topQueries = [];
+    this.router.navigate(['searchresults', query]);
 }
 
   searchInTopQueries(query: string): void {

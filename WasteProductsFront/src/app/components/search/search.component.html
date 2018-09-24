@@ -1,7 +1,7 @@
 <div class="search-component">
   <input class="search-style" [(ngModel)]="query" type="text" placeholder="Поиск продукта..."
   (keyup.enter)="search(query)" (keyup)="searchInTopQueries(query)">
-  <button matSuffix mat-button mat-icon-button aria-label="search" (click)="link_search(query)">
+  <button matSuffix mat-button mat-icon-button aria-label="search" (click)="search(query)">
     <mat-icon>search</mat-icon>
   </button>
   <button *ngIf="query" matSuffix mat-button mat-icon-button aria-label="Clear" (click)="clearQueries()">
@@ -10,5 +10,6 @@
 </div>
 
 <mat-nav-list *ngIf="topQueries.length > 0 && query" class="nav-list">
-  <a mat-list-item href="#" *ngFor="let item of topQueries" (click)="query=item.QueryString; search(item.QueryString)">{{item.QueryString}}</a>
+  <a mat-list-item *ngFor="let item of topQueries" (click)="searchOn(item.QueryString)" >{{item.QueryString}}</a>
+  <!--a mat-list-item href="#" *ngFor="let item of topQueries" [routerLink]="['/searchresults/' + item.QueryString]">{{item.QueryString}}</a-->
 </mat-nav-list>

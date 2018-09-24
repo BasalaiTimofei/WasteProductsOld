@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, ViewChild, OnDestroy } from '@angular/core';
-import { MatPaginator, MatTableDataSource, PageEvent } from '@angular/material';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Component, OnDestroy } from '@angular/core';
+import { PageEvent } from '@angular/material';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -51,7 +51,7 @@ export class SearchresultComponent implements OnDestroy {
         this.length = this.searchResult.length;
         this.changePageEvent();
     }).catch((e: HttpErrorResponse) => {
-        this.errorMessage = 'Empty results...';
+        this.errorMessage = 'Поиск не дал результатов...';
         if (e.status === 204) {
             this.statusCode = e.status;
         }

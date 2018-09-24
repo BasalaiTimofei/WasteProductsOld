@@ -1,8 +1,3 @@
-<button matSuffix mat-button mat-icon-button aria-label="search" (click)="search('soft')">
-  <mat-icon>search</mat-icon>
-</button>
-
-
 <div *ngIf="tempProducts && tempProducts.length > 0">
   <table class="table table-hover">
       <tbody>
@@ -19,4 +14,4 @@
                (page)="pageEvent = changePageEvent($event)">
   </mat-paginator>
 </div>
-<h2 *ngIf="statusCode === 204">Not found .....</h2>
+<h2 *ngIf="statusCode === 204">{{errorMessage}}</h2>
