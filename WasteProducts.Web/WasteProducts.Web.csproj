@@ -265,6 +265,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\ActionResults\ElmahResult.cs" />
     <Compile Include="Utils\Hubs\HubConnectionManager.cs" />
+    <Compile Include="Utils\Hubs\SignalRNotifiactionProvider.cs" />
     <Compile Include="Utils\Logging\SingleEventAsArrayWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
