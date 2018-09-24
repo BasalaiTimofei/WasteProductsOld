@@ -52,7 +52,8 @@ export class SearchComponent implements OnInit {
   }
 
   link_search(search: string) {
-    this.router.navigateByUrl('/searchresults/' + search);
+    // this.router.navigateByUrl('/searchresults/' + search);
+    this.router.navigate(['searchresults', search]);
 }
 
   searchInTopQueries(query: string): void {
