@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
@@ -13,6 +12,7 @@ namespace WasteProducts.Logic.Services.Groups
     {
         private IGroupRepository _dataBase;
         private readonly IMapper _mapper;
+        private bool _disposed;
 
         public GroupService(IGroupRepository dataBase, IMapper mapper)
         {
@@ -27,18 +27,22 @@ namespace WasteProducts.Logic.Services.Groups
             var model = _dataBase.Find<GroupDB>(
                 x => x.AdminId == result.AdminId).FirstOrDefault();
             if (model != null)
+            {
                 return;
+            }
 
+            result.Id = Guid.NewGuid().ToString();
             result.Created = DateTime.UtcNow;
             result.Deleted = null;
             result.IsNotDeleted = true;
-            result.Modified = DateTime.UtcNow;
 
             result.GroupUsers.Add(new GroupUserDB
             {
-                IsInvited = 1,
+                GroupId = result.Id,
+                UserId = result.AdminId,
+                IsConfirmed = true,
                 RightToCreateBoards = true,
-                Modified = DateTime.UtcNow,
+                Created = DateTime.UtcNow,
             });
 
             _dataBase.Create(result);
@@ -85,16 +89,12 @@ namespace WasteProducts.Logic.Services.Groups
                 groupBoard.Modified = DateTime.UtcNow;
                 _dataBase.DeleteAll(groupBoard.GroupProducts);
             }
-            foreach (var groupUser in model.GroupUsers)
-            {
-                groupUser.IsInvited = 2;
-                groupUser.Modified = DateTime.UtcNow;
-            }
+            _dataBase.DeleteAll(model.GroupUsers);
             _dataBase.Update(model);
             _dataBase.Save();
         }
 
-        public Group FindById(Guid groupId)
+        public Group FindById(string groupId)
         {
             var model = _dataBase.GetWithInclude<GroupDB>(
                     x => x.Id == groupId,
@@ -122,6 +122,36 @@ namespace WasteProducts.Logic.Services.Groups
             var result = _mapper.Map<Group>(model);
 
             return result;
+        }
+
+        public Group FindByName(string name)
+        {
+            var model = _dataBase.GetWithInclude<GroupDB>(
+                    x => x.Name == name,
+                    y => y.GroupBoards.Select(z => z.GroupProducts),
+                    k => k.GroupBoards.Select(e => e.GroupComments),
+                    m => m.GroupUsers).FirstOrDefault();
+            if (model == null)
+                return null;
+
+            var result = _mapper.Map<Group>(model);
+
+            return result;
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                _dataBase.Dispose();
+                _disposed = true;
+                GC.SuppressFinalize(this);
+            }
+        }
+
+        ~GroupService()
+        {
+            Dispose();
         }
     }
 }

@@ -4,13 +4,14 @@ using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Contexts.Config;
 using WasteProducts.DataAccess.ModelConfigurations;
-using WasteProducts.DataAccess.ModelConfigurations.UserManagement;
+using WasteProducts.DataAccess.ModelConfigurations.Users;
 
 namespace WasteProducts.DataAccess.Contexts
 {
@@ -46,6 +47,10 @@ namespace WasteProducts.DataAccess.Contexts
                 .HasOptional(p => p.Barcode)
                 .WithRequired(b => b.Product);
 
+            modelBuilder.Entity<BarcodeDB>()
+                .HasRequired(b => b.Product)
+                .WithOptional(b => b.Barcode);
+
             modelBuilder.Configurations.Add(new UserProductDescriptionConfiguration());
 
             modelBuilder.Configurations.Add(new GroupBoardConfiguration());
@@ -68,15 +73,21 @@ namespace WasteProducts.DataAccess.Contexts
 
         /// <summary>
         /// Property added for to use an entity set that is used to perform
+        ///  create, read, update, delete and to get barcode list operations in 'BarcodeRepository' class.
+        /// </summary>
+        public IDbSet<BarcodeDB> Barcodes { get; set; }
+
+        /// <summary>
+        /// Property added for to use an entity set that is used to perform
         ///  create, read, update, delete and to get category list operations in 'CategoryRepository' class.
         /// </summary>
         public IDbSet<CategoryDB> Categories { get; set; }
 
-        public IDbSet<GroupBoardDB> GroupBordDBs { get; set; }
-        public IDbSet<GroupDB> GroupDBs { get; set; }
-        public IDbSet<GroupUserDB> GroupUserDBs { get; set; }
-        public IDbSet<GroupCommentDB> GroupCommentDBs { get; set; }
-        public IDbSet<GroupProductDB> GroupProductDBs { get; set; }
+        public IDbSet<GroupBoardDB> GroupBoards { get; set; }
+        public IDbSet<GroupDB> Groups { get; set; }
+        public IDbSet<GroupUserDB> GroupUsers { get; set; }
+        public IDbSet<GroupCommentDB> GroupComments { get; set; }
+        public IDbSet<GroupProductDB> GroupProducts { get; set; }
 
         public override int SaveChanges()
         {

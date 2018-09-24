@@ -91,10 +91,10 @@
     <Compile Include="Models\Users\UserProductDescriptionDB.cs" />
     <Compile Include="Models\Users\UserRoleDB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\Diagnostic\ISeedRepository.cs" />
     <Compile Include="Repositories\Donations\IDonationRepository.cs" />
     <Compile Include="Repositories\Barcods\IBarcodeRepository.cs" />
     <Compile Include="Repositories\Products\ICategoryRepository.cs" />
-    <Compile Include="Repositories\UserManagement\IUserRepository.cs" />
     <Compile Include="Repositories\Products\IProductRepository.cs" />
     <Compile Include="Repositories\Search\ISearchRepository.cs" />
     <Compile Include="Repositories\Security\IRepositoryBase.cs" />
@@ -103,7 +103,8 @@
     <Compile Include="Repositories\Security\IUserLoginRepository.cs" />
     <Compile Include="Repositories\Security\IUserRepository.cs" />
     <Compile Include="Repositories\Security\IUserRoleRepository.cs" />
-    <Compile Include="Repositories\UserManagement\IUserRoleRepository.cs" />
+    <Compile Include="Repositories\Users\IUserRepository.cs" />
+    <Compile Include="Repositories\Users\IUserRoleRepository.cs" />
     <Compile Include="UoW\IUnitOfWork.cs" />
     <Compile Include="UoW\Security\IUnitOfWork.cs" />
   </ItemGroup>

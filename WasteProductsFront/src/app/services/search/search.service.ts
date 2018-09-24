@@ -23,7 +23,7 @@ export class SearchService {
     return this.http.get<SearchProduct[]>(this.URL_SEARCH + '/products/default', { params: new HttpParams().set('query', query)}).pipe(
       map(res => {
         const result: any = res;
-        return result.map((item) => new SearchProduct(item.Id, item.Name, ''));
+        return result.map((item) => new SearchProduct(item.Id, item.Name));
       }), catchError(this.handleError('Error response', []))
       );
   }
@@ -37,8 +37,8 @@ export class SearchService {
       );
   }
 
-  gettest() {
-    return this.http.get('http://localhost:2189/api/search/queries?query=s', {observe: 'response'});
+  gettest(query: string) {
+    return this.http.get('http://localhost:2189/api/search/products/default?query=' + query, {observe: 'response'});
   }
 
   /**
