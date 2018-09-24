@@ -9,6 +9,15 @@ namespace WasteProducts.Logic.Common.Services.Notifications
     /// </summary>
     public interface INotificationService
     {
+
+        /// <summary>
+        /// Send notification asynchronously
+        /// </summary>
+        /// <param name="notification">notification for sending</param>
+        /// <param name="usersIds">array of users</param>
+        /// <returns></returns>
+        Task NotificateUsersAsync(Notification notification, params string[] usersIds);
+
         /// <summary>
         /// Gets all user notifications
         /// </summary>

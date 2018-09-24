@@ -6,11 +6,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Models.Groups;
+using WasteProducts.DataAccess.Common.Models.Notifications;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Contexts.Config;
 using WasteProducts.DataAccess.ModelConfigurations;
+using WasteProducts.DataAccess.ModelConfigurations.Notifications;
 using WasteProducts.DataAccess.ModelConfigurations.Users;
 
 namespace WasteProducts.DataAccess.Contexts
@@ -36,12 +38,9 @@ namespace WasteProducts.DataAccess.Contexts
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<UserDB>()
-                .HasMany(u => u.Friends)
-                .WithMany()
-                .Map(t => t.MapLeftKey("UserId")
-                    .MapRightKey("FriendId")
-                    .ToTable("UserFriends"));
+            modelBuilder.ComplexType<NotificationSettingsDB>();
+
+            modelBuilder.Configurations.Add(new UserConfiguration());
 
             modelBuilder.Entity<ProductDB>()
                 .HasOptional(p => p.Barcode)
@@ -58,6 +57,8 @@ namespace WasteProducts.DataAccess.Contexts
             modelBuilder.Configurations.Add(new GroupUserConfiguration());
             modelBuilder.Configurations.Add(new GroupCommentConfiguration());
             modelBuilder.Configurations.Add(new GroupProductConfiguration());
+
+            modelBuilder.Configurations.Add(new NotificationConfiguration());
         }
 
         /// <summary>
@@ -88,6 +89,8 @@ namespace WasteProducts.DataAccess.Contexts
         public IDbSet<GroupUserDB> GroupUsers { get; set; }
         public IDbSet<GroupCommentDB> GroupComments { get; set; }
         public IDbSet<GroupProductDB> GroupProducts { get; set; }
+
+        public IDbSet<NotificationDB> Notification { get; set; }
 
         public override int SaveChanges()
         {
