@@ -65,6 +65,8 @@
   <ItemGroup>
     <Compile Include="Attributes\TraceAttribute.cs" />
     <Compile Include="Factories\IServiceFactory.cs" />
+    <Compile Include="Models\Barcods\HttpQueryResult.cs" />
+    <Compile Include="Models\Barcods\ParseResult.cs" />
     <Compile Include="Models\Diagnostic\DatabaseState.cs" />
     <Compile Include="Models\Donations\Address.cs" />
     <Compile Include="Models\Donations\Donation.cs" />
@@ -103,6 +105,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>QueryConverter.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\Barcods\IBarcodeCatalogSearchService.cs" />
+    <Compile Include="Services\Barcods\ICatalog.cs" />
+    <Compile Include="Services\Barcods\IHttpHelper.cs" />
     <Compile Include="Services\Diagnostic\IDbSeedService.cs" />
     <Compile Include="Services\Diagnostic\IDbService.cs" />
     <Compile Include="Services\Diagnostic\ITestModelsService.cs" />

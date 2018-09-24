@@ -108,6 +108,7 @@
     <Compile Include="InjectorModule.cs" />
     <Compile Include="Interceptors\ArgumentValidationInterceptor.cs" />
     <Compile Include="Interceptors\TraceInterceptor.cs" />
+    <Compile Include="Mappings\Barcods\BarcodeProfile.cs" />
     <Compile Include="Mappings\Products\CategoryProfile.cs" />
     <Compile Include="Mappings\Donations\AddressProfile.cs" />
     <Compile Include="Mappings\Donations\DonationProfile.cs" />
@@ -146,6 +147,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UserResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\Barcods\BarcodeCatalogSearchService.cs" />
+    <Compile Include="Services\Barcods\EDostavkaCatalog.cs" />
+    <Compile Include="Services\Barcods\HttpHelper.cs" />
+    <Compile Include="Services\Barcods\PriceGuardCatalog.cs" />
     <Compile Include="Services\Groups\GroupCommentService.cs" />
     <Compile Include="Services\Groups\GroupUserService.cs" />
     <Compile Include="Services\Groups\GroupProductService.cs" />
@@ -163,6 +168,7 @@
     <Compile Include="Services\Products\ProductService.cs" />
     <Compile Include="Services\User\UserRoleService.cs" />
     <Compile Include="Services\User\UserService.cs" />
+    <Compile Include="Validators\Barcods\BarcodeValidator.cs" />
     <Compile Include="Validators\Products\CategoryValidator.cs" />
     <Compile Include="Validators\Products\ProductValidator.cs" />
     <Compile Include="Validators\Search\BoostedSearchQueryValidator.cs" />
