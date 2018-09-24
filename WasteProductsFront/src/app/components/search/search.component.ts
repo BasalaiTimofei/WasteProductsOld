@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { SearchService } from '../../services/search/search.service';
 import { SearchProduct } from '../../models/search-product';
 import { Observable, of } from 'rxjs';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { UserQuery } from '../../models/top-query';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 import {FormControl} from '@angular/forms';
 
@@ -18,12 +18,9 @@ export class SearchComponent implements OnInit {
   topQueries: UserQuery[] = [];
   errorMessage: string;
   errorStatusCode: number;
-  searchResult: SearchProduct[] = [];
 
   constructor(
-    private http: HttpClient,
     private searchService: SearchService,
-    private route: ActivatedRoute,
     private router: Router
     ) { }
 
@@ -36,15 +33,11 @@ export class SearchComponent implements OnInit {
 
   search(query: string): void {
     if (typeof query !== 'undefined' && query) {
+      this.query = '';
       this.router.navigate(['searchresults', query]);
+      this.topQueries = [];
     }
   }
-
-  public searchOn(query: string) {
-    this.query = query;
-    this.topQueries = [];
-    this.router.navigate(['searchresults', query]);
-}
 
   searchInTopQueries(query: string): void {
     if (typeof query !== 'undefined' && query) {
@@ -61,7 +54,7 @@ export class SearchComponent implements OnInit {
 
   clearQueries() {
     this.query = '';
-    this.topQueries.length = 0;
+    this.topQueries = [];
   }
 
   private handleError<T> (operation = 'operation', result?: T) {
