@@ -41,7 +41,7 @@ export class SearchComponent implements OnInit {
 
   searchInTopQueries(query: string): void {
     if (typeof query !== 'undefined' && query) {
-      this.searchService.getTopSearchQueries(query).subscribe(
+      this.searchService.getTopSearchQueries(query).toPromise().then(
         data => this.topQueries = data.slice(0, 10),
                 (err: HttpErrorResponse) => {
           this.errorMessage = 'Empty results...';
