@@ -54,7 +54,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
             if (!(await _context.Categories.ContainsAsync(category))) return;
 
             category.Marked = true;
-            await UpdateAsync(category);
+            await UpdateAsync(category).ConfigureAwait(false);
             
         }
 
@@ -67,13 +67,13 @@ namespace WasteProducts.DataAccess.Repositories.Products
 
             category.Marked = true;
 
-            await UpdateAsync(category);
+            await UpdateAsync(category).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
         public async Task <IEnumerable<CategoryDB>> SelectAllAsync()
         {
-            return await Task.Run(() => _context.Categories.ToList());
+            return await Task.Run(() => _context.Categories.ToList()).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -81,19 +81,19 @@ namespace WasteProducts.DataAccess.Repositories.Products
         {
             var condition = new Func<CategoryDB, bool>(predicate);
 
-            return await Task.Run(() => _context.Categories.Where(condition).ToList());
+            return await Task.Run(() => _context.Categories.Where(condition).ToList()).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
         public async Task <CategoryDB> GetByIdAsync(string id)
         {
-            return await _context.Categories.FirstOrDefaultAsync(p => p.Id == id);
+            return await _context.Categories.FirstOrDefaultAsync(p => p.Id == id).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
         public async Task <CategoryDB> GetByNameAsync(string name)
         {
-            return await _context.Categories.FirstOrDefaultAsync(p => p.Name == name);
+            return await _context.Categories.FirstOrDefaultAsync(p => p.Name == name).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -101,7 +101,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
         {
             _context.Entry(category).State = EntityState.Modified;
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
 
         }
 
