@@ -95,7 +95,7 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// Gets info about all Users in the database.
         /// </summary>
         /// <returns>List of all Users in dataase.</returns>
-        Task<IEnumerable<User>> GetAllUsersAsync();
+        Task<IEnumerable<User>> GetAllAsync();
 
         /// <summary>
         /// Get a users's claims
@@ -144,7 +144,7 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// </summary>
         /// <param name="id">Id of requested User.</param>
         /// <returns>Instance of User that has requested Id. Returns WITHOUT PasswordHash.</returns>
-        Task<User> GetUserAsync(string id);
+        Task<User> GetAsync(string id);
 
         /// <summary>
         /// Deletes user from the group.

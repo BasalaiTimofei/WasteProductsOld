@@ -182,7 +182,8 @@ namespace WasteProducts.DataAccess.Repositories.Users
 
         public async Task<IEnumerable<UserDAL>> GetAllAsync()
         {
-            return _mapper.Map<IEnumerable<UserDAL>>(await _context.Users.AllAsync(u => true).ConfigureAwait(false));
+            var subresult = await _context.Users.ToListAsync().ConfigureAwait(false);
+            return _mapper.Map<IEnumerable<UserDAL>>(subresult);
         }
 
         public async Task<UserDAL> GetAsync(string id)
