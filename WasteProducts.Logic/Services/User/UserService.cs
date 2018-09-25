@@ -119,14 +119,14 @@ namespace WasteProducts.Logic.Services.Users
 
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
-            IEnumerable<UserDAL> allUserDBs = await _repo.GetAllAsync(true);
+            IEnumerable<UserDAL> allUserDBs = await _repo.GetAllAsync();
             var allUsers = _mapper.Map<IEnumerable<User>>(allUserDBs);
             return allUsers;
         }
 
         public async Task<User> GetUserAsync(string id)
         {
-            var userDB = await _repo.GetAsync(id, true);
+            var userDB = await _repo.GetAsync(id);
             var user = MapTo<User>(userDB);
             return user;
         }
