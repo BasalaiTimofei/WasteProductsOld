@@ -10,6 +10,7 @@ import { GroupsComponent } from './components/groups/groups.component';
 import { SettingsComponent } from './components/user/settings/settings.component';
 import { ToListComponent } from './components/products/to-list/to-list.component';
 import { SearchComponent } from './components/search/search.component';
+import { SearchresultComponent } from './components/searchresult/search-result.component';
 
 const routes: Routes = [
   { path: '', component: DefaultComponent },
@@ -19,9 +20,9 @@ const routes: Routes = [
   { path: 'products', component: ProductsComponent},
   { path: 'groups', component: GroupsComponent},
   { path: 'user/settings', component: SettingsComponent},
-  { path: '**', component: NotFoundComponent },
   { path: 'products/to-list', component: ToListComponent },
-  { path: 'search', component: SearchComponent },
+  { path: 'searchresults/:query', component: SearchresultComponent },
+  { path: '**', component: NotFoundComponent },
 ];
 
 @NgModule({

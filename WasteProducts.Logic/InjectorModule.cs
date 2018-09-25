@@ -18,6 +18,7 @@ using WasteProducts.Logic.Common.Services.Barcods;
 using WasteProducts.Logic.Common.Services.Diagnostic;
 using WasteProducts.Logic.Common.Services.Groups;
 using WasteProducts.Logic.Common.Services.Mail;
+using WasteProducts.Logic.Common.Services.Notifications;
 using WasteProducts.Logic.Common.Services.Products;
 using WasteProducts.Logic.Common.Services.Users;
 using WasteProducts.Logic.Extensions;
@@ -29,6 +30,7 @@ using WasteProducts.Logic.Services;
 using WasteProducts.Logic.Services.Barcods;
 using WasteProducts.Logic.Services.Groups;
 using WasteProducts.Logic.Services.Mail;
+using WasteProducts.Logic.Services.Notifications;
 using WasteProducts.Logic.Services.Products;
 using WasteProducts.Logic.Services.Users;
 using ProductProfile = WasteProducts.Logic.Mappings.Products.ProductProfile;
@@ -58,6 +60,8 @@ namespace WasteProducts.Logic
             BindBarcodeServices();
 
             Bind<ISearchService>().To<LuceneSearchService>().ValidateArguments(typeof(BoostedSearchQuery));
+
+            Bind<INotificationService>().To<NotificationService>();
         }
 
         private void BindInterceptors()
