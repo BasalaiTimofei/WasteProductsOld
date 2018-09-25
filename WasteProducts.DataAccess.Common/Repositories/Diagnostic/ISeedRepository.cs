@@ -9,9 +9,15 @@ namespace WasteProducts.DataAccess.Common.Repositories.Diagnostic
     public interface ISeedRepository : IDisposable
     {
         /// <summary>
+        /// Recreates database.
+        /// </summary>
+        /// <returns></returns>
+        Task RecreateAsync();
+
+        /// <summary>
         /// Seeds database with test data.
         /// </summary>
         /// <returns></returns>
-        Task RecreateAndSeedAsync();
+        Task SeedAsync();
     }
 }

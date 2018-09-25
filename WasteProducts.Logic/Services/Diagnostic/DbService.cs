@@ -54,14 +54,15 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <inheritdoc />
-        public async Task ReCreateAsync(bool withTestData)
+        public Task ReCreateAsync()
         {
-            await DeleteAsync().ConfigureAwait(false);
-            await Task.Run(() => _database.Initialize()).ConfigureAwait(false);
-            await _dbSeedService.SeedBaseDataAsync().ConfigureAwait(false);
+            return _seedRepo.RecreateAsync();
+        }
 
-            if(withTestData)
-                await _dbSeedService.SeedTestDataAsync().ConfigureAwait(false);
+        /// <inheritdoc />
+        public Task SeedAsync()
+        {
+            return _seedRepo.SeedAsync();
         }
 
         /// <inheritdoc />
@@ -83,11 +84,6 @@ namespace WasteProducts.Logic.Services
 
                 _disposed = true;
             }
-        }
-
-        public Task ReCreateAndSeedAsync()
-        {
-            return _seedRepo.RecreateAndSeedAsync();
         }
 
         ~DbService()

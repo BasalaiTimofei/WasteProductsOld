@@ -45,22 +45,24 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
             }
         }
 
-        public async Task RecreateAndSeedAsync()
+        public async Task RecreateAsync()
         {
             await Task.Run(() =>
             {
                 _context.Database.Delete();
                 _context.Database.Create();
-                CreateUsers();
-                var user = AddFriendsToFirstUser();
-                _context.SaveChanges();
+            }).ConfigureAwait(false);
+        }
 
-                CreateProductCategories();
-                _context.SaveChanges();
+        public async Task SeedAsync()
+        {
+            CreateUsers();
+            var user = AddFriendsToFirstUser();
 
-                CreateProductsAndAddThemToTheUser(user);
-                _context.SaveChanges();
-            });
+            CreateProductCategories();
+
+            CreateProductsAndAddThemToTheUser(user);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
 
             void CreateProductsAndAddThemToTheUser(UserDB userDB)
             {
@@ -78,7 +80,7 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                         Category = i > 2 ? category1 : category2
                     };
                     _context.Products.Add(prod);
-                    _context.SaveChanges();
+                    //_context.SaveChanges();
                     var descr = new UserProductDescriptionDB
                     {
                         UserId = userDB.Id,
@@ -88,7 +90,7 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                         Created = DateTime.UtcNow.AddDays(-2)
                     };
                     userDB.ProductDescriptions.Add(descr);
-                    _context.SaveChanges();
+                    //_context.SaveChanges();
                 }
             }
 
