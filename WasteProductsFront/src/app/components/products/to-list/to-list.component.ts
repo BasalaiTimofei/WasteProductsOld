@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { UserProduct } from '../../../models/users/user-product';
+import { ProductService } from '../../../services/product/product.service';
 
 @Component({
   selector: 'app-to-list',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ToListComponent implements OnInit {
 
-  constructor() { }
+  userProducts: UserProduct[];
+
+  constructor(private srv: ProductService) { }
 
   ngOnInit() {
+    this.srv.loadUserProducts().subscribe(
+    res => this.userProducts = res,
+    err => console.error(err));
   }
 
 }

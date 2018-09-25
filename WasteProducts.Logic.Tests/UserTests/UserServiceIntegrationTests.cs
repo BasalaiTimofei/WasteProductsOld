@@ -427,11 +427,11 @@ namespace WasteProducts.Logic.Tests.UserTests
         {
             string description = "Tastes like garbage, won't buy it ever again.";
 
-            var products = await _userService.GetProductDescriptionsAsync(_usersIds[0]).ConfigureAwait(false);
+            var products = await _userService.GetProductsAsync(_usersIds[0]).ConfigureAwait(false);
             Assert.IsEmpty(products);
 
             await _userService.AddProductAsync(_usersIds[0], _productIds[0], 1, description).ConfigureAwait(false);
-            products = await _userService.GetProductDescriptionsAsync(_usersIds[0]).ConfigureAwait(false);
+            products = await _userService.GetProductsAsync(_usersIds[0]).ConfigureAwait(false);
 
             Assert.AreEqual(1, products.Count);
             Assert.AreEqual(_productIds[0], products[0].Product.Id);
@@ -443,12 +443,12 @@ namespace WasteProducts.Logic.Tests.UserTests
         [Test]
         public async Task UserIntegrTest_27DeletingProductsFromUser()
         {
-            var products = await _userService.GetProductDescriptionsAsync(_usersIds[0]).ConfigureAwait(false);
+            var products = await _userService.GetProductsAsync(_usersIds[0]).ConfigureAwait(false);
             Assert.AreEqual(1, products.Count);
 
             await _userService.DeleteProductAsync(_usersIds[0], _productIds[0]).ConfigureAwait(false);
 
-            products = await _userService.GetProductDescriptionsAsync(_usersIds[0]).ConfigureAwait(false);
+            products = await _userService.GetProductsAsync(_usersIds[0]).ConfigureAwait(false);
             Assert.IsEmpty(products);
         }
 

@@ -9,11 +9,14 @@ using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.Diagnostic;
 using WasteProducts.DataAccess.Contexts;
 using System.Data.Entity;
+using WasteProducts.DataAccess.Common.Models.Groups;
 
 namespace WasteProducts.DataAccess.Repositories.Diagnostic
 {
     public class DiagnosticRepository : IDiagnosticRepository
     {
+        private readonly Random _random = new Random();
+
         private readonly WasteContext _context;
 
         private readonly UserStore<UserDB> _store;
@@ -56,42 +59,56 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
 
         public async Task SeedAsync()
         {
-            CreateUsers();
+            await CreateUsers();
             var user = AddFriendsToFirstUser();
 
             CreateProductCategories();
 
             CreateProductsAndAddThemToTheUser(user);
+
+            CreateGroups();
+
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
-            void CreateProductsAndAddThemToTheUser(UserDB userDB)
+            async Task CreateUsers()
             {
-                var category1 = _context.Categories.Find(0);
-                var category2 = _context.Categories.Find(1);
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < 10; i++)
                 {
-                    var name = $"Product number {i}";
-                    var prod = new ProductDB
+                    var userToCreate = new UserDB
                     {
                         Id = i.ToString(),
-                        Name = name,
-                        Created = DateTime.UtcNow.AddDays(-2),
-                        Modified = null,
-                        Category = i > 2 ? category1 : category2
+                        UserName = _faker.Name.FullName(),
+                        Email = _faker.Internet.Email(),
+                        EmailConfirmed = true,
+                        Created = DateTime.UtcNow.AddDays(-15)
                     };
-                    _context.Products.Add(prod);
-                    //_context.SaveChanges();
-                    var descr = new UserProductDescriptionDB
-                    {
-                        UserId = userDB.Id,
-                        ProductId = prod.Id,
-                        Rating = i,
-                        Description = (i > 2 ? "Хороший продукт, покупать" : "Плохой продукт, не брать никогда"),
-                        Created = DateTime.UtcNow.AddDays(-2)
-                    };
-                    userDB.ProductDescriptions.Add(descr);
-                    //_context.SaveChanges();
+                    _context.Users.Add(userToCreate);
                 }
+                await _context.SaveChangesAsync();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    await _manager.AddPasswordAsync(i.ToString(), $"{i}{i}{i}{i}{i}{i}");
+                }
+            }
+
+
+            UserDB AddFriendsToFirstUser()
+            {
+                var user0 = _context.Users.Include(u => u.Friends).Include(u => u.ProductDescriptions.Select(d => d.Product)).First(u => u.Id == "0");
+                var user1 = _context.Users.Include(u => u.Friends).Include(u => u.ProductDescriptions.Select(d => d.Product)).First(u => u.Id == "1");
+                var user2 = _context.Users.Include(u => u.Friends).Include(u => u.ProductDescriptions.Select(d => d.Product)).First(u => u.Id == "2");
+                var user3 = _context.Users.Include(u => u.Friends).Include(u => u.ProductDescriptions.Select(d => d.Product)).First(u => u.Id == "3");
+
+                user0.Friends.Add(user1);
+                user0.Friends.Add(user2);
+                user0.Friends.Add(user3);
+
+                user1.Friends.Add(user0);
+
+                user0.Modified = DateTime.UtcNow.AddDays(-3);
+
+                return user0;
             }
 
             void CreateProductCategories()
@@ -113,39 +130,97 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                 _context.Categories.Add(category1);
             }
 
-            void CreateUsers()
+            void CreateProductsAndAddThemToTheUser(UserDB userDB)
             {
-                for (int i = 0; i < 10; i++)
+                var category1 = _context.Categories.Find(0);
+                var category2 = _context.Categories.Find(1);
+                for (int i = 0; i < 6; i++)
                 {
-                    var nameAndPassword = $"{i}{i}{i}{i}{i}{i}";
-                    var userToCreate = new UserDB
+                    var prod = new ProductDB
                     {
                         Id = i.ToString(),
-                        UserName = nameAndPassword,
-                        Email = _faker.Internet.Email(),
-                        EmailConfirmed = true,
-                        Created = DateTime.UtcNow.AddDays(-15)
+                        Name = _faker.Commerce.ProductName(),
+                        Created = DateTime.UtcNow.AddDays(-2),
+                        Modified = null,
+                        Category = i > 2 ? category1 : category2
                     };
-                    _manager.Create(userToCreate, nameAndPassword);
+                    _context.Products.Add(prod);
+                    var descr = new UserProductDescriptionDB
+                    {
+                        UserId = userDB.Id,
+                        ProductId = prod.Id,
+                        Rating = i,
+                        Description = (i > 2 ? "Хороший продукт, покупать" : "Плохой продукт, не брать никогда"),
+                        Created = DateTime.UtcNow.AddDays(-2)
+                    };
+                    userDB.ProductDescriptions.Add(descr);
                 }
             }
 
-            UserDB AddFriendsToFirstUser()
+            void CreateGroups()
             {
-                var user0 = _context.Users.Include(u => u.Friends).Include(u => u.ProductDescriptions.Select(d => d.Product)).First(u => u.Id == "0");
-                var user1 = _context.Users.Include(u => u.Friends).Include(u => u.ProductDescriptions.Select(d => d.Product)).First(u => u.Id == "1");
-                var user2 = _context.Users.Include(u => u.Friends).Include(u => u.ProductDescriptions.Select(d => d.Product)).First(u => u.Id == "2");
-                var user3 = _context.Users.Include(u => u.Friends).Include(u => u.ProductDescriptions.Select(d => d.Product)).First(u => u.Id == "3");
+                for (int i = 0; i < 3; i++)
+                {
+                    var group = new GroupDB
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Name = $"{_faker.Lorem.Word()} group",
+                        Information = _faker.Lorem.Sentence(),
+                        AdminId = i.ToString(),
+                        Created = DateTime.UtcNow.AddDays(-4)
+                    };
+                    _context.Groups.Add(group);
 
-                user0.Friends.Add(user1);
-                user0.Friends.Add(user2);
-                user0.Friends.Add(user3);
+                    for (int j = 0; j < 10; j++)
+                    {
+                        var groupUser = new GroupUserDB
+                        {
+                            UserId = j.ToString(),
+                            GroupId = group.Id,
+                            IsConfirmed = true,
+                            RightToCreateBoards = true,
+                            Created = DateTime.UtcNow.AddDays(-1)
+                        };
+                        _context.GroupUsers.Add(groupUser);
+                    }
 
-                user1.Friends.Add(user0);
+                    for (int j = 0; j < 2; j++)
+                    {
+                        var gbName = $"Board about {_faker.Lorem.Word()}";
+                        var groupBoard = new GroupBoardDB
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            GroupId = group.Id,
+                            CreatorId = i.ToString(),
+                            Name = gbName,
+                            Information = _faker.Lorem.Sentence(),
+                            Created = DateTime.UtcNow.AddDays(-2),
+                            IsNotDeleted = true
+                        };
+                        _context.GroupBoards.Add(groupBoard);
 
-                user0.Modified = DateTime.UtcNow.AddDays(-3);
+                        var groupProduct = new GroupProductDB
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            GroupBoardId = groupBoard.Id,
+                            ProductId = _random.Next(0, 6).ToString(),
+                            Information = _faker.Lorem.Sentence()
+                        };
+                        _context.GroupProducts.Add(groupProduct);
 
-                return user0;
+                        for (int k = 0; k < 10; k++)
+                        {
+                            var groupComment = new GroupCommentDB
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                GroupBoardId = groupBoard.Id,
+                                CommentatorId = _random.Next(0, 10).ToString(),
+                                Comment = _faker.Lorem.Sentence()
+                            };
+                            _context.GroupComments.Add(groupComment);
+                        }
+                    }
+                }
             }
         }
 
