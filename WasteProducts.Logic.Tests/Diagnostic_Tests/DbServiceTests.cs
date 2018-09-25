@@ -82,9 +82,8 @@ namespace WasteProducts.Logic.Tests.Diagnostic_Tests
             _databaseMoq.Verify(database => database.Delete(), Times.Once);
         }
 
-        [TestCase(false)]
-        [TestCase(true)]
-        public async Task ReCreateAsync_Test(bool seedTestData)
+        [Test]
+        public async Task ReCreateAsync_Test()
         {
             // arrange
             var dbManagementService = GetDbService();
@@ -92,16 +91,10 @@ namespace WasteProducts.Logic.Tests.Diagnostic_Tests
             _databaseMoq.SetupGet(database => database.IsExists).Returns(false);
 
             // action
-           await dbManagementService.ReCreateAsync(seedTestData).ConfigureAwait(false);
+           await dbManagementService.ReCreateAsync().ConfigureAwait(false);
 
             // assert
-            _databaseMoq.Verify(database => database.Delete(), Times.Once);
-            _dbSeedServiceMoq.Verify(seedService => seedService.SeedBaseDataAsync(), Times.Once);
-
-            if (seedTestData)
-                _dbSeedServiceMoq.Verify(seedService => seedService.SeedTestDataAsync(), Times.Once);
-            else
-                _dbSeedServiceMoq.Verify(seedService => seedService.SeedTestDataAsync(), Times.Never);
+            _seedRepoMoq.Verify(s => s.RecreateAsync(), Times.Once);
         }
 
         IDbService GetDbService() => new DbService(_seedRepoMoq.Object, _dbSeedServiceMoq.Object, _databaseMoq.Object, _loggerMoq.Object);
