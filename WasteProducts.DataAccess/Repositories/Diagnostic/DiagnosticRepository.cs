@@ -77,7 +77,7 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                     var userToCreate = new UserDB
                     {
                         Id = i.ToString(),
-                        UserName = _faker.Name.FullName(),
+                        UserName = $"UserName{i}",
                         Email = _faker.Internet.Email(),
                         EmailConfirmed = true,
                         Created = DateTime.UtcNow.AddDays(-15)
