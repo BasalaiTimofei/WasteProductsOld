@@ -23,7 +23,7 @@ namespace WasteProducts.Web
             Kernel.BindHttpFilter<ApiValidationExceptionFilterAttribute>(System.Web.Http.Filters.FilterScope.Action);
 
 
-            Bind<INotificationProvider>().To<SignalRNotifiactionProvider>();
+            Kernel.Bind<INotificationProvider>().To<SignalRNotifiactionProvider>();
         }
     }
 }
