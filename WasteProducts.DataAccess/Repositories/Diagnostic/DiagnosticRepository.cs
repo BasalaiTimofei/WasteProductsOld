@@ -56,7 +56,7 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
 
         public async Task SeedAsync()
         {
-            CreateUsers();
+            await CreateUsers();
             var user = AddFriendsToFirstUser();
 
             CreateProductCategories();
@@ -80,7 +80,6 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                         Category = i > 2 ? category1 : category2
                     };
                     _context.Products.Add(prod);
-                    //_context.SaveChanges();
                     var descr = new UserProductDescriptionDB
                     {
                         UserId = userDB.Id,
@@ -90,7 +89,6 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                         Created = DateTime.UtcNow.AddDays(-2)
                     };
                     userDB.ProductDescriptions.Add(descr);
-                    //_context.SaveChanges();
                 }
             }
 
@@ -113,20 +111,21 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                 _context.Categories.Add(category1);
             }
 
-            void CreateUsers()
+            async Task CreateUsers()
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    var nameAndPassword = $"{i}{i}{i}{i}{i}{i}";
+                    var userName = $"{i}{i}{i}UserName{i}{i}{i}";
+                    var password = $"{i}{i}{i}{i}{i}{i}";
                     var userToCreate = new UserDB
                     {
                         Id = i.ToString(),
-                        UserName = nameAndPassword,
+                        UserName = userName,
                         Email = _faker.Internet.Email(),
                         EmailConfirmed = true,
                         Created = DateTime.UtcNow.AddDays(-15)
                     };
-                    _manager.Create(userToCreate, nameAndPassword);
+                    await _manager.CreateAsync(userToCreate, password).ConfigureAwait(false);
                 }
             }
 

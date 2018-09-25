@@ -144,7 +144,7 @@ namespace WasteProducts.Logic
                     cfg.AddProfile<ProductProfile>();
                     cfg.AddProfile<UserProductDescriptionProfile>();
                     cfg.AddProfile<FriendProfile>();
-                    cfg.AddProfile<ProductDescriptionProfile>();
+                    cfg.AddProfile<UserProductProfile>();
                     cfg.AddProfile<GroupOfUserProfile>();
                 })))
                 .WhenInjectedExactlyInto<UserService>();

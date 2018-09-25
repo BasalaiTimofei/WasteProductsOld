@@ -293,6 +293,10 @@ namespace WasteProducts.DataAccess.Repositories.Users
         public async Task<IList<UserDAL>> GetFriendsAsync(string userId)
         {
             var user = await _context.Users.Include(u => u.Friends).FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
+            if (user == null)
+            {
+                return null;
+            }
             return _mapper.Map<List<UserDAL>>(user.Friends);
         }
 
@@ -343,6 +347,10 @@ namespace WasteProducts.DataAccess.Repositories.Users
         public async Task<IList<UserProductDescriptionDB>> GetProductDescriptionsAsync(string userId)
         {
             var user = await _context.Users.Include(u => u.ProductDescriptions).FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
+            if (user == null)
+            {
+                return null;
+            }
             return user.ProductDescriptions;
         }
 
@@ -399,6 +407,10 @@ namespace WasteProducts.DataAccess.Repositories.Users
         public async Task<IEnumerable<GroupUserDB>> GetGroupsAsync(string userId)
         {
             var user = await _context.Users.Include(u => u.Groups.Select(g => g.Group)).FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
+            if (user == null)
+            {
+                return null;
+            }
             return user.Groups.Where(g => g.Group.IsNotDeleted);
         }
 
