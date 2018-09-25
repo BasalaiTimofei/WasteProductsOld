@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Data.Entity;
+using System.Linq;
+using WasteProducts.DataAccess.Common.Comparers.Donations;
 using WasteProducts.DataAccess.Common.Models.Donations;
 using WasteProducts.DataAccess.Common.Repositories.Donations;
 using WasteProducts.DataAccess.Contexts;
@@ -22,6 +25,37 @@ namespace WasteProducts.DataAccess.Repositories.Donations
         /// <param name="donation">The new donation for adding.</param>
         public void Add(DonationDB donation)
         {
+            DonorDB donorFromDB = _context.Donors.Find(donation.Donor.Id);
+            if (new DonorDBComparer().Equals(donorFromDB, donation.Donor))
+                donation.Donor = donorFromDB; // The donor is in the database and has not changed.
+            else if (donorFromDB != null) // The donor is in the database and has changed.
+            {
+                if (new AddressDBComparer() // But the address has not changed.
+                    .Equals(donation.Donor.Address, donorFromDB.Address))
+                {
+                    donation.Donor.AddressId = donorFromDB.AddressId;
+                    donation.Donor.Address = donorFromDB.Address;
+                }
+                else  // And the address has changed too.
+                {
+                    donation.Donor = SetAddressFromDBIfExists(donation.Donor);
+                    if (donation.Donor.Address.Id == default(Guid))
+                    { // The changed address is not in the database.
+                        AddressDB newAddress = _context.Addresses.Add(donation.Donor.Address);
+                        _context.SaveChanges();
+                        donation.Donor.AddressId = newAddress.Id;
+                        donation.Donor.Address = newAddress;
+                    }
+                    if (donorFromDB.Address.Donors.Count == 1) // Is the old address not used?
+                        _context.Entry(donorFromDB.Address).State = EntityState.Deleted;
+                }
+                donation.Donor.Modified = DateTime.Now;
+                donation.Donor.Created = donorFromDB.Created;
+                _context.Entry(donorFromDB).State = EntityState.Detached;
+                _context.Entry(donation.Donor).State = EntityState.Modified;
+            }
+            else // The donator is not in the database.
+                donation.Donor = SetAddressFromDBIfExists(donation.Donor);
             _context.Donations.Add(donation);
             _context.SaveChanges();
         }
@@ -52,9 +86,29 @@ namespace WasteProducts.DataAccess.Repositories.Donations
                 {
                     _context.Dispose();
                 }
-
                 _disposed = true;
             }
+        }
+
+        private DonorDB SetAddressFromDBIfExists(DonorDB donor)
+        {
+            AddressDB addressFromDB =
+                _context.Addresses
+                .FirstOrDefault(
+                    a => a.City == donor.Address.City
+                    && a.Country == donor.Address.Country
+                    && a.IsConfirmed == donor.Address.IsConfirmed
+                    && a.Name == donor.Address.Name
+                    && a.State == donor.Address.State
+                    && a.Street == donor.Address.Street
+                    && a.Zip == donor.Address.Zip);
+            if (addressFromDB != null) // The address is in the database.
+            {
+                donor.AddressId = addressFromDB.Id;
+                donor.Address = addressFromDB;
+                _context.Entry(donor.Address).State = EntityState.Unchanged;
+            }
+            return donor;
         }
     }
 }

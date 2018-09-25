@@ -21,65 +21,113 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
         }
 
         [Test]
-        public void TestCreateNewDonation()
+        public void _00CreateNewDonation()
         {
             DonationDB donation = new DonationDB()
             {
                 Currency = "USD",
                 Date = DateTime.Now,
                 Fee = 0.14M,
-                Gross = 13.85M,
-                TransactionId = "123567890123",
-                Donor = new DonorDB()
-                {
-                    Email = "test_email@gmail.com",
-                    FirstName = "John",
-                    LastName = "Newton",
-                    Id = "0123456789123",
-                    IsVerified = true,
-                    Address = new AddressDB()
-                    {
-                        City = "London",
-                        Country = "United Kingdom",
-                        IsConfirmed = true,
-                        Name = "",
-                        State = "London",
-                        Street = "Down Town",
-                        Zip = "100300"
-                    }
-                }
+                Gross = 1.0M,
+                TransactionId = "1",
+                Donor = CreateDonorWithLondonAddress()
             };
             _donationRepository.Add(donation);
         }
 
         [Test]
-        public void TestCreateNewDonationFromSameDonor()
+        public void _01CreateNewDonationFromSameDonor()
         {
             DonationDB donation = new DonationDB()
             {
                 Currency = "USD",
                 Date = DateTime.Now,
                 Fee = 0.15M,
-                Gross = 26.0M,
-                TransactionId = "123567890124",
-                Donor = new DonorDB()
-                {
-                    Email = "test_email@gmail.com",
-                    FirstName = "John",
-                    LastName = "Newton",
-                    Id = "0123456789123",
-                    IsVerified = true,
-                    Address = new AddressDB()
-                    {
-                        City = "London",
-                        Country = "United Kingdom",
-                        IsConfirmed = true,
-                        Name = "",
-                        State = "London",
-                        Street = "Down Town",
-                        Zip = "100300"
-                    }
-                }
+                Gross = 2.0M,
+                TransactionId = "2",
+                Donor = CreateDonorWithLondonAddress()
+            };
+            _donationRepository.Add(donation);
+        }
+
+        [Test]
+        public void _02CreateNewDonationFromChangedDonorWithUnmodifiedAddress()
+        {
+            DonorDB donor = CreateDonorWithLondonAddress();
+            donor.IsVerified = true;
+            DonationDB donation = new DonationDB()
+            {
+                Currency = "USD",
+                Date = DateTime.Now,
+                Fee = 0.15M,
+                Gross = 3.0M,
+                TransactionId = "3",
+                Donor = donor
+            };
+            _donationRepository.Add(donation);
+        }
+
+        [Test]
+        public void _03CreateNewDonationFromDonorWithNewAddress_OldAddressIsNotUsed()
+        {
+            DonorDB donor = CreateDonorWithLondonAddress();
+            donor.Address = CreateAmsterdamAddress();
+            DonationDB donation = new DonationDB()
+            {
+                Currency = "USD",
+                Date = DateTime.Now,
+                Fee = 0.15M,
+                Gross = 4.0M,
+                TransactionId = "4",
+                Donor = donor
+            };
+            _donationRepository.Add(donation);
+        }
+
+        [Test]
+        public void _04CreateNewDonationFromOtherDonorWithSameAddress()
+        {
+            DonationDB donation = new DonationDB()
+            {
+                Currency = "USD",
+                Date = DateTime.Now,
+                Fee = 0.15M,
+                Gross = 5.0M,
+                TransactionId = "5",
+                Donor = CreateDonorWithAmsterdamAddress()
+            };
+            _donationRepository.Add(donation);
+        }
+
+        [Test]
+        public void _05CreateNewDonationFromDonorWithNewAddress_OldAddressIsUsed()
+        {
+            DonorDB donor = CreateDonorWithLondonAddress();
+            DonationDB donation = new DonationDB()
+            {
+                Currency = "USD",
+                Date = DateTime.Now,
+                Fee = 0.15M,
+                Gross = 6.0M,
+                TransactionId = "6",
+                Donor = donor
+            };
+            _donationRepository.Add(donation);
+        }
+
+        [Test]
+        public void _06CreateNewDonationFromDonorWithChangedButExistAddress_OldAddressIsNotUsed()
+        {
+            DonorDB donor = CreateDonorWithAmsterdamAddress();
+            donor.Address = CreateLondonAddress();
+            DonationDB donation = new DonationDB()
+            {
+                Currency = "USD",
+                Date = DateTime.Now,
+                Fee = 0.15M,
+                Gross = 7.0M,
+                TransactionId = "7",
+                Donor = donor
             };
             _donationRepository.Add(donation);
         }
@@ -89,6 +137,63 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
         {
             _donationRepository?.Dispose();
             _kernel?.Dispose();
+        }
+
+        private AddressDB CreateAmsterdamAddress()
+        {
+            const string AMSTERDAM = "Amsterdam";
+            return new AddressDB()
+            {
+                City = AMSTERDAM,
+                State = AMSTERDAM,
+                Country = "Netherlands",
+                IsConfirmed = false,
+                Name = "Inc.",
+                Street = "Avenue",
+                Zip = "600100"
+            };
+        }
+
+        private AddressDB CreateLondonAddress()
+        {
+            const string LONDON = "London";
+            return new AddressDB()
+            {
+                City = LONDON,
+                Country = "United Kingdom",
+                IsConfirmed = true,
+                Name = "Test name",
+                State = LONDON,
+                Street = "Down Town",
+                Zip = "100300"
+            };
+        }
+
+        private DonorDB CreateDonorWithLondonAddress()
+        {
+            
+            return new DonorDB()
+            {
+                Email = "JohnNewton@gmail.com",
+                FirstName = "John",
+                LastName = "Newton",
+                Id = "1",
+                IsVerified = false,
+                Address = CreateLondonAddress()
+            };
+        }
+
+        private DonorDB CreateDonorWithAmsterdamAddress()
+        {
+            return new DonorDB()
+            {
+                Email = "TomSnow@gmail.com",
+                FirstName = "Tom",
+                LastName = "Snow",
+                Id = "2",
+                IsVerified = false,
+                Address = CreateAmsterdamAddress()
+            };
         }
     }
 }
