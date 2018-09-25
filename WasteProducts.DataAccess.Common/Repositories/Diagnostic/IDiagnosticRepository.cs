@@ -6,7 +6,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Diagnostic
     /// <summary>
     /// Repository created for seeding purposes.
     /// </summary>
-    public interface ISeedRepository : IDisposable
+    public interface IDiagnosticRepository : IDisposable
     {
         /// <summary>
         /// Recreates database.

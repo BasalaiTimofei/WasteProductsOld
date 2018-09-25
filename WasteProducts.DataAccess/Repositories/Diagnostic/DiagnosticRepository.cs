@@ -12,7 +12,7 @@ using System.Data.Entity;
 
 namespace WasteProducts.DataAccess.Repositories.Diagnostic
 {
-    public class SeedRepository : ISeedRepository
+    public class DiagnosticRepository : IDiagnosticRepository
     {
         private readonly WasteContext _context;
 
@@ -24,7 +24,7 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
 
         private bool _disposed;
 
-        public SeedRepository(WasteContext context, Faker faker)
+        public DiagnosticRepository(WasteContext context, Faker faker)
         {
             _context = context;
             _store = new UserStore<UserDB>(_context)
@@ -149,7 +149,7 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
             }
         }
 
-        ~SeedRepository()
+        ~DiagnosticRepository()
         {
             Dispose();
         }

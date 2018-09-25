@@ -55,7 +55,7 @@ namespace WasteProducts.Web.Controllers.Api
         {
             using (_dbService)
             {
-                await _dbService.ReCreateAsync().ConfigureAwait(true);
+                await _dbService.RecreateAsync().ConfigureAwait(true);
                 return StatusCode(HttpStatusCode.NoContent);
             }
         }

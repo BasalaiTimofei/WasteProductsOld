@@ -12,7 +12,7 @@ namespace WasteProducts.Logic.Services
     /// <inheritdoc />
     public class DbService : IDbService
     {
-        private readonly ISeedRepository _seedRepo;
+        private readonly IDiagnosticRepository _diagRepo;
         private readonly IDbSeedService _dbSeedService;
         private readonly IDatabase _database;
         private readonly ILogger _logger;
@@ -25,9 +25,9 @@ namespace WasteProducts.Logic.Services
         /// <param name="dbSeedService">IDbSeedService implementation that seeds into database</param>
         /// <param name="database">IDatabase implementation, for operations with database</param>
         /// <param name="logger">NLog logger</param>
-        public DbService(ISeedRepository seedRepo, IDbSeedService dbSeedService, IDatabase database, ILogger logger)
+        public DbService(IDiagnosticRepository diagRepo, IDbSeedService dbSeedService, IDatabase database, ILogger logger)
         {
-            _seedRepo = seedRepo;
+            _diagRepo = diagRepo;
             _dbSeedService = dbSeedService;
             _database = database;
             _logger = logger;
@@ -54,15 +54,15 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <inheritdoc />
-        public Task ReCreateAsync()
+        public Task RecreateAsync()
         {
-            return _seedRepo.RecreateAsync();
+            return _diagRepo.RecreateAsync();
         }
 
         /// <inheritdoc />
         public Task SeedAsync()
         {
-            return _seedRepo.SeedAsync();
+            return _diagRepo.SeedAsync();
         }
 
         /// <inheritdoc />
@@ -79,7 +79,7 @@ namespace WasteProducts.Logic.Services
                 if (disposing)
                 {
                     _database.Dispose();
-                    _seedRepo?.Dispose();
+                    _diagRepo?.Dispose();
                 }
 
                 _disposed = true;

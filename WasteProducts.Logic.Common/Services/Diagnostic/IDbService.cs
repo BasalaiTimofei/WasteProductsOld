@@ -26,7 +26,7 @@ namespace WasteProducts.Logic.Common.Services.Diagnostic
         /// Deletes database if it exists and create new.
         /// </summary>
         /// <returns>Task</returns>
-        Task ReCreateAsync();
+        Task RecreateAsync();
 
         /// <summary>
         /// Recreates database and populates it with ISeedRepository.
