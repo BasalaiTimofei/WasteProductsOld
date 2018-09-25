@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductDescription } from '../../../models/users/product-description';
+import { UserProduct } from '../../../models/users/user-product';
 import { ProductService } from '../../../services/product/product.service';
 
 @Component({
@@ -9,13 +9,13 @@ import { ProductService } from '../../../services/product/product.service';
 })
 export class ToListComponent implements OnInit {
 
-  products: ProductDescription[];
+  userProducts: UserProduct[];
 
   constructor(private srv: ProductService) { }
 
   ngOnInit() {
-    this.srv.loadProducts().subscribe(
-    res => this.products = res,
+    this.srv.loadUserProducts().subscribe(
+    res => this.userProducts = res,
     err => console.error(err));
   }
 

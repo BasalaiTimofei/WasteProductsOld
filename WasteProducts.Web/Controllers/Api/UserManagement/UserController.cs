@@ -124,9 +124,9 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such Id.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
-        public async Task<IHttpActionResult> GetProductDescriptions([FromUri] string id)
+        public async Task<IHttpActionResult> GetUserProducts([FromUri] string id)
         {
-            return Ok(await _service.GetProductDescriptionsAsync(id));
+            return Ok(await _service.GetProductsAsync(id));
         }
 
         /// <summary>

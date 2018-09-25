@@ -3,6 +3,6 @@
     <p>Список продуктов</p>
   </div>
   </mat-card>
-  <div *ngFor="let item of friends">
-    {{item.UserName}} current ID: {{item.Id}}
+  <div *ngFor="let item of userProducts">
+    ID: {{item.Product.Id}} Name: {{item.Product.Name}} Rating: {{item.Rating}}
   </div>

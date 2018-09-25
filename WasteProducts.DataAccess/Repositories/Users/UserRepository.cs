@@ -344,7 +344,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
             return true;
         }
 
-        public async Task<IList<UserProductDescriptionDB>> GetProductDescriptionsAsync(string userId)
+        public async Task<IList<UserProductDescriptionDB>> GetUserProductDescriptionsAsync(string userId)
         {
             var user = await _context.Users.Include(u => u.ProductDescriptions).FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
             if (user == null)

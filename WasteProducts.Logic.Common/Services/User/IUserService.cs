@@ -130,7 +130,7 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// </summary>
         /// <param name="userId">ID of a user.</param>
         /// <returns>User's product descriptions.</returns>
-        Task<IList<UserProduct>> GetProductDescriptionsAsync(string userId);
+        Task<IList<UserProduct>> GetProductsAsync(string userId);
 
         /// <summary>
         /// Get the names of the roles a user is a member of.

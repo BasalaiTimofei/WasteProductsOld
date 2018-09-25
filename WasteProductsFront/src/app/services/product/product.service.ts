@@ -6,7 +6,7 @@ import { LoggingService } from '../logging/logging.service';
 
 // environment
 import { environment } from '../../../environments/environment.prod';
-import { ProductDescription } from 'src/app/models/users/product-description';
+import { UserProduct } from '../../models/users/user-product';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,8 @@ import { ProductDescription } from 'src/app/models/users/product-description';
 export class ProductService extends BaseHttpService {
 
   private apiUrl = `${environment.apiHostUrl}/api/product/products`;
-  private getProductsUrl = '';
+
+  private getProductsUrl = `http://localhost:2189/api/user/0/products`;
 
   constructor(httpService: HttpClient, loggingService: LoggingService) {
     super(httpService, loggingService);
@@ -24,7 +25,7 @@ export class ProductService extends BaseHttpService {
     throw new Error('Method not implemented.'); // change to correct method
   }
 
-  loadProducts() {
-    return this.httpService.get<ProductDescription[]>(this.getProductsUrl);
+  loadUserProducts() {
+    return this.httpService.get<UserProduct[]>(this.getProductsUrl);
    }
 }
