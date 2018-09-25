@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  logLevel: 0,
   apiHostUrl: 'http://localhost:2189/'
 };
 
