@@ -43,15 +43,15 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// Gets all users of the WasteProducts application.
         /// </summary>
         /// <returns>IEnumerable of all the users.</returns>
-        [HttpGet, Route("")]
+        [HttpGet, Route("all")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Users are found.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There are no Users.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the search.")]
-        public async Task<IHttpActionResult> GetUsers()
+        public async Task<IHttpActionResult> GetAll()
         {
-            var users = await _service.GetAllUsersAsync();
+            var users = await _service.GetAllAsync();
 
             if (!users.Any())
             {
@@ -61,7 +61,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             return Ok(users);
         }
 
-        // GET api/user/5
         /// <summary>
         /// Gets user by its ID.
         /// </summary>
@@ -73,9 +72,9 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such ID.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the search.")]
-        public async Task<IHttpActionResult> GetUserById(string id)
+        public async Task<User> GetById(string id)
         {
-            var user = await _service.GetUserAsync(id);
+            var user = await _service.GetAsync(id);
             if (user is null)
             {
                 throw new WasteException("There is no User with such ID.", HttpStatusCode.NotFound);
@@ -164,9 +163,9 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such Id.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
-        public async Task<IHttpActionResult> GetProductDescriptions([FromUri] string id)
+        public async Task<IHttpActionResult> GetUserProducts([FromUri] string id)
         {
-            return Ok(await _service.GetProductDescriptionsAsync(id));
+            return Ok(await _service.GetProductsAsync(id));
         }
 
         /// <summary>
