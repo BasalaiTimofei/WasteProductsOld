@@ -9,13 +9,16 @@ using System.Net.Mail;
 using System.Reflection;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.Logic.Common.Factories;
+using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Groups;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Search;
 using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Common.Services.Barcods;
 using WasteProducts.Logic.Common.Services.Diagnostic;
 using WasteProducts.Logic.Common.Services.Groups;
 using WasteProducts.Logic.Common.Services.Mail;
+using WasteProducts.Logic.Common.Services.Notifications;
 using WasteProducts.Logic.Common.Services.Products;
 using WasteProducts.Logic.Common.Services.Users;
 using WasteProducts.Logic.Extensions;
@@ -24,8 +27,10 @@ using WasteProducts.Logic.Mappings.Groups;
 using WasteProducts.Logic.Mappings.Products;
 using WasteProducts.Logic.Mappings.Users;
 using WasteProducts.Logic.Services;
+using WasteProducts.Logic.Services.Barcods;
 using WasteProducts.Logic.Services.Groups;
 using WasteProducts.Logic.Services.Mail;
+using WasteProducts.Logic.Services.Notifications;
 using WasteProducts.Logic.Services.Products;
 using WasteProducts.Logic.Services.Users;
 using ProductProfile = WasteProducts.Logic.Mappings.Products.ProductProfile;
@@ -52,8 +57,11 @@ namespace WasteProducts.Logic
             BindUserServices();
             BindGroupServices();
             BindProductServices();
+            BindBarcodeServices();
 
             Bind<ISearchService>().To<LuceneSearchService>().ValidateArguments(typeof(BoostedSearchQuery));
+
+            Bind<INotificationService>().To<NotificationService>();
         }
 
         private void BindInterceptors()
@@ -116,6 +124,15 @@ namespace WasteProducts.Logic
         {
             Bind<IProductService>().To<ProductService>().ValidateArguments(typeof(Product), typeof(Category));
             Bind<ICategoryService>().To<CategoryService>().ValidateArguments(typeof(Category));
+        }
+
+        private void BindBarcodeServices()
+        {
+            Bind<IBarcodeScanService>().To<BarcodeScanService>();
+            Bind<IBarcodeCatalogSearchService>().To<BarcodeCatalogSearchService>();
+            Bind<ICatalog>().To<EDostavkaCatalog>();
+            Bind<ICatalog>().To<PriceGuardCatalog>();
+            Bind<IHttpHelper>().To<HttpHelper>();
         }
 
         private void BindMappers()

@@ -65,11 +65,14 @@
   <ItemGroup>
     <Compile Include="Attributes\TraceAttribute.cs" />
     <Compile Include="Factories\IServiceFactory.cs" />
+    <Compile Include="Models\Barcods\HttpQueryResult.cs" />
+    <Compile Include="Models\Barcods\ParseResult.cs" />
     <Compile Include="Models\Diagnostic\DatabaseState.cs" />
     <Compile Include="Models\Donations\Address.cs" />
     <Compile Include="Models\Donations\Donation.cs" />
     <Compile Include="Models\Barcods\Barcode.cs" />
     <Compile Include="Models\Donations\Donor.cs" />
+    <Compile Include="Models\Notifications\Notification.cs" />
     <Compile Include="Models\Search\BoostedSearchQuery.cs" />
     <Compile Include="Models\Products\Category.cs" />
     <Compile Include="Models\Search\BoostedSearchQueryConverter.cs" />
@@ -103,9 +106,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>QueryConverter.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\Barcods\IBarcodeCatalogSearchService.cs" />
+    <Compile Include="Services\Barcods\ICatalog.cs" />
+    <Compile Include="Services\Barcods\IHttpHelper.cs" />
     <Compile Include="Services\Diagnostic\IDbSeedService.cs" />
     <Compile Include="Services\Diagnostic\IDbService.cs" />
     <Compile Include="Services\Diagnostic\ITestModelsService.cs" />
+    <Compile Include="Services\Notifications\INotificationProvider.cs" />
+    <Compile Include="Services\Notifications\INotificationService.cs" />
     <Compile Include="Services\Products\ICategoryService.cs" />
     <Compile Include="Services\Donations\IDonationService.cs" />
     <Compile Include="Services\Products\IProductService.cs" />

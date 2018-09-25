@@ -72,6 +72,8 @@
     <Compile Include="Models\Barcods\BarcodeDB.cs" />
     <Compile Include="Models\Donations\DonorDB.cs" />
     <Compile Include="Models\Entity.cs" />
+    <Compile Include="Models\Notifications\NotificationDB.cs" />
+    <Compile Include="Models\Notifications\NotificationSettingsDB.cs" />
     <Compile Include="Models\Products\CategoryDB.cs" />
     <Compile Include="Models\Products\ProductDB.cs" />
     <Compile Include="Models\Security\Models\ClaimDb.cs" />
