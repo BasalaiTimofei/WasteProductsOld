@@ -6,12 +6,18 @@ namespace WasteProducts.DataAccess.Common.Repositories.Diagnostic
     /// <summary>
     /// Repository created for seeding purposes.
     /// </summary>
-    public interface ISeedRepository : IDisposable
+    public interface IDiagnosticRepository : IDisposable
     {
+        /// <summary>
+        /// Recreates database.
+        /// </summary>
+        /// <returns></returns>
+        Task RecreateAsync();
+
         /// <summary>
         /// Seeds database with test data.
         /// </summary>
         /// <returns></returns>
-        Task RecreateAndSeedAsync();
+        Task SeedAsync();
     }
 }

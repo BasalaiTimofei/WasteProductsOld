@@ -93,7 +93,7 @@
     <Compile Include="Models\Users\UserProductDescriptionDB.cs" />
     <Compile Include="Models\Users\UserRoleDB.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\Diagnostic\ISeedRepository.cs" />
+    <Compile Include="Repositories\Diagnostic\IDiagnosticRepository.cs" />
     <Compile Include="Repositories\Donations\IDonationRepository.cs" />
     <Compile Include="Repositories\Barcods\IBarcodeRepository.cs" />
     <Compile Include="Repositories\Products\ICategoryRepository.cs" />

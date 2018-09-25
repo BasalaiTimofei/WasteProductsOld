@@ -17,7 +17,7 @@ namespace WasteProducts.Logic.Tests.Diagnostic_Tests
         private Mock<ILogger> _loggerMoq;
         private Mock<IDatabase> _databaseMoq;
         private Mock<IDbSeedService> _dbSeedServiceMoq;
-        private Mock<ISeedRepository> _seedRepoMoq;
+        private Mock<IDiagnosticRepository> _diagRepoMoq;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -25,7 +25,7 @@ namespace WasteProducts.Logic.Tests.Diagnostic_Tests
             _loggerMoq = new Mock<ILogger>();
             _databaseMoq = new Mock<IDatabase>();
             _dbSeedServiceMoq = new Mock<IDbSeedService>();
-            _seedRepoMoq = new Mock<ISeedRepository>();
+            _diagRepoMoq = new Mock<IDiagnosticRepository>();
         }
 
         [TearDown]
@@ -82,9 +82,8 @@ namespace WasteProducts.Logic.Tests.Diagnostic_Tests
             _databaseMoq.Verify(database => database.Delete(), Times.Once);
         }
 
-        [TestCase(false)]
-        [TestCase(true)]
-        public async Task ReCreateAsync_Test(bool seedTestData)
+        [Test]
+        public async Task ReCreateAsync_Test()
         {
             // arrange
             var dbManagementService = GetDbService();
@@ -92,18 +91,12 @@ namespace WasteProducts.Logic.Tests.Diagnostic_Tests
             _databaseMoq.SetupGet(database => database.IsExists).Returns(false);
 
             // action
-           await dbManagementService.ReCreateAsync(seedTestData).ConfigureAwait(false);
+           await dbManagementService.RecreateAsync().ConfigureAwait(false);
 
             // assert
-            _databaseMoq.Verify(database => database.Delete(), Times.Once);
-            _dbSeedServiceMoq.Verify(seedService => seedService.SeedBaseDataAsync(), Times.Once);
-
-            if (seedTestData)
-                _dbSeedServiceMoq.Verify(seedService => seedService.SeedTestDataAsync(), Times.Once);
-            else
-                _dbSeedServiceMoq.Verify(seedService => seedService.SeedTestDataAsync(), Times.Never);
+            _diagRepoMoq.Verify(s => s.RecreateAsync(), Times.Once);
         }
 
-        IDbService GetDbService() => new DbService(_seedRepoMoq.Object, _dbSeedServiceMoq.Object, _databaseMoq.Object, _loggerMoq.Object);
+        IDbService GetDbService() => new DbService(_diagRepoMoq.Object, _dbSeedServiceMoq.Object, _databaseMoq.Object, _loggerMoq.Object);
     }
 }

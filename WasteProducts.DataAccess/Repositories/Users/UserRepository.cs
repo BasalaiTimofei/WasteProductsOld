@@ -50,15 +50,6 @@ namespace WasteProducts.DataAccess.Repositories.Users
             }
         }
 
-        /// <summary>
-        /// Use ONLY with TestDB!
-        /// </summary>
-        public void RecreateTestDatabase()
-        {
-            _context.Database.Delete();
-            _context.Database.CreateIfNotExists();
-        }
-
         public async Task<(string id, string token)> AddAsync(string email, string userName, string password)
         {
             string id = Guid.NewGuid().ToString();
@@ -70,11 +61,11 @@ namespace WasteProducts.DataAccess.Repositories.Users
                 UserName = userName,
                 Created = DateTime.UtcNow
             };
-            await _manager.CreateAsync(user, password);
-            if (await _manager.FindByIdAsync(id) != null)
+            await _manager.CreateAsync(user, password).ConfigureAwait(false);
+            if (await _manager.FindByIdAsync(id).ConfigureAwait(false) != null)
             {
                 _manager.UserTokenProvider = new EmailTokenProvider<UserDB>();
-                var token = await _manager.GenerateEmailConfirmationTokenAsync(id);
+                var token = await _manager.GenerateEmailConfirmationTokenAsync(id).ConfigureAwait(false);
                 return (id, token);
             }
             else
@@ -86,8 +77,8 @@ namespace WasteProducts.DataAccess.Repositories.Users
         public async Task<bool> ConfirmEmailAsync(string userId, string token)
         {
             _manager.UserTokenProvider = new EmailTokenProvider<UserDB>();
-            await _manager.ConfirmEmailAsync(userId, token);
-            if (await _manager.IsEmailConfirmedAsync(userId))
+            await _manager.ConfirmEmailAsync(userId, token).ConfigureAwait(false);
+            if (await _manager.IsEmailConfirmedAsync(userId).ConfigureAwait(false))
             {
                 return true;
             }
@@ -99,27 +90,27 @@ namespace WasteProducts.DataAccess.Repositories.Users
 
         public async Task<(string id, string token)> GeneratePasswordResetTokenAsync(string email)
         {
-            var user = await _manager.FindByEmailAsync(email);
+            var user = await _manager.FindByEmailAsync(email).ConfigureAwait(false);
             _manager.UserTokenProvider = new TotpSecurityStampBasedTokenProvider<UserDB, string>();
-            var token = await _manager.GeneratePasswordResetTokenAsync(user.Id);
+            var token = await _manager.GeneratePasswordResetTokenAsync(user.Id).ConfigureAwait(false);
             return (user.Id, token);
         }
 
         public async Task<bool> ResetPasswordAsync(string userId, string token, string newPassword)
         {
-            var result = await _manager.ResetPasswordAsync(userId, token, newPassword);
+            var result = await _manager.ResetPasswordAsync(userId, token, newPassword).ConfigureAwait(false);
             return result.Succeeded;
         }
 
         public async Task<UserDAL> GetByNameAndPasswordAsync(string userName, string password)
         {
-            return MapTo<UserDAL>(await _manager.FindAsync(userName, password));
+            return MapTo<UserDAL>(await _manager.FindAsync(userName, password).ConfigureAwait(false));
         }
 
         public async Task<UserDAL> GetByEmailAndPasswordAsync(string email, string password)
         {
-            var user = await _manager.FindByEmailAsync(email);
-            if (user != null && await _manager.CheckPasswordAsync(user, password))
+            var user = await _manager.FindByEmailAsync(email).ConfigureAwait(false);
+            if (user != null && await _manager.CheckPasswordAsync(user, password).ConfigureAwait(false))
             {
                 return MapTo<UserDAL>(user);
             }
@@ -131,23 +122,23 @@ namespace WasteProducts.DataAccess.Repositories.Users
 
         public async Task<bool> IsEmailAvailableAsync(string email)
         {
-            return !(await _context.Users.AnyAsync(u => u.Email == email));
+            return !(await _context.Users.AnyAsync(u => u.Email == email).ConfigureAwait(false));
         }
 
         public async Task AddClaimAsync(string userId, Claim claim)
         {
-            await _manager.AddClaimAsync(userId, claim);
+            await _manager.AddClaimAsync(userId, claim).ConfigureAwait(false);
         }
 
         public async Task AddLoginAsync(string userId, UserLoginDB login)
         {
             var userLoginInfo = new UserLoginInfo(login.LoginProvider, login.ProviderKey);
-            await _manager.AddLoginAsync(userId, userLoginInfo);
+            await _manager.AddLoginAsync(userId, userLoginInfo).ConfigureAwait(false);
         }
 
         public async Task AddToRoleAsync(string userId, string roleName)
         {
-            await _manager.AddToRoleAsync(userId, roleName);
+            await _manager.AddToRoleAsync(userId, roleName).ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(string userId)
@@ -172,23 +163,23 @@ namespace WasteProducts.DataAccess.Repositories.Users
 
                 _context.SaveChanges();
                 _manager.Delete(user);
-            });
+            }).ConfigureAwait(false);
         }
 
         public async Task RemoveClaimAsync(string userId, Claim claim)
         {
-            await _manager.RemoveClaimAsync(userId, claim);
+            await _manager.RemoveClaimAsync(userId, claim).ConfigureAwait(false);
         }
 
         public async Task RemoveFromRoleAsync(string userId, string roleName)
         {
-            await _manager.RemoveFromRoleAsync(userId, roleName);
+            await _manager.RemoveFromRoleAsync(userId, roleName).ConfigureAwait(false);
         }
 
         public async Task RemoveLoginAsync(string userId, UserLoginDB login)
         {
             var userLoginInfo = new UserLoginInfo(login.LoginProvider, login.ProviderKey);
-            await _manager.RemoveLoginAsync(userId, userLoginInfo);
+            await _manager.RemoveLoginAsync(userId, userLoginInfo).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<UserDAL>> GetAllAsync(bool initiateNavigationalProps)
@@ -209,7 +200,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
 
                     return _mapper.Map<IEnumerable<UserDAL>>(subresult);
                 }
-            });
+            }).ConfigureAwait(false);
         }
 
         public async Task<UserDAL> GetAsync(string id, bool initiateNavigationalProps)
@@ -232,17 +223,17 @@ namespace WasteProducts.DataAccess.Repositories.Users
 
                     return MapTo<UserDAL>(subresult);
                 }
-            });
+            }).ConfigureAwait(false);
         }
 
         public async Task<IList<string>> GetRolesAsync(string userId)
         {
-            return await _manager.GetRolesAsync(userId);
+            return await _manager.GetRolesAsync(userId).ConfigureAwait(false);
         }
 
         public async Task<IList<Claim>> GetClaimsAsync(string userId)
         {
-            return await _manager.GetClaimsAsync(userId);
+            return await _manager.GetClaimsAsync(userId).ConfigureAwait(false);
         }
 
         public async Task<IList<UserLoginDB>> GetLoginsAsync(string userId)
@@ -259,7 +250,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
 
         public async Task ChangePasswordAsync(string userId, string newPassword, string oldPassword)
         {
-            await _manager.ChangePasswordAsync(userId, oldPassword, newPassword);
+            await _manager.ChangePasswordAsync(userId, oldPassword, newPassword).ConfigureAwait(false);
         }
 
         public async Task UpdateAsync(UserDAL user)
@@ -330,7 +321,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
                     user.Modified = DateTime.UtcNow;
                     _context.SaveChanges();
                 }
-            });
+            }).ConfigureAwait(false);
         }
 
         public async Task<IList<UserDAL>> GetFriendsAsync(string userId)
@@ -339,7 +330,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
             {
                 var user = _context.Users.Include(u => u.Friends).FirstOrDefault(u => u.Id == userId);
                 return _mapper.Map<List<UserDAL>>(user.Friends);
-            });
+            }).ConfigureAwait(false);
         }
 
         public async Task DeleteFriendAsync(string userId, string deletingFriendId)
@@ -355,7 +346,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
                     user.Modified = DateTime.UtcNow;
                     _context.SaveChanges();
                 }
-            });
+            }).ConfigureAwait(false);
         }
 
         public async Task<bool> AddProductAsync(string userId, string productId, int rating, string description)
@@ -384,7 +375,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
                 _context.UserProductDescriptions.Add(userProdDescr);
                 _context.SaveChanges();
                 return true;
-            });
+            }).ConfigureAwait(false);
         }
 
         public async Task<IList<UserProductDescriptionDB>> GetProductDescriptionsAsync(string userId)
@@ -393,7 +384,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
             {
                 var user = _context.Users.Include(u => u.ProductDescriptions).FirstOrDefault(u => u.Id == userId);
                 return user.ProductDescriptions;
-            });
+            }).ConfigureAwait(false);
         }
 
         public async Task<bool> UpdateProductDescriptionAsync(string userId, string productId, int rating, string description)
@@ -410,7 +401,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
 
                 _context.SaveChanges();
                 return true;
-            });
+            }).ConfigureAwait(false);
         }
 
         public async Task<bool> DeleteProductAsync(string userId, string productId)
@@ -426,7 +417,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
                     return true;
                 }
                 else return false;
-            });
+            }).ConfigureAwait(false);
         }
 
         public async Task ChangeGroupInvitationStatusAsync(string userId, string groupId, bool isConfirmed)
@@ -451,7 +442,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
                     }
                     _context.SaveChanges();
                 }
-            });
+            }).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<GroupUserDB>> GetGroupsAsync(string userId)
@@ -460,7 +451,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
             {
                 var user = _context.Users.Include(u => u.Groups.Select(g => g.Group)).FirstOrDefault(u => u.Id == userId);
                 return user.Groups.Where(g => g.Group.IsNotDeleted);
-            });
+            }).ConfigureAwait(false);
         }
 
         private UserDB MapTo<T>(UserDAL user)
