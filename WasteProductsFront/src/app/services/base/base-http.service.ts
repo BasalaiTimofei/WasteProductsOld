@@ -19,7 +19,7 @@ export class BaseHttpService extends BaseService {
     return (error: any): Observable<T> => {
 
       /** Log with the LoggingService */
-      this.logError(`${operation} failed: ${error.message}`);
+      this.logError(`"${operation}" failed: ${error.message}`);
 
       // Let the app keep running by returning an empty result.
       return of(result as T);

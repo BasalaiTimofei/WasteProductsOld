@@ -9,8 +9,9 @@ import { LoggingService } from '../logging/logging.service';
 
 // models
 import { DatabaseState } from '../../models/database/database-state';
+
 // environment
-import { environment } from '../../../environments/environment.prod';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

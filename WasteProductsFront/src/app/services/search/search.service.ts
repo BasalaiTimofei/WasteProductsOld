@@ -1,44 +1,58 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+
+import { Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+
+import { BaseHttpService } from '../base/base-http.service';
+import { LoggingService } from '../logging/logging.service';
+
+// models
 import { SearchProduct } from '../../models/search-product';
 import { UserQuery } from '../../models/top-query';
-import { Observable} from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { environment } from '../../../environments/environment.prod';
-import { LoggingService } from '../logging/logging.service';
-import { BaseHttpService } from '../base/base-http.service';
+
+// environment
+import { environment } from '../../../environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class SearchService extends BaseHttpService {
-  searchProducts: SearchProduct[];
   private URL_SEARCH = `${environment.apiHostUrl}/api/search`;  // URL to web api
 
-  constructor(httpService: HttpClient, loggingService: LoggingService) {
+  public searchProducts: SearchProduct[];
+
+  public constructor(httpService: HttpClient, loggingService: LoggingService) {
     super(httpService, loggingService);
-   }
+  }
 
   getDefault(query: string): Observable<SearchProduct[]> {
-    return this.httpService.get<SearchProduct[]>(this.URL_SEARCH + '/products/default', { params: new HttpParams().set('query', query)}).pipe(
+    return this.httpService.get<SearchProduct[]>(this.URL_SEARCH + '/products/default', this.getOptions(query)).pipe(
       map(res => {
         const result: any = res;
         return result.map((item) => new SearchProduct(item.Id, item.Name));
-      }), catchError(this.handleError('Error response', []))
-      );
+      }), catchError(this.handleError('getDefault', []))
+    );
   }
 
   getTopSearchQueries(query: string): Observable<UserQuery[]> {
-    return this.httpService.get<UserQuery[]>(this.URL_SEARCH + '/queries', { params: new HttpParams().set('query', query)}).pipe(
+    return this.httpService.get<UserQuery[]>(this.URL_SEARCH + '/queries', this.getOptions(query)).pipe(
       map(res => {
         const result: any = res;
         return result.map(item => new UserQuery(item.QueryString));
-      }), catchError(this.handleError('Error response', []))
-      );
+      }),
+      catchError(this.handleError('getTopSearchQueries', []))
+    );
   }
 
   gettest(query: string) {
-    return this.httpService.get('http://localhost:2189/api/search/products/default?query=' + query, {observe: 'response'});
+    return this.httpService.get('http://localhost:2189/api/search/products/default?query=' + query, { observe: 'response' });
+  }
+
+  private getOptions(query: string) {
+    return {
+      params: new HttpParams().set('query', query)
+    };
   }
 }
