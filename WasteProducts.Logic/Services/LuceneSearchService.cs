@@ -169,14 +169,14 @@ namespace WasteProducts.Logic.Services
             return _repository.GetAll<UserQuery>(userQuery.Query, userQuery.SearchableFields, userQuery.BoostValues, MAX_SIMILAR_QUERIES_COUNT);
         }
 
-        public Task<IEnumerable<Product>> SearchProductAsync(BoostedSearchQuery query)
+        public async Task<IEnumerable<Product>> SearchProductAsync(BoostedSearchQuery query)
         {
-            return Task.Run(() => SearchProduct(query));
+            return await Task.Run(() => SearchProduct(query));
         }
 
-        public Task<IEnumerable<UserQuery>> GetSimilarQueriesAsync(string query)
+        public async Task<IEnumerable<UserQuery>> GetSimilarQueriesAsync(string query)
         {
-            return Task.Run(() => GetSimilarQueries(query));
+            return await Task.Run(() => GetSimilarQueries(query));
         }
 
         private void CheckQuery(BoostedSearchQuery query)
