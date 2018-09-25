@@ -13,7 +13,7 @@ namespace WasteProducts.Web.Utils.Hubs
         /// <inheritdoc />
         public Task NotificateAsync(string userId, Notification notification)
         {
-            return Task.Factory.StartNew(() => NotificationHub.SendNotification(userId, notification));
+            return Task.Run(() => NotificationHub.SendNotification(userId, notification));
         }
     }
 }
