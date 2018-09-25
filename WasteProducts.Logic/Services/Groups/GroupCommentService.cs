@@ -38,6 +38,7 @@ namespace WasteProducts.Logic.Services.Groups
             if (modelBoard == null)
                 throw new ValidationException("Board not found");
 
+            result.Id = Guid.NewGuid().ToString();
             result.Modified = DateTime.UtcNow;
 
             _dataBase.Create(result);

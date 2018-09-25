@@ -1,19 +1,17 @@
-<div *ngIf="searchProducts.length > 0">
+<div *ngIf="tempProducts && tempProducts.length > 0">
   <table class="table table-hover">
       <tbody>
         <tr *ngFor="let result of tempProducts">
           <td hidden = true>{{result.Id}}</td>
           <td>{{result.Name}}</td>
-          <td>{{result.Description}}</td>
         </tr>
       </tbody>
   </table>
-</div>
-<h2 *ngIf="statusCode === 204">Not found .....</h2>
-
-<mat-paginator [length]="length"
+  <mat-paginator [length]="length"
                [pageSize]="pageSize"
                [pageIndex]="pageIndex"
                [pageSizeOptions]="[5, 10]"
                (page)="pageEvent = changePageEvent($event)">
-</mat-paginator>
+  </mat-paginator>
+</div>
+<h2 *ngIf="statusCode === 204">{{errorMessage}}</h2>

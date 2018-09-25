@@ -32,6 +32,7 @@ namespace WasteProducts.Logic.Services.Groups
             if (modelUser == null)
                 throw new ValidationException("User not found");
 
+            result.Id = Guid.NewGuid().ToString();
             result.IsNotDeleted = true;
             result.Created = DateTime.UtcNow;
             result.Deleted = null;

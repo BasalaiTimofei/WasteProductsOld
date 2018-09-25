@@ -8,17 +8,17 @@
         /// <summary>
         /// ID of the group.
         /// </summary>
-        public virtual string Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Name of the group.
         /// </summary>
-        public virtual string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// True if user can create boards;
         /// false - user can't create boards.
         /// </summary>
-        public virtual bool RightToCreateBoards { get; set; }
+        public bool RightToCreateBoards { get; set; }
     }
 }
