@@ -124,6 +124,7 @@ namespace WasteProducts.Logic
 
         private void BindBarcodeServices()
         {
+            Bind<IBarcodeService>().To<BarcodeService>();
             Bind<IBarcodeScanService>().To<BarcodeScanService>();
             Bind<IBarcodeCatalogSearchService>().To<BarcodeCatalogSearchService>();
             Bind<ICatalog>().To<EDostavkaCatalog>();

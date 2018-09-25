@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using Ninject.Extensions.Logging;
-using System.Net.Http;
 using System.Web.Http;
 using WasteProducts.Logic.Common.Services.Barcods;
 using Swagger.Net.Annotations;
 using WasteProducts.Logic.Common.Models.Barcods;
-using System.Web;
 using System.IO;
-using System.Drawing;
-using WasteProducts.Logic.Services.Barcods;
 using System.Threading.Tasks;
 
 namespace WasteProducts.Web.Controllers.Api
@@ -25,8 +18,6 @@ namespace WasteProducts.Web.Controllers.Api
         private Barcode _barcode = null;
         private readonly IBarcodeScanService _scanner;
         private readonly IBarcodeCatalogSearchService _searcher;
-        private readonly ICatalog _catalog;
-        private readonly IHttpHelper _httpHelper;
 
         /// <summary>
         /// Constructor.
