@@ -125,6 +125,7 @@
     <Compile Include="ModelConfigurations\Groups\GroupConfiguration.cs" />
     <Compile Include="ModelConfigurations\Groups\GroupProductConfiguration.cs" />
     <Compile Include="ModelConfigurations\Groups\GroupUserConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Notifications\NotificationConfiguration.cs" />
     <Compile Include="ModelConfigurations\Users\UserProductDescriptionConfiguration.cs" />
     <Compile Include="Contexts\Security\Configurations\RoleConfiguration.cs" />
     <Compile Include="Contexts\Security\Configurations\UserClaimConfiguration.cs" />

@@ -16,7 +16,11 @@ namespace WasteProducts.Web.Extensions
         /// <param name="configuration">http configuration</param>
         public static void ConfigureWebApi(this IAppBuilder app, HttpConfiguration configuration)
         {
-            configuration.DependencyResolver = new NinjectDependencyResolver(NinjectWebCommon.Bootstrapper.Kernel);
+            var dependencyResolver = new NinjectDependencyResolver(NinjectWebCommon.Bootstrapper.Kernel);
+
+            GlobalConfiguration.Configuration.DependencyResolver = dependencyResolver;
+
+            configuration.DependencyResolver = dependencyResolver;
 
             RegisterWebApiRoutes(configuration);
 
