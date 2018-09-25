@@ -50,15 +50,6 @@ namespace WasteProducts.DataAccess.Repositories.Users
             }
         }
 
-        /// <summary>
-        /// Use ONLY with TestDB!
-        /// </summary>
-        public void RecreateTestDatabase()
-        {
-            _context.Database.Delete();
-            _context.Database.CreateIfNotExists();
-        }
-
         public async Task<(string id, string token)> AddAsync(string email, string userName, string password)
         {
             string id = Guid.NewGuid().ToString();
