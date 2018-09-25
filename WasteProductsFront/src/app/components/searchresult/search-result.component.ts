@@ -31,6 +31,7 @@ export class SearchresultComponent implements OnDestroy {
             return;
         }
 
+        this.setVariablesToDefault();
         this.search(query);
     });
   }
@@ -65,5 +66,11 @@ export class SearchresultComponent implements OnDestroy {
     }
     this.tempProducts = this.searchResult.slice(this.pageSize * this.pageIndex, this.pageSize * (this.pageIndex + 1));
   return event;
+  }
+
+  private setVariablesToDefault() {
+    this.pageSize = 5;
+    this.pageIndex = 0;
+    this.length = 0;
   }
 }
