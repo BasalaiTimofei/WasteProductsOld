@@ -160,6 +160,7 @@
     <Compile Include="Services\AppUserManagerService.cs" />
     <Compile Include="Services\Barcods\BarcodeScanService.cs" />
     <Compile Include="Services\Mail\MailService.cs" />
+    <Compile Include="Services\Notifications\NotificationService.cs" />
     <Compile Include="Services\Products\CategoryService.cs" />
     <Compile Include="Services\Diagnostic\DbSeedService.cs" />
     <Compile Include="Services\Diagnostic\DbService.cs" />
