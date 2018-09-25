@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
 using WasteProducts.Logic.Common.Models.Groups;
@@ -89,9 +90,9 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         {
             _selectedUserList.Add(_groupUserDB);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-                .Returns(_selectedUserList);
+                .ReturnsAsync(_selectedUserList);
 
-            _groupBoardService.Create(_groupBoard);
+            string x = Task.Run(()=> _groupBoardService.Create(_groupBoard)).Result;
 
             _groupRepositoryMock.Verify(m => m.Create(It.IsAny<GroupBoardDB>()), Times.Once);
         }
@@ -99,10 +100,9 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         public void GroupBoardService_01_Create_02_Group_Unavalible_or_UserGroup_Unavalible_or_User_Dose_Not_Have_Access()
         {
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-                .Returns(_selectedUserList);
+                .ReturnsAsync(_selectedUserList);
 
-            Assert.Throws(typeof(ValidationException),
-                    delegate () { _groupBoardService.Create(_groupBoard); });
+            Assert.ThrowsAsync<ValidationException>(()=> _groupBoardService.Create(_groupBoard));
         }
 
         [Test]
@@ -111,11 +111,11 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _selectedBoardList.Add(_groupBoardDB);
             _selectedUserList.Add(_groupUserDB);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
-                .Returns(_selectedBoardList);
+                .ReturnsAsync(_selectedBoardList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-                .Returns(_selectedUserList);
+                .ReturnsAsync(_selectedUserList);
 
-            _groupBoardService.Update(_groupBoard);
+            Task.Run(() => _groupBoardService.Update(_groupBoard)).Wait();
 
             _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupBoardDB>()), Times.Once);
         }
@@ -123,12 +123,11 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         public void GroupBoardService_02_Update_02_GroupBoard_Unavalible_or_UserGroup_Unavalible_or_User_Dose_Not_Have_Access_or_Board_Unavalible_or_UserGroup_Unavalible()
         {
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
-                .Returns(_selectedBoardList);
+                .ReturnsAsync(_selectedBoardList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-                .Returns(_selectedUserList);
+                .ReturnsAsync(_selectedUserList);
 
-            Assert.Throws(typeof(ValidationException),
-                    delegate () { _groupBoardService.Update(_groupBoard); });
+            Assert.ThrowsAsync<ValidationException>(() => _groupBoardService.Update(_groupBoard));
         }
 
         [Test]
@@ -139,11 +138,11 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.GetWithInclude(
                 It.IsAny<Func<GroupBoardDB, Boolean>>(),
                 It.IsAny<Expression<Func<GroupBoardDB, object>>[]>()))
-                .Returns(_selectedBoardList);
+                .ReturnsAsync(_selectedBoardList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-                .Returns(_selectedUserList);
+                .ReturnsAsync(_selectedUserList);
 
-            _groupBoardService.Delete(_groupBoard);
+            Task.Run(() => _groupBoardService.Delete(_groupBoard)).Wait();
 
             _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupBoardDB>()), Times.Once);
             _groupRepositoryMock.Verify(m => m.DeleteAll(It.IsAny<List<GroupProductDB>>()), Times.Once);
@@ -154,12 +153,11 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.GetWithInclude(
                 It.IsAny<Func<GroupBoardDB, Boolean>>(),
                 It.IsAny<Expression<Func<GroupBoardDB, object>>[]>()))
-                .Returns(_selectedBoardList);
+                .ReturnsAsync(_selectedBoardList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-                .Returns(_selectedUserList);
+                .ReturnsAsync(_selectedUserList);
 
-            Assert.Throws(typeof(ValidationException),
-                    delegate () { _groupBoardService.Delete(_groupBoard); });
+            Assert.ThrowsAsync<ValidationException>(() => _groupBoardService.Delete(_groupBoard));
         }
 
         [Test]
@@ -168,9 +166,9 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _selectedBoardList.Add(_groupBoardDB);
             _groupRepositoryMock.Setup(m => m.Find(
                 It.IsAny<Func<GroupBoardDB, Boolean>>()))
-                .Returns(_selectedBoardList);
+                .ReturnsAsync(_selectedBoardList);
 
-            var result = _groupBoardService.FindById("00000000-0000-0000-0000-000000000000");
+            var result = Task.Run(()=> _groupBoardService.FindById("00000000-0000-0000-0000-000000000000")).Result;
             Assert.AreEqual(_groupBoard.Id, result.Id);
             Assert.AreEqual(_groupBoard.Name, result.Name);
             Assert.AreEqual(_groupBoard.Information, result.Information);
@@ -181,9 +179,9 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         {
             _groupRepositoryMock.Setup(m => m.Find(
                 It.IsAny<Func<GroupBoardDB, Boolean>>()))
-                .Returns(_selectedBoardList);
+                .ReturnsAsync(_selectedBoardList);
 
-            var result = _groupBoardService.FindById("00000000-0000-0000-0000-000000000000");
+            var result = Task.Run(() => _groupBoardService.FindById("00000000-0000-0000-0000-000000000000")).Result;
             Assert.AreEqual(null, result);
         }
     }

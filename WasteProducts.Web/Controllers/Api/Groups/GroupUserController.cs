@@ -4,6 +4,7 @@ using WasteProducts.Logic.Common.Models.Groups;
 using WasteProducts.Logic.Common.Services.Groups;
 using Ninject.Extensions.Logging;
 using Swagger.Net.Annotations;
+using System.Threading.Tasks;
 
 namespace WasteProducts.Web.Controllers.Api.Groups
 {
@@ -35,9 +36,9 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponse(HttpStatusCode.OK, "Invite send", typeof(GroupUser))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpPost, Route("{groupId}/invite/{adminId}")]
-        public IHttpActionResult Invite(GroupUser item, [FromUri]string adminId)
+        public async Task<IHttpActionResult> Invite(GroupUser item, [FromUri]string adminId)
         {
-            _groupUserService.Invite(item, adminId);
+            await _groupUserService.Invite(item, adminId);
 
             return Ok();
         }
@@ -52,9 +53,9 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponse(HttpStatusCode.OK, "User delete", typeof(GroupUser))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpPost, Route("{groupId}/kick/{adminId}")]
-        public IHttpActionResult Kick(GroupUser item, [FromUri]string adminId)
+        public async Task<IHttpActionResult> Kick(GroupUser item, [FromUri]string adminId)
         {
-            _groupUserService.Kick(item, adminId);
+            await _groupUserService.Kick(item, adminId);
 
             return Ok();
         }
@@ -69,9 +70,9 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponse(HttpStatusCode.OK, "Get right to create boards", typeof(GroupUser))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpPut, Route("{groupId}/giveright/{adminId}")]
-        public IHttpActionResult GiveRightToCreateBoards(GroupUser item, [FromUri]string adminId)
+        public async Task<IHttpActionResult> GiveRightToCreateBoards(GroupUser item, [FromUri]string adminId)
         {
-            _groupUserService.GiveRightToCreateBoards(item, adminId);
+            await _groupUserService.GiveRightToCreateBoards(item, adminId);
 
             return Ok();
         }
@@ -86,9 +87,9 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponse(HttpStatusCode.OK, "Take away right to create boards", typeof(GroupUser))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpPut, Route("{groupId}/takeawayright/{adminId}")]
-        public IHttpActionResult TakeAwayRightToCreateBoards(GroupUser item, [FromUri]string adminId)
+        public async Task<IHttpActionResult> TakeAwayRightToCreateBoards(GroupUser item, [FromUri]string adminId)
         {
-            _groupUserService.TakeAwayRightToCreateBoards(item, adminId);
+            await _groupUserService.TakeAwayRightToCreateBoards(item, adminId);
 
             return Ok();
         }

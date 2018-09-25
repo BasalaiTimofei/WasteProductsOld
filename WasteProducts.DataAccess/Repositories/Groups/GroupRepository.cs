@@ -4,7 +4,6 @@ using System.Linq;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
 using System.Data.Entity;
 using System.Linq.Expressions;
-using Microsoft.AspNet.Identity.EntityFramework;
 using WasteProducts.DataAccess.Contexts;
 using System.Threading.Tasks;
 
@@ -50,16 +49,6 @@ namespace WasteProducts.DataAccess.Repositories.Groups
             _context.Entry(item).State = EntityState.Deleted;
         }
 
-        public async Task DeleteUserFromGroupAsync(string groupId, string userId)
-        {
-            await Task.Run(() =>
-            {
-                var item = _context.GroupUsers.FirstOrDefault(gu => gu.GroupId == groupId && gu.UserId == userId);
-                var entry = _context.Entry(item);
-                entry.State = EntityState.Deleted;
-            });
-        }
-
         public void DeleteAll<T>(IList<T> items) where T : class
         {
             while (items.Count > 0)
@@ -68,35 +57,35 @@ namespace WasteProducts.DataAccess.Repositories.Groups
             }
         }
 
-        public T Get<T>(Guid id) where T : class
+        public Task<T> Get<T>(string id) where T : class
         {
-            return _context.Set<T>().Find(id);
+            return Task.FromResult(_context.Set<T>().Find(id));
         }
 
-        public IEnumerable<T> GetAll<T>() where T : class
+        public Task<IEnumerable<T>> GetAll<T>() where T : class
         {
-            return _context.Set<T>();
+            return Task.FromResult((IEnumerable<T>)_context.Set<T>());
         }
 
-        public IEnumerable<T> Find<T>(Func<T, bool> predicate) where T : class
+        public Task<IEnumerable<T>> Find<T>(Func<T, bool> predicate) where T : class
         {
-            return _context.Set<T>().Where(predicate);
+            return Task.FromResult((IEnumerable<T>)_context.Set<T>().Where(predicate));
         }
 
-        public IEnumerable<T> GetWithInclude<T>(
+        public Task<IEnumerable<T>> GetWithInclude<T>(
             params Expression<Func<T, object>>[] includeProperties) where T : class
         {
-            return Include(includeProperties).ToList();
+            return Task.FromResult((IEnumerable<T>)Include(includeProperties).ToList());
         }
 
-        public IEnumerable<T> GetWithInclude<T>(Func<T, bool> predicate,
+        public Task<IEnumerable<T>> GetWithInclude<T>(Func<T, bool> predicate,
             params Expression<Func<T, object>>[] includeProperties) where T : class
         {
             var query = Include(includeProperties);
-            return query.Where(predicate);
+            return Task.FromResult(query.Where(predicate));
         }
 
-        public void Save()
+        public async Task Save()
         {
             _context.SaveChanges();
         }

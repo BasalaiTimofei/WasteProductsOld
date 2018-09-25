@@ -4,6 +4,7 @@ using WasteProducts.Logic.Common.Models.Groups;
 using WasteProducts.Logic.Common.Services.Groups;
 using Ninject.Extensions.Logging;
 using Swagger.Net.Annotations;
+using System.Threading.Tasks;
 
 namespace WasteProducts.Web.Controllers.Api.Groups
 {
@@ -35,9 +36,9 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponse(HttpStatusCode.OK, "Comment create", typeof(GroupComment))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpPost, Route("{groupId}/comment")]
-        public IHttpActionResult Create([FromUri]string groupId, GroupComment item)
+        public async Task<IHttpActionResult> Create([FromUri]string groupId, GroupComment item)
         {
-            item.Id = _groupCommentService.Create(item, groupId);
+            item.Id = await _groupCommentService.Create(item, groupId);
 
             return Ok(item);
         }
@@ -52,9 +53,9 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponse(HttpStatusCode.OK, "Comment update", typeof(GroupComment))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpPut, Route("{groupId}/comment")]
-        public IHttpActionResult Update([FromUri] string groupId, GroupComment item)
+        public async Task<IHttpActionResult> Update([FromUri] string groupId, GroupComment item)
         {
-            _groupCommentService.Update(item, groupId);
+            await _groupCommentService.Update(item, groupId);
 
             return Ok(item);
         }
@@ -69,9 +70,9 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponse(HttpStatusCode.OK, "Comment delete")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpDelete, Route("{groupId}/comment")]
-        public IHttpActionResult Delete([FromUri] string groupId, GroupComment item)
+        public async Task<IHttpActionResult> Delete([FromUri] string groupId, GroupComment item)
         {
-            _groupCommentService.Delete(item, groupId);
+            await _groupCommentService.Delete(item, groupId);
 
             return Ok();
         }

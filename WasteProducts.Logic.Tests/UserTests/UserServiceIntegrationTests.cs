@@ -451,7 +451,7 @@ namespace WasteProducts.Logic.Tests.UserTests
 
         // тестируем создание группы и приглашение человека в группу (не относится к юзер сервису, но необходимо для следующего теста)
         [Test]
-        public void UserIntegrTest_27AddingNewGroupToDB()
+        public async Task UserIntegrTest_27AddingNewGroupToDB()
         {
             var name = "Some group";
             var info = "Info about the group";
@@ -463,9 +463,9 @@ namespace WasteProducts.Logic.Tests.UserTests
             };
             using (var gService = _kernel.Get<IGroupService>())
             {
-                gService.Create(group);
-                var groupFromDB = gService.FindByName(name);
-                Assert.AreEqual(info, groupFromDB.Information); 
+                await gService.Create(group);
+                var groupFromDB = await gService.FindByName(name);
+                Assert.AreEqual(info, groupFromDB.Information);
                 _groupIds.Add(groupFromDB.Id);
             }
 
@@ -482,8 +482,8 @@ namespace WasteProducts.Logic.Tests.UserTests
             };
             using (var guService = _kernel.Get<IGroupUserService>())
             {
-                guService.Invite(groupUser1, _usersIds[0]);
-                guService.Invite(groupUser2, _usersIds[0]);
+               await guService.Invite(groupUser1, _usersIds[0]);
+               await guService.Invite(groupUser2, _usersIds[0]);
             }
         }
 

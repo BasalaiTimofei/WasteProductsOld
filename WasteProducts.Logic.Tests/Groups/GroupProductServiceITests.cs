@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
 using WasteProducts.Logic.Common.Models.Groups;
@@ -90,11 +91,11 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _selectedBoardList.Add(_groupBoardDB);
             _selectedUserList.Add(_groupUserDB);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
-                .Returns(_selectedBoardList);
+                .ReturnsAsync(_selectedBoardList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-                .Returns(_selectedUserList);
+                .ReturnsAsync(_selectedUserList);
 
-            _groupProductService.Create(_groupProduct, "2", "00000000-0000-0000-0000-000000000003");
+            var x = Task.Run(()=>_groupProductService.Create(_groupProduct, "2", "00000000-0000-0000-0000-000000000003")).Result;
 
             _groupRepositoryMock.Verify(m => m.Create(It.IsAny<GroupProductDB>()), Times.Once);
         }
@@ -102,16 +103,13 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         public void GroupProductService_01_Create_02_Group_Unavalible_or_GroupUser_Unavalible_or_GroupBoard_Unavalible()
         {
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
-                .Returns(_selectedBoardList);
+                .ReturnsAsync(_selectedBoardList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-                .Returns(_selectedUserList);
+                .ReturnsAsync(_selectedUserList);
 
-            Assert.Throws(typeof(ValidationException),
-                    delegate () {
+            Assert.ThrowsAsync<ValidationException>(()=>
                         _groupProductService.Create(_groupProduct, "2",
-                            "00000000-0000-0000-0000-000000000003");
-                    });
-
+                            "00000000-0000-0000-0000-000000000003"));
         }
 
         [Test]
@@ -121,13 +119,13 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _selectedBoardList.Add(_groupBoardDB);
             _selectedUserList.Add(_groupUserDB);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupProductDB, Boolean>>()))
-                .Returns(_selectedProductList);
+                .ReturnsAsync(_selectedProductList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
-                .Returns(_selectedBoardList);
+                .ReturnsAsync(_selectedBoardList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-                .Returns(_selectedUserList);
+                .ReturnsAsync(_selectedUserList);
 
-            _groupProductService.Update(_groupProduct, "2", "00000000-0000-0000-0000-000000000003");
+            Task.Run(()=>_groupProductService.Update(_groupProduct, "2", "00000000-0000-0000-0000-000000000003")).Wait();
 
             _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupProductDB>()), Times.Once);
         }
@@ -135,17 +133,15 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         public void GroupProductService_02_Update_02_GroupBoard_Unavalible_or_UserGroup_Unavalible_or_Group_Unavalible_or_GroupProduct_Unavalible()
         {
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupProductDB, Boolean>>()))
-                .Returns(_selectedProductList);
+                .ReturnsAsync(_selectedProductList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
-                .Returns(_selectedBoardList);
+                .ReturnsAsync(_selectedBoardList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-                .Returns(_selectedUserList);
+                .ReturnsAsync(_selectedUserList);
 
-            Assert.Throws(typeof(ValidationException),
-                    delegate () {
+            Assert.ThrowsAsync<ValidationException>(() =>
                         _groupProductService.Update(_groupProduct, "2",
-                            "00000000-0000-0000-0000-000000000003");
-                    });
+                            "00000000-0000-0000-0000-000000000003"));
         }
 
         [Test]
@@ -155,13 +151,13 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _selectedBoardList.Add(_groupBoardDB);
             _selectedUserList.Add(_groupUserDB);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupProductDB, Boolean>>()))
-                .Returns(_selectedProductList);
+                .ReturnsAsync(_selectedProductList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
-                .Returns(_selectedBoardList);
+                .ReturnsAsync(_selectedBoardList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-                .Returns(_selectedUserList);
+                .ReturnsAsync(_selectedUserList);
 
-            _groupProductService.Delete(_groupProduct, "2", "00000000-0000-0000-0000-000000000003");
+            Task.Run(()=>_groupProductService.Delete(_groupProduct, "2", "00000000-0000-0000-0000-000000000003")).Wait();
 
             _groupRepositoryMock.Verify(m => m.Delete(_groupProductDB), Times.Once);
         }
@@ -169,17 +165,15 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         public void GroupProductService_03_Delete_02_GroupBoard_Unavalible_or_UserGroup_Unavalible_or_Group_Unavalible()
         {
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupProductDB, Boolean>>()))
-                .Returns(_selectedProductList);
+                .ReturnsAsync(_selectedProductList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
-                .Returns(_selectedBoardList);
+                .ReturnsAsync(_selectedBoardList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-                .Returns(_selectedUserList);
+                .ReturnsAsync(_selectedUserList);
 
-            Assert.Throws(typeof(ValidationException),
-                    delegate () {
+            Assert.ThrowsAsync<ValidationException>(() =>
                         _groupProductService.Delete(_groupProduct, "2",
-                            "00000000-0000-0000-0000-000000000003");
-                    });
+                            "00000000-0000-0000-0000-000000000003"));
         }
 
         [Test]
@@ -187,9 +181,9 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         {
             _selectedProductList.Add(_groupProductDB);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupProductDB, Boolean>>()))
-                .Returns(_selectedProductList);
+                .ReturnsAsync(_selectedProductList);
 
-            var result = _groupProductService.FindById("00000000-0000-0000-0000-000000000000");
+            var result = Task.Run(()=>_groupProductService.FindById("00000000-0000-0000-0000-000000000000")).Result;
             Assert.AreEqual(_groupProduct.Id, result.Id);
             Assert.AreEqual(_groupProduct.Information, result.Information);
         }
@@ -197,9 +191,9 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         public void GroupProductService_04_FindById_02_Obtainment_Unavalible_GroupBoard_By_Id()
         {
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupProductDB, Boolean>>()))
-                .Returns(_selectedProductList);
+                .ReturnsAsync(_selectedProductList);
 
-            var result = _groupProductService.FindById("00000000-0000-0000-0000-000000000000");
+            var result = Task.Run(() => _groupProductService.FindById("00000000-0000-0000-0000-000000000000")).Result;
             Assert.AreEqual(null, result);
         }
     }

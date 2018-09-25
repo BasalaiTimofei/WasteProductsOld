@@ -14,7 +14,7 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// </summary>
         /// <param name="item">Object</param>
         /// <param name="adminId">Primary key</param>
-        void Invite(GroupUser item, string adminId);
+        Task Invite(GroupUser item, string adminId);
 
         /// <summary>
         /// Kicks user from the group.
@@ -28,13 +28,13 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// </summary>
         /// <param name="item">Object</param>
         /// <param name="adminId">Primary key</param>
-        void GiveRightToCreateBoards(GroupUser item, string adminId);
+        Task GiveRightToCreateBoards(GroupUser item, string adminId);
 
         /// <summary>
         /// Takes away right to create boards from the user.
         /// </summary>
         /// <param name="item">Object</param>
         /// <param name="adminId">Primary key</param>
-        void TakeAwayRightToCreateBoards(GroupUser item, string adminId);
+        Task TakeAwayRightToCreateBoards(GroupUser item, string adminId);
     }
 }

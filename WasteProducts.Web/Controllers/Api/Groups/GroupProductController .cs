@@ -4,6 +4,7 @@ using WasteProducts.Logic.Common.Models.Groups;
 using WasteProducts.Logic.Common.Services.Groups;
 using Ninject.Extensions.Logging;
 using Swagger.Net.Annotations;
+using System.Threading.Tasks;
 
 namespace WasteProducts.Web.Controllers.Api.Groups
 {
@@ -36,9 +37,9 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponse(HttpStatusCode.OK, "Product create", typeof(GroupProduct))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpPost, Route("{groupId}/product/{userId}")]
-        public IHttpActionResult Create(GroupProduct item, [FromUri]string groupId, [FromUri]string userId)
+        public async Task<IHttpActionResult> Create(GroupProduct item, [FromUri]string groupId, [FromUri]string userId)
         {
-            item.Id = _groupProductService.Create(item, userId, groupId);
+            item.Id = await _groupProductService.Create(item, userId, groupId);
 
             return Ok(item);
         }
@@ -54,9 +55,9 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponse(HttpStatusCode.OK, "Product update", typeof(GroupProduct))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpPut, Route("{groupId}/product/{userId}")]
-        public IHttpActionResult Update(GroupProduct item, [FromUri] string groupId, [FromUri] string userId)
+        public async Task<IHttpActionResult> Update(GroupProduct item, [FromUri] string groupId, [FromUri] string userId)
         {
-            _groupProductService.Update(item, userId, groupId);
+            await _groupProductService.Update(item, userId, groupId);
 
             return Ok(item);
         }
@@ -72,9 +73,9 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponse(HttpStatusCode.OK, "Product delete")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpDelete, Route("{groupId}/product/{userId}")]
-        public IHttpActionResult Delete(GroupProduct item, [FromUri] string groupId, [FromUri] string userId)
+        public async Task<IHttpActionResult> Delete(GroupProduct item, [FromUri] string groupId, [FromUri] string userId)
         {
-            _groupProductService.Delete(item, userId, groupId);
+            await _groupProductService.Delete(item, userId, groupId);
 
             return Ok();
         }

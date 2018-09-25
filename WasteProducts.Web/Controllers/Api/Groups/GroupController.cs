@@ -37,12 +37,12 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [HttpGet, Route("{groupId}", Name = "GetGroup")]
         public async Task<IHttpActionResult> GetGroupById(string groupId)
         {
-            var item = _groupService.FindById(groupId);
+            var item = await _groupService.FindById(groupId);
             if (item == null)
             {
                 return NotFound();
             }
-            return await Task.FromResult(Ok(item));
+            return Ok(item);
         }
 
         /// <summary>
@@ -54,11 +54,11 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponse(HttpStatusCode.Created, "Group create", typeof(Group))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpPost, Route("")]
-        public IHttpActionResult Create(Group item)
+        public async Task<IHttpActionResult> Create(Group item)
         {
-            var groupId = _groupService.Create(item);
+            var groupId = await _groupService.Create(item);
 
-            return Created($"{groupId}", item);
+            return Ok(Created($"{groupId}", item));
         }
 
         /// <summary>
@@ -70,9 +70,9 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponse(HttpStatusCode.OK, "Group update", typeof(Group))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpPut, Route("{groupId}")]
-        public IHttpActionResult Update(Group item)
+        public async Task<IHttpActionResult> Update(Group item)
         {
-            _groupService.Update(item);
+            await _groupService.Update(item);
 
             return Ok(item);
         }
@@ -86,9 +86,9 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponse(HttpStatusCode.Redirect, "Group delete")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpDelete, Route("{groupId}")]
-        public IHttpActionResult Delete(Group item)
+        public async Task<IHttpActionResult> Delete(Group item)
         {
-            _groupService.Delete(item);
+            await _groupService.Delete(item);
 
             return Redirect($"");
         }
