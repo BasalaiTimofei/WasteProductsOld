@@ -72,7 +72,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no User with such ID.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the search.")]
-        public async Task<User> GetById(string id)
+        public async Task<IHttpActionResult> GetById(string id)
         {
             var user = await _service.GetAsync(id);
             if (user is null)
@@ -309,7 +309,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             validator.ValidateAndThrow(model);
 
             // throws 404
-            var user = await this.GetUserById(id);
+            var user = await this.GetById(id);
 
             var isChanged = await _service.ChangePasswordAsync(id, model.OldPassword, model.NewPassword);
 
