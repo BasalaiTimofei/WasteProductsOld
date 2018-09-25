@@ -36,18 +36,17 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// Gets all users of the WasteProducts application.
         /// </summary>
         /// <returns>IEnumerable of all the users.</returns>
-        [HttpGet, Route("")]
+        [HttpGet, Route("all")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Users are found.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There are no Users.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the search.")]
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<IEnumerable<User>> GetAll()
         {
-            return await _service.GetAllUsersAsync();
+            return await _service.GetAllAsync();
         }
 
-        // GET api/user/5
         /// <summary>
         /// Gets user by its ID.
         /// </summary>
@@ -59,9 +58,9 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.NotFound, "There are no User with such ID.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the search.")]
-        public async Task<User> GetUserById(string id)
+        public async Task<User> GetById(string id)
         {
-            return await _service.GetUserAsync(id);
+            return await _service.GetAsync(id);
         }
 
         /// <summary>
