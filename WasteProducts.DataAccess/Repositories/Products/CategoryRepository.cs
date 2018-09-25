@@ -25,7 +25,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
         {
             category.Id = Guid.NewGuid().ToString();
             _context.Categories.Add(category);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return category.Id;
         }

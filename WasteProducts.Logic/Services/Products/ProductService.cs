@@ -30,6 +30,7 @@ namespace WasteProducts.Logic.Services.Products
             _mapper = mapper;
         }
 
+        /// <inheritdoc/>
         public Task<string> Add(Barcode barcode)
         {
             if (IsProductsInDB(
@@ -50,12 +51,14 @@ namespace WasteProducts.Logic.Services.Products
                 .ContinueWith(t => t.Result);
         }
 
+        /// <inheritdoc/>
         public Task<Product> GetById(string id)
         {
             return _productRepository.GetByIdAsync(id)
                 .ContinueWith(t => _mapper.Map<Product>(t.Result));
         }
 
+        /// <inheritdoc/>
         public Task<Product> GetByBarcode(Barcode barcode)
         {
             return _productRepository.SelectWhereAsync(p =>
@@ -63,25 +66,29 @@ namespace WasteProducts.Logic.Services.Products
                  .ContinueWith(t => _mapper.Map<Product>(t.Result.First()));
         }
 
+        /// <inheritdoc/>
         public Task<IEnumerable<Product>> GetAll()
         {
             return _productRepository.SelectAllAsync()
                 .ContinueWith(t => _mapper.Map<IEnumerable<Product>>(t.Result));
         }
 
+        /// <inheritdoc/>
         public Task<Product> GetByName(string name)
         {
             return _productRepository.SelectWhereAsync(p =>
                  string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase))
                  .ContinueWith(t => _mapper.Map<Product>(t.Result.First()));
         }
-           
+
+        /// <inheritdoc/>
         public Task<IEnumerable<Product>> GetByCategory(Category category)
         {
             return _productRepository.SelectByCategoryAsync(_mapper.Map<CategoryDB>(category))
                 .ContinueWith(t => _mapper.Map<IEnumerable<Product>>(t.Result));
         }
-                
+
+        /// <inheritdoc/>
         public Task Update(Product product)
         {
             if (!IsProductsInDB(p =>
@@ -91,6 +98,7 @@ namespace WasteProducts.Logic.Services.Products
             return _productRepository.UpdateAsync(_mapper.Map<ProductDB>(product));
         }
 
+        /// <inheritdoc/>
         public Task Delete(string id)
         {
             if (!IsProductsInDB(p =>
@@ -100,6 +108,7 @@ namespace WasteProducts.Logic.Services.Products
             return _productRepository.DeleteAsync(_mapper.Map<ProductDB>(products.First()));
         }
 
+        /// <inheritdoc/>
         public Task AddToCategory(string productId, string categoryId)
         {
             if (!IsProductsInDB(p =>
@@ -113,15 +122,11 @@ namespace WasteProducts.Logic.Services.Products
             return _productRepository.UpdateAsync(productFromDB);
         }
 
+        /// <inheritdoc/>
         private bool IsProductsInDB(Predicate<ProductDB> conditionPredicate, out IEnumerable<ProductDB> products)
         {
             products = _productRepository.SelectWhereAsync(conditionPredicate).Result;
             return products.Any();
-        }
-
-        ~ProductService()
-        {
-            Dispose();
         }
 
         public void Dispose()
@@ -132,6 +137,11 @@ namespace WasteProducts.Logic.Services.Products
                 _disposed = true;
                 GC.SuppressFinalize(this);
             }
+        }
+
+        ~ProductService()
+        {
+            Dispose();
         }
     }
 }
