@@ -115,7 +115,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Barcode_Tests\BarcodeCatalogSearchService_Tests.cs" />
     <Compile Include="Barcode_Tests\BarcodeScanService_Tests.cs" />
+    <Compile Include="Barcode_Tests\EDostavkaCatalog_Tests.cs" />
+    <Compile Include="Barcode_Tests\PriceGuardCatalog_Tests.cs" />
     <Compile Include="Diagnostic_Tests\DbServiceTests.cs" />
     <Compile Include="Donation_Tests\DonationRepositoryIntegrationTests.cs" />
     <Compile Include="Product_Tests\CategoryService_Test.cs" />
@@ -126,7 +129,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="UserManagementTests\UserServiceIntegrationTests.cs" />
+    <Compile Include="UserTests\UserServiceIntegrationTests.cs" />
     <Compile Include="Search_Tests\SearchRepository_Test.cs" />
     <Compile Include="Search_Tests\SearchService_Test.cs" />
     <Compile Include="Groups\GroupCommentServiceITests.cs" />

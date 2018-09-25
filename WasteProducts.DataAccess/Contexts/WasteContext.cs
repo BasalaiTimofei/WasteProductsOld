@@ -5,14 +5,18 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Donations;
+using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Models.Groups;
+using WasteProducts.DataAccess.Common.Models.Notifications;
 using WasteProducts.DataAccess.Common.Models.Products;
+using WasteProducts.DataAccess.Common.Models.Security.Models;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Contexts.Config;
 using WasteProducts.DataAccess.ModelConfigurations;
 using WasteProducts.DataAccess.ModelConfigurations.Donations;
-using WasteProducts.DataAccess.ModelConfigurations.UserManagement;
+using WasteProducts.DataAccess.ModelConfigurations.Notifications;
+using WasteProducts.DataAccess.ModelConfigurations.Users;
 
 namespace WasteProducts.DataAccess.Contexts
 {
@@ -37,16 +41,20 @@ namespace WasteProducts.DataAccess.Contexts
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<UserDB>()
-                .HasMany(u => u.Friends)
-                .WithMany()
-                .Map(t => t.MapLeftKey("UserId")
-                    .MapRightKey("FriendId")
-                    .ToTable("UserFriends"));
+            modelBuilder.ComplexType<NotificationSettingsDB>();
+
+            modelBuilder.Entity<UserDB>().HasMany(u => u.Friends).WithMany()
+                .Map(t => t.MapLeftKey("UserId").MapRightKey("FriendId").ToTable("UserFriends"));
+
+            modelBuilder.Entity<UserDB>().HasMany(u => u.Notifications).WithRequired(n => n.User);
 
             modelBuilder.Entity<ProductDB>()
                 .HasOptional(p => p.Barcode)
                 .WithRequired(b => b.Product);
+
+            modelBuilder.Entity<BarcodeDB>()
+                .HasRequired(b => b.Product)
+                .WithOptional(b => b.Barcode);
 
             modelBuilder.Configurations.Add(new UserProductDescriptionConfiguration());
 
@@ -59,6 +67,8 @@ namespace WasteProducts.DataAccess.Contexts
             modelBuilder.Configurations.Add(new DonationEntityConfiguration());
             modelBuilder.Configurations.Add(new DonorEntityConfiguration());
             modelBuilder.Configurations.Add(new AddressEntityConfiguration());
+
+            modelBuilder.Configurations.Add(new NotificationConfiguration());
         }
 
         /// <summary>
@@ -71,6 +81,12 @@ namespace WasteProducts.DataAccess.Contexts
         ///  create, read, update, delete and to get product list operations in 'ProductRepository' class.
         /// </summary>
         public IDbSet<ProductDB> Products { get; set; }
+
+        /// <summary>
+        /// Property added for to use an entity set that is used to perform
+        ///  create, read, update, delete and to get barcode list operations in 'BarcodeRepository' class.
+        /// </summary>
+        public IDbSet<BarcodeDB> Barcodes { get; set; }
 
         /// <summary>
         /// Property added for to use an entity set that is used to perform
@@ -96,11 +112,13 @@ namespace WasteProducts.DataAccess.Contexts
         /// </summary>
         public IDbSet<AddressDB> Addresses { get; set; }
 
-        public IDbSet<GroupBoardDB> GroupBordDBs { get; set; }
-        public IDbSet<GroupDB> GroupDBs { get; set; }
-        public IDbSet<GroupUserDB> GroupUserDBs { get; set; }
-        public IDbSet<GroupCommentDB> GroupCommentDBs { get; set; }
-        public IDbSet<GroupProductDB> GroupProductDBs { get; set; }
+        public IDbSet<GroupBoardDB> GroupBoards { get; set; }
+        public IDbSet<GroupDB> Groups { get; set; }
+        public IDbSet<GroupUserDB> GroupUsers { get; set; }
+        public IDbSet<GroupCommentDB> GroupComments { get; set; }
+        public IDbSet<GroupProductDB> GroupProducts { get; set; }
+
+        public IDbSet<NotificationDB> Notification { get; set; }
 
         public override int SaveChanges()
         {

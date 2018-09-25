@@ -5,45 +5,56 @@ using System.IO;
 using ZXing;
 using Spire.Barcode;
 using WasteProducts.Logic.Common.Services.Barcods;
+using System;
 
 namespace WasteProducts.Logic.Services.Barcods
 {
     /// <inheritdoc />
     public class BarcodeScanService : IBarcodeScanService
     {
+        private Bitmap _image;
+        private Stream _stream;
+        private Graphics _graphics;
+
         /// <inheritdoc />
-        public Bitmap Resize(Bitmap img, int width, int height)
+        public Bitmap Resize(Stream stream, int width, int height)
         {
+            Bitmap img = new Bitmap(stream);
             Bitmap result = new Bitmap(width, height);
-            using (Graphics g = Graphics.FromImage(result))
+            using (_graphics = Graphics.FromImage(result))
             {
-                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                g.DrawImage(img, 0, 0, width, height);
-                g.Dispose();
+                _graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                _graphics.DrawImage(img, 0, 0, width, height);
+                _graphics.Dispose();
             }
             return result;
         }
 
         /// <inheritdoc />
-        public string ScanByZxing(Bitmap image)
+        public string ScanByZxing(Stream stream)
         {
             string decoded = "";
+            _image = Resize(stream, 400, 400);
+
             BarcodeReader Reader = new BarcodeReader();
-            Result result = Reader.Decode(image);
+            Result result = Reader.Decode(_image);
             decoded = result.ToString().Trim();
 
             return decoded;
         }
 
         /// <inheritdoc />
-        public string ScanBySpire(Bitmap image)
+        public string ScanBySpire(Stream stream)
         {
             string decoded = "";
-            using (Stream stream = new MemoryStream())
+            _image = Resize(stream, 400, 400);
+
+            using (_stream = new MemoryStream())
             {
-                image.Save(stream, ImageFormat.Bmp);
-                decoded = BarcodeScanner.ScanOne(stream, true);
+                _image.Save(_stream, ImageFormat.Bmp);
+                decoded = BarcodeScanner.ScanOne(_stream, true);
             }
+
             return decoded;
         }
     }

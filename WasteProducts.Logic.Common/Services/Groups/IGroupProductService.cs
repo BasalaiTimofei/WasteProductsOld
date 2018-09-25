@@ -13,25 +13,25 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// Create new board
         /// </summary>
         /// <param name="item">Object</param>
-        void Create(GroupProduct item, string userId, Guid groupId);
+        void Create(GroupProduct item, string userId, string groupId);
 
         /// <summary>
         /// Add or corect information on board
         /// </summary>
         /// <param name="item">Object</param>
-        void Update(GroupProduct item, string userId, Guid groupId);
+        void Update(GroupProduct item, string userId, string groupId);
 
         /// <summary>
         /// Product delete
         /// </summary>
         /// <param name="item">Object</param>
-        void Delete(GroupProduct item, string userId, Guid groupId);
+        void Delete(GroupProduct item, string userId, string groupId);
 
         /// <summary>
         /// Search Product in board by id
         /// </summary>
         /// <param name="id">Primary key</param>
         /// <return>Object</return>
-        GroupProduct FindById(Guid id);
+        GroupProduct FindById(string id);
     }
 }

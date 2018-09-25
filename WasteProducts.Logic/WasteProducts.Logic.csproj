@@ -108,15 +108,18 @@
     <Compile Include="InjectorModule.cs" />
     <Compile Include="Interceptors\ArgumentValidationInterceptor.cs" />
     <Compile Include="Interceptors\TraceInterceptor.cs" />
+    <Compile Include="Mappings\Barcods\BarcodeProfile.cs" />
     <Compile Include="Mappings\Products\CategoryProfile.cs" />
     <Compile Include="Mappings\Donations\AddressProfile.cs" />
     <Compile Include="Mappings\Donations\DonationProfile.cs" />
     <Compile Include="Mappings\Donations\DonorProfile.cs" />
     <Compile Include="Mappings\SearchProfile.cs" />
-    <Compile Include="Mappings\TestProfile.cs" />
-    <Compile Include="Mappings\UserMappings\ProductProfile.cs" />
-    <Compile Include="Mappings\UserMappings\UserProductDescriptionProfile.cs" />
-    <Compile Include="Mappings\UserMappings\UserProfile.cs" />
+    <Compile Include="Mappings\Users\FriendProfile.cs" />
+    <Compile Include="Mappings\Users\GroupOfUserProfile.cs" />
+    <Compile Include="Mappings\Users\ProductDescriptionProfile.cs" />
+    <Compile Include="Mappings\Users\ProductProfile.cs" />
+    <Compile Include="Mappings\Users\UserProductDescriptionProfile.cs" />
+    <Compile Include="Mappings\Users\UserProfile.cs" />
     <Compile Include="Mappings\Products\ProductProfile.cs" />
     <Compile Include="Mappings\Groups\GroupUserProfile .cs" />
     <Compile Include="Mappings\Groups\GroupBoardProfile.cs" />
@@ -144,6 +147,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UserResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\Barcods\BarcodeCatalogSearchService.cs" />
+    <Compile Include="Services\Barcods\EDostavkaCatalog.cs" />
+    <Compile Include="Services\Barcods\HttpHelper.cs" />
+    <Compile Include="Services\Barcods\PriceGuardCatalog.cs" />
     <Compile Include="Services\Groups\GroupCommentService.cs" />
     <Compile Include="Services\Groups\GroupUserService.cs" />
     <Compile Include="Services\Groups\GroupProductService.cs" />
@@ -153,19 +160,19 @@
     <Compile Include="Services\AppUserManagerService.cs" />
     <Compile Include="Services\Barcods\BarcodeScanService.cs" />
     <Compile Include="Services\Mail\MailService.cs" />
+    <Compile Include="Services\Notifications\NotificationService.cs" />
     <Compile Include="Services\Products\CategoryService.cs" />
     <Compile Include="Services\Diagnostic\DbSeedService.cs" />
     <Compile Include="Services\Diagnostic\DbService.cs" />
     <Compile Include="Services\Diagnostic\TestModelsService.cs" />
     <Compile Include="Services\LuceneSearchService.cs" />
     <Compile Include="Services\Products\ProductService.cs" />
-    <Compile Include="Services\TestService.cs" />
     <Compile Include="Services\User\UserRoleService.cs" />
     <Compile Include="Services\User\UserService.cs" />
+    <Compile Include="Validators\Barcods\BarcodeValidator.cs" />
     <Compile Include="Validators\Products\CategoryValidator.cs" />
     <Compile Include="Validators\Products\ProductValidator.cs" />
     <Compile Include="Validators\Search\BoostedSearchQueryValidator.cs" />
-    <Compile Include="Validators\TestValidator.cs" />
     <Compile Include="Validators\Groups\GroupValidation.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -177,7 +184,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">
       <Project>{9acbec5d-caa7-4e29-a19c-a247190f6da8}</Project>

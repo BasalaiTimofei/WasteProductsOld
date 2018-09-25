@@ -8,7 +8,7 @@ namespace WasteProducts.DataAccess.ModelConfigurations
     {
         public GroupCommentConfiguration()
         {
-            ToTable("GroupComment");
+            ToTable("GroupComments");
 
             HasKey(x => x.Id);
             Property(x => x.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);

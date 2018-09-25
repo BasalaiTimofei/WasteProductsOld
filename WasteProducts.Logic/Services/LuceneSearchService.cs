@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using WasteProducts.DataAccess.Common.Models.Products;
@@ -37,9 +38,14 @@ namespace WasteProducts.Logic.Services
         public IEnumerable<TEntity> Search<TEntity>(BoostedSearchQuery query) where TEntity : class
         {
             CheckQuery(query);
-            UserQuery userQuery = new UserQuery();
-            userQuery.QueryString = query.Query;
-            _repository.Insert(userQuery);
+            var similarQueries = this.GetSimilarQueries(query.Query);
+            var coincidentQuery = similarQueries.FirstOrDefault(t => t.QueryString.Equals(query.Query, StringComparison.InvariantCultureIgnoreCase));
+            if (coincidentQuery == null)
+            {
+                UserQuery userQuery = new UserQuery();
+                userQuery.QueryString = query.Query;
+                _repository.Insert(userQuery);
+            }
             return _repository.GetAll<TEntity>(query.Query, query.SearchableFields, query.BoostValues, MaxResultCount);
         }
 
@@ -155,20 +161,22 @@ namespace WasteProducts.Logic.Services
             return result;
         }
 
-        public IEnumerable<UserQuery> GetSimilarQueries(BoostedSearchQuery query)
+        public IEnumerable<UserQuery> GetSimilarQueries(string query)
         {
-            CheckQuery(query);
-            return _repository.GetAll<UserQuery>(query.Query, query.SearchableFields, query.BoostValues, MAX_SIMILAR_QUERIES_COUNT);
+            var userQuery = new BoostedSearchQuery(query);
+            userQuery.AddField("QueryString", 1.0f);
+            CheckQuery(userQuery);
+            return _repository.GetAll<UserQuery>(userQuery.Query, userQuery.SearchableFields, userQuery.BoostValues, MAX_SIMILAR_QUERIES_COUNT);
         }
 
-        public Task<IEnumerable<Product>> SearchProductAsync(BoostedSearchQuery query)
+        public async Task<IEnumerable<Product>> SearchProductAsync(BoostedSearchQuery query)
         {
-            return Task.FromResult(SearchProduct(query));
+            return await Task.Run(() => SearchProduct(query));
         }
 
-        public Task<IEnumerable<UserQuery>> GetSimilarQueriesAsync(BoostedSearchQuery query)
+        public async Task<IEnumerable<UserQuery>> GetSimilarQueriesAsync(string query)
         {
-            return Task.FromResult(GetSimilarQueries(query));
+            return await Task.Run(() => GetSimilarQueries(query));
         }
 
         private void CheckQuery(BoostedSearchQuery query)

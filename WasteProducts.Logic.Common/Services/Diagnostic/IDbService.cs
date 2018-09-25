@@ -28,5 +28,11 @@ namespace WasteProducts.Logic.Common.Services.Diagnostic
         /// <param name="withTestData">If it set as <c>true</c>, the database will be created with the test data.</param>
         /// <returns>Task</returns>
         Task ReCreateAsync(bool withTestData = false);
+
+        /// <summary>
+        /// Recreates database and populates it with ISeedRepository.
+        /// </summary>
+        /// <returns>Task</returns>
+        Task ReCreateAndSeedAsync();
     }
 }
