@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using Moq;
@@ -9,6 +10,7 @@ using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
+using WasteProducts.Logic.Common.Services.Barcods;
 using WasteProducts.Logic.Mappings.Products;
 using WasteProducts.Logic.Services.Products;
 
@@ -32,6 +34,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         private Mapper mapper;
         private Mock<IProductRepository> mockProductRepository;
         private Mock<ICategoryRepository> mockCategoryRepository;
+        private Mock<IBarcodeService> mockBarcodeService;
         private Category category;
 
         [SetUp]
@@ -67,6 +70,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
 
             mockProductRepository = new Mock<IProductRepository>();
             mockCategoryRepository = new Mock<ICategoryRepository>();
+            mockBarcodeService = new Mock<IBarcodeService>();
 
             category = new Category
             {
@@ -81,29 +85,29 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void Add_InsertsNewProduct_CallsMethod_AddOfRepository()
+        public void AddByName_InsertsNewProduct_CallsMethod_AddOfRepository()
         {
             mockProductRepository.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(Task.FromResult((IEnumerable<ProductDB>)selectedList));
 
-            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mapper))
+            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mockBarcodeService.Object, mapper))
             {
-                productService.Add(barcode);
+                productService.Add(product.Name);
 
                 mockProductRepository.Verify(m => m.AddAsync(It.IsAny<ProductDB>()), Times.Once);
             }
         }
 
         [Test]
-        public void Add_DoesNotInsertNewProduct_DoesNotCallMethod_AddOfRepository()
+        public void AddByName_DoesNotInsertNewProduct_DoesNotCallMethod_AddOfRepository()
         {
             selectedList.Add(productDB);
             mockProductRepository.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(Task.FromResult((IEnumerable<ProductDB>)selectedList));
 
-            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mapper))
+            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mockBarcodeService.Object, mapper))
             {
-                productService.Add(product.Barcode);
+                productService.Add(product.Name);
 
                 mockProductRepository.Verify(m => m.AddAsync(It.IsAny<ProductDB>()), Times.Never);
             }
@@ -119,7 +123,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             mockCategoryRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<string>()))
                 .Returns(Task.FromResult(categoryDB));
 
-            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mapper))
+            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mockBarcodeService.Object, mapper))
             {
                 productService.AddToCategory(product.Id, category.Id);
 
@@ -136,7 +140,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             mockCategoryRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<string>()))
                 .Returns(Task.FromResult(categoryDB));
 
-            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mapper))
+            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mockBarcodeService.Object, mapper))
             {
                 productService.AddToCategory(product.Id, category.Id);
 
@@ -151,7 +155,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             mockProductRepository.Setup(repo => repo.GetByIdAsync(id))
                 .ReturnsAsync(productDB);
 
-            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mapper))
+            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mockBarcodeService.Object, mapper))
             {
                 var result = productService.GetById(id).Result;
 
@@ -166,7 +170,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             mockProductRepository.Setup(repo => repo.GetByIdAsync(id))
                 .ReturnsAsync(productDB);
 
-            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mapper))
+            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mockBarcodeService.Object, mapper))
             {
                 var result = productService.GetById(null).Result;
 
@@ -181,7 +185,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             mockProductRepository.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(Task.FromResult((IEnumerable<ProductDB>)selectedList));
 
-            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mapper))
+            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mockBarcodeService.Object, mapper))
             {
                 var result = productService.GetByBarcode(barcode).Result;
 
@@ -197,7 +201,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             mockProductRepository.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(Task.FromResult((IEnumerable<ProductDB>)selectedList));
 
-            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mapper))
+            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mockBarcodeService.Object, mapper))
             {
                 var result = productService.GetAll().Result;
 
@@ -212,7 +216,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             mockProductRepository.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(Task.FromResult((IEnumerable<ProductDB>)selectedList));
 
-            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mapper))
+            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mockBarcodeService.Object, mapper))
             {
                 var result = productService.GetByName(productName).Result;
 
@@ -228,7 +232,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             mockProductRepository.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(Task.FromResult((IEnumerable<ProductDB>)selectedList));
 
-            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mapper))
+            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mockBarcodeService.Object, mapper))
             {
                 var result = productService.GetByCategory(category).Result;
 
@@ -243,7 +247,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             mockProductRepository.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(Task.FromResult((IEnumerable<ProductDB>)selectedList));
 
-            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mapper))
+            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mockBarcodeService.Object, mapper))
             {
                 productService.Delete(It.IsAny<string>());
 
@@ -257,7 +261,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             mockProductRepository.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(Task.FromResult((IEnumerable<ProductDB>)selectedList));
 
-            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mapper))
+            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mockBarcodeService.Object, mapper))
             {
                 productService.Delete(It.IsAny<string>());
 
@@ -272,7 +276,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             mockProductRepository.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(Task.FromResult((IEnumerable<ProductDB>)selectedList));
 
-            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mapper))
+            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mockBarcodeService.Object, mapper))
             {
                 productService.Update(product);
 
@@ -286,7 +290,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             mockProductRepository.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<ProductDB>>()))
                 .Returns(Task.FromResult((IEnumerable<ProductDB>)selectedList));
 
-            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mapper))
+            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mockBarcodeService.Object, mapper))
             {
                 productService.Update(product);
 
