@@ -410,7 +410,7 @@ namespace WasteProducts.Logic.Tests.UserTests
             using (var prodService = _kernel.Get<IProductService>())
             {
                 string id;
-                var path = @"\Test_images\Test image.jpg";
+                var path = @"Test_images\Test image.jpg";
 
                 using (var imageStream = new FileStream(path, FileMode.Open))
                 {
