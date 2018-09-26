@@ -362,7 +362,7 @@ namespace WasteProducts.Logic.Tests.UserTests
             userLogins = await _userService.GetLoginsAsync(userId).ConfigureAwait(false);
             Assert.IsEmpty(userLogins);
         }
-                
+
         // тестируем изменение пароля пользователя
         [Test]
         public async Task UserIntegrTest_22ResettingUserPassword()
@@ -454,7 +454,7 @@ namespace WasteProducts.Logic.Tests.UserTests
 
         // тестируем создание группы и приглашение человека в группу (не относится к юзер сервису, но необходимо для следующего теста)
         [Test]
-        public void UserIntegrTest_28AddingNewGroupToDB()
+        public async Task UserIntegrTest_28AddingNewGroupToDB()
         {
             var name = "Some group";
             var info = "Info about the group";
@@ -466,9 +466,9 @@ namespace WasteProducts.Logic.Tests.UserTests
             };
             using (var gService = _kernel.Get<IGroupService>())
             {
-                gService.Create(group);
-                var groupFromDB = gService.FindByName(name);
-                Assert.AreEqual(info, groupFromDB.Information); 
+                await gService.Create(group);
+                var groupFromDB = await gService.FindByName(name);
+                Assert.AreEqual(info, groupFromDB.Information);
                 _groupIds.Add(groupFromDB.Id);
             }
 
@@ -485,13 +485,13 @@ namespace WasteProducts.Logic.Tests.UserTests
             };
             using (var guService = _kernel.Get<IGroupUserService>())
             {
-                guService.Invite(groupUser1, _usersIds[0]);
-                guService.Invite(groupUser2, _usersIds[0]);
+               await guService.Invite(groupUser1, _usersIds[0]);
+               await guService.Invite(groupUser2, _usersIds[0]);
             }
         }
 
         // тестируем ответ на приглашение (один согласится, другой откажется,
-        // приглашение отказавшегося должно быть удалено) + получение списка групп 
+        // приглашение отказавшегося должно быть удалено) + получение списка групп
         // при помощи метода GetGroupsAsync
         [Test]
         public async Task UserIntegrTest_29TestingRespondToInvitationToGroup()

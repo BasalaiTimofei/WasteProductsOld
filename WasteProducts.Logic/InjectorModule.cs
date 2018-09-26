@@ -113,11 +113,11 @@ namespace WasteProducts.Logic
 
         private void BindGroupServices()
         {
-            Bind<IGroupService>().To<GroupService>()/*.ValidateArguments(typeof(Group))*/;
-            Bind<IGroupBoardService>().To<GroupBoardService>();
-            Bind<IGroupProductService>().To<GroupProductService>();
-            Bind<IGroupUserService>().To<GroupUserService>();
-            Bind<IGroupCommentService>().To<GroupCommentService>();
+            Bind<IGroupService>().To<GroupService>().ValidateArguments(typeof(Group));
+            Bind<IGroupBoardService>().To<GroupBoardService>().ValidateArguments(typeof(GroupBoard));
+            Bind<IGroupProductService>().To<GroupProductService>().ValidateArguments(typeof(GroupProduct));
+            Bind<IGroupUserService>().To<GroupUserService>().ValidateArguments(typeof(GroupUser));
+            Bind<IGroupCommentService>().To<GroupCommentService>().ValidateArguments(typeof(GroupComment));
         }
 
         private void BindProductServices()

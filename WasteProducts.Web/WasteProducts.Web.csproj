@@ -236,6 +236,11 @@
     <Compile Include="App_Start\Extensions\SwaggerExtensions.cs" />
     <Compile Include="App_Start\Startup.Cors.cs" />
     <Compile Include="App_Start\Startup.OAuth.cs" />
+    <Compile Include="Controllers\Api\Groups\GroupBoardControlle.cs" />
+    <Compile Include="Controllers\Api\Groups\GroupUserController.cs" />
+    <Compile Include="Controllers\Api\Groups\GroupProductController .cs" />
+    <Compile Include="Controllers\Api\Groups\GroupCommentController.cs" />
+    <Compile Include="Controllers\Api\Groups\GroupController.cs" />
     <Compile Include="Controllers\Api\BarcodeController.cs" />
     <Compile Include="Controllers\Api\BaseApiController.cs" />
     <Compile Include="Controllers\Api\DatabaseController.cs" />
@@ -364,7 +369,8 @@
   <PropertyGroup>
     <PreBuildEvent>del "$(TargetDir)*.*" /Q</PreBuildEvent>
   </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+>>>>>>> develop
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
