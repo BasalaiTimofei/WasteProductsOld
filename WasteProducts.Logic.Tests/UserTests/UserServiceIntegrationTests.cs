@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -406,26 +407,25 @@ namespace WasteProducts.Logic.Tests.UserTests
         [Test]
         public async Task UserIntegrTest_24AddingNewProductsToDB()
         {
-            //string productName = "Waste product";
-            var barcode = new Barcode
-            {
-                Id = Guid.NewGuid().ToString(),
-                Code = "987654321098",
-                ProductName = "New product",
-                Brend = "Some Brand",
-                Country = "Some country"
-            };
-
             using (var prodService = _kernel.Get<IProductService>())
             {
-                await prodService.Add(barcode);
-                var product = await prodService.GetByName(barcode.ProductName);
+                string id;
+                var path = @"\Test_images\Test image.jpg";
+
+                using (var imageStream = new FileStream(path, FileMode.Open))
+                {
+                    id = await prodService.Add(imageStream);
+                }
+
+                var product = await prodService.GetById(id);
 
                 Assert.IsNotNull(product);
-                Assert.AreEqual(barcode.ProductName, product.Name);
+                //Это утверждение теперь не имеет смысла, потому что мы не знаем имени продукта
+                //Assert.AreEqual(barcode.ProductName, product.Name);
                 _productIds.Add(product.Id);
             }
         }
+
 
         // тестируем добавление продукта + метод получения списка продуктов GetProductDescriptionsAsync
         [Test]
