@@ -25,6 +25,7 @@ import { AddProductComponent } from './components/products/add-product/add-produ
 import { DeleteProductComponent } from './components/products/delete-product/delete-product.component';
 import { UpdateProductComponent } from './components/products/update-product/update-product.component';
 import { HeaderComponent } from './components/common/header/header.component';
+import { GroupsOfUserComponent } from './components/groups/groups-of-user/groups-of-user.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { HeaderComponent } from './components/common/header/header.component';
     DeleteProductComponent,
     UpdateProductComponent,
     HeaderComponent,
+    GroupsOfUserComponent,
   ],
   imports: [
     BrowserModule,

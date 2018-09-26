@@ -11,16 +11,18 @@ import { SettingsComponent } from './components/user/settings/settings.component
 import { ToListComponent } from './components/products/to-list/to-list.component';
 import { SearchComponent } from './components/search/search.component';
 import { SearchresultComponent } from './components/searchresult/search-result.component';
+import { GroupsOfUserComponent } from './components/groups/groups-of-user/groups-of-user.component';
 
 const routes: Routes = [
   { path: '', component: DefaultComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'common/mainpage', component: MainPageComponent},
   { path: 'user/friends', component: FriendsComponent},
+  { path: 'user/settings', component: SettingsComponent},
   { path: 'products', component: ProductsComponent},
   { path: 'groups', component: GroupsComponent},
-  { path: 'user/settings', component: SettingsComponent},
-  { path: 'products/to-list', component: ToListComponent },
+  { path: 'groups/mygroups', component: GroupsOfUserComponent},
+  { path: 'products/myproducts', component: ToListComponent },
   { path: 'searchresults/:query', component: SearchresultComponent },
   { path: '**', component: NotFoundComponent },
 ];
