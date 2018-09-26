@@ -100,7 +100,7 @@ namespace WasteProducts.Web.Controllers.Api
         [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect Id")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         [HttpPatch, Route("{productId}/category/{categoryId}")]
-        public async Task<IHttpActionResult> AddToCategory(string productId, string categoryId)
+        public async Task<IHttpActionResult> AddToCategory([FromUri]string productId, [FromUri]string categoryId)
         {
             await _productService.AddToCategory(productId, categoryId);
 
@@ -111,7 +111,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// Updates the product .
         /// </summary>
         /// <param name="data">Data by which the product should be updated.</param>
-        /// <returns>Updated product</returns>
+        /// <returns>Updated product.</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Product was successfully updated", typeof(Product))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect data")]
