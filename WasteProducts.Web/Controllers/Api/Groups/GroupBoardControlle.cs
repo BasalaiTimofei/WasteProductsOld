@@ -1,4 +1,5 @@
-﻿using Ninject.Extensions.Logging;
+
+using Ninject.Extensions.Logging;
 using Swagger.Net.Annotations;
 using System.Net;
 using System.Threading.Tasks;

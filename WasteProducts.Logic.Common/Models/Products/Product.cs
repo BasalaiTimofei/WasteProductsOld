@@ -1,6 +1,4 @@
-﻿using WasteProducts.DataAccess.Common.Repositories;
-using WasteProducts.Logic.Common.Models.Barcods;
-using WasteProducts.Logic.Common.Models.Users;
+﻿using WasteProducts.Logic.Common.Models.Barcods;
 
 namespace WasteProducts.Logic.Common.Models.Products
 {

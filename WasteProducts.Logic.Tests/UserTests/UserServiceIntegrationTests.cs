@@ -6,9 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using WasteProducts.DataAccess.Common.Repositories.Users;
-using WasteProducts.DataAccess.Repositories.Users;
-using WasteProducts.Logic.Common.Models.Barcods;
+using WasteProducts.DataAccess.Common.Repositories.Diagnostic;
 using WasteProducts.Logic.Common.Models.Groups;
 using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Services.Groups;
@@ -39,16 +37,14 @@ namespace WasteProducts.Logic.Tests.UserTests
         }
 
         [OneTimeSetUp]
-        public void Init()
+        public async Task Init()
         {
             _kernel = new StandardKernel();
             _kernel.Load(new DataAccess.InjectorModule(), new Logic.InjectorModule());
 
-            using (var userRepo = _kernel.Get<IUserRepository>())
+            using (var dbService = _kernel.Get<IDiagnosticRepository>())
             {
-                // не делал метода в интерфейсе ради безопасности,
-                // надо знать, что лишь после приведения появляется такой метод.
-                ((UserRepository)userRepo).RecreateTestDatabase();
+                await dbService.RecreateAsync().ConfigureAwait(false);
             }
         }
 
@@ -76,13 +72,13 @@ namespace WasteProducts.Logic.Tests.UserTests
         [Test]
         public async Task UserIntegrTest_00AddingUsers()
         {
-            await _userService.RegisterAsync("test49someemail@gmail.com", "Sergei", "qwerty1", null);
-            await _userService.RegisterAsync("test50someemail@gmail.com", "Anton", "qwerty2", null);
-            await _userService.RegisterAsync("test51someemail@gmail.com", "Alexander", "qwerty3", null);
+            await _userService.RegisterAsync("test49someemail@gmail.com", "Sergei", "qwerty1", null).ConfigureAwait(false);
+            await _userService.RegisterAsync("test50someemail@gmail.com", "Anton", "qwerty2", null).ConfigureAwait(false);
+            await _userService.RegisterAsync("test51someemail@gmail.com", "Alexander", "qwerty3", null).ConfigureAwait(false);
 
-            var user1 = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
-            var user2 = await _userService.LogInByEmailAsync("test50someemail@gmail.com", "qwerty2");
-            var user3 = await _userService.LogInByEmailAsync("test51someemail@gmail.com", "qwerty3");
+            var user1 = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").ConfigureAwait(false);
+            var user2 = await _userService.LogInByEmailAsync("test50someemail@gmail.com", "qwerty2").ConfigureAwait(false);
+            var user3 = await _userService.LogInByEmailAsync("test51someemail@gmail.com", "qwerty3").ConfigureAwait(false);
 
             Assert.AreEqual("Sergei", user1.UserName);
             Assert.AreEqual("Anton", user2.UserName);
@@ -93,17 +89,15 @@ namespace WasteProducts.Logic.Tests.UserTests
             _usersIds.Add(user3.Id);
         }
 
-
-
         // пытаемся зарегистрировать юзера с некорректным емейлом
         [Test]
         public async Task UserIntegrTest_01AddingUserWithIncorrectEmail()
         {
-            await _userService.RegisterAsync("Incorrect email", "NewLogin", "qwerty", null);
-            User user = await _userService.LogInByEmailAsync("Incorrect email", "qwerty");
+            await _userService.RegisterAsync("Incorrect email", "NewLogin", "qwerty", null).ConfigureAwait(false);
+            User user = await _userService.LogInByEmailAsync("Incorrect email", "qwerty").ConfigureAwait(false);
             Assert.IsNull(user);
 
-            user = await _userService.LogInByEmailAsync("Incorrect email", "qwerty");
+            user = await _userService.LogInByEmailAsync("Incorrect email", "qwerty").ConfigureAwait(false);
             Assert.IsNull(user);
         }
 
@@ -111,11 +105,11 @@ namespace WasteProducts.Logic.Tests.UserTests
         [Test]
         public async Task UserIntegrTest_02AddingUserWithAlreadyRegisteredEmail()
         {
-            await _userService.RegisterAsync("test49someemail@gmail.com", "NewLogin", "qwerty", null);
-            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty");
+            await _userService.RegisterAsync("test49someemail@gmail.com", "NewLogin", "qwerty", null).ConfigureAwait(false);
+            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty").ConfigureAwait(false);
             Assert.IsNull(user);
 
-            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty");
+            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty").ConfigureAwait(false);
             Assert.IsNull(user);
         }
 
@@ -123,11 +117,11 @@ namespace WasteProducts.Logic.Tests.UserTests
         [Test]
         public async Task UserIntegrTest_03AddingUserWithAlreadyRegisteredNickName()
         {
-            await _userService.RegisterAsync("test100someemail@gmail.com", "Sergei", "qwerty", null);
-            User user = await _userService.LogInByEmailAsync("test100someemail@gmail.com", "qwerty");
+            await _userService.RegisterAsync("test100someemail@gmail.com", "Sergei", "qwerty", null).ConfigureAwait(false);
+            User user = await _userService.LogInByEmailAsync("test100someemail@gmail.com", "qwerty").ConfigureAwait(false);
             Assert.IsNull(user);
 
-            user = await _userService.LogInByEmailAsync("test100someemail@gmail.com", "qwerty");
+            user = await _userService.LogInByEmailAsync("test100someemail@gmail.com", "qwerty").ConfigureAwait(false);
             Assert.IsNull(user);
         }
 
@@ -135,54 +129,62 @@ namespace WasteProducts.Logic.Tests.UserTests
         [Test]
         public async Task UserIntegrTest_04RegisteringUserWithNullArguements()
         {
-            await _userService.RegisterAsync(null, "Sergei1", "qwert1", null);
-            await _userService.RegisterAsync("test101someemail@gmail.com", null, "qwert2", null);
+            await _userService.RegisterAsync(null, "Sergei1", "qwert1", null).ConfigureAwait(false);
+            await _userService.RegisterAsync("test101someemail@gmail.com", null, "qwert2", null).ConfigureAwait(false);
 
-            User user1 = await _userService.LogInByNameAsync("Sergei1", "qwert1");
-            User user2 = await _userService.LogInByEmailAsync("test101someemail@gmail.com", "qwert2");
+            User user1 = await _userService.LogInByNameAsync("Sergei1", "qwert1").ConfigureAwait(false);
+            User user2 = await _userService.LogInByEmailAsync("test101someemail@gmail.com", "qwert2").ConfigureAwait(false);
 
             Assert.IsNull(user1);
             Assert.IsNull(user2);
         }
 
+        // тестируем получение всех зарегистрированных пользователей
+        [Test]
+        public async Task UserIntegrTest_05GettingAllUsers()
+        {
+            var users = await _userService.GetAllAsync().ConfigureAwait(false);
+            Assert.AreEqual(3, users.Count());
+        }
+
         // проверяем запрос юзера по правильным емейлу и паролю (должно вернуть соответствующего юзера)
         [Test]
-        public async Task UserIntegrTest_05CorrectLoggingInByEmail()
+        public async Task UserIntegrTest_06CorrectLoggingInByEmail()
         {
-            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
+            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").ConfigureAwait(false);
             Assert.AreEqual("Sergei", user.UserName);
         }
 
         // проверяем запрос юзера по неверным емейлу и паролю (юзер должен быть null-овым)
         [Test]
-        public async Task UserIntegrTest_06IncorrectQueryingByEmail()
+        public async Task UserIntegrTest_07IncorrectQueryingByEmail()
         {
-            User user = await _userService.LogInByEmailAsync("incorrectEmail", "incorrectPassword");
+            User user = await _userService.LogInByEmailAsync("incorrectEmail", "incorrectPassword").ConfigureAwait(false);
             Assert.IsNull(user);
         }
 
         // пытаемся поменять зарегистрированному юзеру емейл на корректный уникальный емейл (должно поменять)
         [Test]
-        public async Task UserIntegrTest_07ChangingUserEmailToAvailableEmail()
+        public async Task UserIntegrTest_08ChangingUserEmailToAvailableEmail()
         {
-            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
+            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").ConfigureAwait(false);
             Assert.AreEqual("Sergei", user.UserName);
 
-            bool result = await _userService.UpdateEmailAsync(user.Id, "uniqueemail@gmail.com");
+            bool result = await _userService.UpdateEmailAsync(user.Id, "uniqueemail@gmail.com").ConfigureAwait(false);
 
             Assert.IsTrue(result);
 
-            await _userService.UpdateEmailAsync(user.Id, "test49someemail@gmail.com");
+            await _userService.UpdateEmailAsync(user.Id, "test49someemail@gmail.com").ConfigureAwait(false);
         }
 
         // пытаемся поменять зарегистрированному юзеру емейл на некорректный уникальный емейл (не должно поменять)
         [Test]
-        public async Task UserIntegrTest_08ChangingUserEmailToIncorrectEmail()
+        public async Task UserIntegrTest_09ChangingUserEmailToIncorrectEmail()
         {
-            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
+            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").ConfigureAwait(false);
             Assert.AreEqual("Sergei", user.UserName);
 
-            bool result = await _userService.UpdateEmailAsync(user.Id, "uniqueButIncorrectEmail");
+            bool result = await _userService.UpdateEmailAsync(user.Id, "uniqueButIncorrectEmail").ConfigureAwait(false);
 
             Assert.IsFalse(result);
             Assert.AreEqual("Sergei", user.UserName);
@@ -190,29 +192,29 @@ namespace WasteProducts.Logic.Tests.UserTests
 
         // пытаемся поменять зарегистрированному юзеру емейл на корректный неуникальный емейл (не должно поменять)
         [Test]
-        public async Task UserIntegrTest_09ChangingUserEmailToAlreadyRegisteredEmail()
+        public async Task UserIntegrTest_10ChangingUserEmailToAlreadyRegisteredEmail()
         {
-            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
+            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").ConfigureAwait(false);
             Assert.AreEqual("Sergei", user.UserName);
 
-            bool result = await _userService.UpdateEmailAsync(user.Id, "test50someemail@gmail.com");
+            bool result = await _userService.UpdateEmailAsync(user.Id, "test50someemail@gmail.com").ConfigureAwait(false);
 
             Assert.IsFalse(result);
             Assert.AreEqual("Sergei", user.UserName);
 
-            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
+            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").ConfigureAwait(false);
             Assert.AreEqual("Sergei", user.UserName);
         }
 
         // пытаемся передать в метод UpdateEmailAsync null-овые аргументы (не должно поменять емейла, не должно выдать ошибку)
         [Test]
-        public async Task UserIntegrTest_10CallUpdateEmailAsyncWithNulArguements()
+        public async Task UserIntegrTest_11CallUpdateEmailAsyncWithNulArguements()
         {
-            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
+            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").ConfigureAwait(false);
             Assert.IsNotNull(user);
 
-            bool result1 = await _userService.UpdateEmailAsync(user.Id, null);
-            bool result2 = await _userService.UpdateEmailAsync(null, "correctuniqueemail@gmail.com");
+            bool result1 = await _userService.UpdateEmailAsync(user.Id, null).ConfigureAwait(false);
+            bool result2 = await _userService.UpdateEmailAsync(null, "correctuniqueemail@gmail.com").ConfigureAwait(false);
 
             Assert.IsFalse(result1);
             Assert.IsFalse(result2);
@@ -221,14 +223,14 @@ namespace WasteProducts.Logic.Tests.UserTests
 
         // пытаемся изменить юзеру юзернейм на юзернейм, уже имеющийся в системе (не должно поменять)
         [Test]
-        public async Task UserIntegrTest_11ChangingUserNameToAlreadyExistingUserName()
+        public async Task UserIntegrTest_12ChangingUserNameToAlreadyExistingUserName()
         {
-            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
+            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").ConfigureAwait(false);
             Assert.AreEqual("Sergei", user.UserName);
 
-            bool result = await _userService.UpdateUserNameAsync(user.Id, "Anton");
+            bool result = await _userService.UpdateUserNameAsync(user.Id, "Anton").ConfigureAwait(false);
 
-            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
+            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").ConfigureAwait(false);
 
             Assert.IsFalse(result);
             Assert.AreEqual("Sergei", user.UserName);
@@ -239,15 +241,15 @@ namespace WasteProducts.Logic.Tests.UserTests
         // где в тестовых целях из методов возвращаются айди и токен, необходимые для подтверждения емейла
         // так же тут тестируется аналогичная "отправка" запроса на изменение пароля (в if statement)
         [Test]
-        public async Task UserIntegrTest_12TryingToRegisterUserPropperlyAndResetPassword()
+        public async Task UserIntegrTest_13TryingToRegisterUserPropperlyAndResetPassword()
         {
             string email = "test52someemail@gmail.com";
-            var (id, token) = await _userService.RegisterAsync(email, "TestName", "TestPassword123", "Айди юзера: {0} и токен: {1}");
-            if (await _userService.ConfirmEmailAsync(id, token))
+            var (id, token) = await _userService.RegisterAsync(email, "TestName", "TestPassword123", "Айди юзера: {0} и токен: {1}").ConfigureAwait(false);
+            if (await _userService.ConfirmEmailAsync(id, token).ConfigureAwait(false))
             {
-                (id, token) = await _userService.ResetPasswordRequestAsync(email, "Айди юзера: {0} и токен: {1}");
-                await _userService.ResetPasswordAsync(id, token, "newPassword");
-                var user = await _userService.LogInByNameAsync("TestName", "newPassword");
+                (id, token) = await _userService.ResetPasswordRequestAsync(email, "Айди юзера: {0} и токен: {1}").ConfigureAwait(false);
+                await _userService.ResetPasswordAsync(id, token, "newPassword").ConfigureAwait(false);
+                var user = await _userService.LogInByNameAsync("TestName", "newPassword").ConfigureAwait(false);
                 Assert.IsNotNull(user);
                 Assert.AreEqual(id, user.Id);
             }
@@ -259,58 +261,58 @@ namespace WasteProducts.Logic.Tests.UserTests
 
         // тестируем создание роли, а так же проверяем, действительно ли роль создается в базе данных
         [Test]
-        public async Task UserIntegrTest_13FindingRoleByCorrectRoleName()
+        public async Task UserIntegrTest_14FindingRoleByCorrectRoleName()
         {
             UserRole roleToCreate = new UserRole() { Name = "Simple user" };
-            await _roleService.CreateAsync(roleToCreate);
+            await _roleService.CreateAsync(roleToCreate).ConfigureAwait(false);
 
-            UserRole role = await _roleService.FindByNameAsync("Simple user");
+            UserRole role = await _roleService.FindByNameAsync("Simple user").ConfigureAwait(false);
             Assert.AreEqual(role.Name, "Simple user");
         }
 
         // проверяем запрос роли по несуществующему названию
         [Test]
-        public async Task UserIntegrTest_14FindingRoleByIncorrectRoleName()
+        public async Task UserIntegrTest_15FindingRoleByIncorrectRoleName()
         {
-            UserRole role = await _roleService.FindByNameAsync("Not existing role name");
+            UserRole role = await _roleService.FindByNameAsync("Not existing role name").ConfigureAwait(false);
             Assert.IsNull(role);
         }
 
         // тестим, правильно ли работает функционал добавления роли и добавления юзера в роль, a так же метод GetRolesAsync IUserService
         [Test]
-        public async Task UserIntegrTest_15AddingToTheUserDBNewRole()
+        public async Task UserIntegrTest_16AddingToTheUserDBNewRole()
         {
-            await _userService.AddToRoleAsync(_usersIds[0], "Simple user");
-            await _userService.AddToRoleAsync(_usersIds[1], "Simple user");
-            await _userService.AddToRoleAsync(_usersIds[2], "Simple user");
+            await _userService.AddToRoleAsync(_usersIds[0], "Simple user").ConfigureAwait(false);
+            await _userService.AddToRoleAsync(_usersIds[1], "Simple user").ConfigureAwait(false);
+            await _userService.AddToRoleAsync(_usersIds[2], "Simple user").ConfigureAwait(false);
 
-            var rolesOfUser1 = await _userService.GetRolesAsync(_usersIds[0]);
+            var rolesOfUser1 = await _userService.GetRolesAsync(_usersIds[0]).ConfigureAwait(false);
             Assert.AreEqual("Simple user", rolesOfUser1.FirstOrDefault());
         }
 
         // тестируем изъятие из роли
         [Test]
-        public async Task UserIntegrTest_16RemovingUserFromRole()
+        public async Task UserIntegrTest_17RemovingUserFromRole()
         {
             var userId = _usersIds[0];
-            var userRoles = await _userService.GetRolesAsync(userId);
+            var userRoles = await _userService.GetRolesAsync(userId).ConfigureAwait(false);
             Assert.AreEqual(userRoles.FirstOrDefault(), "Simple user");
-            await _userService.RemoveFromRoleAsync(userId, "Simple user");
+            await _userService.RemoveFromRoleAsync(userId, "Simple user").ConfigureAwait(false);
 
-            userRoles = await _userService.GetRolesAsync(userId);
+            userRoles = await _userService.GetRolesAsync(userId).ConfigureAwait(false);
             Assert.IsNull(userRoles.FirstOrDefault());
         }
 
         // Тестируем добавление утверждения (Claim) в юзера + получение Claims через GetClaimsAsync
         [Test]
-        public async Task UserIntegrTest_17AddingClaimToUser()
+        public async Task UserIntegrTest_18AddingClaimToUser()
         {
             var userId = _usersIds[0];
             var claim = new Claim("SomeType", "SomeValue");
 
-            await _userService.AddClaimAsync(userId, claim);
+            await _userService.AddClaimAsync(userId, claim).ConfigureAwait(false);
 
-            var userClaims = await _userService.GetClaimsAsync(userId);
+            var userClaims = await _userService.GetClaimsAsync(userId).ConfigureAwait(false);
             var userClaim = userClaims.FirstOrDefault();
 
             Assert.AreEqual(userClaim.Type, claim.Type);
@@ -319,28 +321,28 @@ namespace WasteProducts.Logic.Tests.UserTests
 
         // тестируем удаление утверждения из юзера
         [Test]
-        public async Task UserIntegrTest_18DeletingClaimFromUser()
+        public async Task UserIntegrTest_19DeletingClaimFromUser()
         {
             var userId = _usersIds[0];
-            var userClaims = await _userService.GetClaimsAsync(userId);
+            var userClaims = await _userService.GetClaimsAsync(userId).ConfigureAwait(false);
             Assert.AreEqual(1, userClaims.Count);
 
-            await _userService.RemoveClaimAsync(userId, userClaims.FirstOrDefault());
+            await _userService.RemoveClaimAsync(userId, userClaims.FirstOrDefault()).ConfigureAwait(false);
 
-            userClaims = await _userService.GetClaimsAsync(userId);
+            userClaims = await _userService.GetClaimsAsync(userId).ConfigureAwait(false);
             Assert.IsEmpty(userClaims);
         }
 
         // тестируем добавление логина в юзера+ получение Loginss через GetLoginsAsync
         [Test]
-        public async Task UserIntegrTest_19AddingLoginToUser()
+        public async Task UserIntegrTest_20AddingLoginToUser()
         {
             var userId = _usersIds[0];
             var login = new UserLogin { LoginProvider = "SomeLoginProvider", ProviderKey = "SomeProviderKey" };
 
-            await _userService.AddLoginAsync(userId, login);
+            await _userService.AddLoginAsync(userId, login).ConfigureAwait(false);
 
-            var userLogins = await _userService.GetLoginsAsync(userId);
+            var userLogins = await _userService.GetLoginsAsync(userId).ConfigureAwait(false);
             var userLogin = userLogins.FirstOrDefault();
 
             Assert.AreEqual(login, userLogin);
@@ -348,42 +350,42 @@ namespace WasteProducts.Logic.Tests.UserTests
 
         // тестируем удаление логина из юзера
         [Test]
-        public async Task UserIntegrTest_20DeletingLoginFromUser()
+        public async Task UserIntegrTest_21DeletingLoginFromUser()
         {
             var userId = _usersIds[0];
             var login = new UserLogin { LoginProvider = "SomeLoginProvider", ProviderKey = "SomeProviderKey" };
 
-            var userLogins = await _userService.GetLoginsAsync(userId);
+            var userLogins = await _userService.GetLoginsAsync(userId).ConfigureAwait(false);
 
             Assert.AreEqual(1, userLogins.Count);
-            await _userService.RemoveLoginAsync(userId, login);
+            await _userService.RemoveLoginAsync(userId, login).ConfigureAwait(false);
 
-            userLogins = await _userService.GetLoginsAsync(userId);
+            userLogins = await _userService.GetLoginsAsync(userId).ConfigureAwait(false);
             Assert.IsEmpty(userLogins);
         }
 
         // тестируем изменение пароля пользователя
         [Test]
-        public async Task UserIntegrTest_21ResettingUserPassword()
+        public async Task UserIntegrTest_22ResettingUserPassword()
         {
-            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1");
-            await _userService.ChangePasswordAsync(user.Id, "qwerty1", "New password");
+            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").ConfigureAwait(false);
+            await _userService.ChangePasswordAsync(user.Id, "qwerty1", "New password").ConfigureAwait(false);
 
-            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "New password");
-            await _userService.ChangePasswordAsync(user.Id, "New password", "qwerty1");
+            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "New password").ConfigureAwait(false);
+            await _userService.ChangePasswordAsync(user.Id, "New password", "qwerty1").ConfigureAwait(false);
         }
 
         // тестируем добавление друзей + метод получения списка друзей GetFriendsAsync
         [Test]
-        public async Task UserIntegrTest_22AddingNewFriendsToUser()
+        public async Task UserIntegrTest_23AddingNewFriendsToUser()
         {
-            var friends = await _userService.GetFriendsAsync(_usersIds[0]);
+            var friends = await _userService.GetFriendsAsync(_usersIds[0]).ConfigureAwait(false);
             Assert.IsEmpty(friends);
 
-            await _userService.AddFriendAsync(_usersIds[0], _usersIds[1]);
-            await _userService.AddFriendAsync(_usersIds[0], _usersIds[2]);
+            await _userService.AddFriendAsync(_usersIds[0], _usersIds[1]).ConfigureAwait(false);
+            await _userService.AddFriendAsync(_usersIds[0], _usersIds[2]).ConfigureAwait(false);
 
-            friends = await _userService.GetFriendsAsync(_usersIds[0]);
+            friends = await _userService.GetFriendsAsync(_usersIds[0]).ConfigureAwait(false);
             Assert.AreEqual(2, friends.Count);
             Assert.IsTrue(friends.Any(u => u.Id == _usersIds[1]) && friends.Any(u => u.Id == _usersIds[2]));
             Assert.IsTrue(friends.Any(u => u.UserName == "Anton") && friends.Any(u => u.UserName == "Alexander"));
@@ -391,21 +393,21 @@ namespace WasteProducts.Logic.Tests.UserTests
 
         // тестируем удаление друзей
         [Test]
-        public async Task UserIntegrTest_23DeletingFriendsFromUser()
+        public async Task UserIntegrTest_24DeletingFriendsFromUser()
         {
-            var friends = await _userService.GetFriendsAsync(_usersIds[0]);
+            var friends = await _userService.GetFriendsAsync(_usersIds[0]).ConfigureAwait(false);
             Assert.AreEqual(2, friends.Count);
 
-            await _userService.DeleteFriendAsync(_usersIds[0], _usersIds[1]);
-            await _userService.DeleteFriendAsync(_usersIds[0], _usersIds[2]);
+            await _userService.DeleteFriendAsync(_usersIds[0], _usersIds[1]).ConfigureAwait(false);
+            await _userService.DeleteFriendAsync(_usersIds[0], _usersIds[2]).ConfigureAwait(false);
 
-            friends = await _userService.GetFriendsAsync(_usersIds[0]);
+            friends = await _userService.GetFriendsAsync(_usersIds[0]).ConfigureAwait(false);
             Assert.IsEmpty(friends);
         }
 
         // тестируем создание продукта (не относится к юзер сервису, но необходимо для следующего теста)
         [Test]
-        public async Task UserIntegrTest_24AddingNewProductsToDB()
+        public async Task UserIntegrTest_25AddingNewProductsToDB()
         {
             using (var prodService = _kernel.Get<IProductService>())
             {
@@ -414,10 +416,10 @@ namespace WasteProducts.Logic.Tests.UserTests
 
                 using (var imageStream = new FileStream(path, FileMode.Open))
                 {
-                    id = await prodService.Add(imageStream);
+                    id = await prodService.Add(imageStream).ConfigureAwait(false);
                 }
 
-                var product = await prodService.GetById(id);
+                var product = await prodService.GetById(id).ConfigureAwait(false);
 
                 Assert.IsNotNull(product);
                 //Это утверждение теперь не имеет смысла, потому что мы не знаем имени продукта
@@ -429,15 +431,15 @@ namespace WasteProducts.Logic.Tests.UserTests
 
         // тестируем добавление продукта + метод получения списка продуктов GetProductDescriptionsAsync
         [Test]
-        public async Task UserIntegrTest_25AddingNewProductsToUser()
+        public async Task UserIntegrTest_26AddingNewProductsToUser()
         {
             string description = "Tastes like garbage, won't buy it ever again.";
 
-            var products = await _userService.GetProductDescriptionsAsync(_usersIds[0]);
+            var products = await _userService.GetProductsAsync(_usersIds[0]).ConfigureAwait(false);
             Assert.IsEmpty(products);
 
-            await _userService.AddProductAsync(_usersIds[0], _productIds[0], 1, description);
-            products = await _userService.GetProductDescriptionsAsync(_usersIds[0]);
+            await _userService.AddProductAsync(_usersIds[0], _productIds[0], 1, description).ConfigureAwait(false);
+            products = await _userService.GetProductsAsync(_usersIds[0]).ConfigureAwait(false);
 
             Assert.AreEqual(1, products.Count);
             Assert.AreEqual(_productIds[0], products[0].Product.Id);
@@ -447,20 +449,20 @@ namespace WasteProducts.Logic.Tests.UserTests
 
         // тестируем удаление продуктов
         [Test]
-        public async Task UserIntegrTest_26DeletingProductsFromUser()
+        public async Task UserIntegrTest_27DeletingProductsFromUser()
         {
-            var products = await _userService.GetProductDescriptionsAsync(_usersIds[0]);
+            var products = await _userService.GetProductsAsync(_usersIds[0]).ConfigureAwait(false);
             Assert.AreEqual(1, products.Count);
 
-            await _userService.DeleteProductAsync(_usersIds[0], _productIds[0]);
+            await _userService.DeleteProductAsync(_usersIds[0], _productIds[0]).ConfigureAwait(false);
 
-            products = await _userService.GetProductDescriptionsAsync(_usersIds[0]);
+            products = await _userService.GetProductsAsync(_usersIds[0]).ConfigureAwait(false);
             Assert.IsEmpty(products);
         }
 
         // тестируем создание группы и приглашение человека в группу (не относится к юзер сервису, но необходимо для следующего теста)
         [Test]
-        public void UserIntegrTest_27AddingNewGroupToDB()
+        public async Task UserIntegrTest_28AddingNewGroupToDB()
         {
             var name = "Some group";
             var info = "Info about the group";
@@ -472,8 +474,8 @@ namespace WasteProducts.Logic.Tests.UserTests
             };
             using (var gService = _kernel.Get<IGroupService>())
             {
-                gService.Create(group);
-                var groupFromDB = gService.FindByName(name);
+                await gService.Create(group);
+                var groupFromDB = await gService.FindByName(name);
                 Assert.AreEqual(info, groupFromDB.Information);
                 _groupIds.Add(groupFromDB.Id);
             }
@@ -491,22 +493,22 @@ namespace WasteProducts.Logic.Tests.UserTests
             };
             using (var guService = _kernel.Get<IGroupUserService>())
             {
-                guService.Invite(groupUser1, _usersIds[0]);
-                guService.Invite(groupUser2, _usersIds[0]);
+               await guService.Invite(groupUser1, _usersIds[0]);
+               await guService.Invite(groupUser2, _usersIds[0]);
             }
         }
 
         // тестируем ответ на приглашение (один согласится, другой откажется,
-        // приглашение отказавшегося должно быть удалено) + получение списка групп 
+        // приглашение отказавшегося должно быть удалено) + получение списка групп
         // при помощи метода GetGroupsAsync
         [Test]
-        public async Task UserIntegrTest_28TestingRespondToInvitationToGroup()
+        public async Task UserIntegrTest_29TestingRespondToInvitationToGroup()
         {
-            await _userService.RespondToGroupInvitationAsync(_usersIds[1], _groupIds[0], true);
-            await _userService.RespondToGroupInvitationAsync(_usersIds[2], _groupIds[0], false);
+            await _userService.RespondToGroupInvitationAsync(_usersIds[1], _groupIds[0], true).ConfigureAwait(false);
+            await _userService.RespondToGroupInvitationAsync(_usersIds[2], _groupIds[0], false).ConfigureAwait(false);
 
-            var groups1 = await _userService.GetGroupsAsync(_usersIds[1]);
-            var groups2 = await _userService.GetGroupsAsync(_usersIds[2]);
+            var groups1 = await _userService.GetGroupsAsync(_usersIds[1]).ConfigureAwait(false);
+            var groups2 = await _userService.GetGroupsAsync(_usersIds[2]).ConfigureAwait(false);
 
             Assert.AreEqual("Some group", groups1.First().Name);
             Assert.IsFalse(groups1.First().RightToCreateBoards);
@@ -515,37 +517,37 @@ namespace WasteProducts.Logic.Tests.UserTests
 
         // тестим выход из группы
         [Test]
-        public async Task UserIntegrTest_29TestingLeavingAGroup()
+        public async Task UserIntegrTest_30TestingLeavingAGroup()
         {
-            var groups1 = await _userService.GetGroupsAsync(_usersIds[1]);
+            var groups1 = await _userService.GetGroupsAsync(_usersIds[1]).ConfigureAwait(false);
             Assert.AreEqual("Some group", groups1.First().Name);
 
-            await _userService.LeaveGroupAsync(_usersIds[1], _groupIds[0]);
-            groups1 = await _userService.GetGroupsAsync(_usersIds[1]);
+            await _userService.LeaveGroupAsync(_usersIds[1], _groupIds[0]).ConfigureAwait(false);
+            groups1 = await _userService.GetGroupsAsync(_usersIds[1]).ConfigureAwait(false);
             Assert.IsEmpty(groups1);
         }
 
         // тестируем поиск роли по айди и имени
         [Test]
-        public async Task UserIntegrTest_30FindRoleByIdAndName()
+        public async Task UserIntegrTest_31FindRoleByIdAndName()
         {
-            UserRole foundByName = await _roleService.FindByNameAsync("Simple user");
+            UserRole foundByName = await _roleService.FindByNameAsync("Simple user").ConfigureAwait(false);
             Assert.AreEqual("Simple user", foundByName.Name);
 
-            UserRole foundById = await _roleService.FindByIdAsync(foundByName.Id);
+            UserRole foundById = await _roleService.FindByIdAsync(foundByName.Id).ConfigureAwait(false);
             Assert.AreEqual(foundByName.Name, foundById.Name);
             Assert.AreEqual(foundByName.Id, foundById.Id);
         }
 
         // тестируем получение всех пользователей определенной роли
         [Test]
-        public async Task UserIntegrTest_31GettingRoleUsers()
+        public async Task UserIntegrTest_32GettingRoleUsers()
         {
-            User user1 = await _userService.LogInByEmailAsync("test50someemail@gmail.com", "qwerty2");
-            User user2 = await _userService.LogInByEmailAsync("test51someemail@gmail.com", "qwerty3");
-            UserRole role = await _roleService.FindByNameAsync("Simple user");
+            User user1 = await _userService.LogInByEmailAsync("test50someemail@gmail.com", "qwerty2").ConfigureAwait(false);
+            User user2 = await _userService.LogInByEmailAsync("test51someemail@gmail.com", "qwerty3").ConfigureAwait(false);
+            UserRole role = await _roleService.FindByNameAsync("Simple user").ConfigureAwait(false);
 
-            IEnumerable<User> users = await _roleService.GetRoleUsers(role);
+            IEnumerable<User> users = await _roleService.GetRoleUsers(role).ConfigureAwait(false);
             User user1FromGetRoles = users.FirstOrDefault(u => u.Id == user1.Id);
             User user2FromGetRoles = users.FirstOrDefault(u => u.Id == user2.Id);
             Assert.AreEqual(user1.Id, user1FromGetRoles.Id);
@@ -554,43 +556,43 @@ namespace WasteProducts.Logic.Tests.UserTests
 
         // тестируем изменение названия роли
         [Test]
-        public async Task UserIntegrTest_32UpdatingRoleName()
+        public async Task UserIntegrTest_33UpdatingRoleName()
         {
             var userId = _usersIds[1];
 
-            var rolesOfUser = await _userService.GetRolesAsync(userId);
+            var rolesOfUser = await _userService.GetRolesAsync(userId).ConfigureAwait(false);
             Assert.AreEqual("Simple user", rolesOfUser.FirstOrDefault());
 
-            UserRole role = await _roleService.FindByNameAsync("Simple user");
-            await _roleService.UpdateRoleNameAsync(role, "Not so simple user");
+            UserRole role = await _roleService.FindByNameAsync("Simple user").ConfigureAwait(false);
+            await _roleService.UpdateRoleNameAsync(role, "Not so simple user").ConfigureAwait(false);
 
-            rolesOfUser = await _userService.GetRolesAsync(userId);
+            rolesOfUser = await _userService.GetRolesAsync(userId).ConfigureAwait(false);
             Assert.AreEqual("Not so simple user", rolesOfUser.FirstOrDefault());
         }
 
         // тестируем удаление роли
         [Test]
-        public async Task UserIntegrTest_33DeletingRole()
+        public async Task UserIntegrTest_34DeletingRole()
         {
             var userId = _usersIds[1];
 
-            var rolesOfUser = await _userService.GetRolesAsync(userId);
+            var rolesOfUser = await _userService.GetRolesAsync(userId).ConfigureAwait(false);
             Assert.AreEqual("Not so simple user", rolesOfUser.FirstOrDefault());
 
-            UserRole role = await _roleService.FindByNameAsync("Not so simple user");
-            await _roleService.DeleteAsync(role);
+            UserRole role = await _roleService.FindByNameAsync("Not so simple user").ConfigureAwait(false);
+            await _roleService.DeleteAsync(role).ConfigureAwait(false);
 
-            rolesOfUser = await _userService.GetRolesAsync(userId);
+            rolesOfUser = await _userService.GetRolesAsync(userId).ConfigureAwait(false);
             Assert.IsNull(rolesOfUser.FirstOrDefault());
         }
 
         // тестируем удаление юзеров, а заодно и чистим базу до изначального состояния
         [Test]
-        public async Task UserIntegrTest_34DeletingUsers()
+        public async Task UserIntegrTest_35DeletingUsers()
         {
             foreach (var id in _usersIds)
             {
-                await _userService.DeleteUserAsync(id);
+                await _userService.DeleteUserAsync(id).ConfigureAwait(false);
             }
         }
     }

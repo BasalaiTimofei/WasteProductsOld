@@ -36,14 +36,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Groups
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <param name="id">Primary key object</param>
-        void Delete<T>(Guid id) where T : class;
-
-        /// <summary>
-        /// Deletess user from the group.
-        /// </summary>
-        /// <param name="groupId">ID of the group.</param>
-        /// <param name="userId">ID of the user.</param>
-        Task DeleteUserFromGroupAsync(string groupId, string userId);
+        void Delete<T>(string id) where T : class;
 
         /// <summary>
         /// Delete object from db by object
@@ -65,14 +58,14 @@ namespace WasteProducts.DataAccess.Common.Repositories.Groups
         /// <typeparam name="T">Object</typeparam>
         /// <param name="id">Primary key object</param>
         /// <returns>Object</returns>
-        T Get<T>(Guid id) where T : class;
+        Task<T> Get<T>(string id) where T : class;
 
         /// <summary>
         /// Returns all objects
         /// </summary>
         /// <typeparam name="T">Object</typeparam>
         /// <returns>IEnumerable objects</returns>
-        IEnumerable<T> GetAll<T>() where T : class;
+        Task<IEnumerable<T>> GetAll<T>() where T : class;
 
         /// <summary>
         /// Returns objects set with condition
@@ -80,7 +73,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Groups
         /// <typeparam name="T">Object</typeparam>
         /// <param name="predicate">Lambda function</param>
         /// <returns>IEnumerable objects</returns>
-        IEnumerable<T> Find<T>(Func<T, Boolean> predicate) where T : class;
+        Task<IEnumerable<T>> Find<T>(Func<T, Boolean> predicate) where T : class;
 
         /// <summary>
         /// Immediate loading objects with condition
@@ -88,7 +81,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Groups
         /// <typeparam name="T">Object</typeparam>
         /// <param name="includeProperties">Expression trees</param>
         /// <returns>IEnumerable objects</returns>
-        IEnumerable<T> GetWithInclude<T>(params Expression<Func<T,
+        Task<IEnumerable<T>> GetWithInclude<T>(params Expression<Func<T,
             object>>[] includeProperties) where T : class;
 
         /// <summary>
@@ -98,12 +91,12 @@ namespace WasteProducts.DataAccess.Common.Repositories.Groups
         /// <param name="predicate">Lambda function</param>
         /// <param name="includeProperties">Expression trees</param>
         /// <returns>IEnumerable objects</returns>
-        IEnumerable<T> GetWithInclude<T>(Func<T, bool> predicate,
+        Task<IEnumerable<T>> GetWithInclude<T>(Func<T, bool> predicate,
             params Expression<Func<T, object>>[] includeProperties) where T : class;
 
         /// <summary>
         /// Save model 
         /// </summary>
-        void Save();
+        Task Save();
     }
 }
