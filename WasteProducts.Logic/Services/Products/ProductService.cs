@@ -39,7 +39,9 @@ namespace WasteProducts.Logic.Services.Products
         /// <inheritdoc/>
         public Task<string> Add(Stream imageStream)
         {
-            var barcode = _barcodeService.GetBarcodeByStreamAsync(imageStream).Result;
+            if (imageStream == null) return null;
+
+            var barcode = _barcodeService.GetBarcodeAsync(imageStream).Result;
             if (barcode == null) return null;
 
             if (IsProductsInDB(

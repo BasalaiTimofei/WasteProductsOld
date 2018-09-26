@@ -11,6 +11,6 @@ namespace WasteProducts.Logic.Common.Services.Barcods
         /// </summary>
         /// <param name="stream">Photo stream barcode.</param>
         /// <returns>Model of Barcode.</returns>
-        Task<Barcode> GetBarcodeByStreamAsync(Stream stream);
+        Task<Barcode> GetBarcodeAsync(Stream stream);
     }
 }

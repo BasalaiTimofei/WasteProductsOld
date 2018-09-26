@@ -70,9 +70,9 @@ namespace WasteProducts.Web.Controllers.Api
         public async Task<IHttpActionResult> CreateProduct()
         {
             var image = HttpContext.Current.Request.Files[0].InputStream;
+            if (image == null) return BadRequest();
 
             var id = await _productService.Add(image);
-            if (id == null) return BadRequest();
 
             return Created("api/products/" + id, GetById(id));
         }
