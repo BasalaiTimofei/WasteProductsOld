@@ -2,7 +2,6 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -407,21 +406,28 @@ namespace WasteProducts.Logic.Tests.UserTests
         [Test]
         public async Task UserIntegrTest_24AddingNewProductsToDB()
         {
-            using (var prodService = _kernel.Get<IProductService>())
+            //string productName = "Waste product";
+            var barcode = new Barcode
             {
+<<<<<<< HEAD
                 string id;
                 var path = @"Test_images\Test image.jpg";
+=======
+                Id = Guid.NewGuid().ToString(),
+                Code = "987654321098",
+                ProductName = "New product",
+                Brend = "Some Brand",
+                Country = "Some country"
+            };
+>>>>>>> parent of 7b44fa7... Merge branch 'develop' into feature/Products_Big_Refactoring
 
-                using (var imageStream = new FileStream(path, FileMode.Open))
-                {
-                    id = await prodService.Add(imageStream);
-                }
-                
-                var product = await prodService.GetById(id);
+            using (var prodService = _kernel.Get<IProductService>())
+            {
+                await prodService.Add(barcode);
+                var product = await prodService.GetByName(barcode.ProductName);
 
                 Assert.IsNotNull(product);
-                //Это утверждение теперь не имеет смысла, потому что мы не знаем имени продукта
-                //Assert.AreEqual(barcode.ProductName, product.Name);
+                Assert.AreEqual(barcode.ProductName, product.Name);
                 _productIds.Add(product.Id);
             }
         }
