@@ -248,6 +248,7 @@
     <Compile Include="Controllers\Mvc\HomeController.cs" />
     <Compile Include="ExceptionHandling\Api\ApiUnhandledExceptionLogger.cs" />
     <Compile Include="ExceptionHandling\Api\ApiValidationExceptionFilterAttribute.cs" />
+    <Compile Include="ExceptionHandling\Api\AppExceptionFilterAttribute.cs" />
     <Compile Include="ExceptionHandling\Api\WasteExceptionFilterAttribute.cs" />
     <Compile Include="ExceptionHandling\Exceptions\WasteException.cs" />
     <Compile Include="ExceptionHandling\Mvc\MvUnhandledExceptionFilterAttribute.cs" />
@@ -261,6 +262,7 @@
     <Compile Include="Models\Users\NewPassword.cs" />
     <Compile Include="Models\Users\ProductDescriprion.cs" />
     <Compile Include="Models\Users\RegisterUser.cs" />
+    <Compile Include="Models\Users\UserNameModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\ActionResults\ElmahResult.cs" />
@@ -271,6 +273,7 @@
     <Compile Include="Validators\Users\LoginByNameValidator.cs" />
     <Compile Include="Validators\Users\NewPasswordValidator.cs" />
     <Compile Include="Validators\Users\RegisterUserValidator.cs" />
+    <Compile Include="Validators\Users\UserNameModelValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="NLog.config">

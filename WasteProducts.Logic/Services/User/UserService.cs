@@ -87,11 +87,6 @@ namespace WasteProducts.Logic.Services.Users
 
         public async Task<bool> ChangePasswordAsync(string userId, string oldPassword, string newPassword)
         {
-            if (userId == null || oldPassword == null || newPassword == null)
-            {
-                return false;
-            }
-
             await _repo.ChangePasswordAsync(userId, newPassword, oldPassword);
             return true;
         }
@@ -155,7 +150,7 @@ namespace WasteProducts.Logic.Services.Users
 
         public async Task<bool> UpdateEmailAsync(string userId, string newEmail)
         {
-            if (userId == null || newEmail == null || !_mailService.IsValidEmail(newEmail))
+            if (!_mailService.IsValidEmail(newEmail))
             {
                 return false;
             }
