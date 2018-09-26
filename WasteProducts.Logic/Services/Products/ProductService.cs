@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using Ninject;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.Logic.Common.Models.Barcods;
