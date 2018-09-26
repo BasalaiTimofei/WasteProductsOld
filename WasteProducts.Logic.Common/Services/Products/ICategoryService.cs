@@ -15,7 +15,7 @@ namespace WasteProducts.Logic.Common.Services.Products
         /// </summary>
         /// <param name="name">The name of the category to be added.</param>
         /// <returns>A task that represents the add operation.
-        /// The task result contains the id of the category written to the database.</returns>
+        /// The task result contains the name of the category written to the database.</returns>
         Task<string> Add(string name);
 
         /// <summary>
