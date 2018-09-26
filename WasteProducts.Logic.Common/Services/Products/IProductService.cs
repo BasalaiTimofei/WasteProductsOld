@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
@@ -16,7 +17,7 @@ namespace WasteProducts.Logic.Common.Services.Products
         /// </summary>
         /// <param name="barcode">Barcode of the product to be added.</param>
         /// <returns>Represents added products's id.</returns>
-        Task<string> Add(Barcode barcode);
+        Task<string> Add(Stream imageStream);
 
         /// <summary>
         /// Gets the product by its id.

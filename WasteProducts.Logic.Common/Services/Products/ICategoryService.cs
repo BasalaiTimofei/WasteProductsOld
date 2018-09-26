@@ -17,19 +17,38 @@ namespace WasteProducts.Logic.Common.Services.Products
         /// <returns>Boolean represents whether the addition is successful or not.</returns>
         Task<string> Add(string name);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nameRange"></param>
+        /// <returns></returns>
         Task<IEnumerable<string>> AddRange(IEnumerable<string> nameRange);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         Task<IEnumerable<Category>> GetAll();
             
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         Task<Category> GetById(string id);
 
-            /// <summary>
+        /// <summary>
         /// Returns a spicific category by its name.
         /// </summary>
         /// <param name="name">The name of the category to be gotten.</param>
         /// <returns>The specific category to be returned.</returns>
         Task<Category> GetByName(string name);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
         Task Update(Category category);
 
         /// <summary>

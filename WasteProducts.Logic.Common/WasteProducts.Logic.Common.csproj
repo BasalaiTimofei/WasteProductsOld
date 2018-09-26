@@ -107,6 +107,7 @@
       <DependentUpon>QueryConverter.resx</DependentUpon>
     </Compile>
     <Compile Include="Services\Barcods\IBarcodeCatalogSearchService.cs" />
+    <Compile Include="Services\Barcods\IBarcodeService.cs" />
     <Compile Include="Services\Barcods\ICatalog.cs" />
     <Compile Include="Services\Barcods\IHttpHelper.cs" />
     <Compile Include="Services\Diagnostic\IDbSeedService.cs" />

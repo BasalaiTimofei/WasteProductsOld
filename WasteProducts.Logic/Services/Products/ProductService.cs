@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
+using WasteProducts.Logic.Common.Services.Barcods;
 using WasteProducts.Logic.Common.Services.Products;
 
 namespace WasteProducts.Logic.Services.Products
@@ -20,10 +22,14 @@ namespace WasteProducts.Logic.Services.Products
     {
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IBarcodeService _barcodeService;
         private readonly IMapper _mapper;
         private bool _disposed;
 
-        public ProductService(IProductRepository productRepository, ICategoryRepository categoryRepository, IMapper mapper)
+        public ProductService(IProductRepository productRepository, 
+            ICategoryRepository categoryRepository, 
+            IBarcodeService barcodeService, 
+            IMapper mapper)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
@@ -31,8 +37,13 @@ namespace WasteProducts.Logic.Services.Products
         }
 
         /// <inheritdoc/>
-        public Task<string> Add(Barcode barcode)
+        public Task<string> Add(Stream imageStream)
         {
+            if (imageStream == null) return null;
+
+            var barcode = _barcodeService.GetBarcodeAsync(imageStream).Result;
+            if (barcode == null) return null;
+
             if (IsProductsInDB(
                 p => string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
                 out var products))
@@ -42,7 +53,6 @@ namespace WasteProducts.Logic.Services.Products
 
             var newProduct = new Product
             {
-                
                 Barcode = barcode,
                 Name = barcode.ProductName
             };

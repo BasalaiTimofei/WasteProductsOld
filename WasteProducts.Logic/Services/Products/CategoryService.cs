@@ -24,6 +24,7 @@ namespace WasteProducts.Logic.Services.Products
             _mapper = mapper;
         }
 
+        /// <inheritdoc/>
         public Task<string> Add(string name)
         {
             if (IsCategoryInDB(p =>
@@ -35,6 +36,7 @@ namespace WasteProducts.Logic.Services.Products
                 .ContinueWith(c => c.Result);
         }
 
+        /// <inheritdoc/>
         public Task<IEnumerable<string>> AddRange(IEnumerable<string> nameRange)
         {
             var categoriesDB = _categoryRepository.SelectAllAsync().Result;
@@ -54,22 +56,26 @@ namespace WasteProducts.Logic.Services.Products
             return _categoryRepository.AddRangeAsync(_mapper.Map<IEnumerable<CategoryDB>>(newCategoies));
         }
 
+        /// <inheritdoc/>
         public Task<IEnumerable<Category>> GetAll()
         {
             return _categoryRepository.SelectAllAsync()
                 .ContinueWith(t => _mapper.Map<IEnumerable<Category>>(t.Result));
         }
 
+        /// <inheritdoc/>
         public Task<Category> GetById(string id)
         {
             return _categoryRepository.GetByIdAsync(id).ContinueWith(t => _mapper.Map<Category>(t.Result));
         }
 
+        /// <inheritdoc/>
         public Task<Category> GetByName(string name)
         {
             return _categoryRepository.GetByNameAsync(name).ContinueWith(t => _mapper.Map<Category>(t.Result));
         }
 
+        /// <inheritdoc/>
         public Task Update(Category category)
         {
             if (!IsCategoryInDB(c =>
@@ -79,6 +85,7 @@ namespace WasteProducts.Logic.Services.Products
             return _categoryRepository.UpdateAsync(_mapper.Map<CategoryDB>(category));
         }
 
+        /// <inheritdoc/>
         public Task Delete(string id)
         {
             if (!IsCategoryInDB(p =>

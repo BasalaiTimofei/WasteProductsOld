@@ -62,18 +62,20 @@ namespace WasteProducts.Web.Controllers.Api
             return Ok(await _productService.GetById(id));
         }
 
-        //[SwaggerResponseRemoveDefaults]
-        //[SwaggerResponse(HttpStatusCode.Created, "Product was successfully added", typeof(Product))]
-        //[SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect image")]
-        //[SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
-        //[HttpPost, Route("")]
-        //public async Task<IHttpActionResult> CreateProduct()
-        //{
-        //    var image = HttpContext.Current.Request.Files[0].InputStream;
-        //    var id = await _productService.Add(image);
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.Created, "Product was successfully added", typeof(Product))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect image")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
+        [HttpPost, Route("")]
+        public async Task<IHttpActionResult> CreateProduct()
+        {
+            var image = HttpContext.Current.Request.Files[0].InputStream;
+            if (image == null) return BadRequest();
 
-        //    return Created("api/products/"+id, GetById(id));
-        //}
+            var id = await _productService.Add(image);
+
+            return Created("api/products/" + id, GetById(id));
+        }
 
         /// <summary>
         /// Deletes the product by id.
