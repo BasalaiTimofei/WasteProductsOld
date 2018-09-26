@@ -66,18 +66,13 @@ namespace WasteProducts.Logic.Services.Barcods
                     code = _scanner.ScanBySpire(_stream);
                 }
             }
-            if (code == null || code.Length != 8 || code.Length != 4)
-            {
-                code = null;
-            }
-            if (code != null)
+            if (code.Length == 8 || code.Length == 4)
             {
                 if (await GetByCodeAsync(code) != null)
                 {
                     barcode = await _searcher.GetAsync(code);
                 }
             }
-
             return barcode;
         }
 
