@@ -7,11 +7,13 @@ import { takeUntil } from 'rxjs/operators';
 
 import { SearchProduct } from '../../models/search-product';
 import { SearchService } from '../../services/search/search.service';
+import { ImagePreviewService } from '../../services/image-preview/image-preview.service';
+import { ImagePreviewOverlay } from '../image-preview/image-preview-overlay';
 
 @Component({
   selector: 'app-search-result',
   templateUrl: './search-result.component.html',
-  styleUrls: ['./search-result.component.css']
+  styleUrls: ['./search-result.component.css', './search-result.component.scss']
 })
 export class SearchresultComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
@@ -25,7 +27,7 @@ export class SearchresultComponent implements OnDestroy {
   pageIndex = 0;
   length = 0;
 
-  constructor(private searchService: SearchService, private route: ActivatedRoute) {
+  constructor(private searchService: SearchService, private route: ActivatedRoute, private previewDialog: ImagePreviewService) {
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe(({ query }: Params) => {
         if (!query) {
             return;
@@ -57,7 +59,13 @@ export class SearchresultComponent implements OnDestroy {
             this.statusCode = e.status;
         }
     });
-}
+  }
+
+  showPreview() {
+    const dialog: ImagePreviewOverlay = this.previewDialog.open({
+      image: { name: 'image_1.jpg', url: 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg' }
+    });
+  }
 
   public changePageEvent(event?: PageEvent) {
     if (event != null) {
