@@ -3,43 +3,97 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Ninject.Extensions.Logging;
+using Swagger.Net.Annotations;
+using WasteProducts.Logic.Common.Models.Barcods;
+using WasteProducts.Logic.Common.Models.Products;
+using WasteProducts.Logic.Common.Services.Products;
 
 namespace WasteProducts.Web.Controllers.Api
 {
     [RoutePrefix("api/category")]
     public class CategoryController : BaseApiController
     {
-        public CategoryController(ILogger logger) : base(logger)
+        private readonly ICategoryService _categoryService;
+
+        public CategoryController(ICategoryService categoryService, ILogger logger) : base(logger)
         {
+            _categoryService = categoryService;
         }
 
-        // GET api/<controller>
-        public IEnumerable<string> Get()
+
+        /// <summary>
+        /// Gets the list of all categories.
+        /// </summary>
+        /// <returns>All categories from database.</returns>
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "GetAll categories result", typeof(IEnumerable<Category>))]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Categories were not found in database")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
+        [HttpGet, Route("")]
+        public async Task<IHttpActionResult> GetAll()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(await _categoryService.GetAll());
         }
 
-        // GET api/<controller>/5
-        public string Get(int id)
+        /// <summary>
+        /// Gets category by id.
+        /// </summary>
+        /// <param name="id">Category's id.</param>
+        /// <returns>Category with the specific id.</returns>
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "GetById category result", typeof(Category))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect Id")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
+        [HttpGet, Route("{id}")]
+        public async Task<IHttpActionResult> GetById([FromUri] string id)
         {
-            return "value";
+            return Ok(await _categoryService.GetById(id));
         }
 
-        // POST api/<controller>
-        public void Post([FromBody]string value)
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.Created, "Category was successfully created", typeof(Category))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect name")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
+        [HttpPost, Route("")]
+        public async Task<IHttpActionResult> CreateCategory([FromBody]string name)
         {
+            var id = await _categoryService.Add(name);
+
+            return Created("api/category/" + id, GetById(id));
         }
 
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        /// <summary>
+        /// Deletes the category by id.
+        /// </summary>
+        /// <param name="id">Id of the category to be deleted.</param>
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.NoContent, "Product was successfully deleted")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect Id")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
+        [HttpDelete, Route("{id}")]
+        public async Task Delete([FromUri] string id)
         {
+            await _categoryService.Delete(id);
         }
 
-        // DELETE api/<controller>/5
-        public void Delete(int id)
+        /// <summary>
+        /// Updates the category .
+        /// </summary>
+        /// <param name="data">Data by which the category should be updated.</param>
+        /// <returns>Updated category.</returns>
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Product was successfully updated", typeof(Category))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect data")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
+        [HttpPut, Route("")]
+        public async Task<IHttpActionResult> UpdateCategory([FromBody]Category data)
         {
+            await _categoryService.Update(data);
+
+            return Ok(GetById(data.Id));
         }
     }
 }
