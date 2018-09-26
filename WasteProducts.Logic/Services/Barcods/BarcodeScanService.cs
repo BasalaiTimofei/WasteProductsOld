@@ -33,12 +33,18 @@ namespace WasteProducts.Logic.Services.Barcods
         /// <inheritdoc />
         public string ScanByZxing(Stream stream)
         {
-            string decoded = "";
             _image = Resize(stream, 400, 400);
+            var barcodeReader = new BarcodeReader
+            {
+                Options = new ZXing.Common.DecodingOptions()
+                {
+                    TryHarder = true
+                },
+                AutoRotate = true
+            };
+            var result = barcodeReader.Decode(_image);
 
-            BarcodeReader Reader = new BarcodeReader();
-            Result result = Reader.Decode(_image);
-            decoded = result.ToString().Trim();
+            string decoded = result.ToString().Trim();
 
             return decoded;
         }

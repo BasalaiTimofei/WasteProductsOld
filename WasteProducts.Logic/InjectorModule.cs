@@ -59,6 +59,8 @@ namespace WasteProducts.Logic
             BindProductServices();
             BindBarcodeServices();
 
+            Bind<IBarcodeFactory>().ToFactory();
+
             Bind<ISearchService>().To<LuceneSearchService>().ValidateArguments(typeof(BoostedSearchQuery));
 
             Bind<INotificationService>().To<NotificationService>();

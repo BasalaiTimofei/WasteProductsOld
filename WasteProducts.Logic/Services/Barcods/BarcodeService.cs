@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Castle.Core.Logging;
 using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Repositories.Barcods;
+using WasteProducts.Logic.Common.Factories;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Services.Barcods;
 
@@ -12,20 +15,32 @@ namespace WasteProducts.Logic.Services.Barcods
     /// <inheritdoc />
     public class BarcodeService : IBarcodeService
     {
+        private Bitmap _image;
+        private Stream _stream;
         private readonly IBarcodeScanService _scanner;
         private readonly IBarcodeCatalogSearchService _searcher;
         private readonly IBarcodeRepository _repository;
+        private readonly IBarcodeFactory _barcodeFactory;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
 
-        public BarcodeService(IBarcodeScanService scanner, IBarcodeCatalogSearchService searcher, IBarcodeRepository repository, ILogger logger, IMapper mapper)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="barcodeFactory">IBarcodeFactory implementation IBarcodeScanService,
+        /// IBarcodeCatalogSearchService, IBarcodeRepository</param>
+        /// <param name="logger">NLog logger</param>
+        /// <param name="mapper">AutoMapperr</param>
+        public BarcodeService(IBarcodeFactory barcodeFactory, ILogger logger, IMapper mapper)
         {
-            _scanner = scanner;
-            _searcher = searcher;
-            _repository = repository;
+            _barcodeFactory = barcodeFactory;
+            _scanner = _barcodeFactory.CreateScanService();
+            _searcher = _barcodeFactory.CreateSearchService();
+            _repository = _barcodeFactory.CreateRepository();
             _logger = logger;
             _mapper = mapper;
         }
+
         /// <inheritdoc />
         public Task<string> AddAsync(Barcode barcode)
         {
@@ -33,16 +48,36 @@ namespace WasteProducts.Logic.Services.Barcods
         }
 
         /// <inheritdoc />
-        public async Task<Barcode> GetBarcodeAsync(Stream stream)
+        public async Task<Barcode> GetBarcodeByStreamAsync(Stream stream)
         {
-            string code = "";
+            string code = null;
             Barcode barcode = null;
 
-            code = _scanner.ScanBySpire(stream);
-            if (await GetByCodeAsync(code) != null)
+            _image = _scanner.Resize(stream, 400, 400);
+            using (_stream = new MemoryStream())
             {
-                barcode = await _searcher.GetAsync(code);
+                _image.Save(_stream, ImageFormat.Bmp);
+                try
+                {
+                    code = _scanner.ScanByZxing(_stream);
+                }
+                catch
+                {
+                    code = _scanner.ScanBySpire(_stream);
+                }
             }
+            if (code == null || code.Length != 8 || code.Length != 4)
+            {
+                code = null;
+            }
+            if (code != null)
+            {
+                if (await GetByCodeAsync(code) != null)
+                {
+                    barcode = await _searcher.GetAsync(code);
+                }
+            }
+
             return barcode;
         }
 
