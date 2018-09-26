@@ -17,6 +17,8 @@ namespace WasteProducts.Web.Extensions
         {
             var dependencyResolver = new NinjectDependencyResolver(NinjectWebCommon.Bootstrapper.Kernel);
 
+            GlobalHost.DependencyResolver = dependencyResolver;
+
             var hubConfig = new HubConfiguration
             {
                 Resolver = dependencyResolver,
@@ -24,7 +26,7 @@ namespace WasteProducts.Web.Extensions
                 EnableDetailedErrors = true
             };
 
-            app.MapSignalR("/hubs", hubConfig);
+            app.MapSignalR(hubConfig);
         }
     }
 }

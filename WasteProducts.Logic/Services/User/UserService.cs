@@ -112,16 +112,16 @@ namespace WasteProducts.Logic.Services.Users
         }
 
 
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        public async Task<IEnumerable<User>> GetAllAsync()
         {
-            IEnumerable<UserDAL> allUserDBs = await _repo.GetAllAsync(true);
+            IEnumerable<UserDAL> allUserDBs = await _repo.GetAllAsync();
             var allUsers = _mapper.Map<IEnumerable<User>>(allUserDBs);
             return allUsers;
         }
 
-        public async Task<User> GetUserAsync(string id)
+        public async Task<User> GetAsync(string id)
         {
-            var userDB = await _repo.GetAsync(id, true);
+            var userDB = await _repo.GetAsync(id);
             var user = MapTo<User>(userDB);
             return user;
         }
@@ -189,9 +189,9 @@ namespace WasteProducts.Logic.Services.Users
             return await _repo.AddProductAsync(userId, productId, rating, description);
         }
 
-        public Task<IList<ProductDescription>> GetProductDescriptionsAsync(string userId)
+        public Task<IList<UserProduct>> GetProductsAsync(string userId)
         {
-            return _repo.GetProductDescriptionsAsync(userId).ContinueWith(t => _mapper.Map<IList<ProductDescription>>(t.Result));
+            return _repo.GetUserProductDescriptionsAsync(userId).ContinueWith(t => _mapper.Map<IList<UserProduct>>(t.Result));
         }
 
         public async Task<bool> UpdateProductDescriptionAsync(string userId, string productId, int rating, string description)

@@ -110,17 +110,15 @@ namespace WasteProducts.DataAccess.Common.Repositories.Users
         /// <summary>
         /// Gets all users from DB.
         /// </summary>
-        /// <param name="initiateNavigationalprops">Specifies whether navigational properties will be included or no.</param>
         /// <return>All users of the application.</returns>
-        Task<IEnumerable<UserDAL>> GetAllAsync(bool initiateNavigationalProps);
+        Task<IEnumerable<UserDAL>> GetAllAsync();
 
         /// <summary>
         /// Use this method to select user by its ID.
         /// </summary>
         /// <param name="userId">ID of the user.</param>
-        /// <param name="initiateNavigationalProps">Specifies whether navigational properties will be included or no.</param>
         /// <returns>DB User entity.</returns>
-        Task<UserDAL> GetAsync(string userId, bool initiateNavigationalProps);
+        Task<UserDAL> GetAsync(string userId);
 
         /// <summary>
         /// Return a user with the specified email and password or null if there is no match.
@@ -171,7 +169,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Users
         /// </summary>
         /// <param name="userId">ID of a user.</param>
         /// <returns>User's product descriptions.</returns>
-        Task<IList<UserProductDescriptionDB>> GetProductDescriptionsAsync(string userId);
+        Task<IList<UserProductDescriptionDB>> GetUserProductDescriptionsAsync(string userId);
 
         /// <summary>
         /// Get the names of the roles a user is a member of.
