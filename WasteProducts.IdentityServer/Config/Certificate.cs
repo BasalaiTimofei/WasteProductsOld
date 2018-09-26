@@ -1,8 +1,4 @@
-﻿// <copyright file="Certificate.cs">
-//    2017 - Johan Boström
-// </copyright>
-
-using System.IO;
+﻿using System.IO;
 using System.Security.Cryptography.X509Certificates;
 
 namespace WasteProducts.IdentityServer.Config

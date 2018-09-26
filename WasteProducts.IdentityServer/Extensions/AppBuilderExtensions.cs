@@ -1,19 +1,14 @@
-﻿// <copyright file="AppBuilderExtensions.cs">
-//    2017 - Johan Boström
-// </copyright>
-
-using System.Security.Cryptography.X509Certificates;
+﻿using Owin;
 using IdentityServer3.Core.Configuration;
 using IdentityServer3.Core.Services;
 using IdentityServer3.EntityFramework;
+using System.Security.Cryptography.X509Certificates;
 using WasteProducts.IdentityServer.Config;
 using WasteProducts.IdentityServer.Db;
 using WasteProducts.IdentityServer.Managers;
 using WasteProducts.IdentityServer.Services;
 using WasteProducts.IdentityServer.Stores;
 using WasteProducts.IdentityServer.Infrastructure;
-
-using Owin;
 
 namespace WasteProducts.IdentityServer.Extensions
 {

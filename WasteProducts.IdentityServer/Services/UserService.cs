@@ -1,8 +1,4 @@
-﻿// <copyright file="UserService.cs">
-//    2017 - Johan Boström
-// </copyright>
-
-using IdentityServer3.AspNetIdentity;
+﻿using IdentityServer3.AspNetIdentity;
 using WasteProducts.IdentityServer.Managers;
 using WasteProducts.IdentityServer.Models;
 

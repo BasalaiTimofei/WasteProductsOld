@@ -1,8 +1,4 @@
-﻿// <copyright file="DefaultSetup.cs">
-//    2017 - Johan Boström
-// </copyright>
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using IdentityServer3.Core.Models;
@@ -17,7 +13,6 @@ namespace WasteProducts.IdentityServer.Config
 {
     public class DefaultSetup
     {
-
         public static void Configure(EntityFrameworkServiceOptions options)
         {
            

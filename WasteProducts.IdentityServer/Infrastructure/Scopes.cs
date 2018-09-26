@@ -1,18 +1,12 @@
-﻿using System;
+﻿using IdentityServer3.Core.Models;
 using System.Collections.Generic;
-using System.Linq;
-
-using IdentityServer3.Core.Models;
 
 namespace WasteProducts.IdentityServer.Infrastructure
 {
     public class Scopes
     {
-      
-
         public static IEnumerable<Scope> Get()
         {
-
             return new[]
                 {
                     ////////////////////////
@@ -66,8 +60,6 @@ namespace WasteProducts.IdentityServer.Infrastructure
                             new Secret(Constants.secret_write_.Sha256())
                         }
                     }
-
-
                 };
         }
     }

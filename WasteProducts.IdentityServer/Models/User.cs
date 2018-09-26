@@ -1,8 +1,4 @@
-﻿// <copyright file="User.cs">
-//    2017 - Johan Boström
-// </copyright>
-
-using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace WasteProducts.IdentityServer.Models
 {

@@ -1,8 +1,4 @@
-﻿// <copyright file="RoleManager.cs">
-//    2017 - Johan Boström
-// </copyright>
-
-using WasteProducts.IdentityServer.Stores;
+﻿using WasteProducts.IdentityServer.Stores;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
