@@ -13,11 +13,18 @@ namespace WasteProducts.Logic.Common.Services.Products
     public interface IProductService : IDisposable
     {
         /// <summary>
-        /// Tries to add a new product by barcode.
+        /// Tries to add a new product by stream from input image with barcode.
         /// </summary>
-        /// <param name="barcode">Barcode of the product to be added.</param>
+        /// <param name="imageStream">Stream from input image.</param>
         /// <returns>Represents added products's id.</returns>
         Task<string> Add(Stream imageStream);
+
+        /// <summary>
+        /// Tries to add a new product by name.
+        /// </summary>
+        /// <param name="name">Name of the product to be added.</param>
+        /// <returns>Represents added products's id.</returns>
+        Task<string> Add(string name);
 
         /// <summary>
         /// Gets the product by its id.

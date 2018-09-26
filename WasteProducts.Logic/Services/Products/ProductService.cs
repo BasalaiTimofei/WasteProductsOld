@@ -33,6 +33,7 @@ namespace WasteProducts.Logic.Services.Products
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
+            _barcodeService = barcodeService;
             _mapper = mapper;
         }
 
@@ -55,6 +56,25 @@ namespace WasteProducts.Logic.Services.Products
                 Name = barcode.ProductName
             };
             
+            return _productRepository.AddAsync(_mapper.Map<ProductDB>(newProduct))
+                .ContinueWith(t => t.Result);
+        }
+
+        /// <inheritdoc/>
+        public Task<string> Add(string name)
+        {
+            if (IsProductsInDB(
+                p => string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
+                out var products))
+            {
+                return null;
+            }
+
+            var newProduct = new Product
+            {
+                Name = name,
+            };
+
             return _productRepository.AddAsync(_mapper.Map<ProductDB>(newProduct))
                 .ContinueWith(t => t.Result);
         }

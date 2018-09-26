@@ -32,7 +32,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
             product.Created = DateTime.UtcNow;
             _context.Products.Add(product);
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return product.Id;
         }
@@ -46,7 +46,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
             if (! (await _context.Products.ContainsAsync(product))) return;
             product.Marked = true;
 
-            await UpdateAsync(product);
+            await UpdateAsync(product).ConfigureAwait(false);
             
         }
 
@@ -68,7 +68,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
 
         public async Task<ProductDB> GetByNameAsync(string name)
         {
-            return await _context.Products.FirstOrDefaultAsync(p => p.Name == name); 
+            return await _context.Products.FirstOrDefaultAsync(p => p.Name == name).ConfigureAwait(false); 
         }
 
         /// <summary>
