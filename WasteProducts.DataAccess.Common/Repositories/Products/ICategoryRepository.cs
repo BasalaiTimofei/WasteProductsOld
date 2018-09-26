@@ -34,10 +34,6 @@ namespace WasteProducts.DataAccess.Common.Repositories.Products
         Task DeleteAsync(CategoryDB category);
 
         /// <summary>
-        /// Deletes the specific category by id
-        /// </summary>
-        /// <param name="id">Represents a specific category id to delete.</param>
-        /// <summary>
         /// Deletes the specific category by its id.
         /// </summary>
         /// <param name="id">Represents the id of the specific category to delete.</param>
