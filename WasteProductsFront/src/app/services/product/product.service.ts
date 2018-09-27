@@ -49,7 +49,7 @@ export class ProductService extends BaseHttpService {
 
   getUserProducts() {
     const claims = this.authServise.getClaims();
-    const url = `${environment.apiHostUrl}/api/user/${claims.sub}/products`;
+    const url = `${environment.apiHostUrl}/api/user/0/products`;
     return this.httpService.get<UserProduct[]>(url);
    }
 
