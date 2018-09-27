@@ -47,7 +47,7 @@ const routes: Routes = [
   { path: 'groups', component: GroupsComponent },
   { path: 'user/settings', component: SettingsComponent },
   { path: 'products/myproducts', component: ToListComponent },
-  { path: 'groups/mygroups', component: GroupsOfUserComponent}
+  { path: 'groups/mygroups', component: GroupsOfUserComponent},
   { path: 'searchresults/:query', component: SearchresultComponent },
   { path: '**', component: NotFoundComponent },
 ];
