@@ -23,7 +23,7 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
 
         private readonly UserManager<UserDB> _manager;
 
-        private readonly Faker _faker; 
+        private readonly Faker _faker;
 
         private bool _disposed;
 
@@ -62,8 +62,6 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
             await CreateUsers();
             var user = AddFriendsToFirstUser();
 
-            CreateProductCategories();
-
             CreateProductsAndAddThemToTheUser(user);
 
             CreateGroups();
@@ -77,7 +75,7 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                     var userToCreate = new UserDB
                     {
                         Id = i.ToString(),
-                        UserName = _faker.Name.FullName(),
+                        UserName = $"UserName{i}",
                         Email = _faker.Internet.Email(),
                         EmailConfirmed = true,
                         Created = DateTime.UtcNow.AddDays(-15)
@@ -111,29 +109,24 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                 return user0;
             }
 
-            void CreateProductCategories()
+            void CreateProductsAndAddThemToTheUser(UserDB userDB)
             {
-                var category0 = new CategoryDB
+                var category1 = new CategoryDB
                 {
-                    Id = 0,
+                    Id = Guid.NewGuid().ToString(),
                     Name = "Первая категория",
                     Description = "Первая категория товаров, хорошие вещи"
                 };
-                var category1 = new CategoryDB
+                var category2 = new CategoryDB
                 {
-                    Id = 1,
+                    Id = Guid.NewGuid().ToString(),
                     Name = "Вторая категория",
                     Description = "Вторая категория товаров, плохие вещи"
                 };
 
-                _context.Categories.Add(category0);
                 _context.Categories.Add(category1);
-            }
+                _context.Categories.Add(category2);
 
-            void CreateProductsAndAddThemToTheUser(UserDB userDB)
-            {
-                var category1 = _context.Categories.Find(0);
-                var category2 = _context.Categories.Find(1);
                 for (int i = 0; i < 6; i++)
                 {
                     var prod = new ProductDB
