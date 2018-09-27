@@ -47,7 +47,7 @@ export class ProductService extends BaseHttpService {
   }
 
   getUserProducts() {
-    const url = `${environment.apiHostUrl}/api/user/${this.getUserId()}/products`;
+    const url = `${environment.apiHostUrl}/api/user/0/products`;
     return this.httpService.get<UserProduct[]>(url);
    }
 
