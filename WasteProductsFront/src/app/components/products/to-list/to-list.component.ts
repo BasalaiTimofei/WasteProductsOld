@@ -30,7 +30,7 @@ export class ToListComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-this.productService.loadUserProducts().subscribe(
+this.productService.getUserProducts().subscribe(
     res => {
       this.userProducts = res;
       // tslint:disable-next-line:prefer-const

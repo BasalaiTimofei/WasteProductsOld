@@ -14,7 +14,7 @@ export class FriendsComponent implements OnInit {
   constructor(private srv: UserService) { }
 
   ngOnInit() {
-    this.srv.loadFriends().subscribe(
+    this.srv.getFriends().subscribe(
     res => this.friends = res,
     err => console.error(err));
   }

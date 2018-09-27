@@ -9,6 +9,7 @@ import { UserProduct } from '../../models/users/user-product';
 import { Product } from '../../models/products/product';
 import { Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { AuthenticationService } from '../../modules/account/services/authentication.service';
 
 @Injectable({
   providedIn: 'root'
@@ -42,12 +43,14 @@ export class ProductService extends BaseHttpService {
 
   private getProductsUrl = `http://localhost:2189/api/user/0/products`;
 
-  constructor(httpService: HttpClient, loggingService: LoggingService) {
+  constructor(httpService: HttpClient, private authServise: AuthenticationService, loggingService: LoggingService) {
     super(httpService, loggingService);
   }
 
-  loadUserProducts() {
-    return this.httpService.get<UserProduct[]>(this.getProductsUrl);
+  getUserProducts() {
+    const claims = this.authServise.getClaims();
+    const url = `${environment.apiHostUrl}/api/user/${claims.sub}/products`;
+    return this.httpService.get<UserProduct[]>(url);
    }
 
    getProducts(): Observable<UserProduct[ ]> {
