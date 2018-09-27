@@ -53,7 +53,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Users
         /// <param name="rating">Rating from 0 to 10 of this product given by the user.</param>
         /// <param name="description">Textual description of the product given by the user.</param>
         /// <returns>Boolean represents whether operation succeed or not.</returns>
-        Task<bool> AddProductAsync(string userId, string productId, int rating, string description);
+        Task AddProductAsync(string userId, string productId, int rating, string description);
 
         /// <summary>
         /// Add a user to a role.
@@ -98,7 +98,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Users
         /// <param name="userId">ID of user who wants to remove the specific product from his/her list of products.</param>
         /// <param name="productId">ID of specific product to remove from the user's list of products.</param>
         /// <returns>Boolean represents whether operation succeed or not.</returns>
-        Task<bool> DeleteProductAsync(string userId, string productId);
+        Task DeleteProductAsync(string userId, string productId);
 
         /// <summary>
         /// Generates a password reset token for the specific user and returns tuple where item1 is ID of the user and item2 is the token.
@@ -216,7 +216,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Users
         /// <param name="token">Reset password token</param>
         /// <param name="newPassword">New password of the user.</param>
         /// <returns>Boolean represents whether operation succeed or no.</returns>
-        Task<bool> ResetPasswordAsync(string userId, string token, string newPassword);
+        Task ResetPasswordAsync(string userId, string token, string newPassword);
 
         /// <summary>
         /// Confirms group invitation if isConfirmed == true or deletes invite if isConfirmed == false.

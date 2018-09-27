@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Security.Claims;
 using WasteProducts.Logic.Resources;
+using FluentValidation;
 
 namespace WasteProducts.Logic.Services.Users
 {
@@ -42,10 +43,10 @@ namespace WasteProducts.Logic.Services.Users
 
         public async Task<(string id, string token)> RegisterAsync(string email, string userName, string password, string path)
         {
-            if (email == null || userName == null || password == null ||
-            !_mailService.IsValidEmail(email) || !(await _repo.IsEmailAvailableAsync(email)))
+            if (!_mailService.IsValidEmail(email) || !(await _repo.IsEmailAvailableAsync(email)))
             {
-                return(null, null);
+                // throws 409 conflict
+                throw new OperationCanceledException("Please provide valid and unique Email.");
             }
             var (id, token) = await _repo.AddAsync(email, userName, password);
             if(path != null)
@@ -64,10 +65,6 @@ namespace WasteProducts.Logic.Services.Users
         public async Task<User> LogInByEmailAsync(string email, string password)
         {
             var userDB = await _repo.GetByEmailAndPasswordAsync(email, password);
-            if (userDB == null)
-            {
-                return null;
-            }
 
             var loggedInUser = MapTo<User>(userDB);
             return loggedInUser;
@@ -76,24 +73,19 @@ namespace WasteProducts.Logic.Services.Users
         public async Task<User> LogInByNameAsync(string userName, string password)
         {
             var userDB = await _repo.GetByNameAndPasswordAsync(userName, password);
-            if (userDB == null)
-            {
-                return null;
-            }
 
             var loggedInUser = MapTo<User>(userDB);
             return loggedInUser;
         }
 
-        public async Task<bool> ChangePasswordAsync(string userId, string oldPassword, string newPassword)
+        public Task ChangePasswordAsync(string userId, string oldPassword, string newPassword)
         {
-            await _repo.ChangePasswordAsync(userId, newPassword, oldPassword);
-            return true;
+            return _repo.ChangePasswordAsync(userId, newPassword, oldPassword);
         }
 
         public async Task<(string id, string token)> ResetPasswordRequestAsync(string email, string path)
         {
-            if (email != null && path != null)
+            if (path != null)
             {
                 var (id, token) = await _repo.GeneratePasswordResetTokenAsync(email);
                 var fullpath = string.Format(path, id, token);
@@ -106,9 +98,9 @@ namespace WasteProducts.Logic.Services.Users
             }
         }
 
-        public async Task<bool> ResetPasswordAsync(string userId, string token, string newPassword)
+        public async Task ResetPasswordAsync(string userId, string token, string newPassword)
         {
-            return await _repo.ResetPasswordAsync(userId, token, newPassword);
+            await _repo.ResetPasswordAsync(userId, token, newPassword);
         }
 
 
@@ -152,11 +144,10 @@ namespace WasteProducts.Logic.Services.Users
         {
             if (!_mailService.IsValidEmail(newEmail))
             {
-                return false;
+                throw new ValidationException("Please follow validation rules.");
             }
 
-            bool result = await _repo.UpdateEmailAsync(userId, newEmail);
-            return result;
+            return await _repo.UpdateEmailAsync(userId, newEmail);
         }
 
         public async Task<bool> UpdateUserNameAsync(string userId, string newUserName)
@@ -164,9 +155,9 @@ namespace WasteProducts.Logic.Services.Users
             return await _repo.UpdateUserNameAsync(userId, newUserName);
         }
 
-        public Task AddFriendAsync(string userId, string newFriendId)
+        public async Task AddFriendAsync(string userId, string newFriendId)
         {
-            return _repo.AddFriendAsync(userId, newFriendId);
+            await _repo.AddFriendAsync(userId, newFriendId);
         }
 
         public Task<IList<Friend>> GetFriendsAsync(string userId)
@@ -174,19 +165,14 @@ namespace WasteProducts.Logic.Services.Users
             return _repo.GetFriendsAsync(userId).ContinueWith(t => _mapper.Map<IList<Friend>>(t.Result));
         }
 
-        public Task DeleteFriendAsync(string userId, string deletingFriendId)
+        public async Task DeleteFriendAsync(string userId, string deletingFriendId)
         {
-            return _repo.DeleteFriendAsync(userId, deletingFriendId);
+            await _repo.DeleteFriendAsync(userId, deletingFriendId);
         }
 
-        public async Task<bool> AddProductAsync(string userId, string productId, int rating, string description)
+        public async Task AddProductAsync(string userId, string productId, int rating, string description)
         {
-            if (userId == null || productId == null || rating > 10 || rating < 0)
-            {
-                return false;
-            }
-
-            return await _repo.AddProductAsync(userId, productId, rating, description);
+            await _repo.AddProductAsync(userId, productId, rating, description);
         }
 
         public Task<IList<UserProduct>> GetProductsAsync(string userId)
@@ -199,14 +185,9 @@ namespace WasteProducts.Logic.Services.Users
             await _repo.UpdateProductDescriptionAsync(userId, productId, rating, description);
         }
 
-        public async Task<bool> DeleteProductAsync(string userId, string productId)
+        public async Task DeleteProductAsync(string userId, string productId)
         {
-            if (userId == null || productId == null)
-            {
-                return false;
-            }
-
-            return await _repo.DeleteProductAsync(userId, productId);
+            await _repo.DeleteProductAsync(userId, productId);
         }
 
         public Task<IEnumerable<GroupOfUser>> GetGroupsAsync(string userId)
@@ -214,9 +195,9 @@ namespace WasteProducts.Logic.Services.Users
             return _repo.GetGroupsAsync(userId).ContinueWith(t => _mapper.Map<IEnumerable<GroupOfUser>>(t.Result));
         }
 
-        public Task RespondToGroupInvitationAsync(string userId, string groupId, bool isConfirmed)
+        public async Task RespondToGroupInvitationAsync(string userId, string groupId, bool isConfirmed)
         {
-            return _repo.ChangeGroupInvitationStatusAsync(userId, groupId, isConfirmed);
+            await _repo.ChangeGroupInvitationStatusAsync(userId, groupId, isConfirmed);
         }
 
         public Task LeaveGroupAsync(string userId, string groupId)
@@ -254,9 +235,9 @@ namespace WasteProducts.Logic.Services.Users
             await _repo.RemoveLoginAsync(userId, MapTo<UserLoginDB>(login));
         }
 
-        public async Task DeleteUserAsync(string userId)
+        public Task DeleteUserAsync(string userId)
         {
-            await _repo.DeleteAsync(userId);
+            return _repo.DeleteAsync(userId);
         }
 
         private UserDAL MapTo<T>(User user)

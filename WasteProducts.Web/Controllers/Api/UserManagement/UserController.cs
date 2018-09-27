@@ -92,11 +92,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             validator.ValidateAndThrow(user);
 
             var returnUser = await _service.LogInByEmailAsync(user.Email, user.Password);
-            if (returnUser is null)
-            {
-                //throws 401
-                throw new UnauthorizedAccessException("Please provide correct Email and Password.");
-            }
 
             return Ok(returnUser);
         }
@@ -121,11 +116,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
 
             var returnedUser = await _service.LogInByNameAsync(user.UserName, user.Password);
 
-            if (returnedUser is null)
-            {
-                //throws 401
-                throw new UnauthorizedAccessException("Please provide correct User Name and Password.");
-            }
             return Ok(user);
         }
 
@@ -158,9 +148,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task<IHttpActionResult> GetUserProducts([FromUri] string id)
         {
-            //throws 404
-            var user = await this.GetById(id);
-
             return Ok(await _service.GetProductsAsync(id));
         }
 
@@ -177,9 +164,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task<IHttpActionResult> GetGroups([FromUri] string id)
         {
-            //throws 404
-            var user = await this.GetById(id);
-
             return Ok(await _service.GetGroupsAsync(id));
         }
 
@@ -196,9 +180,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task<IHttpActionResult> GetRoles(string id)
         {
-            //throws 404
-            var user = await this.GetById(id);
-
             return Ok(await _service.GetRolesAsync(id));
         }
 
@@ -215,9 +196,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task<IHttpActionResult> GetClaims(string id)
         {
-            //throws 404
-            var user = await this.GetById(id);
-
             return Ok(await _service.GetClaimsAsync(id));
         }
 
@@ -234,9 +212,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task<IHttpActionResult> GetLogins(string id)
         {
-            //throws 404
-            var user = await this.GetById(id);
-
             return Ok(await _service.GetLoginsAsync(id));
         }
 
@@ -267,7 +242,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
                 // throws 409 conflict
                 throw new OperationCanceledException("Please provide unique UserName and Email.");
             }
-            return Ok(idToken);
+            return StatusCode(HttpStatusCode.Created);
         }
 
         /// <summary>
@@ -297,12 +272,9 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the deletion.")]
         public async Task<IHttpActionResult> ConfirmEmail([FromUri] string id, [FromUri] string token)
         {
-            var isConfirmed = await _service.ConfirmEmailAsync(id, token);
-            if (isConfirmed)
-            {
-                return StatusCode(HttpStatusCode.NoContent);
-            }
-            throw new UnauthorizedAccessException("Incorrect token.");
+            await _service.ConfirmEmailAsync(id, token);
+
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -313,7 +285,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <returns></returns>
         [HttpPut, Route("{id}/changepassword")]
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Password is successfully changed.")]
+        [SwaggerResponse(HttpStatusCode.NoContent, "Password is successfully changed.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no such User.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules.")]
@@ -324,12 +296,9 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             var validator = new ChangePasswordValidator();
             validator.ValidateAndThrow(model);
 
-            // throws 404
-            var user = await this.GetById(id);
+            await _service.ChangePasswordAsync(id, model.OldPassword, model.NewPassword);
 
-            var isChanged = await _service.ChangePasswordAsync(id, model.OldPassword, model.NewPassword);
-
-            return Ok(isChanged);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -374,14 +343,9 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             var validator = new NewPasswordValidator();
             validator.ValidateAndThrow(newPassword);
 
-            var isSucceed = await _service.ResetPasswordAsync(id, token, newPassword.Password);
+            await _service.ResetPasswordAsync(id, token, newPassword.Password);
 
-            if (isSucceed)
-            {
-                return StatusCode(HttpStatusCode.NoContent);
-            }
-            //throws 401
-            throw new UnauthorizedAccessException("Invalid token or id.");
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -403,18 +367,9 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             var validator = new EmailValidator();
             validator.ValidateAndThrow(newEmail);
 
-            //throws 404
-            var user = await this.GetById(id);
+            await _service.UpdateEmailAsync(id, newEmail.EmailOfTheUser);
 
-            var isSuccess = await _service.UpdateEmailAsync(id, newEmail.EmailOfTheUser);
-
-            if (isSuccess)
-            {
-                return StatusCode(HttpStatusCode.NoContent);
-            }
-
-            //throws 409
-            throw new OperationCanceledException("Email should be unique.");
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -437,18 +392,9 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             var validator = new UserNameModelValidator();
             validator.ValidateAndThrow(newUserName);
 
-            //throws 404
-            var user = await this.GetById(id);
+            await _service.UpdateUserNameAsync(id, newUserName.UserName);
 
-            var isSuccess = await _service.UpdateUserNameAsync(id, newUserName.UserName);
-
-            if (isSuccess)
-            {
-                return StatusCode(HttpStatusCode.NoContent);
-            }
-            // throws 409
-            throw new OperationCanceledException("User Name should be unique.");
-
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -466,9 +412,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task<IHttpActionResult> AddFriend([FromUri] string userId, [FromUri] string friendId)
         {
-            //throws 404
-            var user = await this.GetById(userId);
-
             await _service.AddFriendAsync(userId, friendId);
 
             return StatusCode(HttpStatusCode.NoContent);
@@ -488,9 +431,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task<IHttpActionResult> DeleteFriend([FromUri] string userId, [FromUri] string friendId)
         {
-            //throws 404
-            await GetById(userId);
-
             await _service.DeleteFriendAsync(userId, friendId);
 
             return StatusCode(HttpStatusCode.NoContent);
@@ -510,12 +450,15 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.Conflict, "User already has got the ProductRate.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
-        public async Task AddProduct([FromUri] string userId, [FromUri] string productId, [FromBody] Models.Users.ProductDescription description)
+        public async Task<IHttpActionResult> AddProduct([FromUri] string userId, [FromUri] string productId, [FromBody] ProductDescription description)
         {
-            //throws 404
-            await GetById(userId);
+            // throws 400
+            var validator = new ProductDescriptionValidator();
+            validator.ValidateAndThrow(description);
 
             await _service.AddProductAsync(userId, productId, description.Rating, description.Description);
+
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -534,9 +477,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task<IHttpActionResult> UpdateProduct([FromUri] string userId, [FromUri] string productId, [FromBody] ProductDescription description)
         {
-            //throws 404
-            await GetById(userId);
-
             // throws 400
             var validator = new ProductDescriptionValidator();
             validator.ValidateAndThrow(description);
@@ -561,9 +501,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task<IHttpActionResult> DeleteProduct([FromUri] string userId, [FromUri] string productId)
         {
-            //throws 404
-            await GetById(userId);
-
             await _service.DeleteProductAsync(userId, productId);
 
             //throws 204
@@ -594,7 +531,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <summary>
         /// Leave from group by the user. 
         /// </summary>
-        /// <exception cref="KeyNotFoundException">Exception is thrown if there is no such GroupUsers.</exception>
         /// <param name="userId">ID of the user.</param>
         /// <param name="groupId">ID of the group.</param>
         /// <returns></returns>
