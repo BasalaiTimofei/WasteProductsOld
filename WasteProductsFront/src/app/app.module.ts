@@ -39,6 +39,7 @@ import { GroupCommentDeleteComponent } from './components/groups/comment/group-c
 import { GroupUserSendInviteComponent } from './components/groups/user/group-user-send-invite/group-user-send-invite.component';
 import { GroupUserDismissUserComponent } from './components/groups/user/group-user-dismiss-user/group-user-dismiss-user.component';
 import { GroupUserGetEntitleComponent } from './components/groups/user/group-user-get-entitle/group-user-get-entitle.component';
+import { FooterComponent } from './components/common/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -73,6 +74,7 @@ import { GroupUserGetEntitleComponent } from './components/groups/user/group-use
     GroupUserSendInviteComponent,
     GroupUserDismissUserComponent,
     GroupUserGetEntitleComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,

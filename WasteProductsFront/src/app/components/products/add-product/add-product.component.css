@@ -1,0 +1,15 @@
+div{
+    padding-inline-start : 20px;
+    padding-block-start: 20px;
+}
+div button {
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    width:100%;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px
+}
