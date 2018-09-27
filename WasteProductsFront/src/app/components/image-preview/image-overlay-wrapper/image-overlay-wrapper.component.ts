@@ -6,7 +6,7 @@ import { ImagePreviewOverlay } from '../image-preview-overlay';
 @Component({
   selector: 'app-image-overlay-wrapper',
   templateUrl: './image-overlay-wrapper.component.html',
-  styleUrls: ['./image-overlay-wrapper.component.scss'],
+  styleUrls: ['./image-overlay-wrapper.component.css'],
   animations: [
     trigger('slideDown', [
       state('void', style({ transform: 'translateY(-100%)' })),
@@ -17,14 +17,12 @@ import { ImagePreviewOverlay } from '../image-preview-overlay';
   ]
 })
 export class ImageOverlayWrapperComponent implements OnInit {
-  // Apply animation to the host element
+
   @HostBinding('@slideDown') slideDown = 'enter';
 
-  // Inject remote control
   constructor(private dialogRef: ImagePreviewOverlay) { }
 
   ngOnInit() {
-    // Animate toolbar out before overlay is closed
     this.dialogRef.beforeClose().subscribe(() => this.slideDown = 'leave');
   }
 

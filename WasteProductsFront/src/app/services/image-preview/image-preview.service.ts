@@ -1,4 +1,4 @@
-import { Injectable, Inject, OnInit, Injector, ComponentRef } from '@angular/core';
+import { Injectable, Injector, ComponentRef } from '@angular/core';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal, PortalInjector } from '@angular/cdk/portal';
 
@@ -33,13 +33,9 @@ export class ImagePreviewService {
     private overlay: Overlay) { }
 
 open(config: FilePreviewDialogConfig = {}) {
-  // Override default configuration
+
   const dialogConfig = { ...DEFAULT_CONFIG, ...config };
-
-  // Returns an OverlayRef which is a PortalHost
   const overlayRef = this.createOverlay(dialogConfig);
-
-  // Instantiate remote control
   const dialogRef = new ImagePreviewOverlay(overlayRef);
 
   const overlayComponent = this.attachDialogContainer(overlayRef, dialogConfig, dialogRef);

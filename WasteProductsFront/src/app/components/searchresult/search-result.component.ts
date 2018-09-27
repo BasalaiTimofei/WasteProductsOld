@@ -13,7 +13,7 @@ import { ImagePreviewOverlay } from '../image-preview/image-preview-overlay';
 @Component({
   selector: 'app-search-result',
   templateUrl: './search-result.component.html',
-  styleUrls: ['./search-result.component.css', './search-result.component.scss']
+  styleUrls: ['./search-result.component.css']
 })
 export class SearchresultComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
@@ -63,7 +63,8 @@ export class SearchresultComponent implements OnDestroy {
 
   showPreview() {
     const dialog: ImagePreviewOverlay = this.previewDialog.open({
-      image: { name: 'image_1.jpg', url: 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg' }
+      // TODO Заменить путем из реквеста и название продукта
+      image: { name: 'Название продукта', url: 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg' }
     });
   }
 
