@@ -12,7 +12,6 @@ using WasteProducts.Logic.Common.Models.Users;
 using WasteProducts.Logic.Common.Models.Users.WebUsers;
 using WasteProducts.Logic.Common.Services.Users;
 using WasteProducts.Web.ExceptionHandling.Api;
-using WasteProducts.Web.ExceptionHandling.Exceptions;
 using WasteProducts.Web.Models.Users;
 using WasteProducts.Web.Validators.Users;
 using FluentValidation;

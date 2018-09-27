@@ -250,8 +250,6 @@
     <Compile Include="ExceptionHandling\Api\ApiUnhandledExceptionLogger.cs" />
     <Compile Include="ExceptionHandling\Api\ApiValidationExceptionFilterAttribute.cs" />
     <Compile Include="ExceptionHandling\Api\AppExceptionFilterAttribute.cs" />
-    <Compile Include="ExceptionHandling\Api\WasteExceptionFilterAttribute.cs" />
-    <Compile Include="ExceptionHandling\Exceptions\WasteException.cs" />
     <Compile Include="ExceptionHandling\Mvc\MvUnhandledExceptionFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
