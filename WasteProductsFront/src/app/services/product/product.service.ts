@@ -38,7 +38,6 @@ export class ProductService extends BaseHttpService {
     {Id: '20', Name: 'Calcium', AvgRating: 5, Composition: 'rthdrht', IsHidden: false},
   ];
 
-
   private apiUrl = `${environment.apiHostUrl}/api/product/products`;
 
   private getProductsUrl = `http://localhost:2189/api/user/0/products`;
