@@ -8,7 +8,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Groups;
-using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.Users;
 using WasteProducts.DataAccess.Contexts;
@@ -293,6 +292,10 @@ namespace WasteProducts.DataAccess.Repositories.Users
         public async Task<IList<UserDAL>> GetFriendsAsync(string userId)
         {
             var user = await _context.Users.Include(u => u.Friends).FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
+            if (user == null)
+            {
+                return null;
+            }
             return _mapper.Map<List<UserDAL>>(user.Friends);
         }
 
@@ -340,9 +343,13 @@ namespace WasteProducts.DataAccess.Repositories.Users
             return true;
         }
 
-        public async Task<IList<UserProductDescriptionDB>> GetProductDescriptionsAsync(string userId)
+        public async Task<IList<UserProductDescriptionDB>> GetUserProductDescriptionsAsync(string userId)
         {
             var user = await _context.Users.Include(u => u.ProductDescriptions).FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
+            if (user == null)
+            {
+                return null;
+            }
             return user.ProductDescriptions;
         }
 
@@ -399,6 +406,10 @@ namespace WasteProducts.DataAccess.Repositories.Users
         public async Task<IEnumerable<GroupUserDB>> GetGroupsAsync(string userId)
         {
             var user = await _context.Users.Include(u => u.Groups.Select(g => g.Group)).FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
+            if (user == null)
+            {
+                return null;
+            }
             return user.Groups.Where(g => g.Group.IsNotDeleted);
         }
 

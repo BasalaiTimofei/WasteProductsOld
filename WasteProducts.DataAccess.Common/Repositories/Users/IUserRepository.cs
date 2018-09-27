@@ -169,7 +169,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Users
         /// </summary>
         /// <param name="userId">ID of a user.</param>
         /// <returns>User's product descriptions.</returns>
-        Task<IList<UserProductDescriptionDB>> GetProductDescriptionsAsync(string userId);
+        Task<IList<UserProductDescriptionDB>> GetUserProductDescriptionsAsync(string userId);
 
         /// <summary>
         /// Get the names of the roles a user is a member of.

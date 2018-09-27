@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -362,7 +363,7 @@ namespace WasteProducts.Logic.Tests.UserTests
             userLogins = await _userService.GetLoginsAsync(userId).ConfigureAwait(false);
             Assert.IsEmpty(userLogins);
         }
-                
+
         // тестируем изменение пароля пользователя
         [Test]
         public async Task UserIntegrTest_22ResettingUserPassword()
@@ -408,18 +409,21 @@ namespace WasteProducts.Logic.Tests.UserTests
         [Test]
         public async Task UserIntegrTest_25AddingNewProductsToDB()
         {
-            string productName = "Waste product";
-
             using (var prodService = _kernel.Get<IProductService>())
             {
-                prodService.Add(productName, out var addedProduct);
-                var product = await prodService.GetByNameAsync(productName).ConfigureAwait(false);
+                string name = "SomeProduct";
+
+                string id = await prodService.AddAsync(name).ConfigureAwait(false);
+
+                var product = await prodService.GetByIdAsync(id).ConfigureAwait(false);
 
                 Assert.IsNotNull(product);
-                Assert.AreEqual(productName, product.Name);
+                Assert.AreEqual(name, product.Name);
+
                 _productIds.Add(product.Id);
             }
         }
+
 
         // тестируем добавление продукта + метод получения списка продуктов GetProductDescriptionsAsync
         [Test]
@@ -427,11 +431,11 @@ namespace WasteProducts.Logic.Tests.UserTests
         {
             string description = "Tastes like garbage, won't buy it ever again.";
 
-            var products = await _userService.GetProductDescriptionsAsync(_usersIds[0]).ConfigureAwait(false);
+            var products = await _userService.GetProductsAsync(_usersIds[0]).ConfigureAwait(false);
             Assert.IsEmpty(products);
 
             await _userService.AddProductAsync(_usersIds[0], _productIds[0], 1, description).ConfigureAwait(false);
-            products = await _userService.GetProductDescriptionsAsync(_usersIds[0]).ConfigureAwait(false);
+            products = await _userService.GetProductsAsync(_usersIds[0]).ConfigureAwait(false);
 
             Assert.AreEqual(1, products.Count);
             Assert.AreEqual(_productIds[0], products[0].Product.Id);
@@ -443,18 +447,18 @@ namespace WasteProducts.Logic.Tests.UserTests
         [Test]
         public async Task UserIntegrTest_27DeletingProductsFromUser()
         {
-            var products = await _userService.GetProductDescriptionsAsync(_usersIds[0]).ConfigureAwait(false);
+            var products = await _userService.GetProductsAsync(_usersIds[0]).ConfigureAwait(false);
             Assert.AreEqual(1, products.Count);
 
             await _userService.DeleteProductAsync(_usersIds[0], _productIds[0]).ConfigureAwait(false);
 
-            products = await _userService.GetProductDescriptionsAsync(_usersIds[0]).ConfigureAwait(false);
+            products = await _userService.GetProductsAsync(_usersIds[0]).ConfigureAwait(false);
             Assert.IsEmpty(products);
         }
 
         // тестируем создание группы и приглашение человека в группу (не относится к юзер сервису, но необходимо для следующего теста)
         [Test]
-        public void UserIntegrTest_28AddingNewGroupToDB()
+        public async Task UserIntegrTest_28AddingNewGroupToDB()
         {
             var name = "Some group";
             var info = "Info about the group";
@@ -466,9 +470,9 @@ namespace WasteProducts.Logic.Tests.UserTests
             };
             using (var gService = _kernel.Get<IGroupService>())
             {
-                gService.Create(group);
-                var groupFromDB = gService.FindByName(name);
-                Assert.AreEqual(info, groupFromDB.Information); 
+                await gService.Create(group);
+                var groupFromDB = await gService.FindByName(name);
+                Assert.AreEqual(info, groupFromDB.Information);
                 _groupIds.Add(groupFromDB.Id);
             }
 
@@ -485,13 +489,13 @@ namespace WasteProducts.Logic.Tests.UserTests
             };
             using (var guService = _kernel.Get<IGroupUserService>())
             {
-                guService.Invite(groupUser1, _usersIds[0]);
-                guService.Invite(groupUser2, _usersIds[0]);
+               await guService.Invite(groupUser1, _usersIds[0]);
+               await guService.Invite(groupUser2, _usersIds[0]);
             }
         }
 
         // тестируем ответ на приглашение (один согласится, другой откажется,
-        // приглашение отказавшегося должно быть удалено) + получение списка групп 
+        // приглашение отказавшегося должно быть удалено) + получение списка групп
         // при помощи метода GetGroupsAsync
         [Test]
         public async Task UserIntegrTest_29TestingRespondToInvitationToGroup()

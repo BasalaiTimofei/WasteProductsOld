@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from './modules/material/material.module';
 import { CdkTableModule } from '@angular/cdk/table';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 /* Components */
 import { AppComponent } from './app.component';
@@ -25,6 +26,27 @@ import { AddProductComponent } from './components/products/add-product/add-produ
 import { DeleteProductComponent } from './components/products/delete-product/delete-product.component';
 import { UpdateProductComponent } from './components/products/update-product/update-product.component';
 import { HeaderComponent } from './components/common/header/header.component';
+import { ImagePreviewComponent } from './components/image-preview/image-preview.component';
+import { ImageOverlayWrapperComponent } from './components/image-preview/image-overlay-wrapper/image-overlay-wrapper.component';
+import { GroupCreateComponent } from './components/groups/group/group-create/group-create.component';
+import { GroupUpdateComponent } from './components/groups/group/group-update/group-update.component';
+import { GroupDeleteComponent } from './components/groups/group/group-delete/group-delete.component';
+import { GroupBoardCreateComponent } from './components/groups/board/group-board-create/group-board-create.component';
+import { GroupBoardUpdateComponent } from './components/groups/board/group-board-update/group-board-update.component';
+import { GroupBoardDeleteComponent } from './components/groups/board/group-board-delete/group-board-delete.component';
+import { GroupProductCreateComponent } from './components/groups/product/group-product-create/group-product-create.component';
+import { GroupProductUpdateComponent } from './components/groups/product/group-product-update/group-product-update.component';
+import { GroupCommentCreateComponent } from './components/groups/comment/group-comment-create/group-comment-create.component';
+import { GroupCommentUpdateComponent } from './components/groups/comment/group-comment-update/group-comment-update.component';
+import { GroupCommentDeleteComponent } from './components/groups/comment/group-comment-delete/group-comment-delete.component';
+import { GroupUserSendInviteComponent } from './components/groups/user/group-user-send-invite/group-user-send-invite.component';
+import { GroupUserDismissUserComponent } from './components/groups/user/group-user-dismiss-user/group-user-dismiss-user.component';
+import { GroupUserGetEntitleComponent } from './components/groups/user/group-user-get-entitle/group-user-get-entitle.component';
+import { FooterComponent } from './components/common/footer/footer.component';
+import { DonateComponent } from './components/donate/donate.component';
+
+/* Services */
+import { ImagePreviewService } from './services/image-preview/image-preview.service';
 
 @NgModule({
   declarations: [
@@ -45,6 +67,24 @@ import { HeaderComponent } from './components/common/header/header.component';
     DeleteProductComponent,
     UpdateProductComponent,
     HeaderComponent,
+    ImagePreviewComponent,
+    ImageOverlayWrapperComponent,
+    GroupCreateComponent,
+    GroupUpdateComponent,
+    GroupDeleteComponent,
+    GroupBoardCreateComponent,
+    GroupBoardUpdateComponent,
+    GroupBoardDeleteComponent,
+    GroupProductCreateComponent,
+    GroupProductUpdateComponent,
+    GroupCommentCreateComponent,
+    GroupCommentUpdateComponent,
+    GroupCommentDeleteComponent,
+    GroupUserSendInviteComponent,
+    GroupUserDismissUserComponent,
+    GroupUserGetEntitleComponent,
+    FooterComponent,
+    DonateComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,9 +94,11 @@ import { HeaderComponent } from './components/common/header/header.component';
     HttpClientModule,
     MaterialModule,
     AppRoutingModule,
-    CdkTableModule
+    CdkTableModule,
+    OverlayModule
   ],
-  providers: [],
+  providers: [ImagePreviewService],
+  entryComponents: [ImagePreviewComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

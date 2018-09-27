@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Moq;
 using Ninject.Extensions.Factory;
 using Ninject.Modules;
 using System;
@@ -82,7 +83,6 @@ namespace WasteProducts.Logic
         private void BindDatabaseServices()
         {
             Bind<IDbService>().To<DbService>();
-            Bind<IDbSeedService>().To<DbSeedService>();
             Bind<ITestModelsService>().To<TestModelsService>();
         }
 
@@ -115,11 +115,11 @@ namespace WasteProducts.Logic
 
         private void BindGroupServices()
         {
-            Bind<IGroupService>().To<GroupService>()/*.ValidateArguments(typeof(Group))*/;
-            Bind<IGroupBoardService>().To<GroupBoardService>();
-            Bind<IGroupProductService>().To<GroupProductService>();
-            Bind<IGroupUserService>().To<GroupUserService>();
-            Bind<IGroupCommentService>().To<GroupCommentService>();
+            Bind<IGroupService>().To<GroupService>().ValidateArguments(typeof(Group));
+            Bind<IGroupBoardService>().To<GroupBoardService>().ValidateArguments(typeof(GroupBoard));
+            Bind<IGroupProductService>().To<GroupProductService>().ValidateArguments(typeof(GroupProduct));
+            Bind<IGroupUserService>().To<GroupUserService>().ValidateArguments(typeof(GroupUser));
+            Bind<IGroupCommentService>().To<GroupCommentService>().ValidateArguments(typeof(GroupComment));
         }
 
         private void BindProductServices()
@@ -147,7 +147,7 @@ namespace WasteProducts.Logic
                     cfg.AddProfile<ProductProfile>();
                     cfg.AddProfile<UserProductDescriptionProfile>();
                     cfg.AddProfile<FriendProfile>();
-                    cfg.AddProfile<ProductDescriptionProfile>();
+                    cfg.AddProfile<UserProductProfile>();
                     cfg.AddProfile<GroupOfUserProfile>();
                 })))
                 .WhenInjectedExactlyInto<UserService>();
