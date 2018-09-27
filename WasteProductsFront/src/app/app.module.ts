@@ -26,6 +26,9 @@ import { DeleteProductComponent } from './components/products/delete-product/del
 import { UpdateProductComponent } from './components/products/update-product/update-product.component';
 import { HeaderComponent } from './components/common/header/header.component';
 
+/* Custom Modules */
+import { AccountModule } from './modules/account/account.module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,7 +47,7 @@ import { HeaderComponent } from './components/common/header/header.component';
     AddProductComponent,
     DeleteProductComponent,
     UpdateProductComponent,
-    HeaderComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +57,9 @@ import { HeaderComponent } from './components/common/header/header.component';
     HttpClientModule,
     MaterialModule,
     AppRoutingModule,
-    CdkTableModule
+    CdkTableModule,
+    /* Custom modules */
+    AccountModule
   ],
   providers: [],
   bootstrap: [AppComponent]
