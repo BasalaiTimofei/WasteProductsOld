@@ -22,7 +22,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// Constructor.
         /// </summary>
         /// <param name="productService">Product service.</param>
-        /// <param name="logger">NLog logger.</param>
+        /// <param name="logger">NInject logger.</param>
         public ProductsController(IProductService productService, ILogger logger) : base(logger)
         {
             _productService = productService;
@@ -57,6 +57,10 @@ namespace WasteProducts.Web.Controllers.Api
             return Ok(await _productService.GetById(id));
         }
 
+        /// <summary>
+        /// Adds new product.
+        /// </summary>
+        /// <returns>Created product.</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.Created, "Product was successfully added", typeof(Product))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect image")]

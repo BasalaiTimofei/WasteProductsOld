@@ -43,7 +43,7 @@ namespace WasteProducts.Logic.Common.Services.Products
         /// <summary>
         /// Gets all products.
         /// </summary>
-        /// <returns>All products in the application.</returns>
+        /// <returns>All products in the database.</returns>
         Task<IEnumerable<Product>> GetAll();
 
         /// <summary>

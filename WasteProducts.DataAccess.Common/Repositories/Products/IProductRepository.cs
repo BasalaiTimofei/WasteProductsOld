@@ -14,6 +14,7 @@ namespace WasteProducts.DataAccess.Common.Repositories.Products
         /// Adding new product
         /// </summary>
         /// <param name="product">The specific product for adding</param>
+        /// <returns>Id of the added product.</returns>
         Task<string> AddAsync(ProductDB product);
 
         /// <summary>
@@ -31,28 +32,28 @@ namespace WasteProducts.DataAccess.Common.Repositories.Products
         /// <summary>
         /// Provides a listing of all products.
         /// </summary>
-        /// <returns>Returns list of products.</returns>
+        /// <returns>List of all products in database.</returns>
         Task<IEnumerable<ProductDB>> SelectAllAsync();
 
         /// <summary>
         /// Provides a listing of products that satisfy the condition.
         /// </summary>
         /// <param name="predicate">The condition that list of products must satisfy</param>
-        /// <returns>Returns list of products.</returns>
+        /// <returns>List of products satisfying the specified conditions.</returns>
         Task<IEnumerable<ProductDB>> SelectWhereAsync(Predicate<ProductDB> predicate);
 
         /// <summary>
         /// Provides a listing of products with a specific category.
         /// </summary>
         /// <param name="category">Category for select products</param>
-        /// <returns>Returns list of products.</returns>
+        /// <returns>List of products belonging to the specified category.</returns>
         Task<IEnumerable<ProductDB>> SelectByCategoryAsync(CategoryDB category);
 
         /// <summary>
         /// Gets products by ID.
         /// </summary>
         /// <param name="id">The specific id of product that was sorted.</param>
-        /// <returns>Returns a product chosen by ID.</returns>
+        /// <returns>Product chosen by Id.</returns>
         Task<ProductDB> GetByIdAsync(string id);
 
         /// <summary>

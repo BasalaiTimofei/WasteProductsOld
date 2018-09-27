@@ -22,10 +22,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
         /// <param name="context">The specific context of WasteContext</param>
         public ProductRepository(WasteContext context) => _context = context;
 
-        /// <summary>
-        /// Allows you to add new product to the products colletion.
-        /// </summary>
-        /// <param name="product">The specific product for adding</param>
+        /// <inheritdoc/>
         public async Task<string> AddAsync(ProductDB product)
         {
             product.Id = Guid.NewGuid().ToString();
@@ -37,10 +34,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
             return product.Id;
         }
 
-        /// <summary>
-        /// Deleting the specific product
-        /// </summary>
-        /// <param name="product">The specific product for deleting.</param>
+        /// <inheritdoc/>
         public async Task DeleteAsync(ProductDB product)
         {
             if (! (await _context.Products.ContainsAsync(product))) return;
@@ -50,10 +44,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
             
         }
 
-        /// <summary>
-        /// The method that delets the product by ID.
-        /// </summary>
-        /// <param name="id">Product's ID that needs to be deleted.</param>
+        /// <inheritdoc/>
         public async Task DeleteAsync(string id)
         {
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
@@ -66,15 +57,13 @@ namespace WasteProducts.DataAccess.Repositories.Products
             
         }
 
+        /// <inheritdoc/>
         public async Task<ProductDB> GetByNameAsync(string name)
         {
             return await _context.Products.FirstOrDefaultAsync(p => p.Name == name).ConfigureAwait(false); 
         }
 
-        /// <summary>
-        /// A method that provides a list of all products.
-        /// </summary>
-        /// <returns>List of products.</returns>
+        /// <inheritdoc/>
         public async Task<IEnumerable<ProductDB>> SelectAllAsync()
         {
             return await Task.Run(() =>
@@ -84,11 +73,6 @@ namespace WasteProducts.DataAccess.Repositories.Products
         }
 
         /// <inheritdoc />
-        /// <summary>
-        /// Provides a listing of products that satisfy the condition.
-        /// </summary>
-        /// <param name="predicate">The condition that list of products must satisfy</param>
-        /// <returns>Returns list of products.</returns>
         public async Task <IEnumerable<ProductDB>> SelectWhereAsync(Predicate<ProductDB> predicate)
         {
             var condition = new Func<ProductDB, bool>(predicate);
@@ -100,11 +84,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
                 
         }
 
-        /// <summary>
-        /// Provides a listing of products with a specific category.
-        /// </summary>
-        /// <param name="category">Category for select products</param>
-        /// <returns>Returns list of products.</returns>
+        /// <inheritdoc />
         public async Task <IEnumerable<ProductDB>> SelectByCategoryAsync(CategoryDB category)
         {
             return await Task.Run(() =>
@@ -113,20 +93,13 @@ namespace WasteProducts.DataAccess.Repositories.Products
             });
         }
 
-        /// <summary>
-        /// A method that selectively provides a product by product's ID.
-        /// </summary>
-        /// <param name="id">The specific id of product that was sorted.</param>
-        /// <returns>Product by ID.</returns>
+        /// <inheritdoc />
         public async Task<ProductDB> GetByIdAsync(string id)
         {
             return await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        /// <summary>
-        /// This method allows you to modify some or all of the product values.
-        /// </summary>
-        /// <param name="product"></param>
+        /// <inheritdoc />
         public async Task UpdateAsync(ProductDB product)
         {
             _context.Entry(product).State = EntityState.Modified;

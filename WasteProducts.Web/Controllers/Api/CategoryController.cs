@@ -1,23 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Ninject.Extensions.Logging;
 using Swagger.Net.Annotations;
-using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Services.Products;
 
 namespace WasteProducts.Web.Controllers.Api
 {
+    /// <summary>
+    /// Controller that performs actions on categories and gives the client the corresponding response.
+    /// </summary>
     [RoutePrefix("api/category")]
     public class CategoryController : BaseApiController
     {
         private readonly ICategoryService _categoryService;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="categoryService">Category service.</param>
+        /// <param name="logger">NInject logger.</param>
         public CategoryController(ICategoryService categoryService, ILogger logger) : base(logger)
         {
             _categoryService = categoryService;
