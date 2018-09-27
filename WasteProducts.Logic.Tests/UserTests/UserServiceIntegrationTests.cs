@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -408,18 +409,21 @@ namespace WasteProducts.Logic.Tests.UserTests
         [Test]
         public async Task UserIntegrTest_25AddingNewProductsToDB()
         {
-            string productName = "Waste product";
-
             using (var prodService = _kernel.Get<IProductService>())
             {
-                prodService.Add(productName, out var addedProduct);
-                var product = await prodService.GetByNameAsync(productName).ConfigureAwait(false);
+                string name = "SomeProduct";
+
+                string id = await prodService.AddAsync(name).ConfigureAwait(false);
+
+                var product = await prodService.GetByIdAsync(id).ConfigureAwait(false);
 
                 Assert.IsNotNull(product);
-                Assert.AreEqual(productName, product.Name);
+                Assert.AreEqual(name, product.Name);
+
                 _productIds.Add(product.Id);
             }
         }
+
 
         // тестируем добавление продукта + метод получения списка продуктов GetProductDescriptionsAsync
         [Test]

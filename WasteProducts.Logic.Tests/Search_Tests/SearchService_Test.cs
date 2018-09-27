@@ -51,7 +51,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
         {
             mockRepo.Setup(x => x.GetAll<TestUser>(It.IsAny<string>(), It.IsAny<string[]>(), It.IsAny<int>())).Returns(users);
 
-            var query = new BoostedSearchQuery();            
+            var query = new BoostedSearchQuery();
 
             Assert.Throws<ArgumentException>(() => sut.Search<TestUser>(query));
         }

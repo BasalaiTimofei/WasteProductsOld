@@ -5,6 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from './modules/material/material.module';
 import { CdkTableModule } from '@angular/cdk/table';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 /* Components */
 import { AppComponent } from './app.component';
@@ -25,6 +26,8 @@ import { AddProductComponent } from './components/products/add-product/add-produ
 import { DeleteProductComponent } from './components/products/delete-product/delete-product.component';
 import { UpdateProductComponent } from './components/products/update-product/update-product.component';
 import { HeaderComponent } from './components/common/header/header.component';
+import { ImagePreviewComponent } from './components/image-preview/image-preview.component';
+import { ImageOverlayWrapperComponent } from './components/image-preview/image-overlay-wrapper/image-overlay-wrapper.component';
 import { GroupCreateComponent } from './components/groups/group/group-create/group-create.component';
 import { GroupUpdateComponent } from './components/groups/group/group-update/group-update.component';
 import { GroupDeleteComponent } from './components/groups/group/group-delete/group-delete.component';
@@ -41,6 +44,9 @@ import { GroupUserDismissUserComponent } from './components/groups/user/group-us
 import { GroupUserGetEntitleComponent } from './components/groups/user/group-user-get-entitle/group-user-get-entitle.component';
 import { FooterComponent } from './components/common/footer/footer.component';
 import { DonateComponent } from './components/donate/donate.component';
+
+/* Services */
+import { ImagePreviewService } from './services/image-preview/image-preview.service';
 
 @NgModule({
   declarations: [
@@ -61,6 +67,8 @@ import { DonateComponent } from './components/donate/donate.component';
     DeleteProductComponent,
     UpdateProductComponent,
     HeaderComponent,
+    ImagePreviewComponent,
+    ImageOverlayWrapperComponent,
     GroupCreateComponent,
     GroupUpdateComponent,
     GroupDeleteComponent,
@@ -86,9 +94,11 @@ import { DonateComponent } from './components/donate/donate.component';
     HttpClientModule,
     MaterialModule,
     AppRoutingModule,
-    CdkTableModule
+    CdkTableModule,
+    OverlayModule
   ],
-  providers: [],
+  providers: [ImagePreviewService],
+  entryComponents: [ImagePreviewComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
