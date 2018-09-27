@@ -40,6 +40,7 @@ import { GroupUserSendInviteComponent } from './components/groups/user/group-use
 import { GroupUserDismissUserComponent } from './components/groups/user/group-user-dismiss-user/group-user-dismiss-user.component';
 import { GroupUserGetEntitleComponent } from './components/groups/user/group-user-get-entitle/group-user-get-entitle.component';
 import { FooterComponent } from './components/common/footer/footer.component';
+import { DonateComponent } from './components/donate/donate.component';
 
 @NgModule({
   declarations: [
@@ -75,6 +76,7 @@ import { FooterComponent } from './components/common/footer/footer.component';
     GroupUserDismissUserComponent,
     GroupUserGetEntitleComponent,
     FooterComponent,
+    DonateComponent,
   ],
   imports: [
     BrowserModule,
