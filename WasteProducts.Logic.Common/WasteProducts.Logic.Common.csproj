@@ -64,7 +64,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\TraceAttribute.cs" />
-    <Compile Include="Factories\IBarcodeFactory.cs" />
     <Compile Include="Factories\IServiceFactory.cs" />
     <Compile Include="Models\Barcods\HttpQueryResult.cs" />
     <Compile Include="Models\Barcods\ParseResult.cs" />

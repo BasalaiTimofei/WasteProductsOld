@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Repositories.Barcods;
 using WasteProducts.Logic.Common.Factories;
 using WasteProducts.Logic.Common.Models.Barcods;
@@ -20,31 +21,33 @@ namespace WasteProducts.Logic.Services.Barcods
         private readonly IBarcodeScanService _scanner;
         private readonly IBarcodeCatalogSearchService _searcher;
         private readonly IBarcodeRepository _repository;
-        private readonly IBarcodeFactory _barcodeFactory;
+        private readonly IServiceFactory _serviceFactory;
         private readonly ILogger _logger;
         private readonly IMapper _mapper;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="barcodeFactory">IBarcodeFactory implementation IBarcodeScanService,
-        /// IBarcodeCatalogSearchService, IBarcodeRepository</param>
+        /// <param name="serviceFactory">IServiceFactory implementation IBarcodeScanService,
+        /// IBarcodeCatalogSearchService</param>
+        /// <param name="repository">IBarcodeRepositoryr</param>
         /// <param name="logger">NLog logger</param>
         /// <param name="mapper">AutoMapperr</param>
-        public BarcodeService(IBarcodeFactory barcodeFactory, ILogger logger, IMapper mapper)
+        public BarcodeService(IServiceFactory serviceFactory, IBarcodeRepository repository, ILogger logger, IMapper mapper)
         {
-            _barcodeFactory = barcodeFactory;
-            _scanner = _barcodeFactory.CreateScanService();
-            _searcher = _barcodeFactory.CreateSearchService();
-            _repository = _barcodeFactory.CreateRepository();
+            _serviceFactory = serviceFactory;
+            _scanner = _serviceFactory.CreateBarcodeScanService();
+            _searcher = _serviceFactory.CreateSearchBarcodeService();
+            _repository = repository;
             _logger = logger;
             _mapper = mapper;
         }
 
         /// <inheritdoc />
-        public Task<string> AddAsync(Barcode barcode)
+        public async Task<string> AddAsync(Barcode barcode)
         {
-            throw new NotImplementedException();
+            return await _repository.AddAsync(_mapper.Map<BarcodeDB>(barcode))
+                .ContinueWith(t => t.Result);
         }
 
         /// <inheritdoc />
@@ -66,9 +69,9 @@ namespace WasteProducts.Logic.Services.Barcods
                     code = _scanner.ScanBySpire(_stream);
                 }
             }
-            if (code.Length == 8 || code.Length == 4)
+            if (code != null)
             {
-                if (await GetByCodeAsync(code) != null)
+                if (await GetByCodeAsync(code) == null)
                 {
                     barcode = await _searcher.GetAsync(code);
                 }
@@ -81,7 +84,7 @@ namespace WasteProducts.Logic.Services.Barcods
         {
             Barcode barcode = null;
 
-            if (await GetByCodeAsync(code) != null)
+            if (await GetByCodeAsync(code) == null)
             {
                 barcode = await _searcher.GetAsync(code);
             }

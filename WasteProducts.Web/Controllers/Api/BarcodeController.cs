@@ -74,10 +74,7 @@ namespace WasteProducts.Web.Controllers.Api
         public async Task<IHttpActionResult> GetBarcodeAsync(Stream uploadStream)
         {
             string code = "";
-            await Task.Run(() =>
-            {
-                code = _scanner.ScanBySpire(uploadStream);
-            });
+            code = _scanner.ScanBySpire(uploadStream);
             _barcode = await _searcher.GetAsync(code);
             return Ok(_barcode);
         }

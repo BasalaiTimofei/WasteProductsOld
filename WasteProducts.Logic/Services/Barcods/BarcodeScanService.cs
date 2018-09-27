@@ -6,6 +6,7 @@ using ZXing;
 using Spire.Barcode;
 using WasteProducts.Logic.Common.Services.Barcods;
 using System;
+using System.Text.RegularExpressions;
 
 namespace WasteProducts.Logic.Services.Barcods
 {
@@ -45,7 +46,10 @@ namespace WasteProducts.Logic.Services.Barcods
             var result = barcodeReader.Decode(_image);
 
             string decoded = result.ToString().Trim();
-
+            if (!IsValid(decoded))
+            {
+                decoded = null;
+            }
             return decoded;
         }
 
@@ -60,8 +64,22 @@ namespace WasteProducts.Logic.Services.Barcods
                 _image.Save(_stream, ImageFormat.Bmp);
                 decoded = BarcodeScanner.ScanOne(_stream, true);
             }
-
+            if (!IsValid(decoded))
+            {
+                decoded = null;
+            }
             return decoded;
+        }
+
+        /// <summary>
+        /// String code validation.
+        /// </summary>
+        /// <param name="code">String code.</param>
+        /// <returns>true or false</returns>
+        private bool IsValid(string code)
+        {
+            Regex regex = new Regex(@"\d{13}");
+            return regex.IsMatch(code);
         }
     }
 }
