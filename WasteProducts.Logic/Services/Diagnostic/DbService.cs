@@ -13,7 +13,7 @@ namespace WasteProducts.Logic.Services
     public class DbService : IDbService
     {
         private readonly IDiagnosticRepository _diagRepo;
-        private readonly IDbSeedService _dbSeedService;
+        //private readonly IDbSeedService _dbSeedService;
         private readonly IDatabase _database;
         private readonly ILogger _logger;
 
@@ -25,10 +25,9 @@ namespace WasteProducts.Logic.Services
         /// <param name="dbSeedService">IDbSeedService implementation that seeds into database</param>
         /// <param name="database">IDatabase implementation, for operations with database</param>
         /// <param name="logger">NLog logger</param>
-        public DbService(IDiagnosticRepository diagRepo, IDbSeedService dbSeedService, IDatabase database, ILogger logger)
+        public DbService(IDiagnosticRepository diagRepo, IDatabase database, ILogger logger)
         {
             _diagRepo = diagRepo;
-            _dbSeedService = dbSeedService;
             _database = database;
             _logger = logger;
         }

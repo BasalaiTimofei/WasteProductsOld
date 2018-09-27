@@ -36,7 +36,7 @@ namespace WasteProducts.Logic.Services.Products
         }
 
         /// <inheritdoc/>
-        public Task<string> Add(Stream imageStream)
+        public Task<string> AddAsync(Stream imageStream)
         {
             if (imageStream == null) return null;
 
@@ -61,7 +61,7 @@ namespace WasteProducts.Logic.Services.Products
         }
 
         /// <inheritdoc/>
-        public Task<string> Add(string name)
+        public Task<string> AddAsync(string name)
         {
             if (IsProductsInDB(
                 p => string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
@@ -80,14 +80,14 @@ namespace WasteProducts.Logic.Services.Products
         }
 
         /// <inheritdoc/>
-        public Task<Product> GetById(string id)
+        public Task<Product> GetByIdAsync(string id)
         {
             return _productRepository.GetByIdAsync(id)
                 .ContinueWith(t => _mapper.Map<Product>(t.Result));
         }
 
         /// <inheritdoc/>
-        public Task<Product> GetByBarcode(Barcode barcode)
+        public Task<Product> GetByBarcodeAsync(Barcode barcode)
         {
             return _productRepository.SelectWhereAsync(p =>
                     string.Equals(p.Barcode.Code, barcode.Code, StringComparison.OrdinalIgnoreCase))
@@ -95,14 +95,14 @@ namespace WasteProducts.Logic.Services.Products
         }
 
         /// <inheritdoc/>
-        public Task<IEnumerable<Product>> GetAll()
+        public Task<IEnumerable<Product>> GetAllAsync()
         {
             return _productRepository.SelectAllAsync()
                 .ContinueWith(t => _mapper.Map<IEnumerable<Product>>(t.Result));
         }
 
         /// <inheritdoc/>
-        public Task<Product> GetByName(string name)
+        public Task<Product> GetByNameAsync(string name)
         {
             return _productRepository.SelectWhereAsync(p =>
                  string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase))
@@ -110,14 +110,14 @@ namespace WasteProducts.Logic.Services.Products
         }
 
         /// <inheritdoc/>
-        public Task<IEnumerable<Product>> GetByCategory(Category category)
+        public Task<IEnumerable<Product>> GetByCategoryAsync(Category category)
         {
             return _productRepository.SelectByCategoryAsync(_mapper.Map<CategoryDB>(category))
                 .ContinueWith(t => _mapper.Map<IEnumerable<Product>>(t.Result));
         }
 
         /// <inheritdoc/>
-        public Task Update(Product product)
+        public Task UpdateAsync(Product product)
         {
             if (!IsProductsInDB(p =>
                     string.Equals(p.Id, product.Id, StringComparison.CurrentCultureIgnoreCase),
@@ -127,7 +127,7 @@ namespace WasteProducts.Logic.Services.Products
         }
 
         /// <inheritdoc/>
-        public Task Delete(string id)
+        public Task DeleteAsync(string id)
         {
             if (!IsProductsInDB(p =>
                     string.Equals(p.Id, id, StringComparison.CurrentCultureIgnoreCase),
@@ -137,24 +137,17 @@ namespace WasteProducts.Logic.Services.Products
         }
 
         /// <inheritdoc/>
-        public Task AddToCategory(string productId, string categoryId)
+        public Task AddToCategoryAsync(string productId, string categoryId)
         {
             if (!IsProductsInDB(p =>
                 string.Equals(p.Id, productId, StringComparison.Ordinal),
                 out var products)) return null;
 
-            var productFromDB = products.ToList().First();
+            var productFromDB = products.First();
 
             productFromDB.Category = _categoryRepository.GetByIdAsync(categoryId).Result;
 
             return _productRepository.UpdateAsync(productFromDB);
-        }
-
-        /// <inheritdoc/>
-        private bool IsProductsInDB(Predicate<ProductDB> conditionPredicate, out IEnumerable<ProductDB> products)
-        {
-            products = _productRepository.SelectWhereAsync(conditionPredicate).Result;
-            return products.Any();
         }
 
         public void Dispose()
@@ -165,6 +158,12 @@ namespace WasteProducts.Logic.Services.Products
                 _disposed = true;
                 GC.SuppressFinalize(this);
             }
+        }
+
+        private bool IsProductsInDB(Predicate<ProductDB> conditionPredicate, out IEnumerable<ProductDB> products)
+        {
+            products = _productRepository.SelectWhereAsync(conditionPredicate).Result;
+            return products.Any();
         }
 
         ~ProductService()

@@ -39,7 +39,7 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpGet, Route("")]
         public async Task<IHttpActionResult> GetAll()
         {
-            return Ok(await _productService.GetAll());
+            return Ok(await _productService.GetAllAsync());
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpGet, Route("{id}")]
         public async Task<IHttpActionResult> GetById([FromUri] string id)
         {
-            return Ok(await _productService.GetById(id));
+            return Ok(await _productService.GetByIdAsync(id));
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace WasteProducts.Web.Controllers.Api
             var image = HttpContext.Current.Request.Files[0].InputStream;
             if (image == null) return BadRequest();
 
-            var id = await _productService.Add(image);
+            var id = await _productService.AddAsync(image);
 
             return Created("api/products/" + id, GetById(id));
         }
@@ -87,7 +87,7 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpDelete, Route("{id}")]
         public async Task Delete([FromUri] string id)
         {
-            await _productService.Delete(id);
+            await _productService.DeleteAsync(id);
         }
 
         /// <summary>
@@ -103,9 +103,9 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpPatch, Route("{productId}/category/{categoryId}")]
         public async Task<IHttpActionResult> AddToCategory([FromUri]string productId, [FromUri]string categoryId)
         {
-            await _productService.AddToCategory(productId, categoryId);
+            await _productService.AddToCategoryAsync(productId, categoryId);
 
-            return Ok(GetById(productId));
+            return Ok(await GetById(productId));
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpPut, Route("")]
         public async Task<IHttpActionResult> UpdateProduct([FromBody]Product data)
         {
-            await _productService.Update(data);
+            await _productService.UpdateAsync(data);
 
             return Ok(GetById(data.Id));
         }

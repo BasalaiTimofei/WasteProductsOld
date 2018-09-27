@@ -411,19 +411,15 @@ namespace WasteProducts.Logic.Tests.UserTests
         {
             using (var prodService = _kernel.Get<IProductService>())
             {
-                string id;
-                var path = @"\Test_images\Test image.jpg";
+                string name = "SomeProduct";
 
-                using (var imageStream = new FileStream(path, FileMode.Open))
-                {
-                    id = await prodService.Add(imageStream).ConfigureAwait(false);
-                }
+                string id = await prodService.AddAsync(name).ConfigureAwait(false);
 
-                var product = await prodService.GetById(id).ConfigureAwait(false);
+                var product = await prodService.GetByIdAsync(id).ConfigureAwait(false);
 
                 Assert.IsNotNull(product);
-                //Это утверждение теперь не имеет смысла, потому что мы не знаем имени продукта
-                //Assert.AreEqual(barcode.ProductName, product.Name);
+                Assert.AreEqual(name, product.Name);
+
                 _productIds.Add(product.Id);
             }
         }

@@ -236,7 +236,7 @@
     <Compile Include="App_Start\Extensions\SwaggerExtensions.cs" />
     <Compile Include="App_Start\Startup.Cors.cs" />
     <Compile Include="App_Start\Startup.OAuth.cs" />
-    <Compile Include="Controllers\Api\Groups\GroupBoardControlle.cs" />
+    <Compile Include="Controllers\Api\Groups\GroupBoardController.cs" />
     <Compile Include="Controllers\Api\Groups\GroupUserController.cs" />
     <Compile Include="Controllers\Api\Groups\GroupProductController .cs" />
     <Compile Include="Controllers\Api\Groups\GroupCommentController.cs" />
