@@ -262,7 +262,7 @@
     <Compile Include="Models\Users\Email.cs" />
     <Compile Include="Models\Users\LoginByName.cs" />
     <Compile Include="Models\Users\NewPassword.cs" />
-    <Compile Include="Models\Users\ProductDescriprion.cs" />
+    <Compile Include="Models\Users\ProductDescription.cs" />
     <Compile Include="Models\Users\RegisterUser.cs" />
     <Compile Include="Models\Users\UserNameModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -276,6 +276,7 @@
     <Compile Include="Validators\Users\LoginByEmailValidator.cs" />
     <Compile Include="Validators\Users\LoginByNameValidator.cs" />
     <Compile Include="Validators\Users\NewPasswordValidator.cs" />
+    <Compile Include="Validators\Users\ProductDescriptionValidator.cs" />
     <Compile Include="Validators\Users\RegisterUserValidator.cs" />
     <Compile Include="Validators\Users\UserNameModelValidator.cs" />
   </ItemGroup>

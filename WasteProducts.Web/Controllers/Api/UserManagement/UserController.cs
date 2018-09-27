@@ -53,12 +53,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         {
             var users = await _service.GetAllAsync();
 
-            if (!users.Any())
-            {
-                //throws 404
-                throw new KeyNotFoundException("There are no Users.");
-            }
-
             return Ok(users);
         }
 
@@ -76,11 +70,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         public async Task<IHttpActionResult> GetById(string id)
         {
             var user = await _service.GetAsync(id);
-            if (user is null)
-            {
-                // throws 404
-                throw new KeyNotFoundException("There is no User with such ID.");
-            }
+            
             return Ok(user);
         }
 
@@ -153,9 +143,6 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task<IHttpActionResult> GetFriends([FromUri] string id)
         {
-            //throws 404
-            var user = await this.GetUserById(id);
-
             return Ok(await _service.GetFriendsAsync(id));
         }
 
@@ -173,9 +160,9 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         public async Task<IHttpActionResult> GetUserProducts([FromUri] string id)
         {
             //throws 404
-            var user = await this.GetUserById(id);
+            var user = await this.GetById(id);
 
-            return Ok(await _service.GetProductDescriptionsAsync(id));
+            return Ok(await _service.GetProductsAsync(id));
         }
 
         /// <summary>
@@ -192,7 +179,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         public async Task<IHttpActionResult> GetGroups([FromUri] string id)
         {
             //throws 404
-            var user = await this.GetUserById(id);
+            var user = await this.GetById(id);
 
             return Ok(await _service.GetGroupsAsync(id));
         }
@@ -211,7 +198,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         public async Task<IHttpActionResult> GetRoles(string id)
         {
             //throws 404
-            var user = await this.GetUserById(id);
+            var user = await this.GetById(id);
 
             return Ok(await _service.GetRolesAsync(id));
         }
@@ -230,7 +217,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         public async Task<IHttpActionResult> GetClaims(string id)
         {
             //throws 404
-            var user = await this.GetUserById(id);
+            var user = await this.GetById(id);
 
             return Ok(await _service.GetClaimsAsync(id));
         }
@@ -249,7 +236,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         public async Task<IHttpActionResult> GetLogins(string id)
         {
             //throws 404
-            var user = await this.GetUserById(id);
+            var user = await this.GetById(id);
 
             return Ok(await _service.GetLoginsAsync(id));
         }
@@ -418,7 +405,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             validator.ValidateAndThrow(newEmail);
 
             //throws 404
-            var user = await this.GetUserById(id);
+            var user = await this.GetById(id);
 
             var isSuccess = await _service.UpdateEmailAsync(id, newEmail.EmailOfTheUser);
 
@@ -434,6 +421,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <summary>
         /// Updates user name of the user with the specific ID.
         /// </summary>
+        /// <exception cref="NullReferenceException">Thrown when null</exception>
         /// <param name="id">ID of the user changing its userName.</param>
         /// <param name="newUserName">New name of the user.</param>
         /// <returns></returns>
@@ -451,7 +439,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             validator.ValidateAndThrow(newUserName);
 
             //throws 404
-            var user = await this.GetUserById(id);
+            var user = await this.GetById(id);
 
             var isSuccess = await _service.UpdateUserNameAsync(id, newUserName.UserName);
 
@@ -480,7 +468,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         public async Task<IHttpActionResult> AddFriend([FromUri] string userId, [FromUri] string friendId)
         {
             //throws 404
-            var user = await this.GetUserById(userId);
+            var user = await this.GetById(userId);
 
             await _service.AddFriendAsync(userId, friendId);
 
@@ -502,7 +490,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         public async Task<IHttpActionResult> DeleteFriend([FromUri] string userId, [FromUri] string friendId)
         {
             //throws 404
-            await GetUserById(userId);
+            await GetById(userId);
 
             await _service.DeleteFriendAsync(userId, friendId);
 
@@ -523,10 +511,10 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.Conflict, "User already has got the ProductRate.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
-        public async Task AddProduct([FromUri] string userId, [FromUri] string productId, [FromBody] ProductDescriprion description)
+        public async Task AddProduct([FromUri] string userId, [FromUri] string productId, [FromBody] Models.Users.ProductDescription description)
         {
             //throws 404
-            await GetUserById(userId);
+            await GetById(userId);
 
             await _service.AddProductAsync(userId, productId, description.Rating, description.Description);
         }
@@ -545,9 +533,19 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Please stick to validation rules.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
-        public async Task UpdateProduct([FromUri] string userId, [FromUri] string productId, [FromBody] ProductDescriprion description)
+        public async Task<IHttpActionResult> UpdateProduct([FromUri] string userId, [FromUri] string productId, [FromBody] ProductDescription description)
         {
+            //throws 404
+            await GetById(userId);
+
+            // throws 400
+            var validator = new ProductDescriptionValidator();
+            validator.ValidateAndThrow(description);
+
             await _service.UpdateProductDescriptionAsync(userId, productId, description.Rating, description.Description);
+
+            //throws 204
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -562,14 +560,21 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no ProductRate with such Id.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
-        public async Task DeleteProduct([FromUri] string userId, [FromUri] string productId)
+        public async Task<IHttpActionResult> DeleteProduct([FromUri] string userId, [FromUri] string productId)
         {
+            //throws 404
+            await GetById(userId);
+
             await _service.DeleteProductAsync(userId, productId);
+
+            //throws 204
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
         /// Confirms group invitation if isConfirmed == true or deletes invite if isConfirmed == false.
         /// </summary>
+        /// <exception cref="KeyNotFoundException">Exception is thrown if there is no such GroupUsers.</exception>
         /// <param name="userId">ID of the user.</param>
         /// <param name="groupId">ID of the group.</param>
         /// <param name="isConfirmed">True if invitation accepted or false if not.</param>
@@ -580,15 +585,17 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no user or group with such Id.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
-        public async Task<HttpStatusCode> RespondToGroupInvitation([FromUri] string userId, [FromUri] string groupId, [FromBody] bool isConfirmed)
+        public async Task<IHttpActionResult> RespondToGroupInvitation([FromUri] string userId, [FromUri] string groupId, [FromBody] bool isConfirmed)
         {
             await _service.RespondToGroupInvitationAsync(userId, groupId, isConfirmed);
-            return HttpStatusCode.NoContent;
+
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
         /// Leave from group by the user. 
         /// </summary>
+        /// <exception cref="KeyNotFoundException">Exception is thrown if there is no such GroupUsers.</exception>
         /// <param name="userId">ID of the user.</param>
         /// <param name="groupId">ID of the group.</param>
         /// <returns></returns>
@@ -598,10 +605,11 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no user or group with such Id.")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "You don't have enough permissions.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
-        public async Task<HttpStatusCode> LeaveGroup([FromUri] string userId, [FromUri] string groupId)
+        public async Task<IHttpActionResult> LeaveGroup([FromUri] string userId, [FromUri] string groupId)
         {
             await _service.LeaveGroupAsync(userId, groupId);
-            return HttpStatusCode.NoContent;
+
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>

@@ -183,12 +183,24 @@ namespace WasteProducts.DataAccess.Repositories.Users
         public async Task<IEnumerable<UserDAL>> GetAllAsync()
         {
             var subresult = await _context.Users.ToListAsync().ConfigureAwait(false);
-            return _mapper.Map<IEnumerable<UserDAL>>(subresult);
+
+            if (subresult.Any())
+            {
+                return _mapper.Map<IEnumerable<UserDAL>>(subresult);
+            }
+            throw new KeyNotFoundException("There are no Users.");
         }
 
         public async Task<UserDAL> GetAsync(string id)
         {
             var subresult = await _context.Users.FirstOrDefaultAsync(u => u.Id == id).ConfigureAwait(false);
+
+            if (subresult is null)
+            {
+                // throws 404
+                throw new KeyNotFoundException("There is no User with such ID.");
+            }
+
             return MapTo<UserDAL>(subresult);
         }
 
@@ -295,7 +307,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
             var user = await _context.Users.Include(u => u.Friends).FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
             if (user == null)
             {
-                return null;
+                throw new KeyNotFoundException("There is no User with such userId.");
             }
             return _mapper.Map<List<UserDAL>>(user.Friends);
         }
@@ -354,12 +366,12 @@ namespace WasteProducts.DataAccess.Repositories.Users
             return user.ProductDescriptions;
         }
 
-        public async Task<bool> UpdateProductDescriptionAsync(string userId, string productId, int rating, string description)
+        public async Task UpdateProductDescriptionAsync(string userId, string productId, int rating, string description)
         {
             var descr = await _context.UserProductDescriptions.FirstOrDefaultAsync(d => d.UserId == userId && d.ProductId == productId).ConfigureAwait(false);
             if (descr == null)
             {
-                return false;
+                throw new KeyNotFoundException("There is no such Product for current User.");
             }
 
             descr.Rating = rating;
@@ -367,7 +379,6 @@ namespace WasteProducts.DataAccess.Repositories.Users
             descr.Modified = DateTime.UtcNow;
 
             await _context.SaveChangesAsync().ConfigureAwait(false);
-            return true;
         }
 
         public async Task<bool> DeleteProductAsync(string userId, string productId)
@@ -402,6 +413,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
                 }
                 await _context.SaveChangesAsync().ConfigureAwait(false);
             }
+            throw new KeyNotFoundException("There is no such GroupUsers.");
         }
 
         public async Task<IEnumerable<GroupUserDB>> GetGroupsAsync(string userId)

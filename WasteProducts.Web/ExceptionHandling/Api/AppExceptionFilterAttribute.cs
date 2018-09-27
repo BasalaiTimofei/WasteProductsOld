@@ -21,7 +21,7 @@ namespace WasteProducts.Web.ExceptionHandling.Api
                 };
             }
 
-            if (context.Exception is UnauthorizedAccessException unauthorizedAccessException)
+            else if (context.Exception is UnauthorizedAccessException unauthorizedAccessException)
             {
                 context.Response = new HttpResponseMessage(HttpStatusCode.Unauthorized)
                 {
@@ -29,7 +29,7 @@ namespace WasteProducts.Web.ExceptionHandling.Api
                 };
             }
 
-            if (context.Exception is OperationCanceledException operationCanceledException)
+            else if (context.Exception is OperationCanceledException operationCanceledException)
             {
                 context.Response = new HttpResponseMessage(HttpStatusCode.Conflict)
                 {

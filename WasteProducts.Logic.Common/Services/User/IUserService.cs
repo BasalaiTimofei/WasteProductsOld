@@ -254,7 +254,7 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// <param name="rating">New rating of the product.</param>
         /// <param name="description">New description of the product.</param>
         /// <returns>Boolean represents whether operation succeed or not.</returns>
-        Task<bool> UpdateProductDescriptionAsync(string userId, string productId, int rating, string description);
+        Task UpdateProductDescriptionAsync(string userId, string productId, int rating, string description);
 
         /// <summary>
         /// Updates user's UserName. You cannot update UserName if newUserName is already used by another user.

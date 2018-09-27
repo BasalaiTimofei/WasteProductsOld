@@ -194,14 +194,9 @@ namespace WasteProducts.Logic.Services.Users
             return _repo.GetUserProductDescriptionsAsync(userId).ContinueWith(t => _mapper.Map<IList<UserProduct>>(t.Result));
         }
 
-        public async Task<bool> UpdateProductDescriptionAsync(string userId, string productId, int rating, string description)
+        public async Task UpdateProductDescriptionAsync(string userId, string productId, int rating, string description)
         {
-            if (userId == null || productId == null || rating > 10 || rating < 0)
-            {
-                return false;
-            }
-
-            return await _repo.UpdateProductDescriptionAsync(userId, productId, rating, description);
+            await _repo.UpdateProductDescriptionAsync(userId, productId, rating, description);
         }
 
         public async Task<bool> DeleteProductAsync(string userId, string productId)
