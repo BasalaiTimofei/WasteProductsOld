@@ -12,7 +12,7 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         /// <summary>
         /// Unique identifier of concrete Category in database.
         /// </summary>
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Unique name of concrete Category in database.

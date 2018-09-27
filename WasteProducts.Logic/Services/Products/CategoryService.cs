@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.Logic.Common.Models.Products;
-using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Common.Services.Products;
 
 namespace WasteProducts.Logic.Services.Products
@@ -24,107 +24,81 @@ namespace WasteProducts.Logic.Services.Products
             _mapper = mapper;
         }
 
-        /// <summary>
-        /// Tries to add a new category by name and returns whether the addition is successful or not.
-        /// </summary>
-        /// <param name="name">The name of the category to be added.</param>
-        /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        public bool Add(string name)
+        /// <inheritdoc/>
+        public Task<string> Add(string name)
         {
             if (IsCategoryInDB(p =>
                 string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
-                out var categories)) return false;
-
-            var newCategory = new Category { Name = name };
-            _categoryRepository.Add(_mapper.Map<CategoryDB>(newCategory));
-
-            return true;
-        }
-
-        /// <summary>
-        /// Tries to add a list of new categories by names and returns whether the addition is successful or not.
-        /// </summary>
-        /// <param name="names">The list of names of the categories to be added.</param>
-        /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        public bool AddRange(IEnumerable<string> names)
-        {
-            var result = false;
-
-            foreach(var name in names)
-            {
-                if (Add(name) && !result) result = true;
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Returns a spicific category by its name.
-        /// </summary>
-        /// <param name="name">The name of the category to be gotten.</param>
-        /// <returns>The specific category to be returned.</returns>
-        public Category Get(string name)
-        {
-            if (!IsCategoryInDB(p =>
-                string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
                 out var categories)) return null;
 
-            return _mapper.Map<Category>(categories.ToList().First());
+            var newCategory = new Category { Name = name };
+            return _categoryRepository.AddAsync(_mapper.Map<CategoryDB>(newCategory))
+                .ContinueWith(c => c.Result);
         }
 
-        /// <summary>
-        /// Adds the description for specific category.
-        /// </summary>
-        /// <param name="category">The specific category for which a description is added.</param>
-        /// <param name="description">The specific description for the specfic category.</param>
-        public void SetDescription(Category category, string description)
+        /// <inheritdoc/>
+        public Task<IEnumerable<string>> AddRange(IEnumerable<string> nameRange)
         {
-            if (!IsCategoryInDB(p =>
-                    string.Equals(p.Name, category.Name, StringComparison.CurrentCultureIgnoreCase),
-                out var categories)) return;
-
-            var categoryFromDB = categories.ToList().First();
-            categoryFromDB.Description = description;
-            _categoryRepository.Update(categoryFromDB);
-        }
-
-        /// <summary>
-        /// Tries to delete the specific category.
-        /// </summary>
-        /// <param name="name">The name of the category to be deleted.</param>
-        /// <returns>Boolean represents whether the deletion is successful or not.</returns>
-        public bool Delete(string name)
-        {
-            if (!IsCategoryInDB(p =>
-                    string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
-                out var categories)) return false;
-
-            var categoryFromDB = categories.ToList().First();
-            _categoryRepository.Delete(categoryFromDB);
-
-            return true;
-        }
-
-        /// <summary>
-        /// Tries to delete the list of specific categories.
-        /// </summary>
-        /// <param name="names">The list of names of the categories to be deleted.</param>
-        /// <returns>Boolean represents whether the deletion is successful or not.</returns>
-        public bool DeleteRange(IEnumerable<string> names)
-        {
-            var result = false;
-
-            foreach (var name in names)
+            var categoriesDB = _categoryRepository.SelectAllAsync().Result;
+            if (!nameRange.All(name =>
             {
-                if (Delete(name) && !result) result = true;
-            }
+                return categoriesDB.All(c =>
+                    !string.Equals(c.Name, name, StringComparison.CurrentCultureIgnoreCase));
+            })) return null;
 
-            return result;
+            var newCategoies = new List<Category>();
+            nameRange.Select(c =>
+            {
+                newCategoies.Add(new Category {Name = c});
+                return c;
+            });
+
+            return _categoryRepository.AddRangeAsync(_mapper.Map<IEnumerable<CategoryDB>>(newCategoies));
+        }
+
+        /// <inheritdoc/>
+        public Task<IEnumerable<Category>> GetAll()
+        {
+            return _categoryRepository.SelectAllAsync()
+                .ContinueWith(t => _mapper.Map<IEnumerable<Category>>(t.Result));
+        }
+
+        /// <inheritdoc/>
+        public Task<Category> GetById(string id)
+        {
+            return _categoryRepository.GetByIdAsync(id).ContinueWith(t => _mapper.Map<Category>(t.Result));
+        }
+
+        /// <inheritdoc/>
+        public Task<Category> GetByName(string name)
+        {
+            return _categoryRepository.GetByNameAsync(name).ContinueWith(t => _mapper.Map<Category>(t.Result));
+        }
+
+        /// <inheritdoc/>
+        public Task Update(Category category)
+        {
+            if (!IsCategoryInDB(c =>
+                    string.Equals(c.Id, category.Id, StringComparison.Ordinal),
+                out var categories)) return null;
+
+            return _categoryRepository.UpdateAsync(_mapper.Map<CategoryDB>(category));
+        }
+
+        /// <inheritdoc/>
+        public Task Delete(string id)
+        {
+            if (!IsCategoryInDB(p =>
+                    string.Equals(p.Id, id, StringComparison.Ordinal),
+                out var categories)) return null;
+
+            var categoryFromDB = categories.ToList().First();
+            return _categoryRepository.DeleteAsync(categoryFromDB);
         }
 
         private bool IsCategoryInDB(Predicate<CategoryDB> conditionPredicate, out IEnumerable<CategoryDB> categories)
         {
-            categories = _categoryRepository.SelectWhere(conditionPredicate);
+            categories = _categoryRepository.SelectWhereAsync(conditionPredicate).Result;
             return categories.Any();
         }
 
@@ -142,8 +116,6 @@ namespace WasteProducts.Logic.Services.Products
                 _disposed = true;
             }
         }
-
-        
 
         /// <inheritdoc/>
         public void Dispose()

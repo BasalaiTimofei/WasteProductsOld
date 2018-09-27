@@ -1,4 +1,5 @@
-﻿using System.Net;
+
+using System.Net;
 using System.Web.Http;
 using WasteProducts.Logic.Common.Models.Groups;
 using WasteProducts.Logic.Common.Services.Groups;

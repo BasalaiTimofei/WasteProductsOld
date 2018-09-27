@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+
+using FluentValidation;
 using WasteProducts.Logic.Common.Models.Groups;
 
 namespace WasteProducts.Logic.Validators.Groups

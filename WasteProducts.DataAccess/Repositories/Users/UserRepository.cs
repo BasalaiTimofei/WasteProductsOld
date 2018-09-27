@@ -8,7 +8,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Groups;
-using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.Users;
 using WasteProducts.DataAccess.Contexts;
