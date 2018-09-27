@@ -4,11 +4,11 @@ using WasteProducts.Logic.Common.Models.Users;
 
 namespace WasteProducts.Logic.Mappings.Users
 {
-    public class ProductDescriptionProfile : Profile
+    public class UserProductProfile : Profile
     {
-        public ProductDescriptionProfile()
+        public UserProductProfile()
         {
-            CreateMap<UserProductDescriptionDB, ProductDescription>();
+            CreateMap<UserProductDescriptionDB, UserProduct>();
         }
     }
 }

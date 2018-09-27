@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models.Products;
 
 namespace WasteProducts.Logic.Common.Services.Products
@@ -10,45 +11,56 @@ namespace WasteProducts.Logic.Common.Services.Products
     public interface ICategoryService : IDisposable
     {
         /// <summary>
-        /// Tries to add a new category by name and returns whether the addition is successful or not.
+        /// Tries to add a new category by name.
         /// </summary>
         /// <param name="name">The name of the category to be added.</param>
-        /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        bool Add(string name);
+        /// <returns>A task that represents the add operation.
+        /// The task result contains the id of the category written to the database.</returns>
+        Task<string> Add(string name);
 
         /// <summary>
-        /// Tries to add a list of new categories by names and returns whether the addition is successful or not.
+        /// Adds a collection of categories.
         /// </summary>
-        /// <param name="names">The list of names of the categories to be added.</param>
-        /// <returns>Boolean represents whether the addition is successful or not.</returns>
-        bool AddRange(IEnumerable<string> names);
+        /// <param name="nameRange">The specific collection of categories for adding.</param>
+        /// <returns>A task that represents the add operation.
+        /// The task result contains the collection of ids of the category written to the database.</returns>
+        Task<IEnumerable<string>> AddRange(IEnumerable<string> nameRange);
 
         /// <summary>
-        /// Returns a spicific category by its name.
+        /// Provides a collection of all categories.
         /// </summary>
-        /// <param name="name">The name of the category to be gotten.</param>
-        /// <returns>The specific category to be returned.</returns>
-        Category Get(string name);
+        /// <returns>A task that represents the get operation.
+        /// The task result contains the collection of all categories from the database.</returns>
+        Task<IEnumerable<Category>> GetAll();
 
         /// <summary>
-        /// Adds the description for specific category.
+        /// Provides a specific category by its id.
         /// </summary>
-        /// <param name="category">The specific category for which a description is added.</param>
-        /// <param name="description">The specific description for the specfic category.</param>
-        void SetDescription(Category category, string description);
+        /// <param name="id">The id of the specific category</param>
+        /// <returns>A task that represents the get operation.
+        /// The task result contains the category from the database.</returns>
+        Task<Category> GetById(string id);
 
         /// <summary>
-        /// Tries to delete the specific category.
+        /// Provides a specific category by its name.
         /// </summary>
-        /// <param name="name">The name of the category to be deleted.</param>
-        /// <returns>Boolean represents whether the deletion is successful or not.</returns>
-        bool Delete(string name);
+        /// <param name="name">The name of the specific category</param>
+        /// <returns>A task that represents the get operation.
+        /// The task result contains the category from the database.</returns>
+        Task<Category> GetByName(string name);
 
         /// <summary>
-        /// Tries to delete the list of specific categories.
+        ///  Updates the specific category.
         /// </summary>
-        /// <param name="names">The list of names of the categories to be deleted.</param>
-        /// <returns>Boolean represents whether the deletion is successful or not.</returns>
-        bool DeleteRange(IEnumerable<string> names);
+        /// <param name="category">The specific category for updating.</param>
+        /// <returns>A task that represents the update operation.</returns>
+        Task Update(Category category);
+
+        /// <summary>
+        /// Deletes the specific category by its id.
+        /// </summary>
+        /// <param name="id">Represents the id of the specific category to delete.</param>
+        /// <returns>A task that represents the delete operation.</returns>
+        Task Delete(string id);
     }
 }

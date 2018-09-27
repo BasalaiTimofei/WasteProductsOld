@@ -1,3 +1,6 @@
 <p>
-  friends works!
+  friends works! Wait for the loading of the friendlist.
 </p>
+<div *ngFor="let item of friends">
+  {{item.UserName}} current ID: {{item.Id}}
+</div>
