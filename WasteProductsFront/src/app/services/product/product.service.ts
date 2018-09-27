@@ -10,6 +10,7 @@ import { Product } from '../../models/products/product';
 import { Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { AuthenticationService } from '../../modules/account/services/authentication.service';
+import { ProductDescription } from '../../models/products/product-description';
 
 @Injectable({
   providedIn: 'root'
@@ -41,8 +42,6 @@ export class ProductService extends BaseHttpService {
 
   private apiUrl = `${environment.apiHostUrl}/api/product/products`;
 
-  private getProductsUrl = `http://localhost:2189/api/user/0/products`;
-
   constructor(httpService: HttpClient, private authServise: AuthenticationService, loggingService: LoggingService) {
     super(httpService, loggingService);
   }
@@ -53,13 +52,25 @@ export class ProductService extends BaseHttpService {
     return this.httpService.get<UserProduct[]>(url);
    }
 
-   getProducts(): Observable<UserProduct[ ]> {
+   updateProduct(productId: string, rating: number, description: string) {
+    const claims = this.authServise.getClaims();
+    const url = `${environment.apiHostUrl}/api/user/${claims.sub}/updateproductdescription/${productId}`;
+    // tslint:disable-next-line:prefer-const
+    let descr: ProductDescription;
+    descr.Rating = rating;
+    descr.Description = description;
+    descr.Rating = rating;
+
+    this.httpService.put(url, descr);
+   }
+
+   getProducts(): Observable<UserProduct[]> {
     const url = `${this.apiUrl}/products`; // правишь урл под конкретный запрос От Сани Галговского
 
-    return this.httpService.get<UserProduct[ ]>(url)
+    return this.httpService.get<UserProduct[]>(url)
     .pipe(
       tap(data => this.logDebug('fetched products')),
-      catchError(this.handleError('getProducts', [ ]))
+      catchError(this.handleError('getProducts', []))
       );
   }
 }
