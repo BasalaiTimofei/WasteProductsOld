@@ -47,30 +47,37 @@ export class ProductService extends BaseHttpService {
   }
 
   getUserProducts() {
-    const claims = this.authServise.getClaims();
-    const url = `${environment.apiHostUrl}/api/user/${claims.sub}/products`;
+    const url = `${environment.apiHostUrl}/api/user/${this.getUserId()}/products`;
     return this.httpService.get<UserProduct[]>(url);
    }
 
-   updateProduct(productId: string, rating: number, description: string) {
-    const claims = this.authServise.getClaims();
-    const url = `${environment.apiHostUrl}/api/user/${claims.sub}/updateproductdescription/${productId}`;
-    // tslint:disable-next-line:prefer-const
-    let descr: ProductDescription;
+   updateUserProduct(productId: string, rating: number, description: string) {
+    const url = `${environment.apiHostUrl}/api/user/${this.getUserId()}/products/${productId}`;
+
+    const descr = new ProductDescription();
     descr.Rating = rating;
     descr.Description = description;
-    descr.Rating = rating;
 
     this.httpService.put(url, descr);
    }
 
-   getProducts(): Observable<UserProduct[]> {
-    const url = `${this.apiUrl}/products`; // правишь урл под конкретный запрос От Сани Галговского
+   deleteUserProduct(productId: string) {
+    const url = `${environment.apiHostUrl}/api/user/${this.getUserId()}/products/${productId}`;
+    this.httpService.delete(url);
+   }
+
+   getAllProducts(): Observable<UserProduct[]> {
+    const url = `${this.apiUrl}/products`;
 
     return this.httpService.get<UserProduct[]>(url)
     .pipe(
       tap(data => this.logDebug('fetched products')),
       catchError(this.handleError('getProducts', []))
       );
+  }
+
+  private getUserId() {
+    const claims = this.authServise.getClaims();
+    return claims.sub;
   }
 }

@@ -367,7 +367,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <param name="productId">ID of the adding product.</param>
         /// <param name="description">PLL model contains Rating and Description</param>
         /// <returns></returns>
-        [HttpPut, Route("{userId}/addproduct/{productId}")]
+        [HttpPost, Route("{userId}/products/{productId}")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.NoContent, "Product added and described.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no User or Product with such Id.")]
@@ -386,7 +386,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <param name="productId">ID of the adding product.</param>
         /// <param name="description">PLL model contains Rating and Description</param>
         /// <returns></returns>
-        [HttpPut, Route("{userId}/updateproductdescription/{productId}")]
+        [HttpPut, Route("{userId}/products/{productId}")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.NoContent, "Feedback is modified.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no ProductRate with such Id.")]
@@ -404,7 +404,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <param name="userId">ID of the user who is adding a product to its list of products.</param>
         /// <param name="productId">ID of adding product.</param>
         /// <returns></returns>
-        [HttpPut, Route("{userId}/deleteproduct/{productId}")]
+        [HttpDelete, Route("{userId}/products/{productId}")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.NoContent, "Product is removed.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no ProductRate with such Id.")]
