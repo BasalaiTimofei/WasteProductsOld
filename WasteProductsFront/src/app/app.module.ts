@@ -48,6 +48,9 @@ import { DonateComponent } from './components/donate/donate.component';
 /* Services */
 import { ImagePreviewService } from './services/image-preview/image-preview.service';
 
+/* Custom Modules */
+import { AccountModule } from './modules/account/account.module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -67,6 +70,7 @@ import { ImagePreviewService } from './services/image-preview/image-preview.serv
     DeleteProductComponent,
     UpdateProductComponent,
     HeaderComponent,
+    FooterComponent,
     ImagePreviewComponent,
     ImageOverlayWrapperComponent,
     GroupCreateComponent,
@@ -83,7 +87,7 @@ import { ImagePreviewService } from './services/image-preview/image-preview.serv
     GroupUserSendInviteComponent,
     GroupUserDismissUserComponent,
     GroupUserGetEntitleComponent,
-    FooterComponent,
+
     DonateComponent,
   ],
   imports: [
@@ -95,7 +99,10 @@ import { ImagePreviewService } from './services/image-preview/image-preview.serv
     MaterialModule,
     AppRoutingModule,
     CdkTableModule,
-    OverlayModule
+    OverlayModule,
+
+    /* Custom modules */
+    AccountModule
   ],
   providers: [ImagePreviewService],
   entryComponents: [ImagePreviewComponent],
