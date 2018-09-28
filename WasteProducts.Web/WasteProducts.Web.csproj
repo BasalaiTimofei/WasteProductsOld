@@ -236,9 +236,16 @@
     <Compile Include="App_Start\Extensions\SwaggerExtensions.cs" />
     <Compile Include="App_Start\Startup.Cors.cs" />
     <Compile Include="App_Start\Startup.OAuth.cs" />
+    <Compile Include="Controllers\Api\Groups\GroupBoardController.cs" />
+    <Compile Include="Controllers\Api\Groups\GroupUserController.cs" />
+    <Compile Include="Controllers\Api\Groups\GroupProductController .cs" />
+    <Compile Include="Controllers\Api\Groups\GroupCommentController.cs" />
+    <Compile Include="Controllers\Api\Groups\GroupController.cs" />
     <Compile Include="Controllers\Api\BarcodeController.cs" />
     <Compile Include="Controllers\Api\BaseApiController.cs" />
+    <Compile Include="Controllers\Api\CategoryController.cs" />
     <Compile Include="Controllers\Api\DatabaseController.cs" />
+    <Compile Include="Controllers\Api\NotificationController.cs" />
     <Compile Include="Controllers\Api\PayPalController.cs" />
     <Compile Include="Controllers\Api\ProductsController.cs" />
     <Compile Include="Controllers\Api\SearchController.cs" />
@@ -252,6 +259,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Hubs\NotificationHub.cs" />
     <Compile Include="InjectionModule.cs" />
     <Compile Include="Models\Users\ChangePassword.cs" />
     <Compile Include="Models\Users\Email.cs" />
@@ -262,6 +270,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utils\ActionResults\ElmahResult.cs" />
+    <Compile Include="Utils\Hubs\HubConnectionManager.cs" />
+    <Compile Include="Utils\Hubs\SignalRNotifiactionProvider.cs" />
     <Compile Include="Utils\Logging\SingleEventAsArrayWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -301,6 +311,7 @@
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>

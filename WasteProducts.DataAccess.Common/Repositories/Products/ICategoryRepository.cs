@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Products;
 
 namespace WasteProducts.DataAccess.Common.Repositories.Products
@@ -10,54 +11,76 @@ namespace WasteProducts.DataAccess.Common.Repositories.Products
     public interface ICategoryRepository : IDisposable
     {
         /// <summary>
-        /// Adds a new category
+        /// Adds a new category.
         /// </summary>
-        /// <param name="category">The specific category for adding</param>
-        void Add(CategoryDB category);
+        /// <param name="category">The specific category for adding.</param>
+        /// <returns>A task that represents the asynchronous add operation.
+        /// The task result contains the id of the category written to the database.</returns>
+        Task<string> AddAsync(CategoryDB category);
 
         /// <summary>
-        /// Deletes the specific category
+        /// Adds a collection of categories.
         /// </summary>
-        /// <param name="category">The specific category for deleting</param>
-        void Delete(CategoryDB category);
+        /// <param name="categories">The specific collection of categories for adding.</param>
+        /// <returns>A task that represents the asynchronous add operation.
+        /// The task result contains the collection of ids of the category written to the database.</returns>
+        Task<IEnumerable<string>> AddRangeAsync(IEnumerable<CategoryDB> categories);
 
         /// <summary>
-        /// Deletes the specific category by id
+        /// Deletes the specific category.
         /// </summary>
-        /// <param name="id">Represents a specific category id to delete</param>
-        void Delete(int id);
+        /// <param name="category">The specific category for deleting.</param>
+        /// <returns>A task that represents the asynchronous delete operation.</returns>
+        Task DeleteAsync(CategoryDB category);
 
         /// <summary>
-        /// Provides a listing of all categories.
+        /// Deletes the specific category by its id.
         /// </summary>
-        /// <returns>Returns list of categories.</returns>
-        IEnumerable<CategoryDB> SelectAll();
+        /// <param name="id">Represents the id of the specific category to delete.</param>
+        /// <returns>A task that represents the asynchronous delete operation.</returns>
+        Task DeleteAsync(string id);
 
         /// <summary>
-        /// Provides a listing of categories that satisfy the condition.
+        /// Provides a collection of all categories.
         /// </summary>
-        /// <param name="predicate">The condition that list of categories must satisfy</param>
-        /// <returns>Returns list of categories.</returns>
-        IEnumerable<CategoryDB> SelectWhere(Predicate<CategoryDB> predicate);
+        /// <returns>A task that represents the asynchronous select operation.
+        /// The task result contains the collection of all categories from the database.</returns>
+        Task<IEnumerable<CategoryDB>> SelectAllAsync();
 
         /// <summary>
-        /// Gets category by ID
+        /// Provides a collection of categories that satisfy the condition.
         /// </summary>
-        /// <param name="id">The specific id of category that was sorted</param>
-        /// <returns>Returns a category chosen by ID</returns>
-        CategoryDB GetById(int id);
+        /// <param name="predicate">The condition that collection of categories must satisfy</param>
+        /// <returns>A task that represents the asynchronous select operation.
+        /// The task result contains the collection of categories from the database that satisfy a condition.</returns>
+        Task<IEnumerable<CategoryDB>> SelectWhereAsync(Predicate<CategoryDB> predicate);
 
         /// <summary>
-        /// Gets category by name of the specific category
+        /// Gets a category by its ID.
         /// </summary>
-        /// <param name="name">The name of the specific category</param>
-        /// <returns>Returns a category chosen by its name</returns>
-        CategoryDB GetByName(string name);
+        /// <param name="id">The specific id of the category.</param>
+        /// <returns>A task that represents the asynchronous get operation.
+        /// The task result contains the category from the database.</returns>
+        Task<CategoryDB> GetByIdAsync(string id);
+
+        /// <summary>
+        /// Gets a category by its name of the specific category.
+        /// </summary>
+        /// <param name="name">The name of the specific category.</param>
+        /// <returns>A task that represents the asynchronous get operation.
+        /// The task result contains the category from the database.</returns>
+        Task<CategoryDB> GetByNameAsync(string name);
 
         /// <summary>
         /// Updates the specific category
         /// </summary>
         /// <param name="category">The specific category for updating</param>
-        void Update(CategoryDB category);
+
+        /// <summary>
+        /// Updates the specific category.
+        /// </summary>
+        /// <param name="category">The specific category for updating.</param>
+        /// <returns>A task that represents the asynchronous update operation.</returns>
+        Task UpdateAsync(CategoryDB category);
     }
 }

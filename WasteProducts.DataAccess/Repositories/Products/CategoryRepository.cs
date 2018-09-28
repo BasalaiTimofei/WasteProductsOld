@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.DataAccess.Contexts;
@@ -16,83 +17,91 @@ namespace WasteProducts.DataAccess.Repositories.Products
         private readonly WasteContext _context;
         private bool _disposed;
 
-        /// <summary>
-        /// Using the context of the WasteContext class through the private field.
-        /// </summary>
-        /// <param name="context">The specific context of WasteContext</param>
+        /// <inheritdoc/>
         public CategoryRepository(WasteContext context) => _context = context;
 
-        /// <summary>
-        /// Adds a new category
-        /// </summary>
-        /// <param name="category">The specific category for adding</param>
-        public void Add(CategoryDB category)
+        /// <inheritdoc/>
+        public async Task<string> AddAsync(CategoryDB category)
         {
-            if (category != null) _context.Categories.Add(category);
-            _context.SaveChanges();
+            category.Id = Guid.NewGuid().ToString();
+            _context.Categories.Add(category);
+            await _context.SaveChangesAsync().ConfigureAwait(false);
+
+            return category.Id;
         }
 
-        /// <summary>
-        /// Deletes the specific category
-        /// </summary>
-        /// <param name="category">The specific category for deleting</param>
-        public void Delete(CategoryDB category)
+        /// <inheritdoc/>
+        public async Task<IEnumerable<string>> AddRangeAsync(IEnumerable<CategoryDB> categories)
         {
-            if (category != null && _context.Categories.Contains(category))
+            var ids = new List<string>();
+            categories.Select(c =>
             {
-                category.Marked = true;
-                Update(category);
-            }
+                c.Id = Guid.NewGuid().ToString();
+                ids.Add(c.Id);
+                return c;
+            });
+
+            (_context.Categories as DbSet).AddRange(categories);
+
+            await _context.SaveChangesAsync();
+
+            return ids;
         }
 
-        /// <summary>
-        /// Deletes the specific category by id
-        /// </summary>
-        /// <param name="id">Represents a specific category id to delete</param>
-        public void Delete(int id)
+        /// <inheritdoc/>
+        public async Task DeleteAsync(CategoryDB category)
         {
-            var category = _context.Categories.Find(id);
-            Delete(category);
+            if (!(await _context.Categories.ContainsAsync(category))) return;
+
+            category.Marked = true;
+            await UpdateAsync(category).ConfigureAwait(false);
+            
         }
 
-        /// <summary>
-        /// Provides a listing of all categories.
-        /// </summary>
-        /// <returns>Returns list of categories.</returns>
-        public IEnumerable<CategoryDB> SelectAll() => _context.Categories.ToList();
+        /// <inheritdoc/>
+        public async Task DeleteAsync(string id)
+        {
+            var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
 
-        /// <summary>
-        /// Provides a listing of categories that satisfy the condition.
-        /// </summary>
-        /// <param name="predicate">The condition that list of categories must satisfy</param>
-        /// <returns>Returns list of categories.</returns>
-        public IEnumerable<CategoryDB> SelectWhere(Predicate<CategoryDB> predicate)
+            if (category == null) return;
+
+            category.Marked = true;
+
+            await UpdateAsync(category).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public async Task <IEnumerable<CategoryDB>> SelectAllAsync()
+        {
+            return await Task.Run(() => _context.Categories.ToList()).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public async Task <IEnumerable<CategoryDB>> SelectWhereAsync(Predicate<CategoryDB> predicate)
         {
             var condition = new Func<CategoryDB, bool>(predicate);
-            return _context.Categories.Where(condition);
+
+            return await Task.Run(() => _context.Categories.Where(condition).ToList()).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Gets category by ID
-        /// </summary>
-        /// <param name="id">The specific id of category that was sorted</param>
-        /// <returns>Returns a category chosen by ID</returns>
-        public CategoryDB GetById(int id) => _context.Categories.Find(id);
+        /// <inheritdoc/>
+        public async Task <CategoryDB> GetByIdAsync(string id)
+        {
+            return await _context.Categories.FirstOrDefaultAsync(p => p.Id == id).ConfigureAwait(false);
+        }
 
-        /// <summary>
-        /// Gets category by name
-        /// </summary>
-        /// <param name="name">The specific category for updating</param>
-        public CategoryDB GetByName(string name) => _context.Categories.Find(name);
+        /// <inheritdoc/>
+        public async Task <CategoryDB> GetByNameAsync(string name)
+        {
+            return await _context.Categories.FirstOrDefaultAsync(p => p.Name == name).ConfigureAwait(false);
+        }
 
-        /// <summary>
-        /// Updates the specific category
-        /// </summary>
-        /// <param name="category">The specific category for updating</param>
-        public void Update(CategoryDB category)
+        /// <inheritdoc/>
+        public async Task UpdateAsync(CategoryDB category)
         {
             _context.Entry(category).State = EntityState.Modified;
-            _context.SaveChanges();
+
+            await _context.SaveChangesAsync().ConfigureAwait(false);
 
         }
 

@@ -45,32 +45,40 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Deletes old database if it exists and creates new database
+        /// Recreates database and seeds it with default test data if seed == true.
         /// </summary>
+        /// <param name="seed">Seeds database if "true", does not seed if "false".</param>
         /// <returns>Task</returns>
-        [HttpGet, Route("recreate")]
+        [HttpPost, Route("recreate")]
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.NoContent, "Database was created and seeded.")]
-        public async Task<IHttpActionResult> ReCreateDatabaseAsync(bool withTestData)
+        [SwaggerResponse(HttpStatusCode.NoContent, "Database was successfully recreated.")]
+        public async Task<IHttpActionResult> ReCreateDatabaseAsync(bool seed)
         {
             using (_dbService)
             {
-                await _dbService.ReCreateAsync(withTestData).ConfigureAwait(true);
+                await _dbService.RecreateAsync().ConfigureAwait(true);
+                if (seed)
+                {
+                    await _dbService.SeedAsync().ConfigureAwait(true);
+                }
                 return StatusCode(HttpStatusCode.NoContent);
             }
         }
 
         /// <summary>
-        /// Recreates and seeds database with ISeedRepository.
+        /// Seeds database with default test data.
         /// </summary>
         /// <returns></returns>
-        [HttpGet, Route("recreateandseed")]
+        [HttpPut, Route("seed")]
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.NoContent, "Database was recreated and seeded.")]
+        [SwaggerResponse(HttpStatusCode.NoContent, "Database was successfully seeded.")]
         public async Task<IHttpActionResult> ReCreateAndSeed()
         {
-            await _dbService.ReCreateAndSeedAsync();
-            return StatusCode(HttpStatusCode.NoContent);
+            using (_dbService)
+            {
+                await _dbService.SeedAsync().ConfigureAwait(true);
+                return StatusCode(HttpStatusCode.NoContent);
+            }
         }
 
         /// <summary>

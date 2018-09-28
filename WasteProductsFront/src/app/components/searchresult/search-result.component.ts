@@ -7,6 +7,8 @@ import { takeUntil } from 'rxjs/operators';
 
 import { SearchProduct } from '../../models/search-product';
 import { SearchService } from '../../services/search/search.service';
+import { ImagePreviewService } from '../../services/image-preview/image-preview.service';
+import { ImagePreviewOverlay } from '../image-preview/image-preview-overlay';
 
 @Component({
   selector: 'app-search-result',
@@ -25,12 +27,13 @@ export class SearchresultComponent implements OnDestroy {
   pageIndex = 0;
   length = 0;
 
-  constructor(private searchService: SearchService, private route: ActivatedRoute) {
+  constructor(private searchService: SearchService, private route: ActivatedRoute, private previewDialog: ImagePreviewService) {
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe(({ query }: Params) => {
         if (!query) {
             return;
         }
 
+        this.setVariablesToDefault();
         this.search(query);
     });
   }
@@ -56,7 +59,14 @@ export class SearchresultComponent implements OnDestroy {
             this.statusCode = e.status;
         }
     });
-}
+  }
+
+  showPreview() {
+    const dialog: ImagePreviewOverlay = this.previewDialog.open({
+      // TODO Заменить путем из реквеста и название продукта
+      image: { name: 'Название продукта', url: 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg' }
+    });
+  }
 
   public changePageEvent(event?: PageEvent) {
     if (event != null) {
@@ -65,5 +75,11 @@ export class SearchresultComponent implements OnDestroy {
     }
     this.tempProducts = this.searchResult.slice(this.pageSize * this.pageIndex, this.pageSize * (this.pageIndex + 1));
   return event;
+  }
+
+  private setVariablesToDefault() {
+    this.pageSize = 5;
+    this.pageIndex = 0;
+    this.length = 0;
   }
 }
