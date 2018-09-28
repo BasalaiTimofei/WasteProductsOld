@@ -44,12 +44,12 @@ namespace WasteProducts.DataAccess.Contexts
                     .ToTable("UserFriends"));
 
             modelBuilder.Entity<ProductDB>()
-                .HasOptional(p => p.Barcode)
-                .WithRequired(b => b.Product);
+                .HasRequired(p => p.Barcode)
+                .WithOptional(b => b.Product);
 
             modelBuilder.Entity<BarcodeDB>()
-                .HasRequired(b => b.Product)
-                .WithOptional(b => b.Barcode);
+                .HasOptional(b => b.Product)
+                .WithRequired(b => b.Barcode);
 
             modelBuilder.Configurations.Add(new UserProductDescriptionConfiguration());
 

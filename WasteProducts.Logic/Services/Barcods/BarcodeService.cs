@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Castle.Core.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,12 +18,16 @@ namespace WasteProducts.Logic.Services.Barcods
         IBarcodeScanService _scanner;
         IBarcodeRepository _repository;
         IBarcodeCatalogSearchService _catalog;
+        ILogger _logger;
+        IMapper _mapper;
 
-        public BarcodeService(IBarcodeScanService scanner, IBarcodeRepository repository, IBarcodeCatalogSearchService catalog)
+        public BarcodeService(IBarcodeScanService scanner, IBarcodeRepository repository, IBarcodeCatalogSearchService catalog, ILogger logger, IMapper mapper)
         {
             _scanner = scanner;
             _repository = repository;
             _catalog = catalog;
+            _logger = logger;
+            _mapper = mapper;
         }
 
         public Barcode Get(Stream imageStream)
@@ -38,10 +43,7 @@ namespace WasteProducts.Logic.Services.Barcods
 
             //если она есть - вернуть ее
             if (barcodeDB != null)
-            {
-                var map1 = Mapper.Map<Barcode>(barcodeDB);
-                return map1;
-            }
+                return Mapper.Map<Barcode>(barcodeDB);
 
             //если ее нет - получить инфу из веб каталога
             var barcode = _catalog.GetAsync(code).Result;
@@ -50,9 +52,7 @@ namespace WasteProducts.Logic.Services.Barcods
                 return null;
 
             //сохранить ее в репозиторий
-            var map2 = Mapper.Map<BarcodeDB>(barcode);
-
-            string res = _repository.AddAsync(map2).Result; //mapping Barcode -> BarcodeDB 
+            string res = _repository.AddAsync(Mapper.Map<BarcodeDB>(barcode)).Result; //mapping Barcode -> BarcodeDB 
 
             //вернуть ее
             return barcode;
