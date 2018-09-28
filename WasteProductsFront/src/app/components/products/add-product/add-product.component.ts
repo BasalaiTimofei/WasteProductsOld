@@ -9,28 +9,25 @@ import { HttpClient } from '@angular/common/http';
 export class AddProductComponent implements OnInit {
 selectedFile: File = null;
 
-onFileSelected(event){
+isHidden = false;
+
+enableAdd = true;
+
+onFileSelected(event) {
   this.selectedFile = <File>event.target.files[1];
 }
 
-onUpload(){
-
-const fd = new FormData;
-fd.append('image', this.selectedFile, this.selectedFile.name);
-this.http.post('redirect to barcode parser', fd)
-.subscribe(res => {console.log(res);
+onUpload() {
+  const fd = new FormData;
+  fd.append('image', this.selectedFile, this.selectedFile.name);
+  this.http.post('redirect to barcode parser', fd).subscribe(res => console.log(res));
 }
-)};
-
-isHidden = false;
 
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
   }
 
-  enableAdd = true;
-
-  turnedOffWhile(){
+  turnedOffWhile() {
   }
 }

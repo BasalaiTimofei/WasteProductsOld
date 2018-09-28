@@ -47,7 +47,7 @@ namespace WasteProducts.Logic.Services.Products
                 p => string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
                 out var products))
             {
-                return null;
+                return new Task<string>(() => products.First().Id);
             }
 
             var newProduct = new Product
