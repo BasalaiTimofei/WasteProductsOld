@@ -30,7 +30,7 @@ namespace WasteProducts.Logic.Services.Barcods
             _mapper = mapper;
         }
 
-        public Barcode Get(Stream imageStream)
+        public Task<Barcode> GetBarcodeAsync(Stream imageStream)
         {
             //получить цифровой код баркода
             var code = _scanner.Scan(imageStream);
@@ -43,7 +43,7 @@ namespace WasteProducts.Logic.Services.Barcods
 
             //если она есть - вернуть ее
             if (barcodeDB != null)
-                return Mapper.Map<Barcode>(barcodeDB);
+                return Task.FromResult(_mapper.Map<Barcode>(barcodeDB));
 
             //если ее нет - получить инфу из веб каталога
             var barcode = _catalog.GetAsync(code).Result;
@@ -55,7 +55,7 @@ namespace WasteProducts.Logic.Services.Barcods
             string res = _repository.AddAsync(Mapper.Map<BarcodeDB>(barcode)).Result; //mapping Barcode -> BarcodeDB 
 
             //вернуть ее
-            return barcode;
+            return Task.FromResult(barcode);
         }
     }
 }

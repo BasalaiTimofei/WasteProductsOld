@@ -41,7 +41,7 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
             {
                 _imageGood.Save(stream, ImageFormat.Bmp);
 
-                barcodeService.Get(stream);
+                barcodeService.GetBarcodeAsync(stream);
 
             }
 
