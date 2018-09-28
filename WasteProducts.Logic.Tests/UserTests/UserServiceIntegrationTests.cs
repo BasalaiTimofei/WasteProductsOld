@@ -1,4 +1,5 @@
-﻿using Ninject;
+﻿using FluentValidation;
+using Ninject;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -92,50 +93,51 @@ namespace WasteProducts.Logic.Tests.UserTests
         [Test]
         public async Task UserIntegrTest_01AddingUserWithIncorrectEmail()
         {
-            await _userService.RegisterAsync("Incorrect email", "NewLogin", "qwerty", null).ConfigureAwait(false);
-            User user = await _userService.LogInByEmailAsync("Incorrect email", "qwerty").ConfigureAwait(false);
-            Assert.IsNull(user);
+            Assert.ThrowsAsync<TaskCanceledException>(async () => await _userService.RegisterAsync("Incorrect email", "NewLogin", "qwerty", null).ConfigureAwait(false));
 
-            user = await _userService.LogInByEmailAsync("Incorrect email", "qwerty").ConfigureAwait(false);
-            Assert.IsNull(user);
+            //User user = await _userService.LogInByEmailAsync("Incorrect email", "qwerty").ConfigureAwait(false);
+            //Assert.IsNull(user);
+
+            //user = await _userService.LogInByEmailAsync("Incorrect email", "qwerty").ConfigureAwait(false);
+            //Assert.IsNull(user);
         }
 
         // пытаемся зарегистрировать юзера с уже использованным емейлом
         [Test]
         public async Task UserIntegrTest_02AddingUserWithAlreadyRegisteredEmail()
         {
-            await _userService.RegisterAsync("test49someemail@gmail.com", "NewLogin", "qwerty", null).ConfigureAwait(false);
-            User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty").ConfigureAwait(false);
-            Assert.IsNull(user);
+            Assert.ThrowsAsync<TaskCanceledException>(async () =>  await _userService.RegisterAsync("test49someemail@gmail.com", "NewLogin", "qwerty", null).ConfigureAwait(false));
+            //User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty").ConfigureAwait(false);
+            //Assert.IsNull(user);
 
-            user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty").ConfigureAwait(false);
-            Assert.IsNull(user);
+            //user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty").ConfigureAwait(false);
+            //Assert.IsNull(user);
         }
 
         // пытаемся зарегистрировать юзера с неуникальным юзернеймом
         [Test]
         public async Task UserIntegrTest_03AddingUserWithAlreadyRegisteredNickName()
         {
-            await _userService.RegisterAsync("test100someemail@gmail.com", "Sergei", "qwerty", null).ConfigureAwait(false);
-            User user = await _userService.LogInByEmailAsync("test100someemail@gmail.com", "qwerty").ConfigureAwait(false);
-            Assert.IsNull(user);
+            Assert.ThrowsAsync<TaskCanceledException>(async () => await _userService.RegisterAsync("test100someemail@gmail.com", "Sergei", "qwerty", null).ConfigureAwait(false));
+            //User user = await _userService.LogInByEmailAsync("test100someemail@gmail.com", "qwerty").ConfigureAwait(false);
+            //Assert.IsNull(user);
 
-            user = await _userService.LogInByEmailAsync("test100someemail@gmail.com", "qwerty").ConfigureAwait(false);
-            Assert.IsNull(user);
+            //user = await _userService.LogInByEmailAsync("test100someemail@gmail.com", "qwerty").ConfigureAwait(false);
+            //Assert.IsNull(user);
         }
 
         // пытаемся зарегистрировать юзера с null-овыми аргументами, не должно крашить, не должно регистрировать
         [Test]
         public async Task UserIntegrTest_04RegisteringUserWithNullArguements()
         {
-            await _userService.RegisterAsync(null, "Sergei1", "qwert1", null).ConfigureAwait(false);
-            await _userService.RegisterAsync("test101someemail@gmail.com", null, "qwert2", null).ConfigureAwait(false);
+            Assert.ThrowsAsync<TaskCanceledException>(async () => await _userService.RegisterAsync(null, "Sergei1", "qwert1", null).ConfigureAwait(false));
+            Assert.ThrowsAsync<TaskCanceledException>(async () => await _userService.RegisterAsync("test101someemail@gmail.com", null, "qwert2", null).ConfigureAwait(false));
 
-            User user1 = await _userService.LogInByNameAsync("Sergei1", "qwert1").ConfigureAwait(false);
-            User user2 = await _userService.LogInByEmailAsync("test101someemail@gmail.com", "qwert2").ConfigureAwait(false);
+            //User user1 = await _userService.LogInByNameAsync("Sergei1", "qwert1").ConfigureAwait(false);
+            //User user2 = await _userService.LogInByEmailAsync("test101someemail@gmail.com", "qwert2").ConfigureAwait(false);
 
-            Assert.IsNull(user1);
-            Assert.IsNull(user2);
+            //Assert.IsNull(user1);
+            //Assert.IsNull(user2);
         }
 
         // тестируем получение всех зарегистрированных пользователей
@@ -158,8 +160,8 @@ namespace WasteProducts.Logic.Tests.UserTests
         [Test]
         public async Task UserIntegrTest_07IncorrectQueryingByEmail()
         {
-            User user = await _userService.LogInByEmailAsync("incorrectEmail", "incorrectPassword").ConfigureAwait(false);
-            Assert.IsNull(user);
+            Assert.ThrowsAsync<UnauthorizedAccessException>(async () => await _userService.LogInByEmailAsync("incorrectEmail", "incorrectPassword").ConfigureAwait(false));
+            //Assert.IsNull(user);
         }
 
         // пытаемся поменять зарегистрированному юзеру емейл на корректный уникальный емейл (должно поменять)
@@ -183,10 +185,10 @@ namespace WasteProducts.Logic.Tests.UserTests
             User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").ConfigureAwait(false);
             Assert.AreEqual("Sergei", user.UserName);
 
-            bool result = await _userService.UpdateEmailAsync(user.Id, "uniqueButIncorrectEmail").ConfigureAwait(false);
+            Assert.ThrowsAsync<ValidationException>(async () => await _userService.UpdateEmailAsync(user.Id, "uniqueButIncorrectEmail").ConfigureAwait(false));
 
-            Assert.IsFalse(result);
-            Assert.AreEqual("Sergei", user.UserName);
+            //Assert.IsFalse(result);
+            //Assert.AreEqual("Sergei", user.UserName);
         }
 
         // пытаемся поменять зарегистрированному юзеру емейл на корректный неуникальный емейл (не должно поменять)
@@ -196,10 +198,10 @@ namespace WasteProducts.Logic.Tests.UserTests
             User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").ConfigureAwait(false);
             Assert.AreEqual("Sergei", user.UserName);
 
-            bool result = await _userService.UpdateEmailAsync(user.Id, "test50someemail@gmail.com").ConfigureAwait(false);
+            Assert.ThrowsAsync<TaskCanceledException>(async () => await _userService.UpdateEmailAsync(user.Id, "test50someemail@gmail.com").ConfigureAwait(false));
 
-            Assert.IsFalse(result);
-            Assert.AreEqual("Sergei", user.UserName);
+            //Assert.IsFalse(result);
+            //Assert.AreEqual("Sergei", user.UserName);
 
             user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").ConfigureAwait(false);
             Assert.AreEqual("Sergei", user.UserName);
@@ -212,11 +214,9 @@ namespace WasteProducts.Logic.Tests.UserTests
             User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").ConfigureAwait(false);
             Assert.IsNotNull(user);
 
-            bool result1 = await _userService.UpdateEmailAsync(user.Id, null).ConfigureAwait(false);
-            bool result2 = await _userService.UpdateEmailAsync(null, "correctuniqueemail@gmail.com").ConfigureAwait(false);
+            Assert.ThrowsAsync<ValidationException>(async () => await _userService.UpdateEmailAsync(user.Id, null).ConfigureAwait(false));
+            Assert.ThrowsAsync<KeyNotFoundException>(async () => await _userService.UpdateEmailAsync(null, "correctuniqueemail@gmail.com").ConfigureAwait(false));
 
-            Assert.IsFalse(result1);
-            Assert.IsFalse(result2);
             Assert.AreEqual("Sergei", user.UserName);
         }
 
@@ -227,11 +227,10 @@ namespace WasteProducts.Logic.Tests.UserTests
             User user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").ConfigureAwait(false);
             Assert.AreEqual("Sergei", user.UserName);
 
-            bool result = await _userService.UpdateUserNameAsync(user.Id, "Anton").ConfigureAwait(false);
+            Assert.ThrowsAsync<TaskCanceledException>(async () => await _userService.UpdateUserNameAsync(user.Id, "Anton").ConfigureAwait(false));
 
             user = await _userService.LogInByEmailAsync("test49someemail@gmail.com", "qwerty1").ConfigureAwait(false);
 
-            Assert.IsFalse(result);
             Assert.AreEqual("Sergei", user.UserName);
         }
 
@@ -502,9 +501,10 @@ namespace WasteProducts.Logic.Tests.UserTests
             var groups1 = await _userService.GetGroupsAsync(_usersIds[1]).ConfigureAwait(false);
             var groups2 = await _userService.GetGroupsAsync(_usersIds[2]).ConfigureAwait(false);
 
+            Assert.IsEmpty(groups2);
+
             Assert.AreEqual("Some group", groups1.First().Name);
             Assert.IsFalse(groups1.First().RightToCreateBoards);
-            Assert.IsEmpty(groups2);
         }
 
         // тестим выход из группы
@@ -515,8 +515,8 @@ namespace WasteProducts.Logic.Tests.UserTests
             Assert.AreEqual("Some group", groups1.First().Name);
 
             await _userService.LeaveGroupAsync(_usersIds[1], _groupIds[0]).ConfigureAwait(false);
-            groups1 = await _userService.GetGroupsAsync(_usersIds[1]).ConfigureAwait(false);
-            Assert.IsEmpty(groups1);
+            var groups = await _userService.GetGroupsAsync(_usersIds[1]).ConfigureAwait(false);
+            Assert.IsEmpty(groups);
         }
 
         // тестируем поиск роли по айди и имени

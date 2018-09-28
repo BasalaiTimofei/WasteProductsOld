@@ -443,7 +443,10 @@ namespace WasteProducts.DataAccess.Repositories.Users
                 }
                 await _context.SaveChangesAsync().ConfigureAwait(false);
             }
-            throw new KeyNotFoundException("There is no such GroupUsers.");
+            else
+            {
+                throw new KeyNotFoundException("There is no such GroupUsers.");
+            }
         }
 
         public async Task<IEnumerable<GroupUserDB>> GetGroupsAsync(string userId)
