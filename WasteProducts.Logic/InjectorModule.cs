@@ -10,7 +10,6 @@ using System.Net.Mail;
 using System.Reflection;
 using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.Logic.Common.Factories;
-using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Groups;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Search;
@@ -24,11 +23,13 @@ using WasteProducts.Logic.Common.Services.Products;
 using WasteProducts.Logic.Common.Services.Users;
 using WasteProducts.Logic.Extensions;
 using WasteProducts.Logic.Interceptors;
+using WasteProducts.Logic.Mappings.Donations;
 using WasteProducts.Logic.Mappings.Groups;
 using WasteProducts.Logic.Mappings.Products;
 using WasteProducts.Logic.Mappings.Users;
 using WasteProducts.Logic.Services;
 using WasteProducts.Logic.Services.Barcods;
+using WasteProducts.Logic.Services.Donations;
 using WasteProducts.Logic.Services.Groups;
 using WasteProducts.Logic.Services.Mail;
 using WasteProducts.Logic.Services.Notifications;
@@ -196,6 +197,15 @@ namespace WasteProducts.Logic
                     cfg.AddProfile<GroupUserProfile>();
                 })))
             .WhenInjectedExactlyInto<GroupUserService>();
+
+            Bind<IMapper>().ToMethod(ctx =>
+            new Mapper(new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<AddressProfile>();
+                cfg.AddProfile<DonorProfile>();
+                cfg.AddProfile<DonationProfile>();
+            })))
+            .WhenInjectedExactlyInto<PayPalService>();
         }
     }
 }
