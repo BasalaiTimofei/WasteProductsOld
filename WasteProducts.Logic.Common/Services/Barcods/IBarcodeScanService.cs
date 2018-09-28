@@ -8,6 +8,8 @@ namespace WasteProducts.Logic.Common.Services.Barcods
     /// </summary>
     public interface IBarcodeScanService
     {
+        string Scan(Stream stream);
+
         /// <summary>
         /// Resize a image of barcode
         /// </summary>

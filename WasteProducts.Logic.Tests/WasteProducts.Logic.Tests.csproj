@@ -117,6 +117,7 @@
   <ItemGroup>
     <Compile Include="Barcode_Tests\BarcodeCatalogSearchService_Tests.cs" />
     <Compile Include="Barcode_Tests\BarcodeScanService_Tests.cs" />
+    <Compile Include="Barcode_Tests\BarcodeService_Tests.cs" />
     <Compile Include="Barcode_Tests\EDostavkaCatalog_Tests.cs" />
     <Compile Include="Barcode_Tests\PriceGuardCatalog_Tests.cs" />
     <Compile Include="Diagnostic_Tests\DbServiceTests.cs" />
