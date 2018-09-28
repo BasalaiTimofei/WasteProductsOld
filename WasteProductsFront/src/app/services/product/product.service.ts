@@ -52,8 +52,8 @@ export class ProductService extends BaseHttpService {
    }
 
    deleteUserProduct(productId: string) {
-    const url = `${environment.apiHostUrl}/api/user/${this.getUserId()}/products/${productId}`;
-    this.httpService.delete(url);
+    const url = `${environment.apiHostUrl}/api/user/0/products/${productId}`;
+    this.httpService.delete(url).subscribe(res => console.log(res), err => console.log(err));
    }
 
    getAllProducts(): Observable<UserProduct[]> {
