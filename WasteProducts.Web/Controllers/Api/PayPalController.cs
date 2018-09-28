@@ -3,6 +3,7 @@ using Swagger.Net.Annotations;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
@@ -45,9 +46,20 @@ namespace WasteProducts.Web.Controllers.Api
         public OkResult Receive()
         {
             var context = new HttpContextWrapper(HttpContext.Current);
-            HttpRequestBase request = context.Request;
-            Task.Run(() => _donationService.VerifyAndLog(request));
+            HttpRequestBase payPalRequest = context.Request;
+            Task.Run(() => VerifyAndLog(payPalRequest));
             return Ok();
+        }
+
+        /// <summary>
+        /// Verify and log the notification.
+        /// </summary>
+        /// <param name="payPalRequest">PayPal request.</param>
+        private void VerifyAndLog(HttpRequestBase payPalRequest)
+        {
+            byte[] param = payPalRequest.BinaryRead(payPalRequest.ContentLength);
+            string payPalRequestString = Encoding.ASCII.GetString(param);
+            _donationService.VerifyAndLog(payPalRequestString);
         }
     }
 }

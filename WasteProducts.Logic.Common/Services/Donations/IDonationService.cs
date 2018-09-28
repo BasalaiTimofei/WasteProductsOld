@@ -1,16 +1,14 @@
-﻿using System.Web;
-
-namespace WasteProducts.Logic.Common.Services.Donations
+﻿namespace WasteProducts.Logic.Common.Services.Donations
 {
     /// <summary>
-    /// This interface provides the verification and registration method for donations.
+    /// Provides the verification and log method for PayPal notifications.
     /// </summary>
     public interface IDonationService
     {
         /// <summary>
-        /// Verify a request and log a new donation.
+        /// Verify and log the request.
         /// </summary>
-        /// <param name="notificationRequest">Donation notification request.</param>
-        void VerifyAndLog(HttpRequestBase notificationRequest);
+        /// <param name="notificationRequestString">String of notification request.</param>
+        void VerifyAndLog(string notificationRequestString);
     }
 }

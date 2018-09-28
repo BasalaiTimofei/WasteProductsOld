@@ -7,10 +7,15 @@ using WasteProducts.Logic.Common.Services.Donations;
 
 namespace WasteProducts.Logic.Services.Donations
 {
+    /// <inheritdoc />
     class PayPalVerificationService : IVerificationService
     {
         private readonly NameValueCollection _appSettings = ConfigurationManager.AppSettings;
 
+        /// <summary>
+        /// Verifies that the request comes from PayPal.
+        /// </summary>
+        /// <param name="payPalRequestString">PayPal request string.</param>
         public bool IsVerified(string payPalRequestString)
         {
             const string VERIFIED = "VERIFIED";
@@ -27,6 +32,7 @@ namespace WasteProducts.Logic.Services.Donations
         /// <summary>
         /// Prepares a verification request.
         /// </summary>
+        /// <param name="payPalRequestString">PayPal request string.</param>
         private HttpWebRequest PrepareVerificationRequest(string payPalRequestString)
         {
             const string PAYPAL_URL = "PayPalUrl";
