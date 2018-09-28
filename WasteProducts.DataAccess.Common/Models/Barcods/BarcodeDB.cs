@@ -24,7 +24,12 @@ namespace WasteProducts.DataAccess.Common.Models.Barcods
         public string ProductName { get; set; }
 
         /// <summary>
-        /// Product brend.
+        /// Product сomposition.
+        /// </summary>
+        public string Composition { get; set; }
+
+        /// <summary>
+        /// Product brand.
         /// </summary>
         public string Brend { get; set; }
 

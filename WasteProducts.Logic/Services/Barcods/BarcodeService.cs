@@ -57,23 +57,15 @@ namespace WasteProducts.Logic.Services.Barcods
             Barcode barcode = null;
 
             _image = _scanner.Resize(stream, 400, 400);
-            using (_stream = new MemoryStream())
-            {
-                _image.Save(_stream, ImageFormat.Bmp);
-                try
-                {
-                    code = _scanner.ScanByZxing(_stream);
-                }
-                catch
-                {
-                    code = _scanner.ScanBySpire(_stream);
-                }
-            }
+            
             if (code != null)
             {
-                if (await GetByCodeAsync(code) == null)
+                barcode = await GetByCodeAsync(code);
+
+                if (barcode == null)
                 {
                     barcode = await _searcher.GetAsync(code);
+                    //сохранение в базу
                 }
             }
             return barcode;
