@@ -154,6 +154,7 @@
     <Compile Include="Services\Barcods\HttpHelper.cs" />
     <Compile Include="Services\Barcods\PriceGuardCatalog.cs" />
     <Compile Include="Services\Donations\PayPalService.cs" />
+    <Compile Include="Services\Donations\PayPalVerificationService.cs" />
     <Compile Include="Services\Groups\GroupCommentService.cs" />
     <Compile Include="Services\Groups\GroupUserService.cs" />
     <Compile Include="Services\Groups\GroupProductService.cs" />
