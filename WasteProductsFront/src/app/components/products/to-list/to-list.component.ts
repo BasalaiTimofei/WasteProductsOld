@@ -16,11 +16,11 @@ export class ToListComponent implements OnInit {
   constructor (private productService: ProductService) {}
 
   products: Product[] = [];
-  userProducts: UserProduct[]; // К обсуждению
+  userProducts: UserProduct[] = []; // К обсуждению
 
-  data: Product[] = this.productService.PRODUCTS_DATA;
+  data: UserProduct[] = this.userProducts;
   dataSource = new MatTableDataSource(this.data);
-  displayedColumns: string[] = ['Id', 'Name', 'AvgRating', 'Composition', 'IsHidden'];
+  displayedColumns: string[] = ['Id', 'Name', 'AvgRating', 'Composition'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
