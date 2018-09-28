@@ -308,8 +308,10 @@
     <Content Include="Views\Error\403-ForbiddenError.cshtml" />
     <Content Include="Views\Error\404-NotFoundError.cshtml" />
     <Content Include="Views\Error\500-InternalServerError.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
