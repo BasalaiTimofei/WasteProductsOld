@@ -2,6 +2,7 @@
 using System.Web;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using Ninject;
+using Ninject.Extensions.Interception;
 using Ninject.Web.Common;
 using Ninject.Web.Common.WebHost;
 
