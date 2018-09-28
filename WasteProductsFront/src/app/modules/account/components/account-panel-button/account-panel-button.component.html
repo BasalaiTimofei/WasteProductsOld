@@ -1,0 +1,7 @@
+<ng-container *ngIf="isAuthenificated | async; else elseTemplate">
+  <button mat-button (click)="openSheet($event)">Open panel</button>
+</ng-container>
+<ng-template #elseTemplate>
+  <button mat-button (click)="logIn($event)">Log In</button>
+  <button mat-button routerLink="/account/register">Register</button>
+</ng-template>

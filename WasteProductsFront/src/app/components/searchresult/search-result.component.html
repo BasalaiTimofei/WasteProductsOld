@@ -1,19 +1,19 @@
-<div *ngIf="searchProducts.length > 0">
-  <table class="table table-hover">
-      <tbody>
-        <tr *ngFor="let result of tempProducts">
-          <td hidden = true>{{result.Id}}</td>
-          <td>{{result.Name}}</td>
-          <td>{{result.Description}}</td>
-        </tr>
-      </tbody>
-  </table>
-</div>
-<h2 *ngIf="statusCode === 204">Not found .....</h2>
-
-<mat-paginator [length]="length"
+<div *ngIf="tempProducts && tempProducts.length > 0">
+  <mat-toolbar color="">Результаты поиска</mat-toolbar>
+  <mat-list>
+    <!--h3 mat-subheader>Результаты поиска</h3-->
+    <mat-list-item *ngFor="let result of tempProducts">
+      <img mat-list-icon src="../../../favicon.ico" (click)="showPreview()"> <!--TODO Картинку продукта вместо favicon-->
+      <h4 mat-line>{{result.Id}}</h4>
+      <p mat-line> {{result.Name}} </p>
+      <mat-icon>assignment</mat-icon> <!--TODO переход на страницу "Детали продукта"-->
+    </mat-list-item>
+    <mat-divider></mat-divider>
+  </mat-list>
+  <mat-paginator [length]="length"
                [pageSize]="pageSize"
                [pageIndex]="pageIndex"
                [pageSizeOptions]="[5, 10]"
                (page)="pageEvent = changePageEvent($event)">
-</mat-paginator>
+  </mat-paginator>
+</div>

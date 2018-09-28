@@ -1,53 +1,56 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 
-import { DatabaseState } from '../../models/database/database-state';
+import { BaseHttpService } from '../base/base-http.service';
 import { LoggingService } from '../logging/logging.service';
-import { environment } from '../../../environments/environment.prod';
+
+/* Models */
+import { DatabaseState } from '../../models/database/database-state';
+
+/* Environment */
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DatabaseService {
+export class DatabaseService extends BaseHttpService {
 
   private apiUrl = `${environment.apiHostUrl}/api/administration/database`;  // URL to web api
 
-  constructor(
-    private http: HttpClient,
-    private logService: LoggingService) { }
+  public constructor(httpService: HttpClient, loggingService: LoggingService) {
+    super(httpService, loggingService);
+   }
 
-  getState(): Observable<DatabaseState> {
+  public getState(): Observable<DatabaseState> {
     const url = `${this.apiUrl}/state`;
 
-    return this.http.get<DatabaseState>(url)
+    return this.httpService.get<DatabaseState>(url)
     .pipe(
-      tap(data  => this.log('fetched database state'))
-    );
+      tap(data => this.logDebug('fetched database state')),
+      catchError(this.handleError('getState', new DatabaseState(false, false)))
+      );
   }
 
-  reCreate(withTestData: boolean): Observable<any> {
+  public reCreate(withTestData: boolean): Observable<any> {
     const url = `${this.apiUrl}/recreate?withTestData=${withTestData}`;
 
-    return this.http.get(url)
+    return this.httpService.get(url)
     .pipe(
-      tap(data => this.log('recreate action executed')),
+      tap(data => this.logDebug('fetched database state')),
+      catchError(this.handleError('reCreate'))
     );
   }
 
-  delete(): Observable<any> {
+  public delete(): Observable<any> {
     const url = `${this.apiUrl}/delete`;
 
-    return this.http.delete(url)
+    return this.httpService.delete(url)
     .pipe(
-      tap(data => this.log('delete action executed')),
+      tap(data => this.logDebug('delete action executed')),
+      catchError(this.handleError('delete'))
     );
-  }
-
-  /** Log with the LoggingService */
-  private log(msg: any) {
-    this.logService.log(`DatabaseService: ${msg}`);
   }
 }

@@ -2,8 +2,10 @@
 using Ninject.Modules;
 using Ninject.Web.Mvc.FilterBindingSyntax;
 using Ninject.Web.WebApi.FilterBindingSyntax;
+using WasteProducts.Logic.Common.Services.Notifications;
 using WasteProducts.Web.ExceptionHandling.Api;
 using WasteProducts.Web.ExceptionHandling.Mvc;
+using WasteProducts.Web.Utils.Hubs;
 
 
 namespace WasteProducts.Web
@@ -19,6 +21,9 @@ namespace WasteProducts.Web
             // api filtres
             Kernel.Bind<IExceptionLogger>().To<ApiUnhandledExceptionLogger>();
             Kernel.BindHttpFilter<ApiValidationExceptionFilterAttribute>(System.Web.Http.Filters.FilterScope.Action);
+
+
+            Kernel.Bind<INotificationProvider>().To<SignalRNotifiactionProvider>();
         }
     }
 }

@@ -4,7 +4,14 @@
 
 export const environment = {
   production: false,
-  apiHostUrl: 'http://localhost:2189/'
+  logLevel: 0,
+
+  /* Api */
+  apiHostUrl: 'http://localhost:2189',
+
+  /* Identity */
+  iderntityHostUrl: 'https://localhost:44333',
+  clientId: 'wasteproducts.angular'
 };
 
 /*

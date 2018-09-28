@@ -12,8 +12,8 @@ namespace WasteProducts.Logic.Services
     /// <inheritdoc />
     public class DbService : IDbService
     {
-        private readonly ISeedRepository _seedRepo;
-        private readonly IDbSeedService _dbSeedService;
+        private readonly IDiagnosticRepository _diagRepo;
+        //private readonly IDbSeedService _dbSeedService;
         private readonly IDatabase _database;
         private readonly ILogger _logger;
 
@@ -25,10 +25,9 @@ namespace WasteProducts.Logic.Services
         /// <param name="dbSeedService">IDbSeedService implementation that seeds into database</param>
         /// <param name="database">IDatabase implementation, for operations with database</param>
         /// <param name="logger">NLog logger</param>
-        public DbService(ISeedRepository seedRepo, IDbSeedService dbSeedService, IDatabase database, ILogger logger)
+        public DbService(IDiagnosticRepository diagRepo, IDatabase database, ILogger logger)
         {
-            _seedRepo = seedRepo;
-            _dbSeedService = dbSeedService;
+            _diagRepo = diagRepo;
             _database = database;
             _logger = logger;
         }
@@ -54,14 +53,15 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <inheritdoc />
-        public async Task ReCreateAsync(bool withTestData)
+        public Task RecreateAsync()
         {
-            await DeleteAsync().ConfigureAwait(false);
-            await Task.Run(() => _database.Initialize()).ConfigureAwait(false);
-            await _dbSeedService.SeedBaseDataAsync().ConfigureAwait(false);
+            return _diagRepo.RecreateAsync();
+        }
 
-            if(withTestData)
-                await _dbSeedService.SeedTestDataAsync().ConfigureAwait(false);
+        /// <inheritdoc />
+        public Task SeedAsync()
+        {
+            return _diagRepo.SeedAsync();
         }
 
         /// <inheritdoc />
@@ -78,16 +78,11 @@ namespace WasteProducts.Logic.Services
                 if (disposing)
                 {
                     _database.Dispose();
-                    _seedRepo?.Dispose();
+                    _diagRepo?.Dispose();
                 }
 
                 _disposed = true;
             }
-        }
-
-        public Task ReCreateAndSeedAsync()
-        {
-            return _seedRepo.RecreateAndSeedAsync();
         }
 
         ~DbService()

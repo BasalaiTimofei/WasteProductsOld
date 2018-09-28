@@ -24,7 +24,7 @@ namespace WasteProducts.Logic.Common.Models.Groups
         /// <summary>
         /// Foreign key
         /// </summary>
-        public virtual Guid GroupId { get; set; }
+        public virtual string GroupId { get; set; }
 
         /// <summary>
         /// Foreign key

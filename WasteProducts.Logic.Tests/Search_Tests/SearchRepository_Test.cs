@@ -277,14 +277,15 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             product.Name = "Test product";
             product.Composition = "Test product composition";
             product.Category = new CategoryDB();
-            product.Category.Id = 11;
+            var categoryId = Guid.NewGuid().ToString();
+            product.Category.Id = categoryId;
             product.Category.Name = "Test category name";
             product.Category.Description = "Test category description";
             sut.Insert(product);
             var result = sut.GetById<ProductDB>(1);
 
             Assert.AreNotEqual(null, product.Category);
-            Assert.AreEqual(11, product.Category.Id);
+            Assert.AreEqual(categoryId, product.Category.Id);
             Assert.AreEqual("Test category name", product.Category.Name);
             Assert.AreEqual("Test category description", product.Category.Description);
         }

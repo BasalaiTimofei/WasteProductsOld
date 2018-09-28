@@ -32,7 +32,7 @@ namespace WasteProducts.DataAccess
             // bind repositories below
             Bind<IUserRepository>().To<UserRepository>();
             Bind<IUserRoleRepository>().To<UserRoleRepository>();
-            Bind<ISeedRepository>().To<SeedRepository>();
+            Bind<IDiagnosticRepository>().To<DiagnosticRepository>();
 
             Bind<IProductRepository>().To<ProductRepository>();
             Bind<ICategoryRepository>().To<CategoryRepository>();

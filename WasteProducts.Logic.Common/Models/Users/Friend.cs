@@ -14,11 +14,11 @@ namespace WasteProducts.Logic.Common.Models.Users
         /// <summary>
         /// Unique key for the friend.
         /// </summary>
-        public virtual string Id { get; set; }
+        public string Id { get; set; }
 
         /// <summary>
         /// Unique username of the friend.
         /// </summary>
-        public virtual string UserName { get; set; }
+        public string UserName { get; set; }
     }
 }

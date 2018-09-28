@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models.Barcods;
-using System.IO;
 
 namespace WasteProducts.Logic.Common.Services.Barcods
 {
     public interface IBarcodeService
     {
-        Barcode Get(Stream imageStream);
+        /// <summary>
+        /// Scan photo of barcode and return a model of Barcode.
+        /// </summary>
+        /// <param name="stream">Photo stream barcode.</param>
+        /// <returns>Model of Barcode.</returns>
+        Task<Barcode> GetBarcodeAsync(Stream stream);
     }
 }
