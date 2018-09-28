@@ -2,6 +2,7 @@
 using System.Web;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using Ninject;
+using Ninject.Extensions.Interception;
 using Ninject.Web.Common;
 using Ninject.Web.Common.WebHost;
 
@@ -56,7 +57,7 @@ namespace WasteProducts.Web
                 kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
                 kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
 
-                kernel.Load("WasteProducts.*.dll");
+                kernel.Load(new DataAccess.InjectorModule(), new Logic.InjectorModule(), new Web.InjectionModule());
 
                 return kernel;
             }

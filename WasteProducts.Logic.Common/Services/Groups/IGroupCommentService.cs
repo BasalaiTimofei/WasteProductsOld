@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models.Groups;
 
 namespace WasteProducts.Logic.Common.Services.Groups
@@ -15,34 +14,34 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// </summary>
         /// <param name="item">Object</param>
         /// <param name="groupId">Primary key</param>
-        void Create(GroupComment item, string groupId);
+        Task<string> Create(GroupComment item, string groupId);
 
         /// <summary>
         /// Update comment
         /// </summary>
         /// <param name="item">Object</param>
         /// <param name="groupId">Primary key</param>
-        void Update(GroupComment item, string groupId);
+        Task Update(GroupComment item, string groupId);
 
         /// <summary>
         /// Delete comment
         /// </summary>
         /// <param name="item">Object</param>
         /// <param name="groupId">Primary key</param>
-        void Delete(GroupComment item, string groupId);
+        Task Delete(GroupComment item, string groupId);
 
         /// <summary>
         /// Get comment by id
         /// </summary>
         /// <param name="id">Primary key</param>
         /// <returns>Object</returns>
-        GroupComment FindById(string id);
+        Task<GroupComment> FindById(string id);
 
         /// <summary>
         /// Get all comments  by boardId
         /// </summary>
         /// <param name="boardId">Primary key</param>
         /// <returns>IEnumerable<Object></returns>
-        IEnumerable<GroupComment> FindtBoardComment(string boardId);
+        Task<IEnumerable<GroupComment>> FindtBoardComment(string boardId);
     }
 }

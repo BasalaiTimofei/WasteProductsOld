@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
 using WasteProducts.Logic.Common.Models.Groups;
@@ -19,61 +21,69 @@ namespace WasteProducts.Logic.Services.Groups
             _mapper = mapper;
         }
 
-        public void Create(GroupBoard item)
+        public async Task<string> Create(GroupBoard item)
         {
             var result = _mapper.Map<GroupBoardDB>(item);
 
-            var modelUser = _dataBase.Find<GroupUserDB>(
+            var modelUser = (await _dataBase.Find<GroupUserDB>(
                 x => x.RightToCreateBoards == true
                 && x.UserId == result.CreatorId
-                && x.GroupId == result.GroupId).FirstOrDefault();
+                && x.GroupId == result.GroupId)).FirstOrDefault();
             if (modelUser == null)
-                return;
+                throw new ValidationException("User not found");
 
+            result.Id = Guid.NewGuid().ToString();
             result.IsNotDeleted = true;
             result.Created = DateTime.UtcNow;
             result.Deleted = null;
             result.Modified = DateTime.UtcNow;
 
             _dataBase.Create(result);
-            _dataBase.Save();
+            await _dataBase.Save();
+            return result.Id;
         }
 
-        public void Update(GroupBoard item)
+        public async Task Update(GroupBoard item)
         {
             var result = _mapper.Map<GroupBoardDB>(item);
-            var model = _dataBase.Find<GroupBoardDB>(
-                x => x.Id == result.Id).FirstOrDefault();
 
-            var modelUser = _dataBase.Find<GroupUserDB>(
+            var model = (await _dataBase.Find<GroupBoardDB>(
+                x => x.Id == result.Id)).FirstOrDefault();
+            if (model == null)
+                throw new ValidationException("Board not found");
+
+            var modelUser = (await _dataBase.Find<GroupUserDB>(
                 x => x.RightToCreateBoards == true
                 && x.UserId == result.CreatorId
-                && x.GroupId == result.GroupId).FirstOrDefault();
-            if (modelUser == null || model == null)
-                return;
+                && x.GroupId == result.GroupId)).FirstOrDefault();
+            if (modelUser == null)
+                throw new ValidationException("User not found");
 
             model.Information = result.Information;
             model.Name = result.Name;
             model.Modified = DateTime.UtcNow;
 
             _dataBase.Update(model);
-            _dataBase.Save();
+            await _dataBase.Save();
         }
 
-        public void Delete(GroupBoard item)
+        public async Task Delete(GroupBoard item)
         {
             var result = _mapper.Map<GroupBoardDB>(item);
 
-            var model = _dataBase.GetWithInclude<GroupBoardDB>(
+            var model = (await _dataBase.GetWithInclude<GroupBoardDB>(
                 x => x.Id == result.Id
                 &&x.GroupId == result.GroupId,
-                z => z.GroupProducts).FirstOrDefault();
-            var modelUser = _dataBase.Find<GroupUserDB>(
+                z => z.GroupProducts)).FirstOrDefault();
+            if (model == null)
+                throw new ValidationException("Board not found");
+
+            var modelUser = (await _dataBase.Find<GroupUserDB>(
                 x => x.RightToCreateBoards == true
                 && x.UserId == result.CreatorId
-                && x.GroupId == result.GroupId).FirstOrDefault();
-            if (model == null || modelUser == null)
-                return;
+                && x.GroupId == result.GroupId)).FirstOrDefault();
+            if (modelUser == null)
+                throw new ValidationException("User not found");
 
             model.IsNotDeleted = false;
             model.Deleted = DateTime.UtcNow;
@@ -81,13 +91,13 @@ namespace WasteProducts.Logic.Services.Groups
 
             _dataBase.DeleteAll(model.GroupProducts);
             _dataBase.Update(model);
-            _dataBase.Save();
+            await _dataBase.Save();
         }
 
-        public GroupBoard FindById(string id)
+        public async Task<GroupBoard> FindById(string id)
         {
-            var model = _dataBase.Find<GroupBoardDB>(
-                x => x.Id == id).FirstOrDefault();
+            var model =(await _dataBase.Find<GroupBoardDB>(
+                x => x.Id == id)).FirstOrDefault();
             if (model == null)
                 return null;
 
