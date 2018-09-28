@@ -15,7 +15,7 @@ using WasteProducts.Logic.Common.Services.Users;
 namespace WasteProducts.Logic.Tests.UserTests
 {
     [TestFixture]
-    public class UserServiceIntegrationTests
+    public class UserServiceIntegrationalTests
     {
         private IUserService _userService;
 
@@ -29,7 +29,7 @@ namespace WasteProducts.Logic.Tests.UserTests
 
         private readonly List<string> _groupIds = new List<string>();
 
-        ~UserServiceIntegrationTests()
+        ~UserServiceIntegrationalTests()
         {
             _userService?.Dispose();
             _roleService?.Dispose();
