@@ -1,16 +1,16 @@
-﻿using WasteProducts.Logic.Common.Models.Donations;
+﻿using System.Web;
 
 namespace WasteProducts.Logic.Common.Services.Donations
 {
     /// <summary>
-    /// This interface provides the log method for donations.
+    /// This interface provides the verification and registration method for donations.
     /// </summary>
     public interface IDonationService
     {
         /// <summary>
-        /// Log new donation.
+        /// Verify a request and log a new donation.
         /// </summary>
-        /// <param name="donation">New donation to log.</param>
-        void Log(Donation donation);
+        /// <param name="notificationRequest">Donation notification request.</param>
+        void VerifyAndLog(HttpRequestBase notificationRequest);
     }
 }
