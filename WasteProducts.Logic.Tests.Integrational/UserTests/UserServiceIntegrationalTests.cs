@@ -2,7 +2,6 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -16,7 +15,7 @@ using WasteProducts.Logic.Common.Services.Users;
 namespace WasteProducts.Logic.Tests.UserTests
 {
     [TestFixture]
-    public class UserServiceIntegrationTests
+    public class UserServiceIntegrationalTests
     {
         private IUserService _userService;
 
@@ -30,7 +29,7 @@ namespace WasteProducts.Logic.Tests.UserTests
 
         private readonly List<string> _groupIds = new List<string>();
 
-        ~UserServiceIntegrationTests()
+        ~UserServiceIntegrationalTests()
         {
             _userService?.Dispose();
             _roleService?.Dispose();
