@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
 using WasteProducts.Logic.Common.Models.Groups;
@@ -20,20 +22,20 @@ namespace WasteProducts.Logic.Services.Groups
             _mapper = mapper;
         }
 
-        public void Invite(GroupUser item, string adminId)
+        public async Task Invite(GroupUser item, string adminId)
         {
             var result = _mapper.Map<GroupUserDB>(item);
 
-            var modelGroupDB = _dataBase.Find<GroupDB>(
+            var modelGroupDB = (await _dataBase.Find<GroupDB>(
                 x => x.Id == result.GroupId
                 && x.AdminId == adminId
-                && x.IsNotDeleted == true).FirstOrDefault();
+                && x.IsNotDeleted == true)).FirstOrDefault();
             if (modelGroupDB == null)
-                return;
+                throw new ValidationException("Group not found");
 
-            var model = _dataBase.Find<GroupUserDB>(
+            var model = (await _dataBase.Find<GroupUserDB>(
                 x => x.UserId == result.UserId
-                && x.GroupId == result.GroupId).FirstOrDefault();
+                && x.GroupId == result.GroupId)).FirstOrDefault();
 
             result.IsConfirmed = false;
             result.Created = DateTime.UtcNow;
@@ -46,68 +48,76 @@ namespace WasteProducts.Logic.Services.Groups
                 _dataBase.Dispose();
                 return;
             }
-            _dataBase.Save();
+            await _dataBase.Save();
         }
 
-        public async void Kick(GroupUser groupUser, string adminId)
+        public async Task Kick(GroupUser item, string adminId)
         {
-            var group = _dataBase.Find<GroupDB>(
-                x => x.Id == groupUser.GroupId
-                && x.AdminId == adminId
-                && x.IsNotDeleted == true).FirstOrDefault();
-
-            if (group == null) return;
-
-            var groupUserDB = _dataBase.Find<GroupUserDB>(x =>
-                x.UserId == groupUser.UserId &&
-                x.GroupId == groupUser.GroupId).FirstOrDefault();
-
-            if (groupUser == null) return;
-
-            await _dataBase.DeleteUserFromGroupAsync(groupUser.GroupId, groupUser.UserId);
-            _dataBase.Save();
-        }
-
-        public void GiveRightToCreateBoards(GroupUser item, string adminId)
-        {
-            var modelGroupDB = _dataBase.Find<GroupDB>(
+            var modelGroupDB = (await _dataBase.Find<GroupDB>(
                 x => x.Id == item.GroupId
-                && x.AdminId == adminId).FirstOrDefault();
+                && x.AdminId == adminId
+                && x.IsNotDeleted == true)).FirstOrDefault();
 
-            if (modelGroupDB == null) return;
+            if (modelGroupDB == null)
+                throw new ValidationException("Group not found");
 
-            var model = _dataBase.Find<GroupUserDB>(
+            var model = (await _dataBase.Find<GroupUserDB>(
                 x => x.UserId == item.UserId
-                && x.GroupId == item.GroupId).FirstOrDefault();
+                && x.GroupId == item.GroupId)).FirstOrDefault();
 
-            if (model == null || model.RightToCreateBoards) return;
+            if (model == null)
+                throw new ValidationException("User not found");
+
+            _dataBase.Delete(model);
+            await _dataBase.Save();
+        }
+
+        public async Task GiveRightToCreateBoards(GroupUser item, string adminId)
+        {
+            var modelGroupDB = (await _dataBase.Find<GroupDB>(
+                x => x.Id == item.GroupId
+                && x.AdminId == adminId
+                && x.IsNotDeleted == true)).FirstOrDefault();
+
+            if (modelGroupDB == null)
+              throw new ValidationException("Group not found");
+
+            var model = (await _dataBase.Find<GroupUserDB>(
+                x => x.UserId == item.UserId
+                && x.GroupId == item.GroupId)).FirstOrDefault();
+
+            if (model == null || model.RightToCreateBoards)
+              throw new ValidationException("User not found");
 
             model.RightToCreateBoards = true;
             model.Modified = DateTime.UtcNow;
 
             _dataBase.Update(model);
-            _dataBase.Save();
+            await _dataBase.Save();
         }
 
-        public void TakeAwayRightToCreateBoards(GroupUser item, string adminId)
+        public async Task TakeAwayRightToCreateBoards(GroupUser item, string adminId)
         {
-            var modelGroupDB = _dataBase.Find<GroupDB>(
+            var modelGroupDB = (await _dataBase.Find<GroupDB>(
                 x => x.Id == item.GroupId
-                && x.AdminId == adminId).FirstOrDefault();
+                && x.AdminId == adminId
+                && x.IsNotDeleted == true)).FirstOrDefault();
 
-            if (modelGroupDB == null) return;
+            if (modelGroupDB == null)
+                throw new ValidationException("Group not found");
 
-            var model = _dataBase.Find<GroupUserDB>(
+            var model = (await _dataBase.Find<GroupUserDB>(
                 x => x.UserId == item.UserId
-                && x.GroupId == item.GroupId).FirstOrDefault();
+                && x.GroupId == item.GroupId)).FirstOrDefault();
 
-            if (model == null || !model.RightToCreateBoards) return;
+            if (model == null || !model.RightToCreateBoards)
+                throw new ValidationException("User not found");
 
             model.RightToCreateBoards = false;
             model.Modified = DateTime.UtcNow;
 
             _dataBase.Update(model);
-            _dataBase.Save();
+            await _dataBase.Save();
         }
 
         public void Dispose()

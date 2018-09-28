@@ -3,16 +3,12 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
-using System.Security.Claims;
+using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
-using WasteProducts.DataAccess.Contexts;
-using WasteProducts.DataAccess.ModelConfigurations;
-using WasteProducts.DataAccess.Repositories.Groups;
 using WasteProducts.Logic.Common.Models.Groups;
-using WasteProducts.Logic.Common.Services.Groups;
 using WasteProducts.Logic.Mappings.Groups;
 using WasteProducts.Logic.Services.Groups;
 
@@ -100,9 +96,9 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         public void GroupService_01_Create_01_Create_New_Group()
         {
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupDB, bool>>()))
-                .Returns(_selectedList);
+                .ReturnsAsync(_selectedList);
 
-            _groupService.Create(_group);
+            var x = Task.Run(()=>_groupService.Create(_group)).Result;
 
             _groupRepositoryMock.Verify(m => m.Create(It.IsAny<GroupDB>()), Times.Once);
         }
@@ -111,11 +107,9 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         {
             _selectedList.Add(_groupDB);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupDB, bool>>()))
-                .Returns(_selectedList);
+                .ReturnsAsync(_selectedList);
 
-            _groupService.Create(_group);
-
-            _groupRepositoryMock.Verify(m => m.Create(It.IsAny<GroupDB>()), Times.Never);
+            Assert.ThrowsAsync<ValidationException>(()=> _groupService.Create(_group));
         }
 
         [Test]
@@ -123,9 +117,9 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         {
             _selectedList.Add(_groupDB);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupDB, bool>>()))
-                .Returns(_selectedList);
+                .ReturnsAsync(_selectedList);
 
-            _groupService.Update(_group);
+            Task.Run(()=>_groupService.Update(_group)).Wait();
 
             _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupDB>()), Times.Once);
         }
@@ -133,11 +127,9 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         public void GroupService_02_Update_02_Group_Did_Not_Created_or_User_Is_Not_Admin()
         {
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupDB, bool>>()))
-                .Returns(_selectedList);
+                .ReturnsAsync(_selectedList);
 
-            _groupService.Update(_group);
-
-            _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupDB>()), Times.Never);
+            Assert.ThrowsAsync<ValidationException>(() => _groupService.Update(_group));
         }
 
         [Test]
@@ -147,9 +139,9 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.GetWithInclude(
                 It.IsAny<Func<GroupDB, bool>>(),
                 It.IsAny<Expression<Func<GroupDB, object>>[]>()))
-                .Returns(_selectedList);
+                .ReturnsAsync(_selectedList);
 
-            _groupService.Delete(_group);
+            Task.Run(() => _groupService.Delete(_group)).Wait();
 
             _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupDB>()), Times.Once);
             _groupRepositoryMock.Verify(m => m.DeleteAll(It.IsAny<List<GroupProductDB>>()), Times.Once);
@@ -160,12 +152,9 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.GetWithInclude(
                 It.IsAny<Func<GroupDB, bool>>(),
                 It.IsAny<Expression<Func<GroupDB, object>>[]>()))
-                .Returns(_selectedList);
+                .ReturnsAsync(_selectedList);
 
-            _groupService.Delete(_group);
-
-            _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupDB>()), Times.Never);
-            _groupRepositoryMock.Verify(m => m.DeleteAll(It.IsAny<List<GroupProductDB>>()), Times.Never);
+            Assert.ThrowsAsync<ValidationException>(() => _groupService.Delete(_group));
         }
 
         [Test]
@@ -175,9 +164,9 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.GetWithInclude(
                 It.IsAny<Func<GroupDB, bool>>(),
                 It.IsAny<Expression<Func<GroupDB, object>>[]>()))
-                .Returns(_selectedList);
+                .ReturnsAsync(_selectedList);
 
-            var result = _groupService.FindById("00000000-0000-0000-0000-000000000000");
+            var result = Task.Run(()=>_groupService.FindById("00000000-0000-0000-0000-000000000000")).Result;
             Assert.AreEqual(_group.Id, result.Id);
             Assert.AreEqual(_group.Name, result.Name);
             Assert.AreEqual(_group.Information, result.Information);
@@ -189,9 +178,9 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.GetWithInclude(
                 It.IsAny<Func<GroupDB, bool>>(),
                 It.IsAny<Expression<Func<GroupDB, object>>[]>()))
-                .Returns(_selectedList);
+                .ReturnsAsync(_selectedList);
 
-            var result = _groupService.FindById("00000000-0000-0000-0000-000000000002");
+            var result = Task.Run(() => _groupService.FindById("00000000-0000-0000-0000-000000000002")).Result;
             Assert.AreEqual(null, result);
         }
 
@@ -202,9 +191,9 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.GetWithInclude(
                 It.IsAny<Func<GroupDB, bool>>(),
                 It.IsAny<Expression<Func<GroupDB, object>>[]>()))
-                .Returns(_selectedList);
+                .ReturnsAsync(_selectedList);
 
-            var result = _groupService.FindByAdmin("1");
+            var result = Task.Run(() => _groupService.FindByAdmin("1")).Result;
             Assert.AreEqual(_group.Id, result.Id);
             Assert.AreEqual(_group.Name, result.Name);
             Assert.AreEqual(_group.Information, result.Information);
@@ -216,9 +205,9 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.GetWithInclude(
                 It.IsAny<Func<GroupDB, bool>>(),
                 It.IsAny<Expression<Func<GroupDB, object>>[]>()))
-                .Returns(_selectedList);
+                .ReturnsAsync(_selectedList);
 
-            var result = _groupService.FindByAdmin("2");
+            var result = Task.Run(() => _groupService.FindByAdmin("2")).Result; ;
             Assert.AreEqual(null, result);
         }
     }

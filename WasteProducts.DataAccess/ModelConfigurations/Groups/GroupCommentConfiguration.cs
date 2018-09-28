@@ -11,7 +11,6 @@ namespace WasteProducts.DataAccess.ModelConfigurations
             ToTable("GroupComments");
 
             HasKey(x => x.Id);
-            Property(x => x.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
             Property(x => x.Comment);
             Property(x => x.Modified).IsOptional();
             Property(x => x.GroupBoardId).IsRequired();

@@ -3,15 +3,12 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Security.Claims;
+using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
-using WasteProducts.DataAccess.Contexts;
-using WasteProducts.DataAccess.ModelConfigurations;
-using WasteProducts.DataAccess.Repositories.Groups;
 using WasteProducts.Logic.Common.Models.Groups;
-using WasteProducts.Logic.Common.Services.Groups;
 using WasteProducts.Logic.Mappings.Groups;
 using WasteProducts.Logic.Services.Groups;
 
@@ -94,11 +91,12 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _selectedUserList.Add(_groupUserDB);
             _selectedBoardList.Add(_groupBoardDB);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-                .Returns(_selectedUserList);
+                .ReturnsAsync(_selectedUserList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
-                .Returns(_selectedBoardList);
+                .ReturnsAsync(_selectedBoardList);
 
-            _groupCommentService.Create(_groupComment, "00000000-0000-0000-0000-000000000001");
+            var x = Task.Run(()=>_groupCommentService
+                .Create(_groupComment, "00000000-0000-0000-0000-000000000001")).Result;
 
             _groupRepositoryMock.Verify(m => m.Create(It.IsAny<GroupCommentDB>()), Times.Once);
         }
@@ -106,13 +104,12 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         public void GroupCommentService_01_Create_02_Board_Unavalible_or_User_Unavalible()
         {
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-                .Returns(_selectedUserList);
+                .ReturnsAsync(_selectedUserList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
-                .Returns(_selectedBoardList);
+                .ReturnsAsync(_selectedBoardList);
 
-            _groupCommentService.Create(_groupComment, "00000000-0000-0000-0000-000000000001");
-
-            _groupRepositoryMock.Verify(m => m.Create(It.IsAny<GroupCommentDB>()), Times.Never);
+            Assert.ThrowsAsync<ValidationException>(()=>_groupCommentService.Create(_groupComment,
+              "00000000-0000-0000-0000-000000000001"));
         }
 
         [Test]
@@ -122,13 +119,14 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _selectedBoardList.Add(_groupBoardDB);
             _selectedCommentList.Add(_groupCommentDB);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-                .Returns(_selectedUserList);
+                .ReturnsAsync(_selectedUserList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
-                .Returns(_selectedBoardList);
+                .ReturnsAsync(_selectedBoardList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupCommentDB, Boolean>>()))
-                .Returns(_selectedCommentList);
+                .ReturnsAsync(_selectedCommentList);
 
-            _groupCommentService.Update(_groupComment, "00000000-0000-0000-0000-000000000001");
+            Task.Run(() => _groupCommentService.Update(_groupComment, 
+                "00000000-0000-0000-0000-000000000001")).Wait();
 
             _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupCommentDB>()), Times.Once);
         }
@@ -136,15 +134,14 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         public void GroupCommentService_02_Update_02_Board_Unavalible_or_User_Unavalible_or_Comment_Unavalible()
         {
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-                .Returns(_selectedUserList);
+                .ReturnsAsync(_selectedUserList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
-                .Returns(_selectedBoardList);
+                .ReturnsAsync(_selectedBoardList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupCommentDB, Boolean>>()))
-                .Returns(_selectedCommentList);
+                .ReturnsAsync(_selectedCommentList);
 
-            _groupCommentService.Update(_groupComment, "00000000-0000-0000-0000-000000000001");
-
-            _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupCommentDB>()), Times.Never);
+            Assert.ThrowsAsync<ValidationException>(() => _groupCommentService.Update(_groupComment,
+              "00000000-0000-0000-0000-000000000001"));
         }
 
         [Test]
@@ -154,13 +151,13 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _selectedBoardList.Add(_groupBoardDB);
             _selectedCommentList.Add(_groupCommentDB);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-                .Returns(_selectedUserList);
+                .ReturnsAsync(_selectedUserList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
-                .Returns(_selectedBoardList);
+                .ReturnsAsync(_selectedBoardList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupCommentDB, Boolean>>()))
-                .Returns(_selectedCommentList);
+                .ReturnsAsync(_selectedCommentList);
 
-            _groupCommentService.Delete(_groupComment, "00000000-0000-0000-0000-000000000002");
+            Task.Run(()=>_groupCommentService.Delete(_groupComment, "00000000-0000-0000-0000-000000000002")).Wait();
 
             _groupRepositoryMock.Verify(m => m.Delete(It.IsAny<GroupCommentDB>()), Times.Once);
         }
@@ -168,15 +165,14 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         public void GroupCommentService_03_Delete_02_Board_Unavalible_or_User_Unavalible_or_Comment_Unavalible()
         {
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-                .Returns(_selectedUserList);
+                .ReturnsAsync(_selectedUserList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
-                .Returns(_selectedBoardList);
+                .ReturnsAsync(_selectedBoardList);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupCommentDB, Boolean>>()))
-                .Returns(_selectedCommentList);
+                .ReturnsAsync(_selectedCommentList);
 
-            _groupCommentService.Delete(_groupComment, "00000000-0000-0000-0000-000000000001");
-
-            _groupRepositoryMock.Verify(m => m.Delete(It.IsAny<GroupCommentDB>()), Times.Never);
+            Assert.ThrowsAsync<ValidationException>(() => _groupCommentService.Delete(_groupComment,
+              "00000000-0000-0000-0000-000000000001"));
         }
 
         [Test]
@@ -184,9 +180,9 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         {
             _selectedCommentList.Add(_groupCommentDB);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupCommentDB, Boolean>>()))
-                .Returns(_selectedCommentList);
+                .ReturnsAsync(_selectedCommentList);
 
-            var result = _groupCommentService.FindById("00000000-0000-0000-0000-000000000001");
+            var result = Task.Run(()=>_groupCommentService.FindById("00000000-0000-0000-0000-000000000001")).Result;
 
             Assert.AreEqual(_groupComment.Id, result.Id);
             Assert.AreEqual(_groupComment.CommentatorId, result.CommentatorId);
@@ -196,9 +192,9 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         public void GroupCommentService_04_FindById_02_GroupCommentDB_Unavalible()
         {
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupCommentDB, Boolean>>()))
-                .Returns(_selectedCommentList);
+                .ReturnsAsync(_selectedCommentList);
 
-            var result = _groupCommentService.FindById("00000000-0000-0000-0000-000000000001");
+            var result = Task.Run(() => _groupCommentService.FindById("00000000-0000-0000-0000-000000000001")).Result;
 
             Assert.AreEqual(null, result);
         }
@@ -208,9 +204,10 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         {
             _selectedCommentList.Add(_groupCommentDB);
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupCommentDB, Boolean>>()))
-                .Returns(_selectedCommentList);
+                .ReturnsAsync(_selectedCommentList);
 
-            var result = _groupCommentService.FindtBoardComment("00000000-0000-0000-0000-000000000001")
+            var result = Task.Run(() => _groupCommentService
+                .FindtBoardComment("00000000-0000-0000-0000-000000000001")).Result
                 .FirstOrDefault();
 
             Assert.AreEqual(_groupComment.Id, result.Id);
@@ -221,103 +218,12 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
         public void GroupCommentService_04_FindtBoardComment_02_GroupCommentDB_Unavalible()
         {
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupCommentDB, Boolean>>()))
-                .Returns(_selectedCommentList);
+                .ReturnsAsync(_selectedCommentList);
 
-            var result = _groupCommentService.FindtBoardComment("00000000-0000-0000-0000-000000000001");
+            var result = Task.Run(() => _groupCommentService
+                .FindtBoardComment("00000000-0000-0000-0000-000000000001")).Result;
 
             Assert.AreEqual(null, result);
         }
-
-        //[Test]
-        //public void GroupBoardService_01_Create_02_Group_Unavalible_or_UserGroup_Unavalible_or_User_Dose_Not_Have_Access()
-        //{
-        //    _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-        //        .Returns(_selectedUserList);
-
-        //    _groupBoardService.Create(_groupBoard);
-
-        //    _groupRepositoryMock.Verify(m => m.Create(It.IsAny<GroupBoardDB>()), Times.Never);
-        //}
-
-        //[Test]
-        //public void GroupBoardService_02_Update_01_Add_New_Information_In_GroupBoard()
-        //{
-        //    _selectedBoardList.Add(_groupBoardDB);
-        //    _selectedUserList.Add(_groupUserDB);
-        //    _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
-        //        .Returns(_selectedBoardList);
-        //    _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-        //        .Returns(_selectedUserList);
-
-        //    _groupBoardService.Update(_groupBoard);
-
-        //    _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupBoardDB>()), Times.Once);
-        //}
-        //[Test]
-        //public void GroupBoardService_02_Update_02_GroupBoard_Unavalible_or_UserGroup_Unavalible_or_User_Dose_Not_Have_Access_or_Board_Unavalible_or_UserGroup_Unavalible()
-        //{
-        //    _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
-        //        .Returns(_selectedBoardList);
-        //    _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-        //        .Returns(_selectedUserList);
-
-        //    _groupBoardService.Update(_groupBoard);
-
-        //    _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupBoardDB>()), Times.Never);
-        //}
-
-        //[Test]
-        //public void GroupBoardService_03_Delete_01_Remove_GroupBoard()
-        //{
-        //    _selectedBoardList.Add(_groupBoardDB);
-        //    _selectedUserList.Add(_groupUserDB);
-        //    _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
-        //        .Returns(_selectedBoardList);
-        //    _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-        //        .Returns(_selectedUserList);
-
-        //    _groupBoardService.Update(_groupBoard);
-
-        //    _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupBoardDB>()), Times.Once);
-        //    _groupRepositoryMock.Verify(m => m.Delete(It.IsAny<GroupProductDB>()), Times.AtMostOnce);
-        //}
-        //[Test]
-        //public void GroupBoardService_03_Delete_02_GroupBoard_Unavalible_or_UserGroup_Unavalible_or_User_Dose_Not_Have_Access_or_Board_Unavalible_or_UserGroup_Unavalible()
-        //{
-        //    _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
-        //        .Returns(_selectedBoardList);
-        //    _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-        //        .Returns(_selectedUserList);
-
-        //    _groupBoardService.Update(_groupBoard);
-
-        //    _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupBoardDB>()), Times.Never);
-        //    _groupRepositoryMock.Verify(m => m.Delete(It.IsAny<GroupProductDB>()), Times.Never);
-        //}
-
-        //[Test]
-        //public void GroupBoardService_04_FindById_01_Obtainment_Avalible_GroupBoard_By_Id()
-        //{
-        //    _selectedBoardList.Add(_groupBoardDB);
-        //    _groupRepositoryMock.Setup(m => m.Find(
-        //        It.IsAny<Func<GroupBoardDB, Boolean>>()))
-        //        .Returns(_selectedBoardList);
-
-        //    var result = _groupBoardService.FindById(new Guid("00000000-0000-0000-0000-000000000000"));
-        //    Assert.AreEqual(_groupBoard.Id, result.Id);
-        //    Assert.AreEqual(_groupBoard.Name, result.Name);
-        //    Assert.AreEqual(_groupBoard.Information, result.Information);
-        //    Assert.AreEqual(_groupBoard.CreatorId, result.CreatorId);
-        //}
-        //[Test]
-        //public void GroupBoardService_04_FindById_02_Obtainment_Unavalible_GroupBoard_By_Id()
-        //{
-        //    _groupRepositoryMock.Setup(m => m.Find(
-        //        It.IsAny<Func<GroupBoardDB, Boolean>>()))
-        //        .Returns(_selectedBoardList);
-
-        //    var result = _groupBoardService.FindById(new Guid("00000000-0000-0000-0000-000000000000"));
-        //    Assert.AreEqual(null, result);
-        //}
     }
 }

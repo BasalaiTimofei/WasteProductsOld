@@ -16,7 +16,6 @@ namespace WasteProducts.Logic.Tests.Diagnostic_Tests
         private const string IncorrectMethodWorkMsg = "Method works incorrect";
         private Mock<ILogger> _loggerMoq;
         private Mock<IDatabase> _databaseMoq;
-        private Mock<IDbSeedService> _dbSeedServiceMoq;
         private Mock<IDiagnosticRepository> _diagRepoMoq;
 
         [OneTimeSetUp]
@@ -24,7 +23,6 @@ namespace WasteProducts.Logic.Tests.Diagnostic_Tests
         {
             _loggerMoq = new Mock<ILogger>();
             _databaseMoq = new Mock<IDatabase>();
-            _dbSeedServiceMoq = new Mock<IDbSeedService>();
             _diagRepoMoq = new Mock<IDiagnosticRepository>();
         }
 
@@ -33,7 +31,6 @@ namespace WasteProducts.Logic.Tests.Diagnostic_Tests
         {
             _loggerMoq.Reset();
             _databaseMoq.Reset();
-            _dbSeedServiceMoq.Reset();
         }
 
         [TestCase(false, false)]
@@ -97,6 +94,6 @@ namespace WasteProducts.Logic.Tests.Diagnostic_Tests
             _diagRepoMoq.Verify(s => s.RecreateAsync(), Times.Once);
         }
 
-        IDbService GetDbService() => new DbService(_diagRepoMoq.Object, _dbSeedServiceMoq.Object, _databaseMoq.Object, _loggerMoq.Object);
+        IDbService GetDbService() => new DbService(_diagRepoMoq.Object, _databaseMoq.Object, _loggerMoq.Object);
     }
 }

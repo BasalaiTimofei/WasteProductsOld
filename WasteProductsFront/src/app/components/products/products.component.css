@@ -1,0 +1,10 @@
+h1{
+    font-size: 40px;
+    letter-spacing: 1px;
+    max-width: 320px;
+    width: 100%;
+    position: relative;
+    display: inline-block;
+    color:black;
+    text-decoration-line: initial
+} 

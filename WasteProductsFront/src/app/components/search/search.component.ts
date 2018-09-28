@@ -33,8 +33,8 @@ export class SearchComponent implements OnInit {
 
   search(query: string): void {
     if (typeof query !== 'undefined' && query) {
-      this.query = '';
       this.router.navigate(['searchresults', query]);
+      this.query = '';
       this.topQueries = [];
     }
   }
