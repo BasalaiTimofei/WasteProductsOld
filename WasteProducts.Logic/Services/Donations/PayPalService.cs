@@ -63,7 +63,8 @@ namespace WasteProducts.Logic.Services.Donations
             // process payment
             NameValueCollection payPalArguments = HttpUtility.ParseQueryString(payPalRequestString);
             if (payPalArguments[IPN.Payment.PAYMENT_STATUS] != COMPLETED ||
-                _appSettings[OUR_PAYPAL_EMAIL] != payPalArguments[IPN.Transaction.RECEIVER_EMAIL])
+                _appSettings[OUR_PAYPAL_EMAIL] != payPalArguments[IPN.Transaction.RECEIVER_EMAIL] ||
+                    _donationRepository.Contains(payPalArguments[IPN.Transaction.TXN_ID]))
                 return;
 
             Donation donation = FillDonation(payPalArguments);

@@ -8,6 +8,7 @@ using WasteProducts.DataAccess.Contexts;
 
 namespace WasteProducts.DataAccess.Repositories.Donations
 {
+    /// <inheritdoc />
     public class DonationRepository : IDonationRepository
     {
         private readonly WasteContext _context;
@@ -19,10 +20,7 @@ namespace WasteProducts.DataAccess.Repositories.Donations
         /// <param name="context">The specific context of WasteContext.</param>
         public DonationRepository(WasteContext context) => _context = context;
 
-        /// <summary>
-        /// Allows you to log new donation to the database.
-        /// </summary>
-        /// <param name="donation">The new donation for adding.</param>
+        /// <inheritdoc />
         public void Add(DonationDB donation)
         {
             DonorDB donorFromDB = _context.Donors.Find(donation.Donor.Id);
@@ -58,6 +56,12 @@ namespace WasteProducts.DataAccess.Repositories.Donations
                 donation.Donor = SetAddressFromDBIfExists(donation.Donor);
             _context.Donations.Add(donation);
             _context.SaveChanges();
+        }
+
+        /// <inheritdoc />
+        public bool Contains(string id)
+        {
+            return _context.Donations.Select(d => d.TransactionId).Contains(id);
         }
 
         /// <summary>
