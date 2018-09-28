@@ -8,7 +8,7 @@ using System.Text;
 using System.Web;
 using WasteProducts.Logic.Common.Models.Donations;
 using WasteProducts.Logic.Common.Services.Donations;
-using WasteProducts.Logic.Constants;
+using WasteProducts.Logic.Constants.Donations;
 
 namespace WasteProducts.Logic.Services.Donations
 {

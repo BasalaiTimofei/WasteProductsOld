@@ -113,6 +113,7 @@
     <Compile Include="Services\Barcods\IHttpHelper.cs" />
     <Compile Include="Services\Diagnostic\IDbService.cs" />
     <Compile Include="Services\Diagnostic\ITestModelsService.cs" />
+    <Compile Include="Services\Donations\IVerificationService.cs" />
     <Compile Include="Services\Notifications\INotificationProvider.cs" />
     <Compile Include="Services\Notifications\INotificationService.cs" />
     <Compile Include="Services\Products\ICategoryService.cs" />

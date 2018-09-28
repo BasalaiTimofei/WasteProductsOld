@@ -1,4 +1,4 @@
-﻿namespace WasteProducts.Logic.Constants
+﻿namespace WasteProducts.Logic.Constants.Donations
 {
     /// <summary>
     /// Represents PayPal IPN variables.
