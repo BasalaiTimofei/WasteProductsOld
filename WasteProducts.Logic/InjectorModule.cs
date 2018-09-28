@@ -16,6 +16,7 @@ using WasteProducts.Logic.Common.Models.Search;
 using WasteProducts.Logic.Common.Services;
 using WasteProducts.Logic.Common.Services.Barcods;
 using WasteProducts.Logic.Common.Services.Diagnostic;
+using WasteProducts.Logic.Common.Services.Donations;
 using WasteProducts.Logic.Common.Services.Groups;
 using WasteProducts.Logic.Common.Services.Mail;
 using WasteProducts.Logic.Common.Services.Notifications;
@@ -60,6 +61,7 @@ namespace WasteProducts.Logic
             BindGroupServices();
             BindProductServices();
             BindBarcodeServices();
+            BindDonationServices();
 
             Bind<ISearchService>().To<LuceneSearchService>().ValidateArguments(typeof(BoostedSearchQuery));
 
@@ -135,6 +137,12 @@ namespace WasteProducts.Logic
             Bind<ICatalog>().To<EDostavkaCatalog>();
             Bind<ICatalog>().To<PriceGuardCatalog>();
             Bind<IHttpHelper>().To<HttpHelper>();
+        }
+
+        private void BindDonationServices()
+        {
+            Bind<IVerificationService>().To<PayPalVerificationService>();
+            Bind<IDonationService>().To<PayPalService>();
         }
 
         private void BindMappers()
