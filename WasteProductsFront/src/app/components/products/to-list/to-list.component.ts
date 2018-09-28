@@ -13,7 +13,7 @@ import { UserProduct } from '../../../models/users/user-product';
 
 export class ToListComponent implements OnInit {
 
-  constructor (private productService: ProductService) {}
+  constructor (public productService: ProductService) {}
 
   products: Product[] = [];
   userProducts: UserProduct[] = [];

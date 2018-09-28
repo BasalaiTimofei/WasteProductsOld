@@ -22,6 +22,20 @@ export class ProductService extends BaseHttpService {
     super(httpService, loggingService);
   }
 
+  createProduct(rating: number, description: string) {
+    const createProdUrl = `${environment.apiHostUrl}/api/products`;
+    let productId: string;
+    this.httpService.post(createProdUrl, null).subscribe(res => productId = <string>res, err => console.error(err));
+
+    const addProdUrl = `${environment.apiHostUrl}/api/user/${this.getUserId()}/products/${productId}`;
+
+    const descr = new ProductDescription();
+    descr.Rating = rating;
+    descr.Description = description;
+
+    this.httpService.post(addProdUrl, descr);
+  }
+
   getUserProducts() {
     const url = `${environment.apiHostUrl}/api/user/0/products`;
     return this.httpService.get<UserProduct[]>(url);
