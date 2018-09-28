@@ -33,6 +33,7 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
                 Donor = CreateDonorWithLondonAddress()
             };
             _donationRepository.Add(donation);
+            Assert.IsTrue(_donationRepository.Contains(donation.TransactionId));
         }
 
         [Test]
@@ -48,6 +49,7 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
                 Donor = CreateDonorWithLondonAddress()
             };
             _donationRepository.Add(donation);
+            Assert.IsTrue(_donationRepository.Contains(donation.TransactionId));
         }
 
         [Test]
@@ -65,6 +67,7 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
                 Donor = donor
             };
             _donationRepository.Add(donation);
+            Assert.IsTrue(_donationRepository.Contains(donation.TransactionId));
         }
 
         [Test]
@@ -82,6 +85,7 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
                 Donor = donor
             };
             _donationRepository.Add(donation);
+            Assert.IsTrue(_donationRepository.Contains(donation.TransactionId));
         }
 
         [Test]
@@ -97,6 +101,7 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
                 Donor = CreateDonorWithAmsterdamAddress()
             };
             _donationRepository.Add(donation);
+            Assert.IsTrue(_donationRepository.Contains(donation.TransactionId));
         }
 
         [Test]
@@ -113,6 +118,7 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
                 Donor = donor
             };
             _donationRepository.Add(donation);
+            Assert.IsTrue(_donationRepository.Contains(donation.TransactionId));
         }
 
         [Test]
@@ -130,6 +136,7 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
                 Donor = donor
             };
             _donationRepository.Add(donation);
+            Assert.IsTrue(_donationRepository.Contains(donation.TransactionId));
         }
 
         [OneTimeTearDown]
