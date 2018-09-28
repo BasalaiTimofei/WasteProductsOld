@@ -16,18 +16,17 @@ export class ToListComponent implements OnInit {
   constructor (private productService: ProductService) {}
 
   products: Product[] = [];
-  userProducts: UserProduct[] = []; // К обсуждению
+  userProducts: UserProduct[] = [];
 
   data: UserProduct[] = this.userProducts;
   dataSource = new MatTableDataSource(this.data);
-  displayedColumns: string[] = ['Id', 'Name', 'AvgRating', 'Composition'];
+  displayedColumns: string[] = ['Id', 'Name', 'AvgRating', 'Composition', 'IsHidden'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit() {
     this.paginator.length = this.data.length;
-    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
 this.productService.getUserProducts().subscribe(
@@ -43,7 +42,7 @@ this.productService.getUserProducts().subscribe(
     err => console.error(err));
   }
 
-    applyFilter(filterValue: string) {
+    applyFilter(filterValue: any) {
       this.dataSource.filter = filterValue.trim().toLowerCase();
     }
   }
