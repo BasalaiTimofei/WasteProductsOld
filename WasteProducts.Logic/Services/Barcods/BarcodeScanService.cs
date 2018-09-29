@@ -35,6 +35,8 @@ namespace WasteProducts.Logic.Services.Barcods
                     code = ScanBySpire(resizeStream);
                 }
             }
+            if (code == null)
+                return null;
             if (!IsValid(code))
                 return null;
             else

@@ -46,7 +46,7 @@ namespace WasteProducts.Logic.Common.Models.Barcods
         /// <summary>
         /// Product picture path.
         /// </summary>
-        public Image Picture { get; set; }
+        public Image Picture { get; set; }      //TODO: Image => string path to image
 
         /// <summary>
         /// Specifies the concreat product
