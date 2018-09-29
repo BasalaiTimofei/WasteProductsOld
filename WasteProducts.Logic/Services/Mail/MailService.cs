@@ -44,6 +44,10 @@ namespace WasteProducts.Logic.Services.Mail
             {
                 return false;
             }
+            catch (ArgumentNullException)
+            {
+                return false;
+            }
         }
 
         public async Task SendAsync(string to, string subject, string body)

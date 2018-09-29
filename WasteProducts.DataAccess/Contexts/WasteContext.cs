@@ -140,5 +140,19 @@ namespace WasteProducts.DataAccess.Contexts
                 }
             }
         }
+
+        /// <summary>
+        /// Method not for use, just for preventing some bug made by .NET "optimization"
+        /// </summary>
+        private void FixEfProviderServicesProblem()
+        {
+            // This method prevents this bug:
+            // The Entity Framework provider type 'System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer'
+            // for the 'System.Data.SqlClient' ADO.NET provider could not be loaded. 
+            // Make sure the provider assembly is available to the running application. 
+            // See http://go.microsoft.com/fwlink/?LinkId=260882 for more information.
+
+            var instance = System.Data.Entity.SqlServer.SqlProviderServices.Instance;
+        }
     }
 }

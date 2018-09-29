@@ -3,7 +3,7 @@
     /// <summary>
     /// PLL model for adding product description.
     /// </summary>
-    public class ProductDescriprion
+    public class ProductDescription
     {
         /// <summary>
         /// Rating of the product.
