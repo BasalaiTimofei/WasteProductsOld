@@ -36,24 +36,39 @@ export class ProductService extends BaseHttpService {
     this.httpService.post(addProdUrl, descr);
   }
 
+  addProductDescription(rating: number, descrText: string, productId: string) {
+    const description = new ProductDescription();
+    description.Rating = rating;
+    description.Description = descrText;
+
+    const url = `${environment.apiHostUrl}/api/user/${this.getUserId()}/products/${productId}`;
+    this.httpService.post(url, description)
+    .subscribe(
+      res => console.log(res),
+      err => console.log(err));
+  }
+
   getUserProducts() {
     const url = `${environment.apiHostUrl}/api/user/0/products`;
     return this.httpService.get<UserProduct[]>(url);
    }
 
-   updateUserProduct(productId: string, rating: number, description: string) {
+   updateUserProduct(productId: string, rating: number, descrText: string) {
     const url = `${environment.apiHostUrl}/api/user/${this.getUserId()}/products/${productId}`;
 
-    const descr = new ProductDescription();
-    descr.Rating = rating;
-    descr.Description = description;
+    const description = new ProductDescription();
+    description.Rating = rating;
+    description.Description = descrText;
 
-    this.httpService.put(url, descr);
+    this.httpService.put(url, description);
    }
 
    deleteUserProduct(productId: string) {
     const url = `${environment.apiHostUrl}/api/user/0/products/${productId}`;
-    this.httpService.delete(url).subscribe(res => console.log(res), err => console.log(err));
+    this.httpService.delete(url)
+    .subscribe(
+      res => console.log(res),
+      err => console.log(err));
    }
 
    getAllProducts(): Observable<UserProduct[]> {

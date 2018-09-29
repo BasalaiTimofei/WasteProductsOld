@@ -73,7 +73,7 @@ namespace WasteProducts.Web.Controllers.Api
 
             var id = await _productService.AddAsync(image);
 
-            return Created("api/products/" + id, GetById(id));
+            return Created("api/products/" + id, await GetById(id));
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace WasteProducts.Web.Controllers.Api
         {
             await _productService.UpdateAsync(data);
 
-            return Ok(GetById(data.Id));
+            return Ok(await GetById(data.Id));
         }
     }
 

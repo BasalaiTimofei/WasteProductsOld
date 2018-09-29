@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
+import { Product } from '../../../models/groups/Group';
+import { ProductService } from '../../../services/product/product.service';
 
 @Component({
   selector: 'app-add-product',
@@ -7,6 +10,9 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./add-product.component.css']
 })
 export class AddProductComponent implements OnInit {
+
+constructor(private http: HttpClient, private productService: ProductService) { }
+
 selectedFile: File = null;
 
 isHidden = false;
@@ -19,15 +25,30 @@ onFileSelected(event) {
 
 onUpload() {
   const fd = new FormData;
-  fd.append('image', this.selectedFile, this.selectedFile.name);
-  this.http.post('redirect to barcode parser', fd).subscribe(res => console.log(res));
-}
+  // fd.append('image', this.selectedFile, this.selectedFile.name);
+  const url = `${environment.apiHostUrl}/api/products/`;
+  this.http.post(url, fd)
+  .subscribe(res => {
+  const uploadResult = <IBarcodeUploadResult>res;
 
-  constructor(private http: HttpClient) { }
+    if (uploadResult.product !== null) {
+      const rating = Number(document.getElementById('inputRating').nodeValue);
+      const descrText = document.getElementById('inputDescription').nodeValue;
+
+      this.productService.addProductDescription(rating, descrText, uploadResult.product.Id);
+    }
+  },
+   err => console.log(err));
+}
 
   ngOnInit() {
   }
 
   turnedOffWhile() {
   }
+}
+
+interface IBarcodeUploadResult {
+  urlOfCreatedProduct: string;
+  product: Product;
 }

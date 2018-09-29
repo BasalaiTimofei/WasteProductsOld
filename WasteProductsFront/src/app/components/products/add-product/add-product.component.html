@@ -2,5 +2,5 @@
   <div><input type="file" (change)="onFileSelected($event)"></div>
   <input id="inputRating" class="form-control" placeholder="Ваша оценка продукта от 0 до 10" required="" autofocus="">
   <input id="inputDescription" class="form-control" placeholder="Ваше описание продукта" required="" autofocus="">
-  <div><button type="button" mat-flat-button>Добавить продукт</button></div>
+  <div><button type="button" (click)="onUpload()" mat-flat-button>Добавить продукт</button></div>
 </div>

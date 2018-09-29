@@ -235,9 +235,9 @@ namespace WasteProducts.Web.Controllers.Api
             var validator = new RegisterUserValidator();
             validator.ValidateAndThrow(model);
 
-            var idToken = await _service.RegisterAsync(model.Email, model.UserName, model.Password, sb.ToString());
+            var (id, token) = await _service.RegisterAsync(model.Email, model.UserName, model.Password, sb.ToString());
 
-            if (idToken.id is null && idToken.token is null)
+            if (id is null && token is null)
             {
                 // throws 409 conflict
                 throw new OperationCanceledException("Please provide unique UserName and Email.");
