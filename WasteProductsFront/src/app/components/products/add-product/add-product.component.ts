@@ -19,23 +19,11 @@ isHidden = false;
 
 enableAdd = true;
 
-rating = '';
-
-descrText = '';
-
 onFileSelected(event) {
   this.selectedFile = <File>event.target.files[1];
 }
 
-onRatingTyping(event) {
-  this.rating += event.target.value;
-}
-
-onDescriptionTyping(event) {
-  this.descrText += event.target.value;
-}
-
-onUpload() {
+onUpload(rating, descrText) {
   const fd = new FormData;
   // fd.append('image', this.selectedFile, this.selectedFile.name);
   const url = `${environment.apiHostUrl}/api/products/`;
@@ -45,7 +33,7 @@ onUpload() {
   const uploadResult = <IBarcodeUploadResult>res;
 
     if (uploadResult.product !== null) {
-      this.productService.addProductDescription(Number(this.rating), this.descrText, uploadResult.product.Id);
+      this.productService.addProductDescription(Number(rating), descrText, uploadResult.product.Id);
     }
   },
    err => console.log(err));
