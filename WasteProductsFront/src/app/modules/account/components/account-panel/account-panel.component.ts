@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatBottomSheetRef } from '@angular/material';
-import { OAuthService, OAuthErrorEvent } from 'angular-oauth2-oidc';
+import { Observable } from 'rxjs';
 import { AuthenticationService } from '../../services/authentication.service';
+import { NotificationService } from '../../services/notification.service';
+import { map } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-account-panel',
@@ -10,10 +13,16 @@ import { AuthenticationService } from '../../services/authentication.service';
 })
 export class AccountPanelComponent implements OnInit {
 
-  public constructor(private authService: AuthenticationService,
-    private bottomSheetRef: MatBottomSheetRef<AccountPanelComponent>) { }
+  hasUnreadNotifications$: Observable<boolean>;
+  unreadNotifcationsCount$: Observable<number>;
+
+  constructor(private authService: AuthenticationService,
+    private bottomSheetRef: MatBottomSheetRef<AccountPanelComponent>,
+    private notificationService: NotificationService) { }
 
   ngOnInit() {
+    this.hasUnreadNotifications$ = this.notificationService.hasUnreadNotifications$;
+    this.unreadNotifcationsCount$ = this.notificationService.unreadNotifications$.pipe(map(notifications => notifications.length));
   }
 
   protected logOut(event: MouseEvent) {

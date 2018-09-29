@@ -1,10 +1,16 @@
 <nav>
   <mat-nav-list>
-    <mat-list-item>
-      <button mat-button routerLink="/account" routerLinkActive="active" (click)="openLink($event)">Account</button>
+    <mat-list-item (click)="openLink($event)">
+      <button mat-button routerLink="/account" routerLinkActive="active">Account</button>
     </mat-list-item>
-    <mat-list-item>
-      <button mat-button (click)="logOut($event)" (click)="openLink($event)">Log Out</button>
+    <mat-list-item (click)="openLink($event)">
+      <button mat-button routerLink="/account/notifications" routerLinkActive="active">
+        Notifications&nbsp;
+        <span *ngIf="hasUnreadNotifications$ | async" class="badge badge-danger">{{unreadNotifcationsCount$ | async}}</span>
+      </button>
+    </mat-list-item>
+    <mat-list-item (click)="openLink($event)">
+      <button mat-button (click)="logOut($event)">Log Out</button>
     </mat-list-item>
   </mat-nav-list>
 </nav>
