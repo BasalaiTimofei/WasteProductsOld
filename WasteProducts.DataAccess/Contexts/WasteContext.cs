@@ -51,8 +51,8 @@ namespace WasteProducts.DataAccess.Contexts
                 .WithOptional(b => b.Product);
 
             modelBuilder.Entity<BarcodeDB>()
-                .HasOptional(b => b.Product)
-                .WithRequired(b => b.Barcode);
+                .HasRequired(p => p.Product)
+                .WithOptional(b => b.Barcode);
 
             modelBuilder.Configurations.Add(new UserProductDescriptionConfiguration());
 
