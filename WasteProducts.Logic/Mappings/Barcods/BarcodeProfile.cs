@@ -2,6 +2,7 @@
 using System;
 using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Barcods;
+using System.Drawing;
 
 namespace WasteProducts.Logic.Mappings.Barcods
 {
@@ -14,6 +15,9 @@ namespace WasteProducts.Logic.Mappings.Barcods
                     opt => opt.MapFrom(p => p.ProductName != null ? DateTime.UtcNow : default(DateTime)))
                 .ForMember(m => m.Modified, opt => opt.UseValue((DateTime?)null))
                 .ReverseMap();
+
+            CreateMap<BarcodeDB, Barcode>()
+                .ForMember(x => x.Picture, x => x.MapFrom(m => Image.FromFile(m.PinturePath)));
         }
     }
 }

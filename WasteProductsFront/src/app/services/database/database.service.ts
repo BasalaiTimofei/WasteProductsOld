@@ -7,11 +7,11 @@ import { catchError, tap } from 'rxjs/operators';
 import { BaseHttpService } from '../base/base-http.service';
 import { LoggingService } from '../logging/logging.service';
 
-// models
+/* Models */
 import { DatabaseState } from '../../models/database/database-state';
 
-// environment
-import { environment } from '../../../environments/environment';
+/* Environment */
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'

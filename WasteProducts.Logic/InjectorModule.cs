@@ -134,6 +134,7 @@ namespace WasteProducts.Logic
             Bind<ICatalog>().To<EDostavkaCatalog>();
             Bind<ICatalog>().To<PriceGuardCatalog>();
             Bind<IHttpHelper>().To<HttpHelper>();
+            Bind<IBarcodeService>().To<BarcodeService>();
         }
 
         private void BindMappers()

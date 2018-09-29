@@ -1,90 +1,61 @@
 ﻿using AutoMapper;
 using Castle.Core.Logging;
 using System;
-using System.Drawing;
-using System.Drawing.Imaging;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Repositories.Barcods;
-using WasteProducts.Logic.Common.Factories;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Services.Barcods;
 
 namespace WasteProducts.Logic.Services.Barcods
 {
-    /// <inheritdoc />
     public class BarcodeService : IBarcodeService
     {
-        private Bitmap _image;
-        private Stream _stream;
-        private readonly IBarcodeScanService _scanner;
-        private readonly IBarcodeCatalogSearchService _searcher;
-        private readonly IBarcodeRepository _repository;
-        private readonly IServiceFactory _serviceFactory;
-        private readonly ILogger _logger;
-        private readonly IMapper _mapper;
+        IBarcodeScanService _scanner;
+        IBarcodeRepository _repository;
+        IBarcodeCatalogSearchService _catalog;
+        ILogger _logger;
+        IMapper _mapper;
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="serviceFactory">IServiceFactory implementation IBarcodeScanService,
-        /// IBarcodeCatalogSearchService</param>
-        /// <param name="repository">IBarcodeRepositoryr</param>
-        /// <param name="logger">NLog logger</param>
-        /// <param name="mapper">AutoMapperr</param>
-        public BarcodeService(IServiceFactory serviceFactory, IBarcodeRepository repository, ILogger logger, IMapper mapper)
+        public BarcodeService(IBarcodeScanService scanner, IBarcodeRepository repository, IBarcodeCatalogSearchService catalog, ILogger logger, IMapper mapper)
         {
-            _serviceFactory = serviceFactory;
-            _scanner = _serviceFactory.CreateBarcodeScanService();
-            _searcher = _serviceFactory.CreateSearchBarcodeService();
+            _scanner = scanner;
             _repository = repository;
+            _catalog = catalog;
             _logger = logger;
             _mapper = mapper;
         }
 
-        /// <inheritdoc />
-        public async Task<string> AddAsync(Barcode barcode)
+        public Task<Barcode> GetBarcodeAsync(Stream imageStream)
         {
-            return await _repository.AddAsync(_mapper.Map<BarcodeDB>(barcode))
-                .ContinueWith(t => t.Result);
+            //получить цифровой код баркода
+            var code = _scanner.Scan(imageStream);
+
+            if (code == null)
+                return null;
+
+            //если получили валидный код - найти информацию о товаре в репозитории
+            var barcodeDB = _repository.GetByCodeAsync(code).Result;
+
+            //если она есть - вернуть ее
+            if (barcodeDB != null)
+                return Task.FromResult(_mapper.Map<Barcode>(barcodeDB));
+
+            //если ее нет - получить инфу из веб каталога
+            var barcode = _catalog.GetAsync(code).Result;
+
+            if (barcode == null)
+                return null;
+
+            //сохранить ее в репозиторий
+            string res = _repository.AddAsync(Mapper.Map<BarcodeDB>(barcode)).Result; //mapping Barcode -> BarcodeDB 
+
+            //вернуть ее
+            return Task.FromResult(barcode);
         }
-
-        /// <inheritdoc />
-        public async Task<Barcode> GetBarcodeByStreamAsync(Stream stream)
-        {
-            string code = null;
-            Barcode barcode = null;
-
-            _image = _scanner.Resize(stream, 400, 400);
-            
-            if (code != null)
-            {
-                barcode = await GetByCodeAsync(code);
-
-                if (barcode == null)
-                {
-                    barcode = await _searcher.GetAsync(code);
-                    //сохранение в базу
-                }
-            }
-            return barcode;
-        }
-
-        /// <inheritdoc />
-        public async Task<Barcode> GetBarcodeByCodeAsync(string code)
-        {
-            Barcode barcode = null;
-
-            if (await GetByCodeAsync(code) == null)
-            {
-                barcode = await _searcher.GetAsync(code);
-            }
-            return barcode;
-        }
-
-        /// <inheritdoc />
-        public async Task<Barcode> GetByCodeAsync(string code)
-           => _mapper.Map<Barcode>(await _repository.GetByCodeAsync(code));
     }
 }
