@@ -73,6 +73,7 @@
     <Compile Include="Models\Barcods\Barcode.cs" />
     <Compile Include="Models\Donations\Donor.cs" />
     <Compile Include="Models\Notifications\Notification.cs" />
+    <Compile Include="Models\Notifications\NotificationMessage.cs" />
     <Compile Include="Models\Search\BoostedSearchQuery.cs" />
     <Compile Include="Models\Products\Category.cs" />
     <Compile Include="Models\Search\BoostedSearchQueryConverter.cs" />
