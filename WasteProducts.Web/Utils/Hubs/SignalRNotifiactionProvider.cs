@@ -11,9 +11,15 @@ namespace WasteProducts.Web.Utils.Hubs
     public class SignalRNotifiactionProvider : INotificationProvider
     {
         /// <inheritdoc />
-        public Task NotificateAsync(string userId, Notification notification)
+        public Task NotifiyAsync(Notification notification,params string[] usersIds)
         {
-            return Task.Run(() => NotificationHub.SendNotification(userId, notification));
+            return Task.Run(() =>
+            {
+                foreach (var userId in usersIds)
+                {
+                    NotificationHub.SendNotification(userId, notification);
+                }
+            });
         }
     }
 }

@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models.Notifications;
 using WasteProducts.Logic.Common.Services.Notifications;
 
 namespace WasteProducts.Logic.Services.Notifications
 {
+    /// <inheritdoc />
     public class NotificationService : INotificationService
     {
         private readonly IEnumerable<INotificationProvider> _notificationProviders;
@@ -16,27 +19,35 @@ namespace WasteProducts.Logic.Services.Notifications
         }
 
         /// <inheritdoc />
-        public Task NotificateUserAsync(string userId, Notification notification)
+        public Task NotifyAsync(NotificationMessage notificationMessage, params string[] usersIds)
         {
-            throw new System.NotImplementedException();
-        }
+            //TODO: cast Notification message to Notification 
 
-        /// <inheritdoc />
-        public Task NotificateUsersAsync(Notification notification, params string[] usersIds)
-        {
-            throw new System.NotImplementedException();
+            //todo: add notification to db
+
+            //todo: send notification using providers
+
+            return Task.CompletedTask; // todo: to remove after implementation of method
         }
 
         /// <inheritdoc />
         public Task<IEnumerable<Notification>> GetUserNotificationsAsync(string userId)
         {
-            throw new System.NotImplementedException();
+            return Task.FromResult(new []{new Notification()
+            {
+                Id = Guid.NewGuid().ToString(),
+                Date = DateTime.UtcNow,
+                Subject = "SOme Subject",
+                Message = "Some Message"
+            }}.AsEnumerable());
         }
 
         /// <inheritdoc />
         public Task MarkReadAsync(string userId, string notificationId)
         {
-            throw new System.NotImplementedException();
+            //todo mark notification as read for user
+
+            return Task.CompletedTask;// todo: to remove after implementation of method
         }
     }
 }
