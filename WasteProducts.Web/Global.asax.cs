@@ -19,6 +19,7 @@ namespace WasteProducts.Web
             var currentController = string.Empty;
             var currentAction = string.Empty;
             var currentRouteData = RouteTable.Routes.GetRouteData(new HttpContextWrapper(httpContext));
+            
 
             if (currentRouteData != null)
             {

@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Web.Http.Filters;
 using FluentValidation;
 
@@ -22,8 +23,10 @@ namespace WasteProducts.Web.ExceptionHandling.Api
                     modelState.AddModelError(validationFailure.PropertyName, validationFailure.ErrorMessage);
                 }
 
-                actionExecutedContext.Response.ReasonPhrase = exception.Message;
                 actionExecutedContext.Response = actionExecutedContext.Request.CreateErrorResponse(HttpStatusCode.BadRequest, modelState);
+                actionExecutedContext.Response.Content = new StringContent(exception.Message, Encoding.UTF8, "text/html");
+                    
+                    //ReasonPhrase = exception.Message;
             }
         }
     }
