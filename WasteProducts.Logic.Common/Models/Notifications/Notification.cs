@@ -2,8 +2,27 @@
 
 namespace WasteProducts.Logic.Common.Models.Notifications
 {
-    public class Notification
+    /// <summary>
+    /// Notification
+    /// </summary>
+    public class Notification: NotificationMessage
     {
+        /// <summary>
+        /// Creates new Notification
+        /// </summary>
+        public Notification() {  }
+
+        /// <summary>
+        /// Creates new Notification from NotificationMessage
+        /// </summary>
+        /// <param name="notificationMessage">notification message</param>
+        public Notification(NotificationMessage notificationMessage)
+        {
+            this.Date = DateTime.UtcNow; ;
+            this.Subject = notificationMessage.Subject;
+            this.Message = notificationMessage.Message;
+        }
+
         /// <summary>
         /// Unique identifier of concrete Notification
         /// </summary>
@@ -18,15 +37,5 @@ namespace WasteProducts.Logic.Common.Models.Notifications
         /// Notification date
         /// </summary>
         public DateTime Date { get; set; }
-
-        /// <summary>
-        /// Notification subject
-        /// </summary>
-        public string Subject { get; set; }
-
-        /// <summary>
-        /// Notification message
-        /// </summary>
-        public string Message { get; set; }
     }
 }
