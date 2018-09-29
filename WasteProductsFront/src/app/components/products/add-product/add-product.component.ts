@@ -19,23 +19,33 @@ isHidden = false;
 
 enableAdd = true;
 
+rating = '';
+
+descrText = '';
+
 onFileSelected(event) {
   this.selectedFile = <File>event.target.files[1];
+}
+
+onRatingTyping(event) {
+  this.rating += event.target.value;
+}
+
+onDescriptionTyping(event) {
+  this.descrText += event.target.value;
 }
 
 onUpload() {
   const fd = new FormData;
   // fd.append('image', this.selectedFile, this.selectedFile.name);
   const url = `${environment.apiHostUrl}/api/products/`;
+
   this.http.post(url, fd)
   .subscribe(res => {
   const uploadResult = <IBarcodeUploadResult>res;
 
     if (uploadResult.product !== null) {
-      const rating = Number(document.getElementById('inputRating').nodeValue);
-      const descrText = document.getElementById('inputDescription').nodeValue;
-
-      this.productService.addProductDescription(rating, descrText, uploadResult.product.Id);
+      this.productService.addProductDescription(Number(this.rating), this.descrText, uploadResult.product.Id);
     }
   },
    err => console.log(err));
