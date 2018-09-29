@@ -42,7 +42,7 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// <param name="rating">Rating from 0 to 10 of this product given by the user.</param>
         /// <param name="description">Textual description of the product given by the user.</param>
         /// <returns>Boolean represents whether operation succeed or no.</returns>
-        Task<bool> AddProductAsync(string userId, string productId, int rating, string description);
+        Task AddProductAsync(string userId, string productId, int rating, string description);
 
         /// <summary>
         /// Add a user to a role.
@@ -59,7 +59,7 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// <param name="oldPassword">Old password of the specific user.</param>
         /// <param name="newPassword">New password of the specific user.</param>
         /// <returns>Boolean representing whether resetting password succeed or not.</returns>
-        Task<bool> ChangePasswordAsync(string userId, string oldPassword, string newPassword);
+        Task ChangePasswordAsync(string userId, string oldPassword, string newPassword);
 
         /// <summary>
         /// Confirms user's email by the confirmation token given by RegisterAsync method.
@@ -82,7 +82,7 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// <param name="userId">ID of user frow whose list of products the specific product will be deleted.</param>
         /// <param name="productId">Specific product's ID to delete from the user's list of products.</param>
         /// <returns>Boolean represents whether operation succeed or no.</returns>
-        Task<bool> DeleteProductAsync(string userId, string productId);
+        Task DeleteProductAsync(string userId, string productId);
 
         /// <summary>
         /// Deletes user from the WasteProducts.
@@ -212,7 +212,7 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// <param name="token">Reset password token</param>
         /// <param name="newPassword">New password of the user.</param>
         /// <returns>Boolean represents whether operation succeed or no.</returns>
-        Task<bool> ResetPasswordAsync(string userId, string token, string newPassword);
+        Task ResetPasswordAsync(string userId, string token, string newPassword);
 
         /// <summary>
         /// Requests an email with the password of the user registered to this email.
@@ -254,7 +254,7 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// <param name="rating">New rating of the product.</param>
         /// <param name="description">New description of the product.</param>
         /// <returns>Boolean represents whether operation succeed or not.</returns>
-        Task<bool> UpdateProductDescriptionAsync(string userId, string productId, int rating, string description);
+        Task UpdateProductDescriptionAsync(string userId, string productId, int rating, string description);
 
         /// <summary>
         /// Updates user's UserName. You cannot update UserName if newUserName is already used by another user.

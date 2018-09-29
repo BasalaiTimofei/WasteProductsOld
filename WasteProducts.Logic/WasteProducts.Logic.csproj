@@ -162,7 +162,6 @@
     <Compile Include="Services\Mail\MailService.cs" />
     <Compile Include="Services\Notifications\NotificationService.cs" />
     <Compile Include="Services\Products\CategoryService.cs" />
-    <Compile Include="Services\Diagnostic\DbSeedService.cs" />
     <Compile Include="Services\Diagnostic\DbService.cs" />
     <Compile Include="Services\Diagnostic\TestModelsService.cs" />
     <Compile Include="Services\LuceneSearchService.cs" />
@@ -187,6 +186,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Validators\Users\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">

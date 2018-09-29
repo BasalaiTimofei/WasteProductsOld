@@ -100,6 +100,7 @@
     <Compile Include="Models\Users\UserProduct.cs" />
     <Compile Include="Models\Users\UserProductDescription.cs" />
     <Compile Include="Models\Users\UserRole.cs" />
+    <Compile Include="Models\Users\WebUsers\LoginByEmail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\QueryConverter.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -107,9 +108,9 @@
       <DependentUpon>QueryConverter.resx</DependentUpon>
     </Compile>
     <Compile Include="Services\Barcods\IBarcodeCatalogSearchService.cs" />
+    <Compile Include="Services\Barcods\IBarcodeService.cs" />
     <Compile Include="Services\Barcods\ICatalog.cs" />
     <Compile Include="Services\Barcods\IHttpHelper.cs" />
-    <Compile Include="Services\Diagnostic\IDbSeedService.cs" />
     <Compile Include="Services\Diagnostic\IDbService.cs" />
     <Compile Include="Services\Diagnostic\ITestModelsService.cs" />
     <Compile Include="Services\Notifications\INotificationProvider.cs" />

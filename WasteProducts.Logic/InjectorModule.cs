@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Moq;
 using Ninject.Extensions.Factory;
 using Ninject.Modules;
 using System;
@@ -80,7 +81,6 @@ namespace WasteProducts.Logic
         private void BindDatabaseServices()
         {
             Bind<IDbService>().To<DbService>();
-            Bind<IDbSeedService>().To<DbSeedService>();
             Bind<ITestModelsService>().To<TestModelsService>();
         }
 
@@ -128,6 +128,7 @@ namespace WasteProducts.Logic
 
         private void BindBarcodeServices()
         {
+            Bind<IBarcodeService>().ToMethod(ctx => new Mock<IBarcodeService>().Object);
             Bind<IBarcodeScanService>().To<BarcodeScanService>();
             Bind<IBarcodeCatalogSearchService>().To<BarcodeCatalogSearchService>();
             Bind<ICatalog>().To<EDostavkaCatalog>();

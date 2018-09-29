@@ -51,11 +51,6 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         public string Composition { get; set; }
 
         /// <summary>
-        /// Defines whether the Product is in the "hidden" state
-        /// </summary>
-        public bool IsHidden { get; set; }
-
-        /// <summary>
         /// Defines whether the Product is marked for deletion
         /// </summary>
         public bool Marked { get; set; }
@@ -91,7 +86,6 @@ namespace WasteProducts.DataAccess.Common.Models.Products
             hashCode = hashCode * -1521134295 + EqualityComparer<BarcodeDB>.Default.GetHashCode(Barcode);
             hashCode = hashCode * -1521134295 + EqualityComparer<ICollection<UserProductDescriptionDB>>.Default.GetHashCode(UserDescriptions);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Composition);
-            hashCode = hashCode * -1521134295 + IsHidden.GetHashCode();
             hashCode = hashCode * -1521134295 + Marked.GetHashCode();
             return hashCode;
         }
