@@ -24,6 +24,7 @@ using WasteProducts.Logic.Common.Services.Products;
 using WasteProducts.Logic.Common.Services.Users;
 using WasteProducts.Logic.Extensions;
 using WasteProducts.Logic.Interceptors;
+using WasteProducts.Logic.Mappings.Barcods;
 using WasteProducts.Logic.Mappings.Groups;
 using WasteProducts.Logic.Mappings.Products;
 using WasteProducts.Logic.Mappings.Users;
@@ -128,13 +129,12 @@ namespace WasteProducts.Logic
 
         private void BindBarcodeServices()
         {
-            Bind<IBarcodeService>().ToMethod(ctx => new Mock<IBarcodeService>().Object);
+            Bind<IBarcodeService>().To<BarcodeService>();
             Bind<IBarcodeScanService>().To<BarcodeScanService>();
             Bind<IBarcodeCatalogSearchService>().To<BarcodeCatalogSearchService>();
             Bind<ICatalog>().To<EDostavkaCatalog>();
             Bind<ICatalog>().To<PriceGuardCatalog>();
             Bind<IHttpHelper>().To<HttpHelper>();
-            Bind<IBarcodeService>().To<BarcodeService>();
         }
 
         private void BindMappers()
@@ -178,6 +178,13 @@ namespace WasteProducts.Logic
                     cfg.AddProfile<CategoryProfile>();
                 })))
                 .WhenInjectedExactlyInto<CategoryService>();
+
+            Bind<IMapper>().ToMethod(ctx =>
+                new Mapper(new MapperConfiguration(cfg =>
+                {
+                    cfg.AddProfile(new BarcodeProfile());
+                })))
+                .WhenInjectedExactlyInto<BarcodeService>();
 
             Bind<IMapper>().ToMethod(ctx =>
                 new Mapper(new MapperConfiguration(cfg =>

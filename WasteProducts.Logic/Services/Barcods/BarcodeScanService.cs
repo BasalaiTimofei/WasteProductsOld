@@ -14,27 +14,39 @@ namespace WasteProducts.Logic.Services.Barcods
     public class BarcodeScanService : IBarcodeScanService
     {
         private Bitmap _image;
-        private Stream _stream;
         private Graphics _graphics;
-        
+
+        /// <summary>
+        /// get a numeric barcode from the photo
+        /// </summary>
+        /// <param name="stream"> image of barcode photo</param>
+        /// <returns>string of a numerical barcode</returns>
         public string Scan(Stream stream)
         {
-            //var code = ScanByZxing(stream);
-
-            //if (IsValid(code))
-            //    return code;
-
-            var code = ScanBySpire(stream);
-
-            if (IsValid(code))
+            string code = null;
+            using (var resizeStream = Resize(stream, 400, 400))
+            {
+                try
+                {
+                    code = ScanByZxing(resizeStream);
+                }
+                catch
+                {
+                    code = ScanBySpire(resizeStream);
+                }
+            }
+            if (code == null)
+                return null;
+            if (!IsValid(code))
+                return null;
+            else
                 return code;
-
-            return null;
         }
 
         /// <inheritdoc />
-        public Bitmap Resize(Stream stream, int width, int height)
+        public Stream Resize(Stream stream, int width, int height)
         {
+            MemoryStream resultStream = new MemoryStream();
             Bitmap img = new Bitmap(stream);
             Bitmap result = new Bitmap(width, height);
             using (_graphics = Graphics.FromImage(result))
@@ -43,19 +55,37 @@ namespace WasteProducts.Logic.Services.Barcods
                 _graphics.DrawImage(img, 0, 0, width, height);
                 _graphics.Dispose();
             }
-            return result;
+            result.Save(resultStream, ImageFormat.Bmp);
+
+            return resultStream;
         }
 
         /// <inheritdoc />
         public string ScanByZxing(Stream stream)
         {
-            string decoded = "";
-            _image = Resize(stream, 400, 400);
-
-            BarcodeReader Reader = new BarcodeReader();
-            Result result = Reader.Decode(_image);
-            decoded = result.ToString().Trim();
-
+            Result result = null;
+            var barcodeReader = new BarcodeReader
+            {
+                Options = new ZXing.Common.DecodingOptions()
+                {
+                    TryHarder = true
+                },
+                AutoRotate = true
+            };
+            using (stream)
+            {
+                _image = new Bitmap(stream);
+                result = barcodeReader.Decode(_image);
+            }
+            if(result == null)
+            {
+                return null;
+            }
+            string decoded = result.ToString().Trim();
+            if (!IsValid(decoded))
+            {
+                decoded = null;
+            }
             return decoded;
         }
 
@@ -63,18 +93,24 @@ namespace WasteProducts.Logic.Services.Barcods
         public string ScanBySpire(Stream stream)
         {
             string decoded = "";
-            _image = Resize(stream, 400, 400);
 
-            using (_stream = new MemoryStream())
+            using (stream)
             {
-                _image.Save(_stream, ImageFormat.Bmp);
-                decoded = BarcodeScanner.ScanOne(_stream, true);
+                decoded = BarcodeScanner.ScanOne(stream, true);
             }
-
+            if (!IsValid(decoded))
+            {
+                decoded = null;
+            }
             return decoded;
         }
-        
-        bool IsValid(string code)
+
+        /// <summary>
+        /// String code validation.
+        /// </summary>
+        /// <param name="code">String code.</param>
+        /// <returns>true or false</returns>  
+        private bool IsValid(string code)
         {
             if (code != (new Regex("[^0-9]")).Replace(code, ""))
             {

@@ -1,42 +1,45 @@
 ﻿using AutoMapper;
-using Castle.Core.Logging;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Repositories.Barcods;
+using WasteProducts.Logic.Common.Factories;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Services.Barcods;
 
 namespace WasteProducts.Logic.Services.Barcods
 {
+    /// <inheritdoc />
     public class BarcodeService : IBarcodeService
     {
+        private Barcode _barcode;
         IBarcodeScanService _scanner;
-        IBarcodeRepository _repository;
         IBarcodeCatalogSearchService _catalog;
-        ILogger _logger;
+        IBarcodeRepository _repository;
         IMapper _mapper;
 
-        public BarcodeService(IBarcodeScanService scanner, IBarcodeRepository repository, IBarcodeCatalogSearchService catalog, ILogger logger, IMapper mapper)
+        public BarcodeService(IServiceFactory serviceFactory, IBarcodeRepository repository, IMapper mapper)
         {
-            _scanner = scanner;
+            _scanner = serviceFactory.CreateBarcodeScanService();
+            _catalog = serviceFactory.CreateSearchBarcodeService();
             _repository = repository;
-            _catalog = catalog;
-            _logger = logger;
             _mapper = mapper;
         }
 
-        public Task<Barcode> GetBarcodeAsync(Stream imageStream)
+        /// <inheritdoc />
+        public Task<string> AddAsync(Barcode barcode)
+        {
+            return Task.FromResult(_repository.AddAsync(Mapper.Map<BarcodeDB>(barcode)).Result); //mapping Barcode -> BarcodeDB 
+        }
+
+        /// <inheritdoc />
+        public Task<Barcode> GetBarcodeByStreamAsync(Stream imageStream)
         {
             //получить цифровой код баркода
             var code = _scanner.Scan(imageStream);
 
             if (code == null)
-                return null;
+                return Task.FromResult(_barcode);
 
             //если получили валидный код - найти информацию о товаре в репозитории
             var barcodeDB = _repository.GetByCodeAsync(code).Result;
@@ -52,7 +55,30 @@ namespace WasteProducts.Logic.Services.Barcods
                 return null;
 
             //сохранить ее в репозиторий
-            string res = _repository.AddAsync(Mapper.Map<BarcodeDB>(barcode)).Result; //mapping Barcode -> BarcodeDB 
+            //string res = _repository.AddAsync(Mapper.Map<BarcodeDB>(barcode)).Result; //mapping Barcode -> BarcodeDB 
+
+            //вернуть ее
+            return Task.FromResult(barcode);
+        }
+
+        /// <inheritdoc />
+        public Task<Barcode> GetBarcodeByCodeAsync(string code)
+        {
+            //если получили валидный код - найти информацию о товаре в репозитории
+            var barcodeDB = _repository.GetByCodeAsync(code).Result;
+
+            //если она есть - вернуть ее
+            if (barcodeDB != null)
+                return Task.FromResult(_mapper.Map<Barcode>(barcodeDB));
+
+            //если ее нет - получить инфу из веб каталога
+            var barcode = _catalog.GetAsync(code).Result;
+
+            if (barcode == null)
+                return Task.FromResult(_barcode);
+
+            //сохранить ее в репозиторий
+            //string res = _repository.AddAsync(Mapper.Map<BarcodeDB>(barcode)).Result; //mapping Barcode -> BarcodeDB 
 
             //вернуть ее
             return Task.FromResult(barcode);

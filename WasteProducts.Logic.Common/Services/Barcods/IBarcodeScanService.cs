@@ -8,8 +8,6 @@ namespace WasteProducts.Logic.Common.Services.Barcods
     /// </summary>
     public interface IBarcodeScanService
     {
-        string Scan(Stream stream);
-
         /// <summary>
         /// Resize a image of barcode
         /// </summary>
@@ -17,7 +15,14 @@ namespace WasteProducts.Logic.Common.Services.Barcods
         /// <param name="width"> width of barcode image result</param>
         /// <param name="height"> height of barcode image result</param>
         /// <returns>Resized image</returns>
-        Bitmap Resize(Stream stream, int width, int height);
+        Stream Resize(Stream stream, int width, int height);
+
+        /// <summary>
+        /// get a numeric barcode from the photo
+        /// </summary>
+        /// <param name="stream"> image of barcode photo</param>
+        /// <returns>string of a numerical barcode</returns>
+        string Scan(Stream stream);
 
         /// <summary>
         /// get a numerical barcode on the photo

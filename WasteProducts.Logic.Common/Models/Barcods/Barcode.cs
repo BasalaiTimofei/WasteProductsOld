@@ -44,9 +44,9 @@ namespace WasteProducts.Logic.Common.Models.Barcods
         public double Weight { get; set; }
 
         /// <summary>
-        /// Link to picture.
+        /// Product picture path.
         /// </summary>
-        public Image Picture { get; set; }
+        public Image Picture { get; set; }      //TODO: Image => string path to image
 
         /// <summary>
         /// Specifies the concreat product

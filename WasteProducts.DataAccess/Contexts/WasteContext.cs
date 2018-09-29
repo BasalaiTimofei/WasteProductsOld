@@ -47,12 +47,12 @@ namespace WasteProducts.DataAccess.Contexts
             modelBuilder.Entity<UserDB>().HasMany(u => u.Notifications).WithRequired(n => n.User);
 
             modelBuilder.Entity<ProductDB>()
-                .HasRequired(p => p.Barcode)
-                .WithOptional(b => b.Product);
+                .HasOptional(p => p.Barcode)
+                .WithRequired(b => b.Product);
 
             modelBuilder.Entity<BarcodeDB>()
-                .HasOptional(b => b.Product)
-                .WithRequired(b => b.Barcode);
+                .HasRequired(p => p.Product)
+                .WithOptional(b => b.Barcode);
 
             modelBuilder.Configurations.Add(new UserProductDescriptionConfiguration());
 

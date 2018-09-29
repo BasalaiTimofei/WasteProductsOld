@@ -40,7 +40,7 @@ namespace WasteProducts.Logic.Services.Products
         {
             if (imageStream == null) return null;
 
-            var barcode = _barcodeService.GetBarcodeAsync(imageStream).Result;
+            var barcode = _barcodeService.GetBarcodeByStreamAsync(imageStream).Result;
             if (barcode == null) return null;
 
             if (IsProductsInDB(

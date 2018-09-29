@@ -46,7 +46,13 @@ namespace WasteProducts.Logic.Common.Factories
         /// Gets IBarcodeService from Ioc container 
         /// </summary>
         /// <returns>Implementation of IBarcodeService</returns>
-        IBarcodeScanService CreateBarcodeService();
+        IBarcodeScanService CreateBarcodeScanService();
+
+        /// <summary>
+        /// Gets IBarcodeCatalogSearchService from Ioc container 
+        /// </summary>
+        /// <returns>Implementation of IBarcodeCatalogSearchService</returns>
+        IBarcodeCatalogSearchService CreateSearchBarcodeService();
 
         /// <summary>
         /// Gets IDonationService from Ioc container 

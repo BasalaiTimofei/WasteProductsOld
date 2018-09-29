@@ -15,9 +15,6 @@ namespace WasteProducts.Logic.Mappings.Barcods
                     opt => opt.MapFrom(p => p.ProductName != null ? DateTime.UtcNow : default(DateTime)))
                 .ForMember(m => m.Modified, opt => opt.UseValue((DateTime?)null))
                 .ReverseMap();
-
-            CreateMap<BarcodeDB, Barcode>()
-                .ForMember(x => x.Picture, x => x.MapFrom(m => Image.FromFile(m.PinturePath)));
         }
     }
 }

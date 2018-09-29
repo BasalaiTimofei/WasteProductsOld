@@ -43,7 +43,6 @@ namespace WasteProducts.Logic.Services.Barcods
                 {
                     var result = new Barcode();
 
-                    result.Id = Guid.NewGuid().ToString();
                     result.Code = barcode;
                     result.ProductName = nameParseResult.Value;
                     result.Composition = ParseComposition(queryResult.Page).Value;
