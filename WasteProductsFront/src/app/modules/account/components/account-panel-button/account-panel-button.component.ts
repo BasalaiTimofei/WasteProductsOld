@@ -1,14 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-
+import { map } from 'rxjs/operators';
 import { AuthenticationService } from '../../services/authentication.service';
-
+import { NotificationService } from '../../services/notification.service';
 /* Materials */
 import { MatBottomSheet } from '@angular/material';
-
 /* Components */
 import { AccountPanelComponent } from '../account-panel/account-panel.component';
-
 
 @Component({
   selector: 'app-account-panel-button',
@@ -17,21 +15,24 @@ import { AccountPanelComponent } from '../account-panel/account-panel.component'
 })
 export class AccountPanelButtonComponent implements OnInit {
 
-  protected isAuthenificated: Observable<boolean>;
+  isAuthenificated$: Observable<boolean>;
+  hasUnreadNotifications$: Observable<boolean>;
 
-  public constructor(
+  constructor(
     private bottomSheet: MatBottomSheet,
-    private authService: AuthenticationService) { }
+    private authService: AuthenticationService,
+    private notificationService: NotificationService) { }
 
   ngOnInit() {
-    this.isAuthenificated = this.authService.isAuthenticated$;
+    this.isAuthenificated$ = this.authService.isAuthenticated$;
+    this.hasUnreadNotifications$ = this.notificationService.hasUnreadNotifications$;
   }
 
-  protected logIn(event: Event) {
+  logIn(event: Event) {
     this.authService.logIn();
   }
 
-  protected openSheet(): void {
+  openSheet(): void {
     this.bottomSheet.open(AccountPanelComponent);
   }
 }

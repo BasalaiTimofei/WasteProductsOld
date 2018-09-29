@@ -10,8 +10,8 @@ export const environment = {
   apiHostUrl: 'http://localhost:2189',
 
   /* Identity */
-  iderntityHostUrl: 'https://localhost:44333',
-  clientId: 'wasteproducts.angular'
+  iderntityHostUrl: 'https://localhost:44300',
+  clientId: 'bc04b7e1-f43b-46c0-9908-3c2fe4633987'
 };
 
 /*
