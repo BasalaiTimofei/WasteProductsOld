@@ -16,7 +16,7 @@ using WasteProducts.Web.Models.Users;
 using WasteProducts.Web.Validators.Users;
 using FluentValidation;
 
-namespace WasteProducts.Web.Controllers.Api.UserManagement
+namespace WasteProducts.Web.Controllers.Api
 {
     /// <summary>
     /// API controller for user management.
