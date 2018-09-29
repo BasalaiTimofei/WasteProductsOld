@@ -69,7 +69,8 @@ namespace WasteProducts.DataAccess.Repositories.Users
             }
             else
             {
-                return (null, null);
+                // throws 409 conflict
+                throw new OperationCanceledException("Id is not unique.");
             }
         }
 
@@ -77,33 +78,40 @@ namespace WasteProducts.DataAccess.Repositories.Users
         {
             _manager.UserTokenProvider = new EmailTokenProvider<UserDB>();
             await _manager.ConfirmEmailAsync(userId, token).ConfigureAwait(false);
-            if (await _manager.IsEmailConfirmedAsync(userId).ConfigureAwait(false))
+            if (!await _manager.IsEmailConfirmedAsync(userId).ConfigureAwait(false))
             {
-                return true;
+                throw new UnauthorizedAccessException("Incorrect userId or token. Email is not confirmed."); 
             }
-            else
-            {
-                return false;
-            }
+            return true;
         }
 
         public async Task<(string id, string token)> GeneratePasswordResetTokenAsync(string email)
         {
             var user = await _manager.FindByEmailAsync(email).ConfigureAwait(false);
+
+            if (user is null) throw new KeyNotFoundException("There is no User with such email.");
+
             _manager.UserTokenProvider = new TotpSecurityStampBasedTokenProvider<UserDB, string>();
             var token = await _manager.GeneratePasswordResetTokenAsync(user.Id).ConfigureAwait(false);
             return (user.Id, token);
         }
 
-        public async Task<bool> ResetPasswordAsync(string userId, string token, string newPassword)
+        public async Task ResetPasswordAsync(string userId, string token, string newPassword)
         {
             var result = await _manager.ResetPasswordAsync(userId, token, newPassword).ConfigureAwait(false);
-            return result.Succeeded;
+
+            if(!result.Succeeded)
+            throw new UnauthorizedAccessException("Invalid token or id.");
         }
 
         public async Task<UserDAL> GetByNameAndPasswordAsync(string userName, string password)
         {
-            return MapTo<UserDAL>(await _manager.FindAsync(userName, password).ConfigureAwait(false));
+            var result = MapTo<UserDAL>(await _manager.FindAsync(userName, password).ConfigureAwait(false));
+
+            if (result is null)
+            throw new UnauthorizedAccessException("Please provide correct User Name and Password.");
+
+            return result;
         }
 
         public async Task<UserDAL> GetByEmailAndPasswordAsync(string email, string password)
@@ -115,7 +123,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
             }
             else
             {
-                return null;
+                throw new UnauthorizedAccessException("Please provide correct Email and Password.");
             }
         }
 
@@ -148,6 +156,8 @@ namespace WasteProducts.DataAccess.Repositories.Users
                         Include(u => u.Groups.Select(g => g.Group))
                         .FirstOrDefaultAsync(u => u.Id == userId)
                         .ConfigureAwait(false);
+
+            if (user is null) throw new KeyNotFoundException("There is no User with such userId.");
 
             user.Groups.Clear();
             user.ProductDescriptions.Clear();
@@ -182,12 +192,21 @@ namespace WasteProducts.DataAccess.Repositories.Users
         public async Task<IEnumerable<UserDAL>> GetAllAsync()
         {
             var subresult = await _context.Users.ToListAsync().ConfigureAwait(false);
+
+            if (!subresult.Any())
+                throw new KeyNotFoundException("There are no Users.");
+
             return _mapper.Map<IEnumerable<UserDAL>>(subresult);
         }
 
         public async Task<UserDAL> GetAsync(string id)
         {
             var subresult = await _context.Users.FirstOrDefaultAsync(u => u.Id == id).ConfigureAwait(false);
+            
+            // throws 404
+            if (subresult is null)
+                throw new KeyNotFoundException("There is no User with such ID.");
+
             return MapTo<UserDAL>(subresult);
         }
 
@@ -215,7 +234,19 @@ namespace WasteProducts.DataAccess.Repositories.Users
 
         public async Task ChangePasswordAsync(string userId, string newPassword, string oldPassword)
         {
-            await _manager.ChangePasswordAsync(userId, oldPassword, newPassword).ConfigureAwait(false);
+            try
+            {
+                var result = await _manager.ChangePasswordAsync(userId, oldPassword, newPassword).ConfigureAwait(false);
+                if (result.Succeeded != true) throw new UnauthorizedAccessException("Password change is not succeeded.");
+            }
+            catch(InvalidOperationException e)
+            {
+                if (e.Message == "UserId not found.")
+                {
+                    throw new KeyNotFoundException("There is no User with such userId.");
+                }
+                else throw;
+            }
         }
 
         public async Task UpdateAsync(UserDAL user)
@@ -244,7 +275,10 @@ namespace WasteProducts.DataAccess.Repositories.Users
                 await _context.SaveChangesAsync();
                 return true;
             }
-            return false;
+            else if(user is null)
+                throw new KeyNotFoundException("There is no User with such userId.");
+            else
+                throw new OperationCanceledException("The Email is not available.");
         }
 
         public async Task<bool> UpdateUserNameAsync(string userId, string newUserName)
@@ -254,6 +288,8 @@ namespace WasteProducts.DataAccess.Repositories.Users
             if (userNameAvailable)
             {
                 var user = _manager.FindById(userId);
+
+                if (user is null) throw new KeyNotFoundException("There is no User with such userId.");
 
                 user.Modified = DateTime.UtcNow;
                 user.UserName = newUserName;
@@ -265,8 +301,10 @@ namespace WasteProducts.DataAccess.Repositories.Users
                 entry.Property(u => u.Modified).IsModified = true;
 
                 await _context.SaveChangesAsync().ConfigureAwait(false);
+                return userNameAvailable;
             }
-            return userNameAvailable;
+            else
+                throw new OperationCanceledException("The User Name is not available.");
         }
 
         // Business logic below
@@ -275,13 +313,13 @@ namespace WasteProducts.DataAccess.Repositories.Users
             var user = await _context.Users.Include(p => p.Friends).FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
             if (user == null)
             {
-                return;
+                throw new KeyNotFoundException("There is no User with such userId.");
             }
 
             var friend = await _context.Users.FirstOrDefaultAsync(u => u.Id == friendId).ConfigureAwait(false);
             if (friend == null)
             {
-                return;
+                throw new KeyNotFoundException("There is no User with such userId.");
             }
 
             user.Friends.Add(friend);
@@ -294,7 +332,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
             var user = await _context.Users.Include(u => u.Friends).FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
             if (user == null)
             {
-                return null;
+                throw new KeyNotFoundException("There is no User with such userId.");
             }
             return _mapper.Map<List<UserDAL>>(user.Friends);
         }
@@ -304,12 +342,12 @@ namespace WasteProducts.DataAccess.Repositories.Users
             var user = await _context.Users.Include(p => p.Friends).FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
             if(user == null)
             {
-                return;
+                throw new KeyNotFoundException("There is no User with such userId.");
             }
             var friend = await _context.Users.FirstOrDefaultAsync(u => u.Id == deletingFriendId).ConfigureAwait(false);
             if (friend == null)
             {
-                return;
+                throw new KeyNotFoundException("There is no User with such userId. (friend)");
             }
 
             user.Friends.Remove(friend);
@@ -317,17 +355,23 @@ namespace WasteProducts.DataAccess.Repositories.Users
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
-        public async Task<bool> AddProductAsync(string userId, string productId, int rating, string description)
+        public async Task AddProductAsync(string userId, string productId, int rating, string description)
         {
             var user = await _context.Users.Include(u => u.ProductDescriptions).FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
-            if (user == null)
+            if (user is null)
             {
-                return false;
+                throw new KeyNotFoundException("There is no User with such userId.");
             }
-            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId).ConfigureAwait(false);
-            if (product == null)
+
+            if (user.ProductDescriptions.Any(x => x.ProductId == productId))
             {
-                return false;
+                throw new OperationCanceledException("The Product with such productId is already exists. Try to update existing.");
+            }
+
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId).ConfigureAwait(false);
+            if (product is null)
+            {
+                throw new KeyNotFoundException("There is no Product with such productId.");
             }
 
             var userProdDescr = new UserProductDescriptionDB()
@@ -340,7 +384,6 @@ namespace WasteProducts.DataAccess.Repositories.Users
             };
             _context.UserProductDescriptions.Add(userProdDescr);
             await _context.SaveChangesAsync().ConfigureAwait(false);
-            return true;
         }
 
         public async Task<IList<UserProductDescriptionDB>> GetUserProductDescriptionsAsync(string userId)
@@ -348,17 +391,17 @@ namespace WasteProducts.DataAccess.Repositories.Users
             var user = await _context.Users.Include(u => u.ProductDescriptions).FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
             if (user == null)
             {
-                return null;
+                throw new KeyNotFoundException("There is no User with such userId.");
             }
             return user.ProductDescriptions;
         }
 
-        public async Task<bool> UpdateProductDescriptionAsync(string userId, string productId, int rating, string description)
+        public async Task UpdateProductDescriptionAsync(string userId, string productId, int rating, string description)
         {
             var descr = await _context.UserProductDescriptions.FirstOrDefaultAsync(d => d.UserId == userId && d.ProductId == productId).ConfigureAwait(false);
             if (descr == null)
             {
-                return false;
+                throw new KeyNotFoundException("There is no Product Description with such productId for current User.");
             }
 
             descr.Rating = rating;
@@ -366,19 +409,17 @@ namespace WasteProducts.DataAccess.Repositories.Users
             descr.Modified = DateTime.UtcNow;
 
             await _context.SaveChangesAsync().ConfigureAwait(false);
-            return true;
         }
 
-        public async Task<bool> DeleteProductAsync(string userId, string productId)
+        public async Task DeleteProductAsync(string userId, string productId)
         {
             var description = await _context.UserProductDescriptions.FirstOrDefaultAsync(d => d.User.Id == userId && d.Product.Id == productId).ConfigureAwait(false);
             if (description != null)
             {
                 _context.UserProductDescriptions.Remove(description);
                 await _context.SaveChangesAsync().ConfigureAwait(false);
-                return true;
             }
-            else return false;
+            else throw new KeyNotFoundException("There is no Product Description with such productId for current User.");
         }
 
         public async Task ChangeGroupInvitationStatusAsync(string userId, string groupId, bool isConfirmed)
@@ -401,6 +442,10 @@ namespace WasteProducts.DataAccess.Repositories.Users
                 }
                 await _context.SaveChangesAsync().ConfigureAwait(false);
             }
+            else
+            {
+                throw new KeyNotFoundException("There is no such GroupUsers.");
+            }
         }
 
         public async Task<IEnumerable<GroupUserDB>> GetGroupsAsync(string userId)
@@ -408,7 +453,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
             var user = await _context.Users.Include(u => u.Groups.Select(g => g.Group)).FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
             if (user == null)
             {
-                return null;
+                throw new KeyNotFoundException("There is no User with such userId.");
             }
             return user.Groups.Where(g => g.Group.IsNotDeleted);
         }

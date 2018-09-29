@@ -6,17 +6,12 @@ using System.Web;
 namespace WasteProducts.Web.Models.Users
 {
     /// <summary>
-    /// PLL model for logging in to the server.
+    /// This model contains only one Property with new Password.
     /// </summary>
-    public class LoginByEmail
+    public class NewPassword
     {
         /// <summary>
-        /// Name of the user.
-        /// </summary>
-        public string Email { get; set; }
-
-        /// <summary>
-        /// Password of the user.
+        /// New password that will be set to the User.
         /// </summary>
         public string Password { get; set; }
     }
