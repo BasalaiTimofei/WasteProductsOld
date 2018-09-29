@@ -10,13 +10,6 @@ namespace WasteProducts.Logic.Common.Services.Barcods
     public interface IBarcodeService
     {
         /// <summary>
-        /// Return the barcode by its numerical barcode.
-        /// </summary>
-        /// <param name="code">Code of the barcode.</param>
-        /// <returns>Barcode with the specific code.</returns>
-        Task<Barcode> GetByCodeAsync(string code);
-
-        /// <summary>
         /// Add new barcode in the repository.
         /// </summary>
         /// <param name="barcode">New barcode to add.</param>
@@ -31,7 +24,7 @@ namespace WasteProducts.Logic.Common.Services.Barcods
         Task<Barcode> GetBarcodeByStreamAsync(Stream stream);
 
         /// <summary>
-        /// Scan photo of barcode and return a model of Barcode.
+        ///  Return a model of Barcode by code.
         /// </summary>
         /// <param name="stream">Photo stream barcode.</param>
         /// <returns>Model of Barcode.</returns>

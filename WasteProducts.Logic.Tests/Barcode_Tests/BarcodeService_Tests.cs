@@ -17,41 +17,57 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
     class BarcodeService_Tests
     {
         private Bitmap _imageGood = Properties.Resources.IMG_GoodImage;
+        private IBarcodeService _service;
+        private StandardKernel _kernel;
 
+        [OneTimeSetUp]
+        public void Init()
+        {
+            _kernel = new StandardKernel();
+            _kernel.Load(new DataAccess.InjectorModule(), new Logic.InjectorModule());
 
-        /// <summary>
-        /// инициализируем массив из ДВУХ каталогов для поиска информации о товаре.
-        /// 
-        /// моделируем успешный поиск в ПЕРВОМ каталоге.
-        /// 
-        /// для успешного прохождения теста нужно убедиться что:
-        /// 1) метод ICatalog.Get() был вызван только у первого каталога 
-        /// 2) результат был возвращен ПЕРВЫМ каталогом
-        /// </summary>
+            //Barcode barcode = new Barcode()
+            //{
+            //    Id = null,
+            //    Code = 
+            //    ProductName
+            //    Composition
+            //    Brend
+            //    Country
+            //    Weight
+            //    PinturePath
+            //    Product
+            //};
+        }
+
+        //[OneTimeTearDown]
+        //public void LastTearDown()
+        //{
+        //    _kernel?.Dispose();
+        //}
+
+        [SetUp]
+        public void SetUp()
+        {
+            _service = _kernel.Get<IBarcodeService>();
+        }
+
         [Test]
         public async Task Call_GetAsync_Only_First_Catalog()
         {
             //Arrange
-            StandardKernel _kernel = new StandardKernel();
-            _kernel.Load(new DataAccess.InjectorModule(), new Logic.InjectorModule());
+            Barcode barcode = new Barcode();
+            var mock = new Mock<IBarcodeService>();
 
-            var barcodeService = _kernel.Get<IBarcodeService>();
-
+            //Act
             using (Stream stream = new MemoryStream())
             {
                 _imageGood.Save(stream, ImageFormat.Bmp);
-
-                barcodeService.GetBarcodeAsync(stream);
-
+                barcode = await _service.GetBarcodeByStreamAsync(stream);
             }
 
-
-            //Act
-
-
-
             //Assert
-
+            Assert.AreNotEqual(null, barcode);
         }
     }
 }
