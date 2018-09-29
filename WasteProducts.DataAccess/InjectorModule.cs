@@ -49,5 +49,19 @@ namespace WasteProducts.DataAccess
 
             Bind<Bogus.Faker>().ToSelf();
         }
+
+        /// <summary>
+        /// Method not for use, just for preventing some bug made by .NET "optimization"
+        /// </summary>
+        public void FixEfProviderServicesProblem()
+        {
+            //The Entity Framework provider type 'System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer'
+            //for the 'System.Data.SqlClient' ADO.NET provider could not be loaded. 
+            //Make sure the provider assembly is available to the running application. 
+            //See http://go.microsoft.com/fwlink/?LinkId=260882 for more information.
+            
+            // Try to fix a bug with StackOverflow copy-paste
+            var instance = System.Data.Entity.SqlServer.SqlProviderServices.Instance;
+        }
     }
 }
