@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Services.Barcods;
+using WasteProducts.Logic.Mappings.Barcods;
 using Ninject;
 using System.Drawing;
 using System.IO;
@@ -35,7 +36,7 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
                 Brend = "Слодыч",
                 Country = "Беларусь",
                 Weight = 0,
-                Picture = null,
+                PicturePath = "https://img.e-dostavka.by/UserFiles/images/catalog/Goods/thumbs/4810/4810064002096_450x450_w.png.jpg?1423771900",
                 Product = null
             };
         }
@@ -59,9 +60,9 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
                 _imageGood.Save(stream, ImageFormat.Bmp);
                 barcode = _service.GetBarcodeByStreamAsync(stream).Result;
             }
-
+            
             //Assert
-            Assert.AreEqual(_verified.ProductName, barcode.ProductName);
+            Assert.AreEqual(_verified.PicturePath, barcode.PicturePath);
         }
 
         [Test]

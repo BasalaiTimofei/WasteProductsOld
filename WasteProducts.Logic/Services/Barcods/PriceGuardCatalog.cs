@@ -2,7 +2,6 @@
 using WasteProducts.Logic.Common.Services.Barcods;
 using WasteProducts.Logic.Common.Models.Barcods;
 using System.Threading.Tasks;
-using System;
 
 namespace WasteProducts.Logic.Services.Barcods
 {
@@ -48,12 +47,7 @@ namespace WasteProducts.Logic.Services.Barcods
                     result.Composition = ParseComposition(queryResult.Page).Value;
                     result.Brend = ParseBrend(queryResult.Page).Value;
                     result.Country = ParseCountry(queryResult.Page).Value;
-
-                    var picturePathParseResult = ParsePicturePath(queryResult.Page);
-                    if (picturePathParseResult.Success)
-                    {
-                        result.Picture = await _httpHelper.DownloadPictureAsync(picturePathParseResult.Value);
-                    }
+                    result.PicturePath = ParsePicturePath(queryResult.Page).Value;
 
                     return result;
                 }

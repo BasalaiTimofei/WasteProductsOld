@@ -29,7 +29,7 @@ namespace WasteProducts.Logic.Services.Barcods
         /// <inheritdoc />
         public Task<string> AddAsync(Barcode barcode)
         {
-            return Task.FromResult(_repository.AddAsync(Mapper.Map<BarcodeDB>(barcode)).Result); //mapping Barcode -> BarcodeDB 
+            return Task.FromResult(_repository.AddAsync(_mapper.Map<BarcodeDB>(barcode)).Result); //mapping Barcode -> BarcodeDB 
         }
 
         /// <inheritdoc />
@@ -54,9 +54,6 @@ namespace WasteProducts.Logic.Services.Barcods
             if (barcode == null)
                 return null;
 
-            //сохранить ее в репозиторий
-            //string res = _repository.AddAsync(Mapper.Map<BarcodeDB>(barcode)).Result; //mapping Barcode -> BarcodeDB 
-
             //вернуть ее
             return Task.FromResult(barcode);
         }
@@ -76,9 +73,6 @@ namespace WasteProducts.Logic.Services.Barcods
 
             if (barcode == null)
                 return Task.FromResult(_barcode);
-
-            //сохранить ее в репозиторий
-            //string res = _repository.AddAsync(Mapper.Map<BarcodeDB>(barcode)).Result; //mapping Barcode -> BarcodeDB 
 
             //вернуть ее
             return Task.FromResult(barcode);

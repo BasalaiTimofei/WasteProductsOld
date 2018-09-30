@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using WasteProducts.Logic.Common.Models.Products;
+﻿using WasteProducts.Logic.Common.Models.Products;
 
 namespace WasteProducts.Logic.Common.Models.Barcods
 {
@@ -46,7 +45,7 @@ namespace WasteProducts.Logic.Common.Models.Barcods
         /// <summary>
         /// Product picture path.
         /// </summary>
-        public Image Picture { get; set; }      //TODO: Image => string path to image
+        public string PicturePath { get; set; }
 
         /// <summary>
         /// Specifies the concreat product

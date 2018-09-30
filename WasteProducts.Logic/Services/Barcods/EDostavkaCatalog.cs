@@ -48,12 +48,7 @@ namespace WasteProducts.Logic.Services.Barcods
                     result.Composition = ParseComposition(queryResult.Page).Value;
                     result.Brend = ParseBrend(queryResult.Page).Value;
                     result.Country = ParseCountry(queryResult.Page).Value;
-
-                    var picturePathParseResult = ParsePicturePath(queryResult.Page);
-                    if (picturePathParseResult.Success)
-                    {
-                        result.Picture = await _httpHelper.DownloadPictureAsync(picturePathParseResult.Value);//замокать
-                    }
+                    result.PicturePath = ParsePicturePath(queryResult.Page).Value;
 
                     return result;
                 }

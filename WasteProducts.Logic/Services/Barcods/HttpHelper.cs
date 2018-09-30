@@ -44,8 +44,7 @@ namespace WasteProducts.Logic.Services.Barcods
                     HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
                     HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-                    //_image = Image.FromStream(response.GetResponseStream());
-                    _image = null;                  //TODO: return path to file
+                    _image = Image.FromStream(response.GetResponseStream());
                 });
                 return _image;
             }
