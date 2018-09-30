@@ -53,7 +53,12 @@ namespace WasteProducts.Logic.Services.Products
             var newProduct = new Product
             {
                 Barcode = barcode,
-                Name = barcode.ProductName
+                Name = barcode.ProductName,
+                Composition =  barcode.Composition,
+                Brand = barcode.Brand,
+                Country = barcode.Country,
+                Weight = barcode.Weight,
+                PicturePath = barcode.PicturePath,
             };
 
             return _productRepository.AddAsync(_mapper.Map<ProductDB>(newProduct))

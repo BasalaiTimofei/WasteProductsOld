@@ -30,7 +30,7 @@ namespace WasteProducts.Logic.Common.Models.Barcods
         /// <summary>
         /// Product brand.
         /// </summary>
-        public string Brend { get; set; }
+        public string Brand { get; set; }
 
         /// <summary>
         /// Product country.
