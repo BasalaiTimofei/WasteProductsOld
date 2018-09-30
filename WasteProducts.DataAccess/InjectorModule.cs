@@ -13,6 +13,8 @@ using WasteProducts.DataAccess.Repositories.Groups;
 using WasteProducts.DataAccess.Repositories.Users;
 using WasteProducts.DataAccess.Common.Repositories.Diagnostic;
 using WasteProducts.DataAccess.Repositories.Diagnostic;
+using WasteProducts.DataAccess.Common.Repositories.Barcods;
+using WasteProducts.DataAccess.Repositories.Barcods;
 
 namespace WasteProducts.DataAccess
 {
@@ -38,6 +40,8 @@ namespace WasteProducts.DataAccess
             Bind<ISearchRepository>().To<LuceneSearchRepository>().InSingletonScope();
 
             Bind<IGroupRepository>().To<GroupRepository>();
+
+            Bind<IBarcodeRepository>().To<BarcodeRepository>();
 
             Bind<IMapper>().ToMethod(ctx =>
             {
