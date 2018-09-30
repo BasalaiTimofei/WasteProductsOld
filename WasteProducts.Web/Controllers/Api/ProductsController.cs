@@ -58,7 +58,7 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Adds new product.
+        /// Adds new product. File from request reads by an "image" key, so make sure to use this key in FormData.
         /// </summary>
         /// <returns>Created product.</returns>
         [SwaggerResponseRemoveDefaults]
@@ -68,12 +68,17 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpPost, Route("")]
         public async Task<IHttpActionResult> CreateProduct()
         {
-            var image = HttpContext.Current.Request.Files[0].InputStream;
-            if (image == null) return BadRequest();
+            var httpRequest = HttpContext.Current.Request;
+            if (httpRequest.Files.Count > 0)
+            {
+                using(var imageStream = httpRequest.Files["image"].InputStream)
+                {
+                    var id = await _productService.AddAsync(imageStream);
 
-            var id = await _productService.AddAsync(image);
-
-            return Created("api/products/" + id, await GetById(id));
+                    return Created("api/products/" + id, id);
+                }
+            }
+            return BadRequest();
         }
 
         /// <summary>

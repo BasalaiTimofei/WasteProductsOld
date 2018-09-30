@@ -20,7 +20,7 @@ isHidden = false;
 enableAdd = true;
 
 onFileSelected(event) {
-  this.selectedFile = <File>event.target.files[1];
+  this.selectedFile = <File>event.target.files[0];
 }
 
 onUpload(rating, descrText) {
@@ -30,14 +30,9 @@ onUpload(rating, descrText) {
     const url = `${environment.apiHostUrl}/api/products/`;
 
     this.http.post(url, fd)
-    .subscribe(res => {
-    const uploadResult = <IBarcodeUploadResult>res;
-
-      if (uploadResult.product !== null) {
-        this.productService.addProductDescription(Number(rating), descrText, uploadResult.product.Id);
-      }
-    },
-     err => console.log(err));
+    .subscribe(
+      res => this.productService.addProductDescription(Number(rating), descrText, String(res)), // res is an ID of added product
+      err => console.log(err));
   }
 }
 
@@ -46,9 +41,4 @@ onUpload(rating, descrText) {
 
   turnedOffWhile() {
   }
-}
-
-interface IBarcodeUploadResult {
-  urlOfCreatedProduct: string;
-  product: Product;
 }
