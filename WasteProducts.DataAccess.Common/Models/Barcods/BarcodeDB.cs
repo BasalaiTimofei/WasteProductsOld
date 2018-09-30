@@ -46,7 +46,7 @@ namespace WasteProducts.DataAccess.Common.Models.Barcods
         /// <summary>
         /// Product picture path.
         /// </summary>
-        public string PinturePath { get; set; }
+        public string PicturePath { get; set; }
 
         /// <summary>
         /// Date of record creation in DB.
