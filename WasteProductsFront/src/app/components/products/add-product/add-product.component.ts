@@ -24,8 +24,8 @@ onFileSelected(event) {
 }
 
 onUpload(rating, descrText) {
-  const fd = new FormData;
   if (this.selectedFile !== null) {
+    const fd = new FormData;
     fd.append('image', this.selectedFile, this.selectedFile.name);
     const url = `${environment.apiHostUrl}/api/products/`;
 
