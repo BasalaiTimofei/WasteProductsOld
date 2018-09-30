@@ -21,6 +21,31 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         public string Name { get; set; }
 
         /// <summary>
+        /// Product brend.
+        /// </summary>
+        public string Brand { get; set; }
+
+        /// <summary>
+        /// Product country.
+        /// </summary>
+        public string Country { get; set; }
+
+        /// <summary>
+        /// Product weight.
+        /// </summary>
+        public double Weight { get; set; }
+
+        /// <summary>
+        /// Defines the Product description
+        /// </summary>
+        public string Composition { get; set; }
+
+        /// <summary>
+        /// Product picture path.
+        /// </summary>
+        public string PicturePath { get; set; }
+
+        /// <summary>
         /// Specifies the timestamp of creation of concrete Product in database.
         /// </summary>
         public DateTime Created { get; set; }
@@ -44,11 +69,6 @@ namespace WasteProducts.DataAccess.Common.Models.Products
         /// User descriptions of this product.
         /// </summary>
         public virtual ICollection<UserProductDescriptionDB> UserDescriptions { get; set; }
-
-        /// <summary>
-        /// Defines the Product description
-        /// </summary>
-        public string Composition { get; set; }
 
         /// <summary>
         /// Defines whether the Product is marked for deletion
