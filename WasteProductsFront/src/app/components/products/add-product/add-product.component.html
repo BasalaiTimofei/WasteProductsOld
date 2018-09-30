@@ -1,6 +1,6 @@
 <!-- <div style="border-style: groove; margin: 20px;">todo change style of the outer div -->
   <div><input type="file" (change)="onFileSelected($event)"></div>
-  <input #inputRating type="number" min = "0" max="10" class="form-control" placeholder="Ваша оценка продукта от 0 до 10" required="" autofocus="">
+  <input #inputRating type="number" min = "0" max="5" class="form-control" placeholder="Ваша оценка продукта от 0 до 5" required="" autofocus="">
   <input #inputDescription type="text" class="form-control" placeholder="Ваше описание продукта" required="" autofocus="">
   <div><button type="button" (click)="onUpload(inputRating.value, inputDescription.value)" mat-flat-button>Добавить продукт</button></div>
 <!-- </div> -->
