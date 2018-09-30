@@ -5,6 +5,7 @@ using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Repositories.Barcods;
 using WasteProducts.Logic.Common.Factories;
 using WasteProducts.Logic.Common.Models.Barcods;
+using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Services.Barcods;
 
 namespace WasteProducts.Logic.Services.Barcods

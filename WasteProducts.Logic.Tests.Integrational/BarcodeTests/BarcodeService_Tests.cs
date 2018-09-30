@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Services.Barcods;
-using WasteProducts.Logic.Mappings.Barcods;
 using Ninject;
 using System.Drawing;
 using System.IO;
