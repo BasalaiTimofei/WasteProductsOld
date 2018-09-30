@@ -25,18 +25,20 @@ onFileSelected(event) {
 
 onUpload(rating, descrText) {
   const fd = new FormData;
-  // fd.append('image', this.selectedFile, this.selectedFile.name);
-  const url = `${environment.apiHostUrl}/api/products/`;
+  if (this.selectedFile !== null) {
+    fd.append('image', this.selectedFile, this.selectedFile.name);
+    const url = `${environment.apiHostUrl}/api/products/`;
 
-  this.http.post(url, fd)
-  .subscribe(res => {
-  const uploadResult = <IBarcodeUploadResult>res;
+    this.http.post(url, fd)
+    .subscribe(res => {
+    const uploadResult = <IBarcodeUploadResult>res;
 
-    if (uploadResult.product !== null) {
-      this.productService.addProductDescription(Number(rating), descrText, uploadResult.product.Id);
-    }
-  },
-   err => console.log(err));
+      if (uploadResult.product !== null) {
+        this.productService.addProductDescription(Number(rating), descrText, uploadResult.product.Id);
+      }
+    },
+     err => console.log(err));
+  }
 }
 
   ngOnInit() {
