@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
+import { Product } from '../../../models/groups/Group';
+import { ProductService } from '../../../services/product/product.service';
 
 @Component({
   selector: 'app-add-product',
@@ -7,30 +10,35 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./add-product.component.css']
 })
 export class AddProductComponent implements OnInit {
+
+constructor(private http: HttpClient, private productService: ProductService) { }
+
 selectedFile: File = null;
-
-onFileSelected(event){
-  this.selectedFile = <File>event.target.files[1];
-}
-
-onUpload(){
-
-const fd = new FormData;
-fd.append('image', this.selectedFile, this.selectedFile.name);
-this.http.post('redirect to barcode parser', fd)
-.subscribe(res => {console.log(res);
-}
-)};
 
 isHidden = false;
 
-  constructor(private http: HttpClient) { }
+enableAdd = true;
+
+onFileSelected(event) {
+  this.selectedFile = <File>event.target.files[0];
+}
+
+onUpload(rating, descrText) {
+  if (this.selectedFile !== null) {
+    const fd = new FormData;
+    fd.append('image', this.selectedFile, this.selectedFile.name);
+    const url = `${environment.apiHostUrl}/api/products/`;
+
+    this.http.post(url, fd)
+    .subscribe(
+      res => this.productService.addProductDescription(Number(rating), descrText, String(res)), // res is an ID of added product
+      err => console.log(err));
+  }
+}
 
   ngOnInit() {
   }
 
-  enableAdd = true;
-
-  turnedOffWhile(){
+  turnedOffWhile() {
   }
 }

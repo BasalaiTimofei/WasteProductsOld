@@ -3,6 +3,7 @@ export const environment = {
   logLevel: 3,
 
   /* Api */
+  // apiHostUrl: 'http://localhost:2189',
   apiHostUrl: 'http://waste-api.belpyro.net',
 
   /* Identity */

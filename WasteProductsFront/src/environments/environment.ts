@@ -7,7 +7,8 @@ export const environment = {
   logLevel: 0,
 
   /* Api */
-  apiHostUrl: 'http://waste-api.belpyro.net', // 'http://localhost:2189',
+  // apiHostUrl: 'http://localhost:2189',
+  apiHostUrl: 'http://waste-api.belpyro.net',
 
   /* Identity */
   iderntityHostUrl: 'http://waste-identity.belpyro.net', // 'https://localhost:44300',

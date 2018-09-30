@@ -16,7 +16,7 @@ using WasteProducts.Web.Models.Users;
 using WasteProducts.Web.Validators.Users;
 using FluentValidation;
 
-namespace WasteProducts.Web.Controllers.Api.UserManagement
+namespace WasteProducts.Web.Controllers.Api
 {
     /// <summary>
     /// API controller for user management.
@@ -235,9 +235,9 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
             var validator = new RegisterUserValidator();
             validator.ValidateAndThrow(model);
 
-            var idToken = await _service.RegisterAsync(model.Email, model.UserName, model.Password, sb.ToString());
+            var (id, token) = await _service.RegisterAsync(model.Email, model.UserName, model.Password, sb.ToString());
 
-            if (idToken.id is null && idToken.token is null)
+            if (id is null && token is null)
             {
                 // throws 409 conflict
                 throw new OperationCanceledException("Please provide unique UserName and Email.");
@@ -443,7 +443,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <param name="productId">ID of the adding product.</param>
         /// <param name="description">PLL model contains Rating and Description</param>
         /// <returns></returns>
-        [HttpPut, Route("{userId}/addproduct/{productId}")]
+        [HttpPost, Route("{userId}/products/{productId}")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.NoContent, "Product added and described.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no User or Product with such Id.")]
@@ -468,7 +468,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <param name="productId">ID of the adding product.</param>
         /// <param name="description">PLL model contains Rating and Description</param>
         /// <returns></returns>
-        [HttpPut, Route("{userId}/updateproductdescription/{productId}")]
+        [HttpPut, Route("{userId}/products/{productId}")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.NoContent, "Feedback is modified.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no ProductRate with such Id.")]
@@ -493,7 +493,7 @@ namespace WasteProducts.Web.Controllers.Api.UserManagement
         /// <param name="userId">ID of the user who is adding a product to its list of products.</param>
         /// <param name="productId">ID of adding product.</param>
         /// <returns></returns>
-        [HttpPut, Route("{userId}/deleteproduct/{productId}")]
+        [HttpDelete, Route("{userId}/products/{productId}")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.NoContent, "Product is removed.")]
         [SwaggerResponse(HttpStatusCode.NotFound, "There is no ProductRate with such Id.")]

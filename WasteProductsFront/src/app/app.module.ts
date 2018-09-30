@@ -44,6 +44,7 @@ import { GroupUserDismissUserComponent } from './components/groups/user/group-us
 import { GroupUserGetEntitleComponent } from './components/groups/user/group-user-get-entitle/group-user-get-entitle.component';
 import { FooterComponent } from './components/common/footer/footer.component';
 import { DonateComponent } from './components/donate/donate.component';
+import { GroupsOfUserComponent } from './components/groups/groups-of-user/groups-of-user.component';
 
 /* Services */
 import { ImagePreviewService } from './services/image-preview/image-preview.service';
@@ -89,6 +90,7 @@ import { AccountModule } from './modules/account/account.module';
     GroupUserGetEntitleComponent,
 
     DonateComponent,
+    GroupsOfUserComponent,
   ],
   imports: [
     BrowserModule,

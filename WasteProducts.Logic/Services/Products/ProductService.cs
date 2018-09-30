@@ -44,10 +44,10 @@ namespace WasteProducts.Logic.Services.Products
             if (barcode == null) return null;
 
             if (IsProductsInDB(
-                p => string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
+                p => p.Barcode != null && string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
                 out var products))
             {
-                return null;
+                return new Task<string>(() => products.First().Id);
             }
 
             var newProduct = new Product
