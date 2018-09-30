@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using Ninject.Extensions.Logging;
-using System.Net.Http;
 using System.Web.Http;
 using WasteProducts.Logic.Common.Services.Barcods;
 using Swagger.Net.Annotations;
 using WasteProducts.Logic.Common.Models.Barcods;
-using System.Web;
 using System.IO;
-using System.Drawing;
-using WasteProducts.Logic.Services.Barcods;
 using System.Threading.Tasks;
 
 namespace WasteProducts.Web.Controllers.Api
@@ -23,10 +16,8 @@ namespace WasteProducts.Web.Controllers.Api
     public class BarcodeController : BaseApiController
     {
         private Barcode _barcode = null;
-        private readonly IBarcodeScanService _scanner;
+        private readonly IBarcodeService _scanner;
         private readonly IBarcodeCatalogSearchService _searcher;
-        private readonly ICatalog _catalog;
-        private readonly IHttpHelper _httpHelper;
 
         /// <summary>
         /// Constructor.
@@ -34,28 +25,10 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="scanner">BarcodeScan service.</param>
         /// <param name="searcher"></param>
         /// <param name="logger">NLog logger.</param>
-        public BarcodeController(IBarcodeScanService scanner, IBarcodeCatalogSearchService searcher, ILogger logger) : base(logger)
+        public BarcodeController(IBarcodeService scanner, IBarcodeCatalogSearchService searcher, ILogger logger) : base(logger)
         {
             _scanner = scanner;
             _searcher = searcher;
-        }
-
-        /// <summary>
-        /// Scan photo of barcode.
-        /// </summary>
-        /// <param name="uploadStream">The photo of barcode.</param>
-        /// <returns>Numerical code of barcode.</returns>
-        [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Get numerical barcode", typeof(string))]
-        [HttpPost, Route("onlyread")]
-        public async Task<IHttpActionResult> GetCodeByStreamPhotoAsync(Stream uploadStream)
-        {
-            string code = "";
-            await Task.Run(() =>
-            {  
-                code = _scanner.ScanBySpire(uploadStream);
-            });
-            return Ok(code);
         }
 
         /// <summary>
@@ -82,12 +55,7 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpPost, Route("read")]
         public async Task<IHttpActionResult> GetBarcodeAsync(Stream uploadStream)
         {
-            string code = "";
-            await Task.Run(() =>
-            {
-                code = _scanner.ScanBySpire(uploadStream);
-            });
-            _barcode = await _searcher.GetAsync(code);
+            _barcode = await _scanner.GetBarcodeByStreamAsync(uploadStream);
             return Ok(_barcode);
         }
     }
