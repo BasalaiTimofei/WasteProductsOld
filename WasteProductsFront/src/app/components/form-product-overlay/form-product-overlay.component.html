@@ -5,19 +5,24 @@
 
 <div class="overlay-content"
   [@slideContent]="animationState"
-  (@slideContent.start)="onAnimationStart($event)"
-  (@slideContent.done)="onAnimationDone($event)">
-  <div class="spinner-wrapper" *ngIf="loading">
-    <mat-spinner></mat-spinner>
-  </div>
+  (@slideContent.start)="onAnimationStart($event)">
 
-  <form class="example-form">
-    <mat-form-field class="example-full-width">
-      <input matInput placeholder="Favorite food" value="Sushi">
+  <form class="product-form">
+    <mat-form-field>
+      <mat-label>Мой рейнтинг</mat-label>
+      <mat-select value="0">
+        <mat-option value="0">0</mat-option>
+        <mat-option value="1">1</mat-option>
+        <mat-option value="2">2</mat-option>
+        <mat-option value="3">3</mat-option>
+        <mat-option value="4">4</mat-option>
+        <mat-option value="5">5</mat-option>
+      </mat-select>
     </mat-form-field>
-
-    <mat-form-field class="example-full-width">
-      <textarea matInput placeholder="Leave a comment"></textarea>
+    <mat-form-field class="full-width">
+      <textarea matInput placeholder="Мой комментарий"></textarea>
     </mat-form-field>
+    <button type="submit" mat-button>Добавить</button>
   </form>
+
 </div>

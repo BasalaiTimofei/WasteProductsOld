@@ -17,10 +17,16 @@ h1 {
   z-index: -1;
 }
 
-img {
-  width: 100%;
+.product-form {
+  min-width: 150px;
   max-width: 500px;
-  height: auto;
+  width: 100%;
+  background-color: aliceblue;
+  padding: 30px;
+}
+
+.full-width {
+  width: 100%;
 }
 
 .overlay-content {

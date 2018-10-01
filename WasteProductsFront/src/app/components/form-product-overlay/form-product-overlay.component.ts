@@ -1,5 +1,7 @@
-import { Component, Input, Inject, HostListener, EventEmitter } from '@angular/core';
+import { Component, Input, Inject, HostListener, EventEmitter, NgZone, ViewChild } from '@angular/core';
 import { trigger, state, style, transition, animate, AnimationEvent, group, query } from '@angular/animations';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { take } from 'rxjs/operators';
 
 import { FormPreviewOverlay } from './form-preview-overlay';
 import { FILE_PREVIEW_DIALOG_DATA } from './form-preview-overlay.tokens';
@@ -29,6 +31,7 @@ export class FormProductOverlayComponent {
   loading = true;
   animationState: 'void' | 'enter' | 'leave' = 'enter';
   animationStateChanged = new EventEmitter<AnimationEvent>();
+  // @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
   @HostListener('document:keydown', ['$event']) private handleKeydown(event: KeyboardEvent) {
     if (event.keyCode === ESCAPE) {
@@ -36,11 +39,18 @@ export class FormProductOverlayComponent {
     }
   }
   constructor(
+    private ngZone: NgZone,
     public dialogRef: FormPreviewOverlay,
     @Inject(FILE_PREVIEW_DIALOG_DATA) public form: any) { }
     onLoad(event: Event) {
       this.loading = false;
     }
+
+  /*triggerResize() {
+    // Wait for changes to be applied, then trigger textarea resize.
+    this.ngZone.onStable.pipe(take(1))
+        .subscribe(() => this.autosize.resizeToFitContent(true));
+  }*/
 
   onAnimationStart(event: AnimationEvent) {
     this.animationStateChanged.emit(event);
