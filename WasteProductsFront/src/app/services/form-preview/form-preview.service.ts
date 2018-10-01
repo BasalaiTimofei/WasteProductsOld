@@ -2,20 +2,22 @@ import { Injectable, Injector, ComponentRef } from '@angular/core';
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal, PortalInjector } from '@angular/cdk/portal';
 
-import { ImagePreviewComponent } from '../../components/image-preview/image-preview.component';
-import { ImagePreviewOverlay } from '../../components/image-preview/image-preview-overlay';
-import { FILE_PREVIEW_DIALOG_DATA } from '../../components/image-preview/image-preview-overaly.tokens';
+import { FormProductOverlayComponent } from '../../components/form-product-overlay/form-product-overlay.component';
+import { FormPreviewOverlay } from '../../components/form-product-overlay/form-preview-overlay';
+import { FILE_PREVIEW_DIALOG_DATA } from '../../components/form-product-overlay/form-preview-overlay.tokens';
 
-export interface Image {
+export interface Form {
   name: string;
-  url: string;
+  route: string;
+  rate: number;
+  comment: string;
 }
 
 interface FilePreviewDialogConfig {
   panelClass?: string;
   hasBackdrop?: boolean;
   backdropClass?: string;
-  image?: Image;
+  image?: Form;
 }
 
 const DEFAULT_CONFIG: FilePreviewDialogConfig = {
@@ -26,7 +28,7 @@ const DEFAULT_CONFIG: FilePreviewDialogConfig = {
 };
 
 @Injectable()
-export class ImagePreviewService {
+export class FormPreviewService {
 
   constructor(
     private injector: Injector,
@@ -36,7 +38,7 @@ open(config: FilePreviewDialogConfig = {}) {
 
   const dialogConfig = { ...DEFAULT_CONFIG, ...config };
   const overlayRef = this.createOverlay(dialogConfig);
-  const dialogRef = new ImagePreviewOverlay(overlayRef);
+  const dialogRef = new FormPreviewOverlay(overlayRef);
 
   const overlayComponent = this.attachDialogContainer(overlayRef, dialogConfig, dialogRef);
   dialogRef.componentInstance = overlayComponent;
@@ -50,19 +52,19 @@ private createOverlay(config: FilePreviewDialogConfig) {
   return this.overlay.create(overlayConfig);
 }
 
-private attachDialogContainer(overlayRef: OverlayRef, config: FilePreviewDialogConfig, dialogRef: ImagePreviewOverlay) {
+private attachDialogContainer(overlayRef: OverlayRef, config: FilePreviewDialogConfig, dialogRef: FormPreviewOverlay) {
   const injector = this.createInjector(config, dialogRef);
 
-  const containerPortal = new ComponentPortal(ImagePreviewComponent, null, injector);
-  const containerRef: ComponentRef<ImagePreviewComponent> = overlayRef.attach(containerPortal);
+  const containerPortal = new ComponentPortal(FormProductOverlayComponent, null, injector);
+  const containerRef: ComponentRef<FormProductOverlayComponent> = overlayRef.attach(containerPortal);
 
   return containerRef.instance;
 }
 
-private createInjector(config: FilePreviewDialogConfig, dialogRef: ImagePreviewOverlay): PortalInjector {
+private createInjector(config: FilePreviewDialogConfig, dialogRef: FormPreviewOverlay): PortalInjector {
   const injectionTokens = new WeakMap();
 
-  injectionTokens.set(ImagePreviewOverlay, dialogRef);
+  injectionTokens.set(FormPreviewOverlay, dialogRef);
   injectionTokens.set(FILE_PREVIEW_DIALOG_DATA, config.image);
 
   return new PortalInjector(this.injector, injectionTokens);
@@ -83,6 +85,5 @@ private getOverlayConfig(config: FilePreviewDialogConfig): OverlayConfig {
   });
 
   return overlayConfig;
+  }
 }
-}
-

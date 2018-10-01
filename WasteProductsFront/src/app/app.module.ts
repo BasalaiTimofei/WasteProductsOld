@@ -51,6 +51,8 @@ import { ImagePreviewService } from './services/image-preview/image-preview.serv
 
 /* Custom Modules */
 import { AccountModule } from './modules/account/account.module';
+import { FormProductOverlayComponent } from './components/form-product-overlay/form-product-overlay.component';
+import { FormOverlayWrapperComponent } from './components/form-product-overlay/form-overlay-wrapper/form-overlay-wrapper.component';
 
 @NgModule({
   declarations: [
@@ -91,6 +93,8 @@ import { AccountModule } from './modules/account/account.module';
 
     DonateComponent,
     GroupsOfUserComponent,
+    FormProductOverlayComponent,
+    FormOverlayWrapperComponent,
   ],
   imports: [
     BrowserModule,
