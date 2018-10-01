@@ -1,0 +1,23 @@
+<app-form-overlay-wrapper>
+  <mat-icon>description</mat-icon>
+    {{ form.name }}
+</app-form-overlay-wrapper>
+
+<div class="overlay-content"
+  [@slideContent]="animationState"
+  (@slideContent.start)="onAnimationStart($event)"
+  (@slideContent.done)="onAnimationDone($event)">
+  <div class="spinner-wrapper" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <form class="example-form">
+    <mat-form-field class="example-full-width">
+      <input matInput placeholder="Favorite food" value="Sushi">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <textarea matInput placeholder="Leave a comment"></textarea>
+    </mat-form-field>
+  </form>
+</div>
