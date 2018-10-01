@@ -1,4 +1,5 @@
 ﻿using Owin;
+using WasteProducts.IdentityServer.Extensions;
 
 namespace WasteProducts.Web
 {
@@ -6,7 +7,7 @@ namespace WasteProducts.Web
     {
         private void ConfigureOAuth(IAppBuilder app)
         {
-            
+            app.UseIdentityServer();
         }
     }
 }

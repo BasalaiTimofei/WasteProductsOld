@@ -17,7 +17,7 @@
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort />
+    <IISExpressSSLPort>44325</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -346,6 +346,10 @@
     <ProjectReference Include="..\WasteProducts.DataAccess\WasteProducts.DataAccess.csproj">
       <Project>{e9fb0e3e-01d5-4316-8703-84248a90be98}</Project>
       <Name>WasteProducts.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WasteProducts.IdentityServer\WasteProducts.IdentityServer.csproj">
+      <Project>{897ff481-d5df-4495-8141-6bdfb245dcd3}</Project>
+      <Name>WasteProducts.IdentityServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\WasteProducts.Logic.Common\WasteProducts.Logic.Common.csproj">
       <Project>{643aab59-4858-4e23-9a18-4bbec3ee5f56}</Project>

@@ -1,15 +1,14 @@
 ﻿using System.IO;
 using System.Security.Cryptography.X509Certificates;
 
-namespace WasteProducts.IdentityServer.Config
+namespace WasteProducts.IdentityServer.Certificate
 {
-    public static class Certificate
+    public static class CertificateLoader
     {
         public static X509Certificate2 Get()
         {
-            var assembly = typeof(Certificate).Assembly;
-            using (var stream = assembly.GetManifestResourceStream("WasteProducts.IdentityServer.Config.idsrv3test.pfx"))
-                // Should be the path to the embeded certificate
+            var assembly = typeof(CertificateLoader).Assembly;
+            using (var stream = assembly.GetManifestResourceStream("WasteProducts.IdentityServer.Certificate.idsrv3test.pfx"))
             {
                 return new X509Certificate2(ReadStream(stream), "idsrv3test");
             }
