@@ -2,6 +2,7 @@
 @import "~bootstrap/dist/css/bootstrap.css";
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 @import "../node_modules/bulma/css/bulma.css";
+@import "../node_modules/material-icons/css/material-icons.min.css";
 
 .cdk-overlay-backdrop.cdk-overlay-backdrop-showing.dark-backdrop {
   background: #000;
