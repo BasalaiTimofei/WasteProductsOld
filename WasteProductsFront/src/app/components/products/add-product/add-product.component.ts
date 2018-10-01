@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { Product } from '../../../models/groups/Group';
 import { ProductService } from '../../../services/product/product.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-product',
@@ -11,7 +12,8 @@ import { ProductService } from '../../../services/product/product.service';
 })
 export class AddProductComponent implements OnInit {
 
-constructor(private http: HttpClient, private productService: ProductService) { }
+constructor(private http: HttpClient, private productService: ProductService,
+  private router: Router) { }
 
 selectedFile: File = null;
 
@@ -33,6 +35,9 @@ onUpload(rating, descrText) {
     .subscribe(
       res => this.productService.addProductDescription(Number(rating), descrText, String(res)), // res is an ID of added product
       err => console.log(err));
+      
+      // Если продукт добавился div скрывается!
+      this.router.navigate(['/products']);
   }
 }
 
@@ -40,5 +45,9 @@ onUpload(rating, descrText) {
   }
 
   turnedOffWhile() {
+  }
+
+  hideBlockAdd(){
+    this.router.navigate(['/products'])
   }
 }

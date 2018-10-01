@@ -2,5 +2,6 @@
   <div><input type="file" (change)="onFileSelected($event)"></div>
   <input #inputRating type="number" min = "1" max="5" class="form-control" placeholder="Ваша оценка продукта от 0 до 5" required="" autofocus="">
   <input #inputDescription type="text" class="form-control" placeholder="Ваше описание продукта" required="" autofocus="">
-  <div><button type="button" (click)="onUpload(inputRating.value, inputDescription.value)" mat-flat-button>Добавить продукт</button></div>
+  <div><button (click)="onUpload(inputRating.value, inputDescription.value)" mat-flat-button>Добавить продукт</button></div>
+  <div><button (click)="hideBlockAdd()" mat-flat-button>Отмена</button></div>
 <!-- </div> -->
