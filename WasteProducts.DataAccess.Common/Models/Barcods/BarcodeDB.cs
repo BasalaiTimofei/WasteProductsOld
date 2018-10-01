@@ -24,6 +24,11 @@ namespace WasteProducts.DataAccess.Common.Models.Barcods
         public string ProductName { get; set; }
 
         /// <summary>
+        /// Product сomposition.
+        /// </summary>
+        public string Composition { get; set; }
+
+        /// <summary>
         /// Product brend.
         /// </summary>
         public string Brend { get; set; }
@@ -37,6 +42,11 @@ namespace WasteProducts.DataAccess.Common.Models.Barcods
         /// Product weight.
         /// </summary>
         public double Weight { get; set; }
+
+        /// <summary>
+        /// Product picture path.
+        /// </summary>
+        public string PicturePath { get; set; }
 
         /// <summary>
         /// Date of record creation in DB.

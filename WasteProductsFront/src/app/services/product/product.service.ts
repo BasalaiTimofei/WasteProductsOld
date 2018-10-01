@@ -41,7 +41,7 @@ export class ProductService extends BaseHttpService {
     description.Rating = rating;
     description.Description = descrText;
 
-    const url = `${environment.apiHostUrl}/api/user/${this.getUserId()}/products/${productId}`;
+    const url = `${environment.apiHostUrl}/api/user/0/products/${productId}`;
     this.httpService.post(url, description)
     .subscribe(
       res => console.log(res),
@@ -54,7 +54,7 @@ export class ProductService extends BaseHttpService {
    }
 
    updateUserProduct(productId: string, rating: number, descrText: string) {
-    const url = `${environment.apiHostUrl}/api/user/${this.getUserId()}/products/${productId}`;
+    const url = `${environment.apiHostUrl}/api/user/0/products/${productId}`;
 
     const description = new ProductDescription();
     description.Rating = rating;

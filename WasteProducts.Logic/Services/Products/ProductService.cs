@@ -40,11 +40,11 @@ namespace WasteProducts.Logic.Services.Products
         {
             if (imageStream == null) return null;
 
-            var barcode = _barcodeService.GetBarcodeAsync(imageStream).Result;
+            var barcode = _barcodeService.GetBarcodeByStreamAsync(imageStream).Result;
             if (barcode == null) return null;
 
             if (IsProductsInDB(
-                p => string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
+                p => p.Barcode != null && string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
                 out var products))
             {
                 return new Task<string>(() => products.First().Id);
@@ -55,7 +55,7 @@ namespace WasteProducts.Logic.Services.Products
                 Barcode = barcode,
                 Name = barcode.ProductName
             };
-            
+
             return _productRepository.AddAsync(_mapper.Map<ProductDB>(newProduct))
                 .ContinueWith(t => t.Result);
         }

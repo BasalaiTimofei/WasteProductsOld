@@ -20,7 +20,7 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
         private Bitmap _imageBad = Properties.Resources.IMG_BadImage;
         private Bitmap _imageOriginal = Properties.Resources.IMG_NotResize;
         private string _verified = "4810064002096";
-        private string _verifiedBad = "";
+        private string _verifiedBad = null;
 
         [Test]
         public void TestMethod_Spire_WithGoodImage()
@@ -55,43 +55,56 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
             }
 
             //Assert
-            Assert.AreNotEqual(_verified, result);
+            Assert.AreEqual(_verifiedBad, result);
         }
 
         [Test]
-        public void TestMethodMock_Zxing_WithGoodImage()
+        public void TestMethod_Zxing_WithGoodImage()
         {
+            ////Arrange
+            //byte[] rawBytes = null;
+            //ResultPoint[] resultPoints = null;
+            //Result result = new Result(_verified, rawBytes, resultPoints, BarcodeFormat.EAN_13);
+            //var mock = new Mock<IBarcodeReader>();
+
+            ////Act
+            //mock.Setup(m => m.Decode(_imageGood)).Returns(result);
+            //Result resultDecod = mock.Object.Decode(_imageGood);
+            //string decoded = mock.Object.Decode(_imageGood).ToString().Trim();
+
+            ////Assert
+            //Assert.AreEqual(_verified, decoded);
             //Arrange
-            byte[] rawBytes = null;
-            ResultPoint[] resultPoints = null;
-            Result result = new Result(_verified, rawBytes, resultPoints, BarcodeFormat.EAN_13);
-            var mock = new Mock<IBarcodeReader>();
+            string result = null;
+            var service = new BarcodeScanService();
 
             //Act
-            mock.Setup(m => m.Decode(_imageGood)).Returns(result);
-            Result resultDecod = mock.Object.Decode(_imageGood);
-            string decoded = mock.Object.Decode(_imageGood).ToString().Trim();
+            using (_stream = new MemoryStream())
+            {
+                _imageGood.Save(_stream, ImageFormat.Bmp);
+                result = service.ScanByZxing(_stream);
+            }
 
             //Assert
-            Assert.AreEqual(_verified, decoded);
+            Assert.AreEqual(_verified, result);
         }
 
         [Test]
-        public void TestMethodMock_Zxing_WithBadImage()
+        public void TestMethod_Zxing_WithBadImage()
         {
             //Arrange
-            byte[] rawBytes = null;
-            ResultPoint[] resultPoints = null;
-            Result result = new Result(_verifiedBad, rawBytes, resultPoints, BarcodeFormat.EAN_13);
-            var mock = new Mock<IBarcodeReader>();
+            string result = null;
+            var service = new BarcodeScanService();
 
             //Act
-            mock.Setup(m => m.Decode(_imageBad)).Returns(result);
-            Result resultDecod = mock.Object.Decode(_imageBad);
-            string decoded = mock.Object.Decode(_imageBad).ToString().Trim();
+            using (_stream = new MemoryStream())
+            {
+                _imageBad.Save(_stream, ImageFormat.Bmp);
+                result = service.ScanByZxing(_stream);
+            }
 
             //Assert
-            Assert.AreEqual(_verifiedBad, decoded);
+            Assert.AreEqual(_verifiedBad, result);
         }
 
         [Test]
@@ -99,18 +112,18 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
         {
             //Arrange
             var service = new BarcodeScanService();
-            Image result;
 
             //Act
             using (_stream = new MemoryStream())
             {
                 _imageOriginal.Save(_stream, ImageFormat.Bmp);
-                result = service.Resize(_stream, 400, 400);
+                using (var result = service.Resize(_stream, 400, 400))
+                    _image = new Bitmap(result);
             }
 
             //Assert
-            Assert.AreEqual(_imageGood.Width, result.Width);
-            Assert.AreEqual(_imageGood.Height, result.Height);
+            Assert.AreEqual(_imageGood.Width, _image.Width);
+            Assert.AreEqual(_imageGood.Height, _image.Height);
         }
     }
 }

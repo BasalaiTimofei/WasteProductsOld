@@ -189,9 +189,9 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
             {
                 StatusCode = 200,
                 Page = @"<h1>Имя</h1>
-<div class=""title"">Описание</div><table><tr class=""property_3220""><td class=""name"">Состав</td><td class=""value"">Состав</td></tr><tr class=""property_3221""><td class=""name"">Краткое описание</td><td class=""value"">Охлажденная.</td></tr></table></div>
-<li class=""product_card_country""><strong>Страна производства:</strong><span>Страна</span></li><li><strong>Торговая марка:</strong><span>Марка</span></li>
-<a class=""increaseImage no_click"" href=""https://img.e-dostavka.by/UserFiles/images/catalog/Goods/thumbs/4811/4811040118787_1000x1000""><img class=""retina_redy"" src=""ссылкаНаКартинку"" alt=""Колбаса вареная «Мортаделла» высшего сорта, 650 г.""/></a>"
+                         <div class=""title"">Описание</div><table><tr class=""property_3220""><td class=""name"">Состав</td><td class=""value"">Состав</td></tr><tr class=""property_3221""><td class=""name"">Краткое описание</td><td class=""value"">Охлажденная.</td></tr></table></div>
+                         <li class=""product_card_country""><strong>Страна производства:</strong><span>Страна</span></li><li><strong>Торговая марка:</strong><span>Марка</span></li>
+                         <a class=""increaseImage no_click"" href=""https://img.e-dostavka.by/UserFiles/images/catalog/Goods/thumbs/4811/4811040118787_1000x1000""><img class=""retina_redy"" src=""ссылкаНаКартинку"" alt=""Колбаса вареная «Мортаделла» высшего сорта, 650 г.""/></a>"
             };
             
             var httpHelper = new Mock<IHttpHelper>();
@@ -213,7 +213,7 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
             Assert.AreEqual(expected: "Марка", actual: result.Brend);
             Assert.AreEqual(expected: "Страна", actual: result.Country);
             Assert.AreEqual(expected: "Состав", actual: result.Composition);
-            httpHelper.Verify(m => m.DownloadPictureAsync("ссылкаНаКартинку"), () => Times.Exactly(1));
+            Assert.AreEqual(expected: "ссылкаНаКартинку", actual: result.PicturePath);
         }
     }
 }

@@ -31,8 +31,19 @@
 
     <!-- IsHidden Column -->
     <ng-container matColumnDef="IsHidden">
-      <th mat-header-cell *matHeaderCellDef>Управление</th>
-      <td mat-cell *matCellDef="let row"><button mat-flat-button color="primary" focusable="false" (click)="this.productService.deleteUserProduct(row.Product.Id)">Удалить</button></td>
+      
+      <th mat-header-cell *matHeaderCellDef>
+        <button mat-icon-button color="primary" focusable="false" (click)="row.addProduct()"> <!--Логика добавления продукта-->
+          <i class="material-icons">add</i>
+        </button>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-icon-button color="primary" focusable="false" (click)="this.productService.updateUserProduct(row.Product.Composition, row.Product.AvgRating)">
+        <i class="material-icons">edit</i></button>
+        <button mat-icon-button color="primary" focusable="false" (click)="this.productService.deleteUserProduct(row.Product.Id)">
+            <i class="material-icons">delete</i>
+          </button>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -41,23 +52,3 @@
 <div>
   <mat-paginator #paginator [length]="dataSource.data.length" [pageIndex]="0" [pageSize]="50" [pageSizeOptions]="[3, 5, 10, 25, 50]"></mat-paginator>
 </div>
-
-
-  <mat-card>
-  <div>
-    <p>Список продуктов пользователя с описанием</p>
-  </div>
-  </mat-card>
-
-  <div *ngFor="let item of userProducts">
-    ID: {{item.Product.Id}} Name: {{item.Product.Name}} Rating: {{item.Rating}} Average Rating: {{item.Product.AvgRating}} Composition: {{item.Product.Composition}} IsHidden: {{item.Product.IsHidden}}
-  </div>
-
-  <mat-card>
-  <div>
-    <p>Список продуктов пользователя</p>
-  </div>
-  </mat-card>
-  <div *ngFor="let item of products">
-    ID: {{item.Id}} Name: {{item.Name}} Average Rating: {{item.AvgRating}} Composition: {{item.Composition}} IsHidden: {{item.IsHidden}}
-  </div>
