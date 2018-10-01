@@ -336,7 +336,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
 
                 var entry = _context.Entry(user);
 
-                entry.State = EntityState.Unchanged;
+                //entry.State = EntityState.Unchanged;
                 entry.Property(u => u.UserName).IsModified = true;
                 entry.Property(u => u.Modified).IsModified = true;
 
