@@ -34,4 +34,27 @@ export class UserService extends BaseHttpService  {
     const url = `${environment.apiHostUrl}/api/user/${claims.sub}/friends/${friendId}`;
     this.httpClient.delete(url);
   }
+
+  getUserSettings() {
+    const claims = this.authServise.getClaims();
+    const url = `${environment.apiHostUrl}/api/user/${1}`;
+    return this.httpClient.get<User>(url);
+  }
+
+  updateUserName(userName: string) {
+    const claims = this.authServise.getClaims();
+    const url = `${environment.apiHostUrl}/api/user/${1}/updateusername`;
+    const bodyObj = {
+      UserName: userName
+    };
+    return this.httpClient.put(url, bodyObj);
+  }
+  updateEmail(email: string)  {
+    const claims = this.authServise.getClaims();
+    const url = `${environment.apiHostUrl}/api/user/${1}/updateemail`;
+    const bodyObj = {
+      EmailOfTheUser: email,
+    };
+    return this.httpClient.put(url, bodyObj);
+  }
 }
