@@ -38,11 +38,13 @@
         </button>
       </th>
       <td mat-cell *matCellDef="let row">
+          <div class="btn-group">
         <button mat-icon-button color="primary" focusable="false" (click)="this.productService.updateUserProduct(row.Product.Composition, row.Product.AvgRating)">
         <i class="material-icons">edit</i></button>
         <button mat-icon-button color="primary" focusable="false" (click)="this.productService.deleteUserProduct(row.Product.Id)">
             <i class="material-icons">delete</i>
           </button>
+          </div>
       </td>
     </ng-container>
 
