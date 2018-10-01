@@ -1,5 +1,6 @@
 ﻿using Swagger.Net.Annotations;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -39,9 +40,11 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="query">Query string</param>
         /// <returns>Product collection</returns>
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "GetById search result collection", typeof(IEnumerable<Product>))]
+        [SwaggerResponse(HttpStatusCode.OK, Description = "Returns search result collection")]
+        [SwaggerResponse(HttpStatusCode.NoContent)]
         [HttpGet, Route("products/default")]
-        public async Task<IEnumerable<Product>> GetProductsDefaultFields([FromUri]string query)
+        public async Task<IHttpActionResult> GetProductsDefaultFields([FromUri]string query)
+        //public async Task<IEnumerable<Product>> GetProductsDefaultFields([FromUri]string query)
         {
             BoostedSearchQuery searchQuery = new BoostedSearchQuery();
             searchQuery.AddField(DEFAULT_PRODUCT_NAME_FIELD, 1.0f)
@@ -49,7 +52,15 @@ namespace WasteProducts.Web.Controllers.Api
                 .AddField(DEFAULT_PRODUCT_BARCODE_FIELD, 1.0f);
             searchQuery.Query = query;
 
-            return await _searchService.SearchProductAsync(searchQuery);
+            var products = await _searchService.SearchProductAsync(searchQuery);
+            if (products.Any())
+            {
+                return Ok(products);
+            }
+            else
+            {
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.NoContent));
+            }
         }
 
 
@@ -59,11 +70,20 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="query">SearchQuery object converted from string "query;field1[:boost1],field2[:boost2],..."</param>
         /// <returns>Product collection</returns>
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "GetById search result collection", typeof(IEnumerable<Product>))]
+        [SwaggerResponse(HttpStatusCode.OK, Description = "Returns search result collection")]
+        [SwaggerResponse(HttpStatusCode.NoContent)]
         [HttpGet, Route("products/custom")]
-        public async Task<IEnumerable<Product>> GetProducts(BoostedSearchQuery query)
+        public async Task<IHttpActionResult> GetProducts(BoostedSearchQuery query)
         {
-            return await  _searchService.SearchProductAsync(query);
+            var products = await  _searchService.SearchProductAsync(query);
+            if (products.Any())
+            {
+                return Ok(products);
+            }
+            else
+            {
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.NoContent));
+            }
         }
 
         /// <summary>
