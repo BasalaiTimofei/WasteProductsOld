@@ -45,7 +45,7 @@ namespace WasteProducts.Logic.Services.Barcods
                     result.Code = barcode;
                     result.ProductName = nameParseResult.Value;
                     result.Composition = ParseComposition(queryResult.Page).Value;
-                    result.Brend = ParseBrend(queryResult.Page).Value;
+                    result.Brand = ParseBrend(queryResult.Page).Value;
                     result.Country = ParseCountry(queryResult.Page).Value;
                     result.PicturePath = ParsePicturePath(queryResult.Page).Value;
 

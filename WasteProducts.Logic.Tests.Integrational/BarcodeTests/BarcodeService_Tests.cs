@@ -32,7 +32,7 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
                    "яичный порошок, молоко сухое обезжиренное, пудра ванильная, соль пищевая йодированная, " +
                    "разрыхлители (натрий двууглекислый, углеаммонийная соль), эмульгатор - лактилат натрия, " +
                    "краситель Сахарный колер (натуральная Карамель).",
-                Brend = "Слодыч",
+                Brand = "Слодыч",
                 Country = "Беларусь",
                 Weight = 0,
                 PicturePath = "https://img.e-dostavka.by/UserFiles/images/catalog/Goods/thumbs/4810/4810064002096_450x450_w.png.jpg?1423771900",
