@@ -3,8 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { BaseHttpService } from '../base/base-http.service';
 import { LoggingService } from '../logging/logging.service';
 import { Group } from 'src/app/models/groups/group';
+import { GroupBoard } from 'src/app/models/groups/groupBoard';
+import { GroupProduct } from 'src/app/models/groups/groupProduct';
+import { GroupComment } from 'src/app/models/groups/groupComment';
+import { GroupUser } from 'src/app/models/groups/groupUser';
 
 import { environment } from '../../../environments/environment.prod';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,20 +21,65 @@ export class GroupService extends BaseHttpService{
   constructor(httpService: HttpClient, loggingService: LoggingService) {
     super(httpService, loggingService);
   }
-
-  create(group:Group){
-    return this.httpService.post(this.apiUrl, group); 
+  ///group
+  createGroup(item:Group):Observable<Group>{
+    return this.httpService.post<Group>(`${this.apiUrl}`, item); 
   }
   
-  update(group:Group, groupId:string){
-    return this.httpService.put(this.apiUrl+`/`+groupId, group); 
+  updateGroup(item:Group):Observable<Group>{
+    return this.httpService.put<Group>(`${this.apiUrl}/${item.Id}`, item); 
   }
   
-  delete(group:Group, groupId:string){
+  deleteGroup(item:Group):Observable<any>{
+    return this.httpService.delete<any>(`${this.apiUrl}/${item.Id}/${item.AdminId}`); 
+  }
+  ///board
+  createGroupBoard(item:GroupBoard):Observable<GroupBoard>{
+    return this.httpService.post<GroupBoard>(`${this.apiUrl}/${item.GroupId}/board`, item); 
+  }
 
-    this.httpService.delete(this.apiUrl+`/`+groupId, new RequestOptions({
-      headers: headers,
-      body: group
-   }))
+  updateGroupBoard(item:GroupBoard):Observable<GroupBoard>{
+    return this.httpService.put<GroupBoard>(`${this.apiUrl}/${item.GroupId}/board`, item); 
+  }
+  
+  deleteGroupBoard(item:GroupBoard):Observable<any>{
+    return this.httpService.delete<any>(`${this.apiUrl}/${item.GroupId}/board/${item.CreatorId}`); 
+  }
+  ///product
+  createGroupProduct(item:GroupProduct, groupId:string, userId:string):Observable<GroupProduct>{
+    return this.httpService.post<GroupProduct>(`${this.apiUrl}/${groupId}/product/${userId}`, item); 
+  }
+
+  updateGroupProduct(item:GroupProduct, groupId:string, userId:string):Observable<GroupProduct>{
+    return this.httpService.put<GroupProduct>(`${this.apiUrl}/${groupId}/product/${userId}`, item); 
+  }
+  
+  deleteGroupProduct(item:GroupProduct, groupId:string, userId:string):Observable<any>{
+    return this.httpService.delete<any>(`${this.apiUrl}/${groupId}/product/${item.GroupBoardId}/${item.Id}/${userId}`); 
+  }
+  ///comment
+  createGroupComment(item:GroupComment, groupId:string):Observable<GroupComment>{
+    return this.httpService.post<GroupComment>(`${this.apiUrl}/${groupId}/comment`, item); 
+  }
+
+  updateGroupComment(item:GroupComment, groupId:string):Observable<GroupComment>{
+    return this.httpService.put<GroupComment>(`${this.apiUrl}/${groupId}/comment`, item); 
+  }
+  
+  deleteGroupComment(item:GroupComment, groupId:string):Observable<any>{
+    return this.httpService.delete<any>(`${this.apiUrl}/${groupId}/comment/${item.GroupBoardId}/${item.Id}/${item.CommentatorId}`); 
+  }
+  ///user
+  inviteGroupUser(item:GroupUser, groupId:string, adminId:string):Observable<any>{
+    return this.httpService.post<any>(`${this.apiUrl}/${groupId}/invite/${adminId}`, item); 
+  }
+  kickGroupUser(item:GroupUser, groupId:string, adminId:string):Observable<any>{
+    return this.httpService.post<any>(`${this.apiUrl}/${groupId}/kick/${adminId}`, item); 
+  }
+  giveRightToCreateBoardsGroupUser(item:GroupUser, groupId:string, adminId:string):Observable<GroupUser>{
+    return this.httpService.put<GroupUser>(`${this.apiUrl}/${groupId}/giveright/${adminId}`, item); 
+  }
+  takeAwayRightToCreateBoardsGroupUser(item:GroupUser, groupId:string, adminId:string):Observable<GroupUser>{
+    return this.httpService.put<GroupUser>(`${this.apiUrl}/${groupId}/takeawayright/${adminId}`, item); 
   }
 }
