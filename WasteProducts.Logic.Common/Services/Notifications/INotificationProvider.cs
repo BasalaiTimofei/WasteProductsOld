@@ -11,9 +11,9 @@ namespace WasteProducts.Logic.Common.Services.Notifications
         /// <summary>
         /// Send notification asynchronously
         /// </summary>
-        /// <param name="userId">user id</param>
         /// <param name="notification">notification for sending</param>
+        /// <param name="usersIds">users ids</param>
         /// <returns></returns>
-        Task NotificateAsync(string userId, Notification notification);
+        Task NotifiyAsync(Notification notification, params string[] usersIds);
     }
 }

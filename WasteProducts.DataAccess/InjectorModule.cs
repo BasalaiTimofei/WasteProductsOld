@@ -15,6 +15,8 @@ using WasteProducts.DataAccess.Repositories.Donations;
 using WasteProducts.DataAccess.Repositories.Users;
 using WasteProducts.DataAccess.Common.Repositories.Diagnostic;
 using WasteProducts.DataAccess.Repositories.Diagnostic;
+using WasteProducts.DataAccess.Common.Repositories.Barcods;
+using WasteProducts.DataAccess.Repositories.Barcods;
 
 namespace WasteProducts.DataAccess
 {
@@ -42,6 +44,8 @@ namespace WasteProducts.DataAccess
             Bind<IGroupRepository>().To<GroupRepository>();
 
             Bind<IDonationRepository>().To<DonationRepository>();
+
+            Bind<IBarcodeRepository>().To<BarcodeRepository>();
 
             Bind<IMapper>().ToMethod(ctx =>
             {

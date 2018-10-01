@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FriendsService } from '../../../services/user/friends/friends.service';
 import { User } from 'src/app/models/users/user';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-friends',
@@ -11,10 +11,10 @@ export class FriendsComponent implements OnInit {
 
   friends: User[];
 
-  constructor(private srv: FriendsService) { }
+  constructor(private srv: UserService) { }
 
   ngOnInit() {
-    this.srv.loadFriends().subscribe(
+    this.srv.getFriends().subscribe(
     res => this.friends = res,
     err => console.error(err));
   }

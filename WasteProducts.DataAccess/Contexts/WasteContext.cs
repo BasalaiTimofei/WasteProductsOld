@@ -49,12 +49,8 @@ namespace WasteProducts.DataAccess.Contexts
             modelBuilder.Entity<UserDB>().HasMany(u => u.Notifications).WithRequired(n => n.User);
 
             modelBuilder.Entity<ProductDB>()
-                .HasOptional(p => p.Barcode)
-                .WithRequired(b => b.Product);
-
-            modelBuilder.Entity<BarcodeDB>()
-                .HasRequired(b => b.Product)
-                .WithOptional(b => b.Barcode);
+                .HasOptional(b => b.Barcode)
+                .WithOptionalDependent(p => p.Product);
 
             modelBuilder.Configurations.Add(new UserProductDescriptionConfiguration());
 
@@ -163,6 +159,20 @@ namespace WasteProducts.DataAccess.Contexts
                         _searchRepository.Delete(entry.Entity); break;
                 }
             }
+        }
+
+        /// <summary>
+        /// Method not for use, just for preventing some bug made by .NET "optimization"
+        /// </summary>
+        private void FixEfProviderServicesProblem()
+        {
+            // This method prevents this bug:
+            // The Entity Framework provider type 'System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer'
+            // for the 'System.Data.SqlClient' ADO.NET provider could not be loaded. 
+            // Make sure the provider assembly is available to the running application. 
+            // See http://go.microsoft.com/fwlink/?LinkId=260882 for more information.
+
+            var instance = System.Data.Entity.SqlServer.SqlProviderServices.Instance;
         }
     }
 }

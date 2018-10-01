@@ -135,7 +135,9 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                         Name = _faker.Commerce.ProductName(),
                         Created = DateTime.UtcNow.AddDays(-2),
                         Modified = null,
-                        Category = i > 2 ? category1 : category2
+                        Category = i > 2 ? category1 : category2,
+                        Composition = _faker.Lorem.Sentence(),
+                        Marked = false,
                     };
                     _context.Products.Add(prod);
                     var descr = new UserProductDescriptionDB

@@ -150,6 +150,7 @@
       <DependentUpon>UserResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Services\Barcods\BarcodeCatalogSearchService.cs" />
+    <Compile Include="Services\Barcods\BarcodeService.cs" />
     <Compile Include="Services\Barcods\EDostavkaCatalog.cs" />
     <Compile Include="Services\Barcods\HttpHelper.cs" />
     <Compile Include="Services\Barcods\PriceGuardCatalog.cs" />
@@ -190,6 +191,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Validators\Users\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WasteProducts.DataAccess.Common\WasteProducts.DataAccess.Common.csproj">

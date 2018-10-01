@@ -129,7 +129,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="UserTests\UserServiceIntegrationTests.cs" />
     <Compile Include="Search_Tests\SearchRepository_Test.cs" />
     <Compile Include="Search_Tests\SearchService_Test.cs" />
     <Compile Include="Groups\GroupCommentServiceITests.cs" />
@@ -171,9 +170,7 @@
       <Name>WasteProducts.Logic</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UserTests\Test_images\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

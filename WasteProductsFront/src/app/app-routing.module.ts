@@ -11,6 +11,7 @@ import { SettingsComponent } from './components/user/settings/settings.component
 import { ToListComponent } from './components/products/to-list/to-list.component';
 import { SearchComponent } from './components/search/search.component';
 import { SearchresultComponent } from './components/searchresult/search-result.component';
+import { GroupsOfUserComponent } from './components/groups/groups-of-user/groups-of-user.component';
 
 /* Account components */
 import { AccountComponent } from './modules/account/components/account/account.component';
@@ -21,38 +22,41 @@ import { AuthenticationGuard } from './modules/account/guards/authentication.gua
 
 /* Environment */
 import { environment } from '../environments/environment';
+import { NotificationListComponent } from './modules/account/components/notification-list/notification-list.component';
+import { NotificationDetailsComponent } from './modules/account/components/notification-details/notification-details.component';
 
 const routes: Routes = [
-  { path: '', component: DefaultComponent },
+  { path: '', component: DefaultComponent, pathMatch: 'full' },
+  { path: 'register', component: AccountRegisterComponent },
   {
-    path: 'account',
+    path: 'account', canActivate: [AuthenticationGuard],
     children: [
+      { path: '', component: AccountComponent, pathMatch: 'full' },
       {
-        path: '',
-        pathMatch: 'full',
-        component: AccountComponent,
-        canActivate: [AuthenticationGuard]
+        path: 'notifications',
+        children: [
+          { path: '', component: NotificationListComponent, pathMatch: 'full' },
+          { path: 'details/:id', component: NotificationDetailsComponent },
+        ]
       },
-      {
-        path: 'register',
-        component: AccountRegisterComponent
-      },
-
+      { path: 'details/:id', component: NotificationDetailsComponent },
     ]
   },
+  { path: 'details/:id', component: NotificationDetailsComponent },
   { path: 'common/mainpage', component: MainPageComponent },
   { path: 'user/friends', component: FriendsComponent },
   { path: 'products', component: ProductsComponent },
   { path: 'groups', component: GroupsComponent },
   { path: 'user/settings', component: SettingsComponent },
-  { path: 'products/to-list', component: ToListComponent },
+  { path: 'products/myproducts', component: ToListComponent },
+  { path: 'groups/mygroups', component: GroupsOfUserComponent},
   { path: 'searchresults/:query', component: SearchresultComponent },
   { path: '**', component: NotFoundComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, {
-    enableTracing: !environment.production,
+    // enableTracing: !environment.production,
   })],
   exports: [RouterModule]
 })

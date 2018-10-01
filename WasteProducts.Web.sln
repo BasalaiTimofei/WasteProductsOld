@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WasteProducts.Web.Tests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WasteProducts.IdentityServer", "WasteProducts.IdentityServer\WasteProducts.IdentityServer.csproj", "{55C1DCEB-D89B-4A93-A8F4-F2AC0C621A49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WasteProducts.Logic.Tests.Integrational", "WasteProducts.Logic.Tests.Integrational\WasteProducts.Logic.Tests.Integrational.csproj", "{34C9D3DA-8ADC-4ADF-A3DA-189A40C8F665}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{55C1DCEB-D89B-4A93-A8F4-F2AC0C621A49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55C1DCEB-D89B-4A93-A8F4-F2AC0C621A49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55C1DCEB-D89B-4A93-A8F4-F2AC0C621A49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34C9D3DA-8ADC-4ADF-A3DA-189A40C8F665}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34C9D3DA-8ADC-4ADF-A3DA-189A40C8F665}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34C9D3DA-8ADC-4ADF-A3DA-189A40C8F665}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34C9D3DA-8ADC-4ADF-A3DA-189A40C8F665}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,6 +85,7 @@ Global
 		{643AAB59-4858-4E23-9A18-4BBEC3EE5F56} = {F44E3173-7A14-445E-8CB5-77274C59AF0E}
 		{8D1FE6AE-3538-41F6-8C12-E80F7731A007} = {6463C37F-C7DF-4AA9-8C39-DA4EDFC4F260}
 		{2D028708-99E3-4BFC-83AD-13F3A01E18E5} = {6463C37F-C7DF-4AA9-8C39-DA4EDFC4F260}
+		{34C9D3DA-8ADC-4ADF-A3DA-189A40C8F665} = {6463C37F-C7DF-4AA9-8C39-DA4EDFC4F260}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E3BE916F-60B2-474C-B0AE-5F6761BA0B5C}
