@@ -51,6 +51,8 @@ import { ImagePreviewService } from './services/image-preview/image-preview.serv
 
 /* Custom Modules */
 import { AccountModule } from './modules/account/account.module';
+import { UserdataComponent } from './components/user/settings/userdata/userdata.component';
+import { UserformfieldComponent } from './components/user/settings/userformfield/userformfield.component';
 
 @NgModule({
   declarations: [
@@ -91,6 +93,8 @@ import { AccountModule } from './modules/account/account.module';
 
     DonateComponent,
     GroupsOfUserComponent,
+    UserdataComponent,
+    UserformfieldComponent,
   ],
   imports: [
     BrowserModule,
