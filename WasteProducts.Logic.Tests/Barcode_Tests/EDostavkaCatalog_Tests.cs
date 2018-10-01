@@ -210,7 +210,7 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
 
             Assert.IsTrue(result != null);
             Assert.AreEqual(expected: "Имя", actual: result.ProductName);
-            Assert.AreEqual(expected: "Марка", actual: result.Brend);
+            Assert.AreEqual(expected: "Марка", actual: result.Brand);
             Assert.AreEqual(expected: "Страна", actual: result.Country);
             Assert.AreEqual(expected: "Состав", actual: result.Composition);
             Assert.AreEqual(expected: "ссылкаНаКартинку", actual: result.PicturePath);

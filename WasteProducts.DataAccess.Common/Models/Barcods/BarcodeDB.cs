@@ -19,36 +19,6 @@ namespace WasteProducts.DataAccess.Common.Models.Barcods
         public string Code { get; set; }
 
         /// <summary>
-        /// Product name.
-        /// </summary>
-        public string ProductName { get; set; }
-
-        /// <summary>
-        /// Product сomposition.
-        /// </summary>
-        public string Composition { get; set; }
-
-        /// <summary>
-        /// Product brend.
-        /// </summary>
-        public string Brend { get; set; }
-
-        /// <summary>
-        /// Product country.
-        /// </summary>
-        public string Country { get; set; }
-
-        /// <summary>
-        /// Product weight.
-        /// </summary>
-        public double Weight { get; set; }
-
-        /// <summary>
-        /// Product picture path.
-        /// </summary>
-        public string PicturePath { get; set; }
-
-        /// <summary>
         /// Date of record creation in DB.
         /// </summary>
         public DateTime Created { get; set; }
