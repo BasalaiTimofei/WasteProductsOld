@@ -68,7 +68,7 @@ namespace WasteProducts.Logic.Services
             return new Faker<Barcode>()
                 .RuleFor(barcode => barcode.Code, faker => faker.Random.ReplaceNumbers("############"))
 
-                .RuleFor(barcode => barcode.Brend, faker => faker.Company.CompanyName())
+                .RuleFor(barcode => barcode.Brand, faker => faker.Company.CompanyName())
                 .RuleFor(barcode => barcode.Country, faker => faker.Address.Country())
 
                 .RuleFor(barcode => barcode.ProductName, faker => faker.Commerce.ProductName())

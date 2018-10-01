@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using Moq;
@@ -49,8 +48,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             barcodeDB = new BarcodeDB
             {
                 Id = Guid.NewGuid().ToString(),
-                Code = "456731556",
-                ProductName = "Some product"
+                Code = "456731556"
             };
 
             selectedList = new List<ProductDB>();

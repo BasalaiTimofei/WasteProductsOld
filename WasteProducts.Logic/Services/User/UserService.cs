@@ -78,6 +78,19 @@ namespace WasteProducts.Logic.Services.Users
             return loggedInUser;
         }
 
+        public Task ConfirmEmailChangingAsync(string userId, string token)
+        {
+            return _repo.ConfirmEmailChangingAsync(userId, token);
+        }
+
+        public async Task GenerateEmailChangingTokenAsync(string userId, string newEmail)
+        {
+            var token = await _repo.GenerateEmailChangingTokenAsync(userId, newEmail).ConfigureAwait(false);
+            var fullpath = $@"http://localhost:2189/user/{userId}/confirmemailchanging/{token}";
+
+            await _mailService.SendAsync(newEmail, UserResources.NewEmailConfirmationHeader, string.Format(UserResources.NewEmailConfirmationBody, fullpath));
+        }
+
         public Task ChangePasswordAsync(string userId, string oldPassword, string newPassword)
         {
             return _repo.ChangePasswordAsync(userId, newPassword, oldPassword);
@@ -148,6 +161,7 @@ namespace WasteProducts.Logic.Services.Users
             }
 
             return await _repo.UpdateEmailAsync(userId, newEmail);
+
         }
 
         public async Task<bool> UpdateUserNameAsync(string userId, string newUserName)
@@ -177,7 +191,8 @@ namespace WasteProducts.Logic.Services.Users
 
         public Task<IList<UserProduct>> GetProductsAsync(string userId)
         {
-            return _repo.GetUserProductDescriptionsAsync(userId).ContinueWith(t => _mapper.Map<IList<UserProduct>>(t.Result));
+            return _repo.GetUserProductDescriptionsAsync(userId)
+                .ContinueWith(t => _mapper.Map<IList<UserProduct>>(t.Result));
         }
 
         public async Task UpdateProductDescriptionAsync(string userId, string productId, int rating, string description)

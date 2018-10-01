@@ -18,6 +18,31 @@ namespace WasteProducts.Logic.Common.Models.Products
         public string Name { get; set; }
 
         /// <summary>
+        /// Product brend.
+        /// </summary>
+        public string Brand { get; set; }
+
+        /// <summary>
+        /// Product country.
+        /// </summary>
+        public string Country { get; set; }
+
+        /// <summary>
+        /// Product weight.
+        /// </summary>
+        public double Weight { get; set; }
+
+        /// <summary>
+        /// Defines the product description
+        /// </summary>
+        public string Composition { get; set; }
+
+        /// <summary>
+        /// Product picture path.
+        /// </summary>
+        public string PicturePath { get; set; }
+
+        /// <summary>
         /// Defines the Product category.
         /// </summary>
         public virtual Category Category { get; set; }
@@ -30,11 +55,6 @@ namespace WasteProducts.Logic.Common.Models.Products
         /// <summary>
         /// Defines the Average Rating of the product.
         /// </summary>
-        public decimal? AvgRating { get; }
-
-        /// <summary>
-        /// Defines the product description
-        /// </summary>
-        public string Composition { get; set; }
+        public decimal? AvgRating { get; set; }
     }
 }
