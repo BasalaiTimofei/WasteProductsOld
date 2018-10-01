@@ -17,14 +17,14 @@ interface FilePreviewDialogConfig {
   panelClass?: string;
   hasBackdrop?: boolean;
   backdropClass?: string;
-  image?: Form;
+  form?: Form;
 }
 
 const DEFAULT_CONFIG: FilePreviewDialogConfig = {
   hasBackdrop: true,
   backdropClass: 'dark-backdrop',
   panelClass: 'tm-file-preview-dialog-panel',
-  image: null
+  form: null
 };
 
 @Injectable()
@@ -65,7 +65,7 @@ private createInjector(config: FilePreviewDialogConfig, dialogRef: FormPreviewOv
   const injectionTokens = new WeakMap();
 
   injectionTokens.set(FormPreviewOverlay, dialogRef);
-  injectionTokens.set(FILE_PREVIEW_DIALOG_DATA, config.image);
+  injectionTokens.set(FILE_PREVIEW_DIALOG_DATA, config.form);
 
   return new PortalInjector(this.injector, injectionTokens);
 }

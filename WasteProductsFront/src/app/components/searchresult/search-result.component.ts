@@ -8,6 +8,8 @@ import { takeUntil } from 'rxjs/operators';
 import { SearchProduct } from '../../models/search-product';
 import { SearchService } from '../../services/search/search.service';
 import { ProductService } from '../../services/product/product.service';
+import { FormPreviewService } from '../../services/form-preview/form-preview.service';
+import { FormPreviewOverlay } from '../form-product-overlay/form-preview-overlay';
 import { ImagePreviewService } from '../../services/image-preview/image-preview.service';
 import { ImagePreviewOverlay } from '../image-preview/image-preview-overlay';
 
@@ -28,8 +30,9 @@ export class SearchresultComponent implements OnDestroy {
   pageIndex = 0;
   length = 0;
 
-  constructor(private searchService: SearchService, private productService: ProductService,
-              private route: ActivatedRoute, private previewDialog: ImagePreviewService) {
+  constructor(private searchService: SearchService, private productService: ProductService, private route: ActivatedRoute,
+              private previewDialogForm: FormPreviewService,
+              private previewDialog: ImagePreviewService) {
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe(({ query }: Params) => {
         if (!query) {
             return;
@@ -63,8 +66,11 @@ export class SearchresultComponent implements OnDestroy {
     });
   }
 
-  public addToMyProducts(productId: string) {
-
+  addToMyProducts(productId: string) {
+    const dialog: FormPreviewOverlay = this.previewDialogForm.open({
+      // TODO Заменить путем из реквеста и название продукта
+      form: { name: 'Добавить', route: productId, rate: 12, comment: 'ddddddddd'}
+    });
   }
 
   showPreview() {
