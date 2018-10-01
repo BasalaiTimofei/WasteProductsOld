@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-import { Product } from '../../../models/groups/Group';
 import { ProductService } from '../../../services/product/product.service';
+import { Router } from '@angular/router';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ProductDescription } from '../../../models/products/product-description';
 
 @Component({
   selector: 'app-add-product',
@@ -11,16 +13,78 @@ import { ProductService } from '../../../services/product/product.service';
 })
 export class AddProductComponent implements OnInit {
 
-constructor(private http: HttpClient, private productService: ProductService) { }
+  productForm: FormGroup;
+  product: ProductDescription = new ProductDescription();
+
+  formErrors = {
+    'avgRating': '',
+    'discription': ''
+  };
+
+  validationMessages = {
+    'avgRating': {
+      'required': 'Обязательное поле.',
+      'min': 'Значение должно быть не менее 1.',
+      'max': 'Значение не должно быть больше 5.'
+      },
+    'discription': {
+      'required': 'Обязательное поле.',
+    }
+  }
+
+constructor(private http: HttpClient, private productService: ProductService,
+  private router: Router, private fb: FormBuilder) { }
+
+  buildForm(){
+    this.productForm = this.fb.group({
+      'avgRating': [this.product.Rating, [
+        Validators.required,
+        Validators.min(1),
+        Validators.max(5)
+      ]],
+      'discription': [this.product.Description, [
+        Validators.required
+      ]]
+    })
+
+    this.productForm.valueChanges.subscribe(data => this.onValueChange(data));
+
+    this.onValueChange();
+  }
+
+  onValueChange(data?: any) {
+    if (!this.productForm) return;
+    let form = this.productForm;
+
+    for (let field in this.formErrors) {
+        this.formErrors[field] = "";
+        let control = form.get(field);
+
+        if (control && control.dirty && !control.valid) {
+            let message = this.validationMessages[field];
+            for (let key in control.errors) {
+                this.formErrors[field] += message[key] + " ";
+            }
+        }
+    }
+  }
+
+  onSubmit() {
+    console.log("submitted");
+    console.log(this.productForm.value);
+}
 
 selectedFile: File = null;
 
 isHidden = false;
 
-enableAdd = true;
+enableAdd: boolean = true;
+
 
 onFileSelected(event) {
   this.selectedFile = <File>event.target.files[0];
+
+  this.disabled();
 }
 
 onUpload(rating, descrText) {
@@ -33,12 +97,37 @@ onUpload(rating, descrText) {
     .subscribe(
       res => this.productService.addProductDescription(Number(rating), descrText, String(res)), // res is an ID of added product
       err => console.log(err));
+      
+      // Если продукт добавился div скрывается!
+      this.router.navigate(['/products']);
   }
 }
 
+addProduct(){
+  this.productService.addProductDescription(this.product.Rating, this.product.Description, '');
+  this.router.navigate(['/products']);
+}
+
+  disabled(): void{
+    let discription = document.getElementById('discription');
+    discription.removeAttribute('disabled')
+    let rat = document.getElementById('avgRating');
+    rat.removeAttribute('disabled');
+  }
+
   ngOnInit() {
+    let discription = document.getElementById('discription');
+    let rat = document.getElementById('avgRating');
+    discription.attributes.setNamedItem(document.createAttribute('disabled'));
+    rat.attributes.setNamedItem(document.createAttribute('disabled'));
+
+    this.buildForm();
   }
 
   turnedOffWhile() {
+  }
+
+  hideBlockAdd(){
+    this.router.navigate(['/products'])
   }
 }

@@ -24,6 +24,7 @@ import { AuthenticationGuard } from './modules/account/guards/authentication.gua
 import { environment } from '../environments/environment';
 import { NotificationListComponent } from './modules/account/components/notification-list/notification-list.component';
 import { NotificationDetailsComponent } from './modules/account/components/notification-details/notification-details.component';
+import { AddProductComponent } from './components/products/add-product/add-product.component';
 
 const routes: Routes = [
   { path: '', component: DefaultComponent, pathMatch: 'full' },
@@ -45,7 +46,9 @@ const routes: Routes = [
   { path: 'details/:id', component: NotificationDetailsComponent },
   { path: 'common/mainpage', component: MainPageComponent },
   { path: 'user/friends', component: FriendsComponent },
-  { path: 'products', component: ProductsComponent },
+  { path: 'products', component: ProductsComponent, children: [
+    { path: 'add-product', component: AddProductComponent }
+  ]},
   { path: 'groups', component: GroupsComponent },
   { path: 'user/settings', component: SettingsComponent },
   { path: 'products/myproducts', component: ToListComponent },
