@@ -3,6 +3,7 @@ import { Product } from '../../../models/products/product';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { ProductService } from '../../../services/product/product.service';
 import { UserProduct } from '../../../models/users/user-product';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-to-list',
@@ -13,7 +14,8 @@ import { UserProduct } from '../../../models/users/user-product';
 
 export class ToListComponent implements OnInit {
 
-  constructor (public productService: ProductService) {}
+  constructor (public productService: ProductService,
+    private router: Router) {}
 
   products: Product[] = [];
   userProducts: UserProduct[] = [];
@@ -44,5 +46,9 @@ this.productService.getUserProducts().subscribe(
 
     applyFilter(filterValue: any) {
       this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+
+    addProduct(){
+      this.router.navigate(['products/add-product']);
     }
   }
