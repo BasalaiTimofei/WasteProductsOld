@@ -177,7 +177,8 @@ namespace WasteProducts.Logic.Services.Users
 
         public Task<IList<UserProduct>> GetProductsAsync(string userId)
         {
-            return _repo.GetUserProductDescriptionsAsync(userId).ContinueWith(t => _mapper.Map<IList<UserProduct>>(t.Result));
+            return _repo.GetUserProductDescriptionsAsync(userId)
+                .ContinueWith(t => _mapper.Map<IList<UserProduct>>(t.Result));
         }
 
         public async Task UpdateProductDescriptionAsync(string userId, string productId, int rating, string description)

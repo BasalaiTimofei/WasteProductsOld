@@ -388,10 +388,19 @@ namespace WasteProducts.DataAccess.Repositories.Users
 
         public async Task<IList<UserProductDescriptionDB>> GetUserProductDescriptionsAsync(string userId)
         {
-            var user = await _context.Users.Include(u => u.ProductDescriptions).FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
+            var user =
+                await _context.Users
+                .Include(u => u.ProductDescriptions.Select(pd => pd.Product))
+                .FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
+
             if (user == null)
             {
                 throw new KeyNotFoundException("There is no User with such userId.");
+            }
+
+            foreach (var pd in user.ProductDescriptions)
+            {
+                pd.Product.UserDescriptions.Select(ud => ud);
             }
             return user.ProductDescriptions;
         }

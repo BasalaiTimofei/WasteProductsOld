@@ -13,11 +13,11 @@ namespace WasteProducts.Logic.Mappings.Products
             CreateMap<Product, ProductDB>()
                 .ForMember(m => m.Created,
                     opt => opt.MapFrom(p => p.Name != null ? DateTime.UtcNow : default(DateTime)))
-                .ForMember(m => m.Modified, opt => opt.UseValue((DateTime?) null))
-                .ReverseMap()
+                .ForMember(m => m.Modified, opt => opt.UseValue((DateTime?)null));
+
+            CreateMap<ProductDB, Product>()
                 .ForMember(m => m.AvgRating,
-                    opt => opt.MapFrom(p =>
-                        p.UserDescriptions.Average(ud => ud.Rating)));
+                    opt => opt.MapFrom(p => p.UserDescriptions.Average(ud => ud.Rating)));
         }
     }
 }
