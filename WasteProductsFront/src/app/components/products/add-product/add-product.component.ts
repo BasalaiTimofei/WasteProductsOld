@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-import { Product } from '../../../models/groups/Group';
 import { ProductService } from '../../../services/product/product.service';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -79,10 +78,13 @@ selectedFile: File = null;
 
 isHidden = false;
 
-enableAdd = true;
+enableAdd: boolean = true;
+
 
 onFileSelected(event) {
   this.selectedFile = <File>event.target.files[0];
+
+  this.disabled();
 }
 
 onUpload(rating, descrText) {
@@ -102,13 +104,23 @@ onUpload(rating, descrText) {
 }
 
 addProduct(){
-  // Зачем нужен id?
-  let productId: number = 12;
-  this.productService.addProductDescription(this.product.Rating, this.product.Description, productId.toString());
+  this.productService.addProductDescription(this.product.Rating, this.product.Description, '');
   this.router.navigate(['/products']);
 }
 
+  disabled(): void{
+    let discription = document.getElementById('discription');
+    discription.removeAttribute('disabled')
+    let rat = document.getElementById('avgRating');
+    rat.removeAttribute('disabled');
+  }
+
   ngOnInit() {
+    let discription = document.getElementById('discription');
+    let rat = document.getElementById('avgRating');
+    discription.attributes.setNamedItem(document.createAttribute('disabled'));
+    rat.attributes.setNamedItem(document.createAttribute('disabled'));
+
     this.buildForm();
   }
 

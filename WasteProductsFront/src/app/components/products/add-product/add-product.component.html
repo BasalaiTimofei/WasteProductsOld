@@ -1,11 +1,11 @@
 <!-- <div style="border-style: groove; margin: 20px;">todo change style of the outer div -->
 <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
   <div><input type="file" (change)="onFileSelected($event)"></div>
-  <input formControlName="avgRating" id="avgRating"  type="number" class="form-control" placeholder="Ваша оценка продукта от 0 до 5">
+  <input formControlName="avgRating" id="avgRating"  type="number" class="form-control" placeholder="Ваша оценка продукта от 0 до 5"  >
   <div *ngIf="formErrors.avgRating" class="alert alert-danger">
       {{ formErrors.avgRating }}
     </div>
-  <input formControlName="discription" id="discription" type="text" class="form-control" placeholder="Ваше описание продукта">
+  <input formControlName="discription" #discription disabled="false" id="discription" type="text" class="form-control" placeholder="Ваше описание продукта">
   <div *ngIf="formErrors.discription" class="alert alert-danger">
       {{ formErrors.discription }}
     </div>
