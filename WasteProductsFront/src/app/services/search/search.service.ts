@@ -31,7 +31,7 @@ export class SearchService extends BaseHttpService {
     return this.httpService.get<SearchProduct[]>(this.URL_SEARCH + '/products/default', this.getOptions(query)).pipe(
       map(res => {
         const result: any = res;
-        return result.map((item) => new SearchProduct(item.Id, item.Name));
+        return result.map((item) => new SearchProduct(item.Id, item.Name, false));
       }), catchError(this.handleError('getDefault', []))
     );
   }

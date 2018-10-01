@@ -7,6 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { SearchProduct } from '../../models/search-product';
 import { SearchService } from '../../services/search/search.service';
+import { ProductService } from '../../services/product/product.service';
 import { ImagePreviewService } from '../../services/image-preview/image-preview.service';
 import { ImagePreviewOverlay } from '../image-preview/image-preview-overlay';
 
@@ -27,7 +28,8 @@ export class SearchresultComponent implements OnDestroy {
   pageIndex = 0;
   length = 0;
 
-  constructor(private searchService: SearchService, private route: ActivatedRoute, private previewDialog: ImagePreviewService) {
+  constructor(private searchService: SearchService, private productService: ProductService,
+              private route: ActivatedRoute, private previewDialog: ImagePreviewService) {
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe(({ query }: Params) => {
         if (!query) {
             return;
@@ -59,6 +61,10 @@ export class SearchresultComponent implements OnDestroy {
             this.statusCode = e.status;
         }
     });
+  }
+
+  public addToMyProducts(productId: string) {
+
   }
 
   showPreview() {

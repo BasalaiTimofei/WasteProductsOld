@@ -6,7 +6,12 @@
       <img mat-list-icon src="../../../favicon.ico" (click)="showPreview()"> <!--TODO Картинку продукта вместо favicon-->
       <h4 mat-line>{{result.Id}}</h4>
       <p mat-line> {{result.Name}} </p>
-      <mat-icon>assignment</mat-icon> <!--TODO переход на страницу "Детали продукта"-->
+      <button *ngIf="!result.IsAdded; else added" matSuffix mat-button mat-icon-button aria-label="Clear" (click)="addToMyProducts(result.Id)">
+        <mat-icon>star_border</mat-icon>
+      </button>
+      <button matSuffix mat-button mat-icon-button aria-label="Clear">
+        <mat-icon>assignment</mat-icon> <!--TODO переход на страницу "Детали продукта"-->
+      </button>
     </mat-list-item>
     <mat-divider></mat-divider>
   </mat-list>
@@ -17,3 +22,7 @@
                (page)="pageEvent = changePageEvent($event)">
   </mat-paginator>
 </div>
+
+<ng-template #added>
+  <mat-icon>star</mat-icon><!-- TODO если продукт не добавлен в список юзера-->
+<ng-template>
