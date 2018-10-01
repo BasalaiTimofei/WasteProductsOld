@@ -12,7 +12,7 @@ namespace WasteProducts.Logic.Services.Barcods
         const string SEARCH_URI_FORMATTER = "https://e-dostavka.by/search/?searchtext={0}";
         const string NAME_PATTERN = "<h1>(.*?)</h1>";
         const string COMPOSITION_PATTERN = @"<div class=""title"">Описание</div><table>.*?Состав.*?class=""value"">(.*?)</td>";
-        const string BREND_PATTERN = @"<li class=""product_card_country"">.*?</li><li>.*?<span>(.*?)</span></li>";
+        const string BRAND_PATTERN = @"<li class=""product_card_country"">.*?</li><li>.*?<span>(.*?)</span></li>";
         const string COUNTRY_PATTERN = @"<li class=""product_card_country"">.*?<span>(.*?)</span></li>";
         const string PICTURE_PATH_PATTERN = @"<a class=""increaseImage.*?src=""(.*?)""";
         const string DESCRIPTION_URI_PATTERN = @"<!--/noindex--><div class=\""img\""><a href=\""(.*?)""";
@@ -41,14 +41,15 @@ namespace WasteProducts.Logic.Services.Barcods
                 //минимум что мы хотим знать о товаре, это его имя. если оно найдено - дополняем остальными данными ProductInfo и возвращаем значение
                 if (nameParseResult.Success)
                 {
-                    var result = new Barcode();
-
-                    result.Code = barcode;
-                    result.ProductName = nameParseResult.Value;
-                    result.Composition = ParseComposition(queryResult.Page).Value;
-                    result.Brand = ParseBrend(queryResult.Page).Value;
-                    result.Country = ParseCountry(queryResult.Page).Value;
-                    result.PicturePath = ParsePicturePath(queryResult.Page).Value;
+                    var result = new Barcode
+                    {
+                        Code = barcode,
+                        ProductName = nameParseResult.Value,
+                        Composition = ParseComposition(queryResult.Page).Value,
+                        Brand = ParseBrand(queryResult.Page).Value,
+                        Country = ParseCountry(queryResult.Page).Value,
+                        PicturePath = ParsePicturePath(queryResult.Page).Value
+                    };
 
                     return result;
                 }
@@ -137,11 +138,11 @@ namespace WasteProducts.Logic.Services.Barcods
         /// </summary>
         /// <param name="page">String page.</param>
         /// <returns>Product brand</returns>
-        private ParseResult ParseBrend(string page)
+        private ParseResult ParseBrand(string page)
         {
             var result = new ParseResult();
 
-            Regex r = new Regex(BREND_PATTERN);
+            Regex r = new Regex(BRAND_PATTERN);
             Match m = r.Match(page);
 
             if (m.Success)
