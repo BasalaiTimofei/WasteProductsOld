@@ -138,7 +138,7 @@ namespace WasteProducts.Logic.Services.Products
                     string.Equals(p.Id, id, StringComparison.CurrentCultureIgnoreCase),
                 out var products)) return null;
 
-            return _productRepository.DeleteAsync(_mapper.Map<ProductDB>(products.First()));
+            return _productRepository.DeleteAsync(id);
         }
 
         /// <inheritdoc/>

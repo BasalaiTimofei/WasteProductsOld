@@ -68,7 +68,8 @@ namespace WasteProducts.DataAccess.Repositories.Products
         {
             return await Task.Run(() =>
             {
-               return _context.Products.ToList();
+                var result = _context.Products.ToList();
+                return result.Where(p => p.Marked == false);
             });
         }
 
@@ -96,16 +97,21 @@ namespace WasteProducts.DataAccess.Repositories.Products
         /// <inheritdoc />
         public async Task<ProductDB> GetByIdAsync(string id)
         {
-            return await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            var result = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+
+            return (result.Marked == true) ? null : result;
         }
 
         /// <inheritdoc />
         public async Task UpdateAsync(ProductDB product)
         {
-            _context.Entry(product).State = EntityState.Modified;
+            var productInDb = await _context.Products.FirstOrDefaultAsync(p => p.Id == product.Id).ConfigureAwait(false);
 
-            var productInDb = await _context.Products.FirstOrDefaultAsync(p => p.Id == product.Id);
-            productInDb.Modified = DateTime.UtcNow;
+            var entry = _context.Entry(productInDb);
+            entry.CurrentValues.SetValues(product);
+            entry.Property(p => p.Modified).CurrentValue = DateTime.UtcNow;
+
+            entry.Property(p => p.Id).IsModified = false;
 
             await _context.SaveChangesAsync();
         }
