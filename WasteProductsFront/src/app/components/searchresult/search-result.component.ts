@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material';
 
 import { SearchProduct } from '../../models/search-product';
 import { SearchService } from '../../services/search/search.service';
@@ -30,9 +31,12 @@ export class SearchresultComponent implements OnDestroy {
   pageIndex = 0;
   length = 0;
 
-  constructor(private searchService: SearchService, private productService: ProductService, private route: ActivatedRoute,
+  constructor(private searchService: SearchService,
+              private productService: ProductService,
+              private route: ActivatedRoute,
               private previewDialogForm: FormPreviewService,
-              private previewDialog: ImagePreviewService) {
+              private previewDialog: ImagePreviewService,
+              public snackBar: MatSnackBar) {
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe(({ query }: Params) => {
         if (!query) {
             return;
@@ -68,8 +72,16 @@ export class SearchresultComponent implements OnDestroy {
 
   addToMyProducts(productId: string) {
     const dialog: FormPreviewOverlay = this.previewDialogForm.open({
-      // TODO Заменить путем из реквеста и название продукта
       form: { name: 'Добавить в Мой список', id: productId }
+    });
+  }
+
+  removeFromMyProducts(productId: string) {
+    this.productService.deleteUserProduct(productId);
+    this.snackBar.open('Продукт удален из Мои продукты', null, {
+      duration: 4000,
+      verticalPosition: 'top',
+      horizontalPosition: 'center'
     });
   }
 
