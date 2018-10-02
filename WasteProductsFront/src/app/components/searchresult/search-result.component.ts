@@ -37,13 +37,13 @@ export class SearchresultComponent implements OnDestroy {
               private previewDialogForm: FormPreviewService,
               private previewDialog: ImagePreviewService,
               public snackBar: MatSnackBar) {
-    this.route.params.pipe(takeUntil(this.destroy$)).subscribe(({ query }: Params) => {
+      this.route.params.pipe(takeUntil(this.destroy$)).subscribe(({ query }: Params) => {
         if (!query) {
             return;
-        }
+      }
 
-        this.setVariablesToDefault();
-        this.search(query);
+      this.setVariablesToDefault();
+      this.search(query);
     });
   }
 
