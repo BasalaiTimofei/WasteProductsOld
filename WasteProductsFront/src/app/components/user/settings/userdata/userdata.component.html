@@ -1,22 +1,17 @@
-<form novalidate (ngSubmit)="updateUserNameAndEmail(f)" #f="ngForm">
+<form novalidate (ngSubmit)="updateUserName(f)" #f="ngForm">
 <div>
   <label>Имя:</label>
   <input id="name" type="text" name="name" required minlength="4" maxlength="16" [(ngModel)]="user.UserName">
+  <label><input type="submit" class="submit" value="Изменить"></label>
 </div>
-<div>
-  <label>Эл. почта:</label>
-  <input id="email" type="text" name="email" required [(ngModel)]="user.Email"  pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,3}$" title="type email">
-</div>
-<div>
-  <div style="margin-top: -20px">
-    <label>Состояние:</label>
-    <label>{{user.EmailConfirmed ? "Подтверждена" : "Не подтверждена"}}</label>
-  </div>
-</div>
-<div>
-    <label><input type="submit" class="submit" value="Изменить"></label>
-</div>
-<div>
-  <button href="#" routerLink="/changepassword" routerLinkActive="active">Изменить пароль</button>
-</div>
+</form>
+<form novalidate (ngSubmit)="updateEmail(g)" #g="ngForm">
+    <div>
+        <label>Эл. почта:</label>
+        <input id="email" type="text" name="email" required [(ngModel)]="user.Email" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,3}$" title="type email">
+        <label><input type="submit" class="submit" value="Изменить"></label>
+    </div>
+    <div>
+        <button href="#" routerLink="/changepassword" routerLinkActive="active">Изменить пароль</button>
+    </div>
 </form>

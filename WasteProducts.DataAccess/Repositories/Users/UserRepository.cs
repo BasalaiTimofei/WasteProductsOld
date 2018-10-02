@@ -103,6 +103,11 @@ namespace WasteProducts.DataAccess.Repositories.Users
                 _context.NewEmailConfirmators.Remove(confirm);
                 await _context.SaveChangesAsync().ConfigureAwait(false);
             }
+            else
+            {
+                throw new UnauthorizedAccessException("Token is not valid.");
+            }
+
         }
 
         public async Task<string> GenerateEmailChangingTokenAsync(string userId, string newEmail)
@@ -110,7 +115,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
             if (user != null)
             {
-                var token = _faker.Phone.Random.String(5, 5);
+                var token = _faker.Phone.Random.String(5, 5, 'a', 'z');
                 var newEmailConfirmator = new NewEmailConfirmator
                 {
                     UserId = userId,
