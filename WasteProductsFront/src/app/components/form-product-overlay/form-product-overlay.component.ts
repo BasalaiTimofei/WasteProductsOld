@@ -7,6 +7,7 @@ import { take } from 'rxjs/operators';
 import { FormPreviewOverlay } from './form-preview-overlay';
 import { FILE_PREVIEW_DIALOG_DATA } from './form-preview-overlay.tokens';
 import { ProductService } from '../../services/product/product.service';
+import { HttpResponse } from '@angular/common/http';
 
 const ESCAPE = 27;
 const ANIMATION_TIMINGS = '400ms cubic-bezier(0.25, 0.8, 0.25, 1)';

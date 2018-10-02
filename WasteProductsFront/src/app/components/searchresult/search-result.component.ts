@@ -13,6 +13,7 @@ import { FormPreviewService } from '../../services/form-preview/form-preview.ser
 import { FormPreviewOverlay } from '../form-product-overlay/form-preview-overlay';
 import { ImagePreviewService } from '../../services/image-preview/image-preview.service';
 import { ImagePreviewOverlay } from '../image-preview/image-preview-overlay';
+import { AuthenticationService } from '../../modules/account/services/authentication.service';
 
 @Component({
   selector: 'app-search-result',
@@ -21,9 +22,9 @@ import { ImagePreviewOverlay } from '../image-preview/image-preview-overlay';
 })
 export class SearchresultComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
-  private authentificationSubject = new BehaviorSubject<boolean>(false);
-  isAuth$ = this.authentificationSubject.asObservable();
+  public isAuth: boolean;
 
+  responseMessage = 'Продукт удален из Мои продукты';
   query: string;
   searchResult: SearchProduct[];
   statusCode: number;
@@ -38,12 +39,16 @@ export class SearchresultComponent implements OnDestroy {
               private route: ActivatedRoute,
               private previewDialogForm: FormPreviewService,
               private previewDialog: ImagePreviewService,
-              public snackBar: MatSnackBar) {
+              public snackBar: MatSnackBar,
+              public authService: AuthenticationService) {
+
       this.route.params.pipe(takeUntil(this.destroy$)).subscribe(({ query }: Params) => {
         if (!query) {
             return;
       }
-
+      this.authService.isAuthenticated$.toPromise<boolean>().then(res => {
+        this.isAuth = res;
+      });
       this.setVariablesToDefault();
       this.search(query);
     });
@@ -80,7 +85,7 @@ export class SearchresultComponent implements OnDestroy {
 
   removeFromMyProducts(productId: string) {
     this.productService.deleteUserProduct(productId);
-    this.snackBar.open('Продукт удален из Мои продукты', null, {
+    this.snackBar.open(this.responseMessage, null, {
       duration: 4000,
       verticalPosition: 'top',
       horizontalPosition: 'center'
