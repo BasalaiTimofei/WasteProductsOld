@@ -11,7 +11,7 @@ import { AuthenticationService } from '../../modules/account/services/authentica
 })
 export class UserService extends BaseHttpService  {
 
-  private apiUrlPlusUserId = `${environment.apiHostUrl}/api/user/${this.authServise.getUserId()}`;
+  private apiUrlPlusUserId = `${environment.apiHostUrl}/api/user/0`;
 
   constructor(private httpClient: HttpClient, private authServise: AuthenticationService, loggingService: LoggingService) {
     super(httpClient, loggingService);

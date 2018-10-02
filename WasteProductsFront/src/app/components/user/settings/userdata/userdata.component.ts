@@ -20,15 +20,17 @@ export class UserdataComponent implements OnInit {
       res => this.user = res,
       err => console.error(err)
       );
+      console.log(this.user);
   }
-  updateUserNameAndEmail() {
+  updateUserName() {
     this.userService.updateUserName(this.user.UserName).subscribe(
-      err => console.error(err)
-      );
-
-    this.userService.updateEmail(this.user.Email).subscribe(
-      err => console.error(err)
-      );
+      err => console.log(err)
+    );
   }
 
+  updateEmail() {
+    this.userService.updateEmail(this.user.Email).subscribe(
+      err => console.log(err)
+    );
+  }
 }
