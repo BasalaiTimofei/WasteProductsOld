@@ -14,7 +14,7 @@ export class UserService extends BaseHttpService  {
     super(httpClient, loggingService);
    }
 
-   private apiUrlPlusUserId = `${environment.apiHostUrl}/api/user/${0}`;
+   private apiUrlPlusUserId = `${environment.apiHostUrl}/api/user/${this.authServise.getUserId()}`;
 
   addFriend(friendId: string) {
     const url = `${this.apiUrlPlusUserId}/friends/${friendId}`;

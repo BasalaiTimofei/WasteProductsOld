@@ -15,19 +15,19 @@ import { ProductDescription } from '../../models/products/product-description';
   providedIn: 'root'
 })
 export class ProductService extends BaseHttpService {
-
-  private apiUrl = `${environment.apiHostUrl}/api/product/products`;
-
   constructor(httpService: HttpClient, private authServise: AuthenticationService, loggingService: LoggingService) {
     super(httpService, loggingService);
   }
 
+  private baseProdApiUrl = `${environment.apiHostUrl}/api/products`;
+  private baseUserApiUrl = `${environment.apiHostUrl}/api/user/${this.authServise.getUserId}`;
+
   createProduct(rating: number, description: string) {
-    const createProdUrl = `${environment.apiHostUrl}/api/products`;
+    const createProdUrl = this.baseProdApiUrl;
     let productId: string;
     this.httpService.post(createProdUrl, null).subscribe(res => productId = <string>res, err => console.error(err));
 
-    const addProdUrl = `${environment.apiHostUrl}/api/user/${this.getUserId()}/products/${productId}`;
+    const addProdUrl = `${this.baseUserApiUrl}/products/${productId}`;
 
     const descr = new ProductDescription();
     descr.Rating = rating;
@@ -41,7 +41,7 @@ export class ProductService extends BaseHttpService {
     description.Rating = rating;
     description.Description = descrText;
 
-    const url = `${environment.apiHostUrl}/api/user/0/products/${productId}`;
+    const url = `${this.baseUserApiUrl}/products/${productId}`;
     this.httpService.post(url, description)
     .subscribe(
       res => console.log(res),
@@ -49,12 +49,12 @@ export class ProductService extends BaseHttpService {
   }
 
   getUserProducts() {
-    const url = `${environment.apiHostUrl}/api/user/0/products`;
+    const url = `${this.baseUserApiUrl}/products`;
     return this.httpService.get<UserProduct[]>(url);
    }
 
    updateUserProduct(productId: string, rating: number, descrText: string) {
-    const url = `${environment.apiHostUrl}/api/user/0/products/${productId}`;
+    const url = `${this.baseUserApiUrl}/products/${productId}`;
 
     const description = new ProductDescription();
     description.Rating = rating;
@@ -64,7 +64,7 @@ export class ProductService extends BaseHttpService {
    }
 
    deleteUserProduct(productId: string) {
-    const url = `${environment.apiHostUrl}/api/user/0/products/${productId}`;
+    const url = `${this.baseUserApiUrl}/products/${productId}`;
     this.httpService.delete(url)
     .subscribe(
       res => console.log(res),
@@ -72,17 +72,12 @@ export class ProductService extends BaseHttpService {
    }
 
    getAllProducts(): Observable<UserProduct[]> {
-    const url = `${this.apiUrl}/products`;
+    const url = this.baseProdApiUrl;
 
     return this.httpService.get<UserProduct[]>(url)
     .pipe(
       tap(data => this.logDebug('fetched products')),
       catchError(this.handleError('getProducts', []))
       );
-  }
-
-  private getUserId() {
-    const claims = this.authServise.getClaims();
-    return claims.sub;
   }
 }

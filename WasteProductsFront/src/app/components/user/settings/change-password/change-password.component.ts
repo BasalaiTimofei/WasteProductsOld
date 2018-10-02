@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ChangePasswordComponent implements OnInit {
 
-  constructor(private service: UserService, private router: Router, private httpClient: HttpClient) { }
+  constructor(private service: UserService, private router: Router) { }
 
   ngOnInit() {
   }

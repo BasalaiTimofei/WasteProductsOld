@@ -75,7 +75,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
             else
             {
                 // throws 409 conflict
-                throw new OperationCanceledException("Id is not unique.");
+                throw new OperationCanceledException("User was not created.");
             }
         }
 
