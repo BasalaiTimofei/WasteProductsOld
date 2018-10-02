@@ -36,8 +36,6 @@ this.productService.getUserProducts().subscribe(
       this.userProducts = res;
       // tslint:disable-next-line:prefer-const
       for (let item of res) {
-        item.Product.AvgRating = 3;
-        item.Product.IsHidden = false;
         this.products.push(item.Product);
       }
     } ,
@@ -48,7 +46,7 @@ this.productService.getUserProducts().subscribe(
       this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
-    addProduct(){
+    addProduct() {
       this.router.navigate(['products/add-product']);
     }
   }
