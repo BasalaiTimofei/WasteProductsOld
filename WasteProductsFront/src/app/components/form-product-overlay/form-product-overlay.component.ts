@@ -1,5 +1,6 @@
 import { Component, Input, Inject, HostListener, EventEmitter, NgZone, ViewChild } from '@angular/core';
 import { trigger, state, style, transition, animate, AnimationEvent, group, query } from '@angular/animations';
+import { MatSnackBar } from '@angular/material';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { take } from 'rxjs/operators';
 
@@ -41,10 +42,18 @@ export class FormProductOverlayComponent {
     private ngZone: NgZone,
     public dialogRef: FormPreviewOverlay,
     @Inject(FILE_PREVIEW_DIALOG_DATA) public form: any,
-    private productService: ProductService) { }
+    private productService: ProductService,
+    public snackBar: MatSnackBar) { }
 
   addToMyProducts(comment: string, rate: number) {
     this.productService.addProductDescription(rate, comment, this.form.id);
+    this.closeForm();
+    // Получить фидбек и показать ответ
+    this.snackBar.open('Продукт добавлен успешно!', null, {
+      duration: 4000,
+      verticalPosition: 'top',
+      horizontalPosition: 'center'
+    });
   }
 
   onAnimationStart(event: AnimationEvent) {
@@ -57,5 +66,9 @@ export class FormProductOverlayComponent {
 
   startExitAnimation() {
     this.animationState = 'leave';
+  }
+
+  closeForm() {
+    this.dialogRef.close();
   }
 }

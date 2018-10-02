@@ -23,7 +23,7 @@
       <textarea #comment matInput placeholder="Мой комментарий" value=""></textarea>
     </mat-form-field>
     <button type="submit" (click)="addToMyProducts(comment.value, rate.value)" mat-button>Добавить</button>
-    <button type="reset" mat-button>Отмена</button>
+    <button mat-button (click)="closeForm()">Отмена</button>
   </form>
 
 </div>
