@@ -57,6 +57,6 @@ export class UserService extends BaseHttpService  {
       OldPassword: oldPassword,
       NewPassword: newPassword
     };
-    this.httpClient.put(url, bodyObj);
+    return this.httpClient.put(url, bodyObj);
   }
 }
