@@ -29,7 +29,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WasteProducts.Web.Tests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WasteProducts.Logic.Tests.Integrational", "WasteProducts.Logic.Tests.Integrational\WasteProducts.Logic.Tests.Integrational.csproj", "{34C9D3DA-8ADC-4ADF-A3DA-189A40C8F665}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WasteProducts.IdentityServer", "WasteProducts.IdentityServer\WasteProducts.IdentityServer.csproj", "{897FF481-D5DF-4495-8141-6BDFB245DCD3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WasteProducts.IdentityServer", "WasteProducts.IdentityServer\WasteProducts.IdentityServer.csproj", "{29548066-7171-40CD-86C2-5312AAD536BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,10 +69,10 @@ Global
 		{34C9D3DA-8ADC-4ADF-A3DA-189A40C8F665}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34C9D3DA-8ADC-4ADF-A3DA-189A40C8F665}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34C9D3DA-8ADC-4ADF-A3DA-189A40C8F665}.Release|Any CPU.Build.0 = Release|Any CPU
-		{897FF481-D5DF-4495-8141-6BDFB245DCD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{897FF481-D5DF-4495-8141-6BDFB245DCD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{897FF481-D5DF-4495-8141-6BDFB245DCD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{897FF481-D5DF-4495-8141-6BDFB245DCD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29548066-7171-40CD-86C2-5312AAD536BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29548066-7171-40CD-86C2-5312AAD536BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29548066-7171-40CD-86C2-5312AAD536BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29548066-7171-40CD-86C2-5312AAD536BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

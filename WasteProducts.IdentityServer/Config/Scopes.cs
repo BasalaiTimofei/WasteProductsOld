@@ -5,7 +5,7 @@ namespace WasteProducts.IdentityServer.Config
 {
     public static class Scopes
     {
-        public static IEnumerable<Scope> Get()
+        public static IEnumerable<Scope> Load()
         {
             var scopes = new List<Scope>();
 
@@ -34,7 +34,6 @@ namespace WasteProducts.IdentityServer.Config
                     DisplayName = IdentityConstants.WasteProducts_Api_Name,
                     Description = IdentityConstants.WasteProducts_Api_Description,
                     
-
                     ScopeSecrets = new List<Secret>
                     {
                         new Secret(IdentityConstants.WasteProducts_Api_Secret.Sha256())
