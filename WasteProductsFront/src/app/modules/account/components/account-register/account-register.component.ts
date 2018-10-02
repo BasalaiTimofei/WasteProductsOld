@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
+import { Registration } from '../../models/registration';
+import { AuthenticationService } from '../../services/authentication.service';
+
 
 @Component({
   selector: 'app-account-register',
@@ -7,9 +12,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AccountRegisterComponent implements OnInit {
 
-  constructor() { }
+  model: Registration = new Registration('', '', '');
+  errors: string;
+
+
+  constructor(
+    private authService: AuthenticationService,
+    private router: Router) { }
 
   ngOnInit() {
+  }
+
+  submitForm(form: NgForm) {
+    this.authService.register(this.model).subscribe(succes => {
+      this.router.navigate(['/']);
+    }, error => {
+      this.errors = error.error;
+    });
   }
 
 }

@@ -28,6 +28,8 @@ import { UpdateProductComponent } from './components/products/update-product/upd
 import { HeaderComponent } from './components/common/header/header.component';
 import { ImagePreviewComponent } from './components/image-preview/image-preview.component';
 import { ImageOverlayWrapperComponent } from './components/image-preview/image-overlay-wrapper/image-overlay-wrapper.component';
+import { FormProductOverlayComponent } from './components/form-product-overlay/form-product-overlay.component';
+import { FormOverlayWrapperComponent } from './components/form-product-overlay/form-overlay-wrapper/form-overlay-wrapper.component';
 import { GroupCreateComponent } from './components/groups/group/group-create/group-create.component';
 import { GroupUpdateComponent } from './components/groups/group/group-update/group-update.component';
 import { GroupDeleteComponent } from './components/groups/group/group-delete/group-delete.component';
@@ -44,9 +46,11 @@ import { GroupUserDismissUserComponent } from './components/groups/user/group-us
 import { GroupUserGetEntitleComponent } from './components/groups/user/group-user-get-entitle/group-user-get-entitle.component';
 import { FooterComponent } from './components/common/footer/footer.component';
 import { DonateComponent } from './components/donate/donate.component';
+import { GroupsOfUserComponent } from './components/groups/groups-of-user/groups-of-user.component';
 
 /* Services */
 import { ImagePreviewService } from './services/image-preview/image-preview.service';
+import { FormPreviewService } from './services/form-preview/form-preview.service';
 
 /* Custom Modules */
 import { AccountModule } from './modules/account/account.module';
@@ -89,6 +93,9 @@ import { AccountModule } from './modules/account/account.module';
     GroupUserGetEntitleComponent,
 
     DonateComponent,
+    GroupsOfUserComponent,
+    FormProductOverlayComponent,
+    FormOverlayWrapperComponent,
   ],
   imports: [
     BrowserModule,
@@ -104,8 +111,10 @@ import { AccountModule } from './modules/account/account.module';
     /* Custom modules */
     AccountModule
   ],
-  providers: [ImagePreviewService],
-  entryComponents: [ImagePreviewComponent],
+  providers: [ImagePreviewService,
+              FormPreviewService],
+  entryComponents: [ImagePreviewComponent,
+                    FormProductOverlayComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

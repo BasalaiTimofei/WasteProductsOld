@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Repositories.Barcods;
@@ -26,6 +25,7 @@ namespace WasteProducts.DataAccess.Repositories.Barcods
         {
             _wasteContext = wasteContext;
         }
+
         /// <summary>
         /// Return the barcode by its numerical barcode.
         /// </summary>

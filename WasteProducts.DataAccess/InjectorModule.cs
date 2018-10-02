@@ -10,9 +10,13 @@ using WasteProducts.DataAccess.Contexts;
 using WasteProducts.DataAccess.Repositories;
 using WasteProducts.DataAccess.Repositories.Products;
 using WasteProducts.DataAccess.Repositories.Groups;
+using WasteProducts.DataAccess.Common.Repositories.Donations;
+using WasteProducts.DataAccess.Repositories.Donations;
 using WasteProducts.DataAccess.Repositories.Users;
 using WasteProducts.DataAccess.Common.Repositories.Diagnostic;
 using WasteProducts.DataAccess.Repositories.Diagnostic;
+using WasteProducts.DataAccess.Common.Repositories.Barcods;
+using WasteProducts.DataAccess.Repositories.Barcods;
 
 namespace WasteProducts.DataAccess
 {
@@ -38,6 +42,10 @@ namespace WasteProducts.DataAccess
             Bind<ISearchRepository>().To<LuceneSearchRepository>().InSingletonScope();
 
             Bind<IGroupRepository>().To<GroupRepository>();
+
+            Bind<IDonationRepository>().To<DonationRepository>();
+
+            Bind<IBarcodeRepository>().To<BarcodeRepository>();
 
             Bind<IMapper>().ToMethod(ctx =>
             {

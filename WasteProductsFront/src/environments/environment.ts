@@ -7,11 +7,12 @@ export const environment = {
   logLevel: 0,
 
   /* Api */
-  apiHostUrl: 'http://waste-api.belpyro.net', // 'http://localhost:2189',
+  apiHostUrl: 'http://localhost:2189',
+  // apiHostUrl: 'http://waste-api.belpyro.net',
 
   /* Identity */
-  iderntityHostUrl: 'http://waste-identity.belpyro.net', // 'https://localhost:44300',
-  clientId: 'bc04b7e1-f43b-46c0-9908-3c2fe4633987'
+  iderntityHostUrl: 'https://waste-api.belpyro.net/identity', // 'https://localhost:44300',
+  clientId: 'wasteproducts.front.angular'
 };
 
 /*

@@ -89,6 +89,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -103,6 +104,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constants\Donations\AppSettings.cs" />
+    <Compile Include="Constants\Donations\IPN.cs" />
     <Compile Include="Extensions\BindingInterceptionExtensions.cs" />
     <Compile Include="Extensions\KernelInterceptionExtensions.cs" />
     <Compile Include="InjectorModule.cs" />
@@ -148,9 +151,12 @@
       <DependentUpon>UserResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Services\Barcods\BarcodeCatalogSearchService.cs" />
+    <Compile Include="Services\Barcods\BarcodeService.cs" />
     <Compile Include="Services\Barcods\EDostavkaCatalog.cs" />
     <Compile Include="Services\Barcods\HttpHelper.cs" />
     <Compile Include="Services\Barcods\PriceGuardCatalog.cs" />
+    <Compile Include="Services\Donations\PayPalService.cs" />
+    <Compile Include="Services\Donations\PayPalVerificationService.cs" />
     <Compile Include="Services\Groups\GroupCommentService.cs" />
     <Compile Include="Services\Groups\GroupUserService.cs" />
     <Compile Include="Services\Groups\GroupProductService.cs" />
@@ -219,5 +225,6 @@
       <LastGenOutput>UserResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

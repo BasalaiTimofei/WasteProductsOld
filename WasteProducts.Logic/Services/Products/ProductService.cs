@@ -40,22 +40,27 @@ namespace WasteProducts.Logic.Services.Products
         {
             if (imageStream == null) return null;
 
-            var barcode = _barcodeService.GetBarcodeAsync(imageStream).Result;
+            var barcode = _barcodeService.GetBarcodeByStreamAsync(imageStream).Result;
             if (barcode == null) return null;
 
             if (IsProductsInDB(
-                p => string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
+                p => p.Barcode != null && string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
                 out var products))
             {
-                return null;
+                return new Task<string>(() => products.First().Id);
             }
 
             var newProduct = new Product
             {
                 Barcode = barcode,
-                Name = barcode.ProductName
+                Name = barcode.ProductName,
+                Composition =  barcode.Composition,
+                Brand = barcode.Brand,
+                Country = barcode.Country,
+                Weight = barcode.Weight,
+                PicturePath = barcode.PicturePath,
             };
-            
+
             return _productRepository.AddAsync(_mapper.Map<ProductDB>(newProduct))
                 .ContinueWith(t => t.Result);
         }

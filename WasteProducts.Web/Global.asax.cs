@@ -3,6 +3,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using WasteProducts.Web.Controllers.Mvc;
+using OperationCanceledException = System.OperationCanceledException;
 
 namespace WasteProducts.Web
 {
@@ -15,6 +16,11 @@ namespace WasteProducts.Web
         /// </summary>
         protected void Application_Error(object sender, EventArgs e)
         {
+            var exception = Server.GetLastError();
+
+            if(exception is OperationCanceledException)
+                return;
+
             var httpContext = ((HttpApplication)sender).Context;
             var currentController = string.Empty;
             var currentAction = string.Empty;
@@ -33,8 +39,6 @@ namespace WasteProducts.Web
                     currentAction = currentRouteData.Values["action"].ToString();
                 }
             }
-
-            var exception = Server.GetLastError();
 
             var controller = new ErrorController();
             var routeData = new RouteData();

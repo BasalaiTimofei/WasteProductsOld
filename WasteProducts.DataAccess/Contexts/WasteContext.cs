@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Donations;
 using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Models.Notifications;
@@ -13,6 +14,7 @@ using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Contexts.Config;
 using WasteProducts.DataAccess.ModelConfigurations;
+using WasteProducts.DataAccess.ModelConfigurations.Donations;
 using WasteProducts.DataAccess.ModelConfigurations.Notifications;
 using WasteProducts.DataAccess.ModelConfigurations.Users;
 
@@ -47,12 +49,8 @@ namespace WasteProducts.DataAccess.Contexts
             modelBuilder.Entity<UserDB>().HasMany(u => u.Notifications).WithRequired(n => n.User);
 
             modelBuilder.Entity<ProductDB>()
-                .HasOptional(p => p.Barcode)
-                .WithRequired(b => b.Product);
-
-            modelBuilder.Entity<BarcodeDB>()
-                .HasRequired(b => b.Product)
-                .WithOptional(b => b.Barcode);
+                .HasOptional(b => b.Barcode)
+                .WithOptionalDependent(p => p.Product);
 
             modelBuilder.Configurations.Add(new UserProductDescriptionConfiguration());
 
@@ -61,6 +59,10 @@ namespace WasteProducts.DataAccess.Contexts
             modelBuilder.Configurations.Add(new GroupUserConfiguration());
             modelBuilder.Configurations.Add(new GroupCommentConfiguration());
             modelBuilder.Configurations.Add(new GroupProductConfiguration());
+
+            modelBuilder.Configurations.Add(new DonationEntityConfiguration());
+            modelBuilder.Configurations.Add(new DonorEntityConfiguration());
+            modelBuilder.Configurations.Add(new AddressEntityConfiguration());
 
             modelBuilder.Configurations.Add(new NotificationConfiguration());
         }
@@ -87,6 +89,24 @@ namespace WasteProducts.DataAccess.Contexts
         ///  create, read, update, delete and to get category list operations in 'CategoryRepository' class.
         /// </summary>
         public IDbSet<CategoryDB> Categories { get; set; }
+
+        /// <summary>
+        /// Property added for to use an entity set that is used to perform
+        /// CRUD operations in 'DonationRepository' class.
+        /// </summary>
+        public IDbSet<DonationDB> Donations { get; set; }
+
+        /// <summary>
+        /// Property added for to use an entity set that is used to perform
+        /// CRUD operations in 'DonationRepository' class.
+        /// </summary>
+        public IDbSet<DonorDB> Donors { get; set; }
+
+        /// <summary>
+        /// Property added for to use an entity set that is used to perform
+        /// CRUD operations in 'DonationRepository' class.
+        /// </summary>
+        public IDbSet<AddressDB> Addresses { get; set; }
 
         public IDbSet<GroupBoardDB> GroupBoards { get; set; }
         public IDbSet<GroupDB> Groups { get; set; }
