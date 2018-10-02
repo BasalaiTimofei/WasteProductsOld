@@ -3,6 +3,7 @@ import { trigger, state, style, transition, animate, AnimationEvent, group, quer
 import { MatSnackBar } from '@angular/material';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { take } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 import { FormPreviewOverlay } from './form-preview-overlay';
 import { FILE_PREVIEW_DIALOG_DATA } from './form-preview-overlay.tokens';
@@ -44,11 +45,13 @@ export class FormProductOverlayComponent {
     public dialogRef: FormPreviewOverlay,
     @Inject(FILE_PREVIEW_DIALOG_DATA) public form: any,
     private productService: ProductService,
-    public snackBar: MatSnackBar) { }
+    public snackBar: MatSnackBar,
+    private router: Router) { }
 
   addToMyProducts(comment: string, rate: number) { // TODO. Refactoring
     this.productService.addProductDescription(rate, comment, this.form.id);
     this.closeForm();
+    this.router.navigate(['searchresults', this.form.searchQuery]);
     // Получить фидбек и показать ответ
     this.snackBar.open('Продукт добавлен успешно!', null, {
       duration: 4000,
