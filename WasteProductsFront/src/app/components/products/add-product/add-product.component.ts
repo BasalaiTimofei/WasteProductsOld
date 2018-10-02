@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-import { Product } from '../../../models/groups/Group';
 import { ProductService } from '../../../services/product/product.service';
 
 @Component({
