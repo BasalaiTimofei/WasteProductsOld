@@ -11,6 +11,7 @@ export interface Form {
   route: string;
   rate: number;
   comment: string;
+  id: string;
 }
 
 interface FilePreviewDialogConfig {

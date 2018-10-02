@@ -5,6 +5,7 @@ import { take } from 'rxjs/operators';
 
 import { FormPreviewOverlay } from './form-preview-overlay';
 import { FILE_PREVIEW_DIALOG_DATA } from './form-preview-overlay.tokens';
+import { ProductService } from '../../services/product/product.service';
 
 const ESCAPE = 27;
 const ANIMATION_TIMINGS = '400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
@@ -28,12 +29,8 @@ const ANIMATION_TIMINGS = '400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
   ]
 })
 export class FormProductOverlayComponent {
-  rate: 0;
-  comment: string;
   animationState: 'void' | 'enter' | 'leave' = 'enter';
   animationStateChanged = new EventEmitter<AnimationEvent>();
-
-  // @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
   @HostListener('document:keydown', ['$event']) private handleKeydown(event: KeyboardEvent) {
     if (event.keyCode === ESCAPE) {
@@ -43,17 +40,13 @@ export class FormProductOverlayComponent {
   constructor(
     private ngZone: NgZone,
     public dialogRef: FormPreviewOverlay,
-    @Inject(FILE_PREVIEW_DIALOG_DATA) public form: any) { }
+    @Inject(FILE_PREVIEW_DIALOG_DATA) public form: any,
+    private productService: ProductService) { }
 
-  /*triggerResize() {
-    // Wait for changes to be applied, then trigger textarea resize.
-    this.ngZone.onStable.pipe(take(1))
-        .subscribe(() => this.autosize.resizeToFitContent(true));
-  }*/
-
-  addToMyProducts() {
-
+  addToMyProducts(comment: string, rate: number) {
+    this.productService.addProductDescription(rate, comment, this.form.id);
   }
+
   onAnimationStart(event: AnimationEvent) {
     this.animationStateChanged.emit(event);
   }

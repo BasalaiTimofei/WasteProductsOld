@@ -10,7 +10,7 @@
   <form class="product-form">
     <mat-form-field>
       <mat-label>Мой рейнтинг</mat-label>
-      <mat-select value="0">
+      <mat-select #rate value="0">
         <mat-option value="0">0</mat-option>
         <mat-option value="1">1</mat-option>
         <mat-option value="2">2</mat-option>
@@ -20,9 +20,10 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field class="full-width">
-      <textarea matInput placeholder="Мой комментарий"></textarea>
+      <textarea #comment matInput placeholder="Мой комментарий" value=""></textarea>
     </mat-form-field>
-    <button type="submit" (click)="addToMyProducts()" mat-button>Добавить</button>
+    <button type="submit" (click)="addToMyProducts(comment.value, rate.value)" mat-button>Добавить</button>
+    <button type="reset" mat-button>Отмена</button>
   </form>
 
 </div>
