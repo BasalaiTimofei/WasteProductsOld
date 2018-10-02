@@ -28,9 +28,11 @@ const ANIMATION_TIMINGS = '400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
   ]
 })
 export class FormProductOverlayComponent {
-  loading = true;
+  rate: 0;
+  comment: string;
   animationState: 'void' | 'enter' | 'leave' = 'enter';
   animationStateChanged = new EventEmitter<AnimationEvent>();
+
   // @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
   @HostListener('document:keydown', ['$event']) private handleKeydown(event: KeyboardEvent) {
@@ -42,9 +44,6 @@ export class FormProductOverlayComponent {
     private ngZone: NgZone,
     public dialogRef: FormPreviewOverlay,
     @Inject(FILE_PREVIEW_DIALOG_DATA) public form: any) { }
-    onLoad(event: Event) {
-      this.loading = false;
-    }
 
   /*triggerResize() {
     // Wait for changes to be applied, then trigger textarea resize.
@@ -52,6 +51,9 @@ export class FormProductOverlayComponent {
         .subscribe(() => this.autosize.resizeToFitContent(true));
   }*/
 
+  addToMyProducts() {
+
+  }
   onAnimationStart(event: AnimationEvent) {
     this.animationStateChanged.emit(event);
   }
