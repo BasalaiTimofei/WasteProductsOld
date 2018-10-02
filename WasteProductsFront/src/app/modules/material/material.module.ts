@@ -4,7 +4,7 @@ import {
   MatCardModule, MatListModule, MatIconModule, MatDividerModule, MatToolbarModule, MatMenuModule,
   MatButtonModule, MatCheckboxModule, MatProgressSpinnerModule, MatChipsModule, MatSnackBarModule,
    MatDialogModule, MatTooltipModule, MatInputModule, MatFormFieldModule, MatOptionModule,
-   MatAutocompleteModule, MatTableModule, MatPaginatorModule
+   MatAutocompleteModule, MatTableModule, MatPaginatorModule, MatSelectModule
 } from '@angular/material';
 
 /* Popups & Modals */
@@ -15,7 +15,7 @@ import { MatBottomSheetModule } from '@angular/material';
     MatCardModule, MatListModule, MatIconModule, MatDividerModule,
     MatMenuModule, MatButtonModule, MatCheckboxModule, MatProgressSpinnerModule, MatChipsModule,
     MatSnackBarModule, MatDialogModule, MatTooltipModule, MatInputModule, MatFormFieldModule, MatOptionModule,
-    MatAutocompleteModule, MatTableModule, MatPaginatorModule, MatToolbarModule,
+    MatAutocompleteModule, MatTableModule, MatPaginatorModule, MatToolbarModule, MatSelectModule,
 
     /* Popups & Modals */
     MatBottomSheetModule,
@@ -24,7 +24,7 @@ import { MatBottomSheetModule } from '@angular/material';
     MatCardModule, MatListModule, MatIconModule, MatDividerModule,
     MatMenuModule, MatButtonModule, MatCheckboxModule, MatProgressSpinnerModule, MatChipsModule,
     MatSnackBarModule, MatDialogModule, MatTooltipModule, MatInputModule, MatFormFieldModule, MatOptionModule,
-    MatAutocompleteModule, MatTableModule, MatPaginatorModule, MatToolbarModule,
+    MatAutocompleteModule, MatTableModule, MatPaginatorModule, MatToolbarModule, MatSelectModule,
 
     /* Popups & Modals */
     MatBottomSheetModule

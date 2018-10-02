@@ -65,14 +65,18 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// Comment delete
         /// </summary>
         /// <param name="groupId">Primary key</param>
-        /// <param name="item">Object</param>
+        /// <param name="boardId">Primary key</param>
+        /// <param name="commentId">Primary key</param>
+        /// <param name="commentatorId">Primary key</param>
         /// <returns>200()</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Comment delete")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
-        [HttpDelete, Route("{groupId}/comment")]
-        public async Task<IHttpActionResult> Delete([FromUri] string groupId, GroupComment item)
+        [HttpDelete, Route("{groupId}/comment/{boardId}/{commentId}/{commentatorId}")]
+        public async Task<IHttpActionResult> Delete([FromUri] string groupId, [FromUri] string boardId, 
+            [FromUri] string commentId, [FromUri] string commentatorId )
         {
+            var item = new GroupComment { Id = commentId, GroupBoardId = boardId, CommentatorId = commentatorId };
             await _groupCommentService.Delete(item, groupId);
 
             return Ok();

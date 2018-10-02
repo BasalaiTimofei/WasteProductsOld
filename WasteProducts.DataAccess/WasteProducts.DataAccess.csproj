@@ -126,6 +126,7 @@
     <Compile Include="ModelConfigurations\Groups\GroupProductConfiguration.cs" />
     <Compile Include="ModelConfigurations\Groups\GroupUserConfiguration.cs" />
     <Compile Include="ModelConfigurations\Notifications\NotificationConfiguration.cs" />
+    <Compile Include="ModelConfigurations\Users\NewEmailConfirmatorConfiguration.cs" />
     <Compile Include="ModelConfigurations\Users\UserProductDescriptionConfiguration.cs" />
     <Compile Include="Contexts\Security\Configurations\RoleConfiguration.cs" />
     <Compile Include="Contexts\Security\Configurations\UserClaimConfiguration.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Contexts\Security\Configurations\UserLoginConfiguration.cs" />
     <Compile Include="Contexts\Security\Configurations\UserRoleConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\Donations\DonationRepository.cs" />
     <Compile Include="Repositories\Barcods\BarcodeRepository.cs" />
     <Compile Include="Repositories\Diagnostic\DiagnosticRepository.cs" />
     <Compile Include="Repositories\Products\CategoryRepository.cs" />

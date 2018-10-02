@@ -83,6 +83,6 @@ private getOverlayConfig(config: FilePreviewDialogConfig): OverlayConfig {
   });
 
   return overlayConfig;
-  }
+}
 }
 

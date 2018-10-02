@@ -64,6 +64,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Comparers\Donations\AddressDBComparer.cs" />
+    <Compile Include="Comparers\Donations\DonorDBComparer.cs" />
     <Compile Include="Context\IDatabase.cs" />
     <Compile Include="Models\Donations\AddressDB.cs" />
     <Compile Include="Models\Donations\DonationDB.cs" />
@@ -87,6 +89,7 @@
     <Compile Include="Models\Security\Models\UserDb.cs" />
     <Compile Include="Models\Security\Models\UserLoginDb.cs" />
     <Compile Include="Models\Security\Models\UserRoleDb.cs" />
+    <Compile Include="Models\Users\NewEmailConfirmator.cs" />
     <Compile Include="Models\Users\UserDAL.cs" />
     <Compile Include="Models\Users\UserLoginDB.cs" />
     <Compile Include="Models\Users\UserDB.cs" />

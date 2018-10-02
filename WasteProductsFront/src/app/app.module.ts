@@ -28,6 +28,8 @@ import { UpdateProductComponent } from './components/products/update-product/upd
 import { HeaderComponent } from './components/common/header/header.component';
 import { ImagePreviewComponent } from './components/image-preview/image-preview.component';
 import { ImageOverlayWrapperComponent } from './components/image-preview/image-overlay-wrapper/image-overlay-wrapper.component';
+import { FormProductOverlayComponent } from './components/form-product-overlay/form-product-overlay.component';
+import { FormOverlayWrapperComponent } from './components/form-product-overlay/form-overlay-wrapper/form-overlay-wrapper.component';
 import { GroupCreateComponent } from './components/groups/group/group-create/group-create.component';
 import { GroupUpdateComponent } from './components/groups/group/group-update/group-update.component';
 import { GroupDeleteComponent } from './components/groups/group/group-delete/group-delete.component';
@@ -48,9 +50,13 @@ import { GroupsOfUserComponent } from './components/groups/groups-of-user/groups
 
 /* Services */
 import { ImagePreviewService } from './services/image-preview/image-preview.service';
+import { FormPreviewService } from './services/form-preview/form-preview.service';
 
 /* Custom Modules */
 import { AccountModule } from './modules/account/account.module';
+import { UserdataComponent } from './components/user/settings/userdata/userdata.component';
+import { UserformfieldComponent } from './components/user/settings/userformfield/userformfield.component';
+import { ChangePasswordComponent } from './components/user/settings/change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -91,6 +97,11 @@ import { AccountModule } from './modules/account/account.module';
 
     DonateComponent,
     GroupsOfUserComponent,
+    UserdataComponent,
+    UserformfieldComponent,
+    ChangePasswordComponent,
+    FormProductOverlayComponent,
+    FormOverlayWrapperComponent,
   ],
   imports: [
     BrowserModule,
@@ -106,8 +117,10 @@ import { AccountModule } from './modules/account/account.module';
     /* Custom modules */
     AccountModule
   ],
-  providers: [ImagePreviewService],
-  entryComponents: [ImagePreviewComponent],
+  providers: [ImagePreviewService,
+              FormPreviewService],
+  entryComponents: [ImagePreviewComponent,
+                    FormProductOverlayComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

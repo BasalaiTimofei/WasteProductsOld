@@ -62,14 +62,18 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <summary>
         /// Board delete
         /// </summary>
-        /// <param name="item">Object</param>
+        /// <param name="groupId">Primary key</param>
+        /// <param name="boardId">Primary key</param>
+        /// <param name="creatorId">Primary key</param>
         /// <returns>200()</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Board delete")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
-        [HttpDelete, Route("{groupId}/board")]
-        public async Task<IHttpActionResult> Delete(GroupBoard item)
+        [HttpDelete, Route("{groupId}/board/{boardId}/{creatorId}")]
+        public async Task<IHttpActionResult> Delete([FromUri]string groupId, [FromUri]string boardId, 
+            [FromUri]string creatorId)
         {
+            var item = new GroupBoard { Id = boardId, GroupId = groupId, CreatorId = creatorId };
             await _groupBoardService.Delete(item);
 
             return Ok();

@@ -31,8 +31,20 @@
 
     <!-- IsHidden Column -->
     <ng-container matColumnDef="IsHidden">
-      <th mat-header-cell *matHeaderCellDef>Управление</th>
-      <td mat-cell *matCellDef="let row"><button mat-flat-button color="primary" focusable="false" (click)="this.productService.deleteUserProduct(row.Product.Id)">Удалить</button></td>
+      <th mat-header-cell *matHeaderCellDef>
+        <button mat-icon-button color="primary" focusable="false" (click)=addProduct()> <!--Логика добавления продукта-->
+          <i class="material-icons">add</i>
+        </button>
+      </th>
+      <td mat-cell *matCellDef="let row">
+          <div class="btn-group">
+        <button mat-icon-button color="primary" focusable="false" (click)="this.productService.updateUserProduct(row.Product.Composition, row.Product.AvgRating)">
+        <i class="material-icons">edit</i></button>
+        <button mat-icon-button color="primary" focusable="false" (click)="this.productService.deleteUserProduct(row.Product.Id)">
+            <i class="material-icons">delete</i>
+          </button>
+          </div>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -80,6 +80,25 @@ namespace WasteProducts.Logic.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to На нашем сайте был сделан запрос на изменение email на этот email. Если вы не делали этого запроса, просим вас проигнорировать это письмо. Иначе, для того, чтобы изменить email, вы должны перейти по ссылке, указаной ниже. Ссылка для изменения email:
+        ///{0}.
+        /// </summary>
+        internal static string NewEmailConfirmationBody {
+            get {
+                return ResourceManager.GetString("NewEmailConfirmationBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Подтверждение нового email на WasteProducts.
+        /// </summary>
+        internal static string NewEmailConfirmationHeader {
+            get {
+                return ResourceManager.GetString("NewEmailConfirmationHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to На нашем сайте был сделан запрос на восстановление пароля аккаунта, привязанного к этому email. Если вы не делали этого запроса, просим вас проигнорировать это письмо. Иначе, для того, чтобы восстановить пароль, вы должны перейти по ссылке, указанной ниже. Ссылка для восстановления пароля:
         ///{0}.
         /// </summary>

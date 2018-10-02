@@ -66,16 +66,19 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <summary>
         /// Product delete
         /// </summary>
-        /// <param name="item">Object</param>
         /// <param name="groupId">Primary key</param>
+        /// <param name="boardId">Primary key</param>
+        /// <param name="productId">Primary key</param>
         /// <param name="userId">Primary key</param>
         /// <returns>200()</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Product delete")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
-        [HttpDelete, Route("{groupId}/product/{userId}")]
-        public async Task<IHttpActionResult> Delete(GroupProduct item, [FromUri] string groupId, [FromUri] string userId)
+        [HttpDelete, Route("{groupId}/product/{boardId}/{productId}/{userId}")]
+        public async Task<IHttpActionResult> Delete([FromUri] string groupId, [FromUri] string boardId, 
+            [FromUri] string productId, [FromUri] string userId)
         {
+            var item = new GroupProduct { Id = productId, GroupBoardId = boardId };
             await _groupProductService.Delete(item, userId, groupId);
 
             return Ok();

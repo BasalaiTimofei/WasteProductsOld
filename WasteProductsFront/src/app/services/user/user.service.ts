@@ -10,28 +10,53 @@ import { AuthenticationService } from '../../modules/account/services/authentica
   providedIn: 'root'
 })
 export class UserService extends BaseHttpService  {
-
-  private getFriendsUrl = `${environment.apiHostUrl}/api/user/0/friends`;
-
   constructor(private httpClient: HttpClient, private authServise: AuthenticationService, loggingService: LoggingService) {
     super(httpClient, loggingService);
    }
 
+   private apiUrlPlusUserId = `${environment.apiHostUrl}/api/user/${this.authServise.getUserId()}`;
+
   addFriend(friendId: string) {
-    const claims = this.authServise.getClaims();
-    const url = `${environment.apiHostUrl}/api/user/${claims.sub}/friends/${friendId}`;
+    const url = `${this.apiUrlPlusUserId}/friends/${friendId}`;
     this.httpClient.put(url, null);
   }
 
   getFriends() {
-    const claims = this.authServise.getClaims();
-    const url = `${environment.apiHostUrl}/api/user/${claims.sub}/friends`;
+    const url = `${this.apiUrlPlusUserId}/friends`;
     return this.httpClient.get<User[]>(url);
   }
 
   deleteFriend(friendId: string) {
-    const claims = this.authServise.getClaims();
-    const url = `${environment.apiHostUrl}/api/user/${claims.sub}/friends/${friendId}`;
+    const url = `${this.apiUrlPlusUserId}/friends/${friendId}`;
     this.httpClient.delete(url);
+  }
+
+  getUserSettings() {
+    return this.httpClient.get<User>(this.apiUrlPlusUserId);
+  }
+
+  updateUserName(userName: string) {
+    const url = `${this.apiUrlPlusUserId}/updateusername`;
+    const bodyObj = {
+      UserName: userName
+    };
+    return this.httpClient.put(url, bodyObj);
+  }
+
+  updateEmail(email: string)  {
+    const url = `${this.apiUrlPlusUserId}/updateemail`;
+    const bodyObj = {
+      EmailOfTheUser: email,
+    };
+    return this.httpClient.put(url, bodyObj);
+  }
+
+  updatePassword(oldPassword: string, newPassword: string) {
+    const url = `${this.apiUrlPlusUserId}/changepassword`;
+    const bodyObj = {
+      OldPassword: oldPassword,
+      NewPassword: newPassword
+    };
+    return this.httpClient.put(url, bodyObj);
   }
 }

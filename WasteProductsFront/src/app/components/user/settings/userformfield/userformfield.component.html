@@ -1,0 +1,6 @@
+<div class="example-container">
+    <mat-form-field>
+      <input matInput placeholder="Введите имя" [formControl]="userName" required value="{{user.UserName}}">
+      <mat-error *ngIf="userName.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
+  </div>
