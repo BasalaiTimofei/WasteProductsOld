@@ -1,16 +1,14 @@
-﻿using WasteProducts.Logic.Common.Models.Donations;
-
-namespace WasteProducts.Logic.Common.Services.Donations
+﻿namespace WasteProducts.Logic.Common.Services.Donations
 {
     /// <summary>
-    /// This interface provides the log method for donations.
+    /// Provides the verification and log method for PayPal notifications.
     /// </summary>
     public interface IDonationService
     {
         /// <summary>
-        /// Log new donation.
+        /// Verify and log the request.
         /// </summary>
-        /// <param name="donation">New donation to log.</param>
-        void Log(Donation donation);
+        /// <param name="notificationRequestString">String of notification request.</param>
+        void VerifyAndLog(string notificationRequestString);
     }
 }

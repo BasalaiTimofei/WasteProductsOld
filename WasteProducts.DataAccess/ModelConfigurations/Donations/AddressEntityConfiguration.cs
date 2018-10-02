@@ -10,7 +10,7 @@ namespace WasteProducts.DataAccess.ModelConfigurations.Donations
         {
             this.ToTable("Address");
 
-            this.HasKey<string>(a => a.Id);
+            this.HasKey(a => a.Id);
 
             this.Property(a => a.Id)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
