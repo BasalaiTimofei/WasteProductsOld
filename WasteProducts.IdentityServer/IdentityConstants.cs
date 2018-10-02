@@ -11,7 +11,7 @@ namespace WasteProducts.IdentityServer
         public static string WasteProducts_Api_Secret = "F0E56438-BCDE-401E-BDE5-303BA812186F";
 
         public static string WasteProducts_Front_ClientID = "wasteproducts.front.angular";
-        public static string WasteProducts_Front_ClientUrl = "http://localhost:4200";
+        public static string WasteProducts_Front_ClientUrl = "http://waste-products.belpyro.net/";
         public static string WasteProducts_Front_ClientName = "Waste Products Angular Client";
         
     }
