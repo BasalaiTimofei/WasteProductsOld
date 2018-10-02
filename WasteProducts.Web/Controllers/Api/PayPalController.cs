@@ -1,8 +1,11 @@
-﻿using Swagger.Net.Annotations;
+using Ninject.Extensions.Logging;
+using Swagger.Net.Annotations;
 using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Results;
-using Ninject.Extensions.Logging;
 using WasteProducts.Logic.Common.Services.Donations;
 
 namespace WasteProducts.Web.Controllers.Api
@@ -26,14 +29,35 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public PayPalController(ILogger logger) : base(logger)
+        {
+        }
+
+        /// <summary>
         /// Receives Instant Payment Notifications from PayPal.
         /// </summary>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Instant Payment Notification from PayPal was received.")]
         [HttpPost, Route("donation/log")]
-        public OkResult Receive([FromUri]string query)
+        public OkResult Receive()
         {
+            var context = new HttpContextWrapper(HttpContext.Current);
+            HttpRequestBase payPalRequest = context.Request;
+            Task.Run(() => VerifyAndLog(payPalRequest));
             return Ok();
+        }
+
+        /// <summary>
+        /// Verify and log the notification.
+        /// </summary>
+        /// <param name="payPalRequest">PayPal request.</param>
+        private void VerifyAndLog(HttpRequestBase payPalRequest)
+        {
+            byte[] param = payPalRequest.BinaryRead(payPalRequest.ContentLength);
+            string payPalRequestString = Encoding.ASCII.GetString(param);
+            _donationService.VerifyAndLog(payPalRequestString);
         }
     }
 }
