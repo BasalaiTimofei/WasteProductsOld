@@ -61,7 +61,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
                 Created = DateTime.UtcNow
             };
             await _manager.CreateAsync(user, password).ConfigureAwait(false);
-            if (await _manager.FindByIdAsync(id).ConfigureAwait(false) != null)
+            if (await _manager.FindByIdAsync(id).ConfigureAwait(false) is null)
             {
                 _manager.UserTokenProvider = new EmailTokenProvider<UserDB>();
                 var token = await _manager.GenerateEmailConfirmationTokenAsync(id).ConfigureAwait(false);
