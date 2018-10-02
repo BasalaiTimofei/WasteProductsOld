@@ -288,7 +288,7 @@ namespace WasteProducts.Web.Controllers.Api
         {
             await _service.ConfirmEmailChangingAsync(id, token);
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Ok("Email is successfully changed.");
         }
 
         /// <summary>
@@ -311,24 +311,6 @@ namespace WasteProducts.Web.Controllers.Api
             validator.ValidateAndThrow(model);
 
             await _service.ChangePasswordAsync(id, model.OldPassword, model.NewPassword);
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        /// <summary>
-        /// Requests email change for the specific user.
-        /// </summary>
-        /// <param name="userId">ID of the user.</param>
-        /// <param name="email">New user's email.</param>
-        /// <returns></returns>
-        [HttpPut, Route("{userId}/changeemailrequest")]
-        [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.NoContent, "Request is sent")]
-        [SwaggerResponse(HttpStatusCode.BadRequest, "Please follow the validation rules.")]
-        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
-        public async Task<IHttpActionResult> ChangeEmailRequest([FromUri] string userId, [FromBody] Email email)
-        {
-            await _service.GenerateEmailChangingTokenAsync(userId, email.EmailOfTheUser);
 
             return StatusCode(HttpStatusCode.NoContent);
         }
