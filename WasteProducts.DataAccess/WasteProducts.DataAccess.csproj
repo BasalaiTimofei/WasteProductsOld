@@ -134,6 +134,7 @@
     <Compile Include="Contexts\Security\Configurations\UserLoginConfiguration.cs" />
     <Compile Include="Contexts\Security\Configurations\UserRoleConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\Donations\DonationRepository.cs" />
     <Compile Include="Repositories\Barcods\BarcodeRepository.cs" />
     <Compile Include="Repositories\Diagnostic\DiagnosticRepository.cs" />
     <Compile Include="Repositories\Products\CategoryRepository.cs" />

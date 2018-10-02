@@ -1,13 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Http;
+using System.Web.Http.Results;
 using Moq;
+using Newtonsoft.Json.Linq;
 using Ninject.Extensions.Logging;
 using NUnit.Framework;
 using WasteProducts.DataAccess.Repositories;
 using WasteProducts.Logic.Services;
 using WasteProducts.Web.Controllers.Api;
 using WasteProducts.DataAccess.Common.Models.Products;
+using WasteProducts.Logic.Common.Models.Products;
 
 namespace WasteProducts.Web.Tests.WebApiTests
 {
@@ -40,14 +44,8 @@ namespace WasteProducts.Web.Tests.WebApiTests
 
             service.AddToSearchIndex<ProductDB>(products);
 
-            var result = await sut.GetProductsDefaultFields("test");
-            Assert.AreEqual(expected: 5, actual: result.ToArray().Length);
-
-            result = await sut.GetProductsDefaultFields("unique");
-            Assert.AreEqual(expected: 1, actual: result.ToArray().Length);
-
-            result = await sut.GetProductsDefaultFields("lorem");
-            Assert.AreEqual(expected: 0, actual: result.ToArray().Length);
+            var result = await sut.GetProductsDefaultFields("test") as OkNegotiatedContentResult<IEnumerable<Product>>;
+            Assert.AreEqual(expected: 5, actual: result.Content.Count());
 
         }
     }

@@ -7,7 +7,8 @@ import { UserQuery } from '../../models/top-query';
 import { Router } from '@angular/router';
 
 import {FormControl} from '@angular/forms';
-
+// TODO: В результаты поиска выводить кнопку "Добавить в мои продукты" для авторизованных. При нажатии появляется форма с двумя полями
+// коммент и рейтинг (int). Далее Добавить и /api/user/{userId}/products/{productId}. UserID вытягиваем из product.service getUserId()
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',

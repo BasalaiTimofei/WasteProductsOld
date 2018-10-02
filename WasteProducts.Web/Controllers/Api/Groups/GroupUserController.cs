@@ -75,7 +75,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         {
             await _groupUserService.GiveRightToCreateBoards(item, adminId);
 
-            return Ok();
+            return Ok(item);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         {
             await _groupUserService.TakeAwayRightToCreateBoards(item, adminId);
 
-            return Ok();
+            return Ok(item);
         }
     }
 }

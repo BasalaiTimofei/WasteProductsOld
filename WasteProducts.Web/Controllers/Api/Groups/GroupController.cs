@@ -59,7 +59,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         {
             var groupId = await _groupService.Create(item);
 
-            return Ok(Created($"{groupId}", item));
+            return Created($"{groupId}", item);
         }
 
         /// <summary>
@@ -81,14 +81,16 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <summary>
         /// Group delete
         /// </summary>
-        /// <param name="item">Object</param>
+        /// <param name="groupId">Primary key</param>
+        /// <param name="adminId">Primary key</param>
         /// <returns>302(url)</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.Redirect, "Group delete")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
-        [HttpDelete, Route("{groupId}")]
-        public async Task<IHttpActionResult> Delete(Group item)
+        [HttpDelete, Route("{groupId}/{adminId}")]
+        public async Task<IHttpActionResult> Delete([FromUri]string groupId, [FromUri]string adminId)
         {
+            var item = new Group { Id = groupId, AdminId = adminId };
             await _groupService.Delete(item);
 
             return Redirect($"");

@@ -1,0 +1,29 @@
+<app-form-overlay-wrapper>
+  <mat-icon>description</mat-icon>
+    {{ form.name }}
+</app-form-overlay-wrapper>
+
+<div class="overlay-content"
+  [@slideContent]="animationState"
+  (@slideContent.start)="onAnimationStart($event)">
+
+  <form class="product-form">
+    <mat-form-field>
+      <mat-label>Мой рейнтинг</mat-label>
+      <mat-select #rate value="0">
+        <mat-option value="0">0</mat-option>
+        <mat-option value="1">1</mat-option>
+        <mat-option value="2">2</mat-option>
+        <mat-option value="3">3</mat-option>
+        <mat-option value="4">4</mat-option>
+        <mat-option value="5">5</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <textarea #comment matInput placeholder="Мой комментарий" value=""></textarea>
+    </mat-form-field>
+    <button type="submit" (click)="addToMyProducts(comment.value, rate.value)" mat-button>Добавить</button>
+    <button mat-button (click)="closeForm()">Отмена</button>
+  </form>
+
+</div>

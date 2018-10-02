@@ -11,7 +11,7 @@ namespace WasteProducts.DataAccess.Common.Models.Donations
         /// <summary>
         /// Unique address ID.
         /// </summary>
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// City of donor's address.
