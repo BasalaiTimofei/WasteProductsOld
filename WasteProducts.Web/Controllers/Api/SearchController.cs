@@ -98,5 +98,18 @@ namespace WasteProducts.Web.Controllers.Api
         {
             return await _searchService.GetSimilarQueriesAsync(query);
         }
+
+        /// <summary>
+        /// Clears search index.
+        /// </summary>
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Clear search index.")]
+        [HttpGet, Route("clear")]
+        public IHttpActionResult ClearIndex()
+        {
+            _searchService.ClearSearchIndex();
+            return Ok();
+        }
+
     }
 }
