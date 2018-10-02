@@ -54,6 +54,9 @@ import { FormPreviewService } from './services/form-preview/form-preview.service
 
 /* Custom Modules */
 import { AccountModule } from './modules/account/account.module';
+import { UserdataComponent } from './components/user/settings/userdata/userdata.component';
+import { UserformfieldComponent } from './components/user/settings/userformfield/userformfield.component';
+import { ChangePasswordComponent } from './components/user/settings/change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +97,9 @@ import { AccountModule } from './modules/account/account.module';
 
     DonateComponent,
     GroupsOfUserComponent,
+    UserdataComponent,
+    UserformfieldComponent,
+    ChangePasswordComponent,
     FormProductOverlayComponent,
     FormOverlayWrapperComponent,
   ],

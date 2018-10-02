@@ -9,7 +9,6 @@ using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Models.Notifications;
 using WasteProducts.DataAccess.Common.Models.Products;
-using WasteProducts.DataAccess.Common.Models.Security.Models;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Contexts.Config;
@@ -53,6 +52,7 @@ namespace WasteProducts.DataAccess.Contexts
                 .WithOptionalDependent(p => p.Product);
 
             modelBuilder.Configurations.Add(new UserProductDescriptionConfiguration());
+            modelBuilder.Configurations.Add(new NewEmailConfirmatorConfiguration());
 
             modelBuilder.Configurations.Add(new GroupBoardConfiguration());
             modelBuilder.Configurations.Add(new GroupConfiguration());
@@ -66,6 +66,11 @@ namespace WasteProducts.DataAccess.Contexts
 
             modelBuilder.Configurations.Add(new NotificationConfiguration());
         }
+
+        /// <summary>
+        /// Entity for changing email.
+        /// </summary>
+        public IDbSet<NewEmailConfirmator> NewEmailConfirmators { get; set; }
 
         /// <summary>
         /// Entity represents many-to-many relationship between User and Product and includes ratings and descriptions of products by specific users.
