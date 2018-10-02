@@ -59,37 +59,21 @@ namespace WasteProducts.IdentityServer.Config
                     RefreshTokenExpiration = TokenExpiration.Sliding
                 },
 
-                ///////////////////////////////////////////////////////////////
-                //// MVC No Library Client
-                ///////////////////////////////////////////////////////////////
-                //new Client
-                //{
-                //    ClientName = "OpenID Connect without Client Library Sample",
-                //    ClientId = IdentityConstants.WasteProducts_Api_ClientID,
-                //    Flow = Flows.Implicit,
-                //    ClientSecrets = new List<Secret>()
-                //    {
-                //        new Secret(IdentityConstants.WasteProducts_Api_Secret.Sha256())
-                //    },
 
-                //    AllowedScopes = new List<string>
-                //    {
-                //        Constants.StandardScopes.OpenId,
-                //        Constants.StandardScopes.Profile,
-                //        Constants.StandardScopes.Email,
-                //        Constants.StandardScopes.Roles
-                //    },
-
-                //    ClientUri = "https://identityserver.io",
-
-                //    RequireConsent = true,
-                //    AllowRememberConsent = true,
-
-                //    RedirectUris = new List<string>
-                //    {
-                //        "http://localhost:11716/account/signInCallback",
-                //    },
-                //},
+                new Client
+                {
+                    ClientName = IdentityConstants.WasteProducts_Api_Name,
+                    ClientId = IdentityConstants.WasteProducts_Api_ClientID,
+                    Flow = Flows.ResourceOwner,
+                    ClientSecrets = new List<Secret>
+                    {
+                        new Secret(IdentityConstants.WasteProducts_Api_Secret.Sha256())
+                    },
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityConstants.WasteProducts_Api_Scope
+                    }
+                },
             };
         }
     }
