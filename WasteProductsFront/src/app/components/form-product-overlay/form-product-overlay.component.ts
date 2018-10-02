@@ -45,7 +45,7 @@ export class FormProductOverlayComponent {
     private productService: ProductService,
     public snackBar: MatSnackBar) { }
 
-  addToMyProducts(comment: string, rate: number) {
+  addToMyProducts(comment: string, rate: number) { // TODO. Refactoring
     this.productService.addProductDescription(rate, comment, this.form.id);
     this.closeForm();
     // Получить фидбек и показать ответ

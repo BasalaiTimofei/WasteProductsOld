@@ -8,10 +8,12 @@
           matTooltip="Открыть в исходном размере" > <!--TODO Картинку продукта вместо favicon-->
       <h4 mat-line>{{result.Id}}</h4>
       <p mat-line> {{result.Name}} </p>
-      <div *ngIf="!result.IsAdded; else added">
-        <button  matSuffix mat-button mat-icon-button (click)="addToMyProducts(result.Id)">
-          <mat-icon matTooltip="Добавить продукт в Мой список">star_border</mat-icon>
-        </button>
+      <div *ngIf="isAuth$">
+        <div *ngIf="!result.IsAdded; else added">
+          <button  matSuffix mat-button mat-icon-button (click)="addToMyProducts(result.Id)">
+            <mat-icon matTooltip="Добавить продукт в Мой список">star_border</mat-icon>
+          </button>
+        </div>
       </div>
       <button matSuffix mat-button mat-icon-button>
         <mat-icon matTooltip="Подробнее">assignment</mat-icon> <!--TODO переход на страницу "Детали продукта"-->

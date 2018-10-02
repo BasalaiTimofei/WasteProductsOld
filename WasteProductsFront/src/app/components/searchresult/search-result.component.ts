@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { PageEvent } from '@angular/material';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
 
@@ -21,6 +21,8 @@ import { ImagePreviewOverlay } from '../image-preview/image-preview-overlay';
 })
 export class SearchresultComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
+  private authentificationSubject = new BehaviorSubject<boolean>(false);
+  isAuth$ = this.authentificationSubject.asObservable();
 
   query: string;
   searchResult: SearchProduct[];
