@@ -1,15 +1,13 @@
-﻿using System.Runtime.Remoting.Contexts;
-using IdentityServer3.AspNetIdentity;
+﻿using IdentityServer3.AspNetIdentity;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WasteProducts.DataAccess.Common.Models.Users;
 using WasteProducts.DataAccess.Contexts;
 
-namespace WasteProducts.IdentityServer
+namespace WasteProducts.IdentityServer.Services
 {
     public class IdentityUserService : AspNetIdentityUserService<UserDB, string>
     {
-
         public IdentityUserService(UserManager userManager) : base(userManager)
         {
         }
@@ -20,13 +18,7 @@ namespace WasteProducts.IdentityServer
     {
         public UserStore(WasteContext context) : base(context) { }
     }
-
-    public class RoleStore : RoleStore<IdentityRole>
-    {
-        public RoleStore(WasteContext context) : base(context) { }
-    }
-
-
+    
     public class UserManager : UserManager<UserDB>
     {
         public UserManager(UserStore userStore)
@@ -35,9 +27,14 @@ namespace WasteProducts.IdentityServer
         }
     }
 
-    public class RoleManager : RoleManager<IdentityRole>
-    {
-        public RoleManager(RoleStore roleStore) : base(roleStore) { }
-    }
+    //public class RoleStore : RoleStore<IdentityRole>
+    //{
+    //    public RoleStore(WasteContext context) : base(context) { }
+    //}
+
+    //public class RoleManager : RoleManager<IdentityRole>
+    //{
+    //    public RoleManager(RoleStore roleStore) : base(roleStore) { }
+    //}
 
 }

@@ -5,7 +5,7 @@ namespace WasteProducts.IdentityServer.Certificate
 {
     public static class CertificateLoader
     {
-        public static X509Certificate2 Get()
+        public static X509Certificate2 Load()
         {
             var assembly = typeof(CertificateLoader).Assembly;
             using (var stream = assembly.GetManifestResourceStream("WasteProducts.IdentityServer.Certificate.idsrv3test.pfx"))
