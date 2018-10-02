@@ -193,6 +193,17 @@
             /// Length: 13 characters.
             /// </summary>
             public const string PAYER_ID = "payer_id";
+
+            /// <summary>
+            /// Represents the status of the buyer's address.
+            /// </summary>
+            public static class AddressStatus
+            {
+                /// <summary>
+                /// Customer provided a confirmed address.
+                /// </summary>
+                public const string CONFIRMED = "confirmed";
+            }
         }
 
         /// <summary>
@@ -514,6 +525,29 @@
             /// Authorization and Capture transaction entity.
             /// </summary>
             public const string TRANSACTION_ENTITY = "transaction_entity";
+
+            /// <summary>
+            /// Represents the status of the payment.
+            /// </summary>
+            public static class Status
+            {
+                /// <summary>
+                /// The payment has been completed,
+                /// and the funds have been added successfully to your account balance.
+                /// </summary>
+                public const string COMPLETED = "Completed";
+            }
+
+            /// <summary>
+            /// Represents the status of the payer.
+            /// </summary>
+            public static class PayerStatus
+            {
+                /// <summary>
+                /// Customer has a verified PayPal account.
+                /// </summary>
+                public const string VERIFIED = "verified";
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using WasteProducts.Logic.Common.Services.Donations;
+using WasteProducts.Logic.Constants.Donations;
 
 namespace WasteProducts.Logic.Services.Donations
 {
@@ -34,13 +35,13 @@ namespace WasteProducts.Logic.Services.Donations
         /// </summary>
         /// <param name="payPalRequestString">PayPal request string.</param>
         private HttpWebRequest PrepareVerificationRequest(string payPalRequestString)
-        {
-            const string PAYPAL_URL = "PayPalUrl";
+        {            
             const string VERIFICATION_PREFIX = "cmd=_notify-validate&";
             const string POST = "POST";
             const string CONTENT_TYPE = "application/x-www-form-urlencoded";
 
-            HttpWebRequest verificationRequest = (HttpWebRequest)WebRequest.Create(_appSettings[PAYPAL_URL]);
+            HttpWebRequest verificationRequest =
+                (HttpWebRequest)WebRequest.Create(_appSettings[AppSettings.PAYPAL_URL]);
 
             // Set values for the verification request
             verificationRequest.Method = POST;

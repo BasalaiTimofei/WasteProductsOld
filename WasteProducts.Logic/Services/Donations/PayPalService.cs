@@ -13,7 +13,7 @@ using WasteProducts.Logic.Constants.Donations;
 namespace WasteProducts.Logic.Services.Donations
 {
     /// <inheritdoc />
-    class PayPalService : IDonationService
+    public class PayPalService : IDonationService
     {
         private readonly NameValueCollection _appSettings = ConfigurationManager.AppSettings;
         private readonly IVerificationService _payPalVerificationService;
@@ -53,17 +53,14 @@ namespace WasteProducts.Logic.Services.Donations
         /// <param name="payPalRequestString"></param>
         private void ProcessPayPalRequest(string payPalRequestString)
         {
-            const string COMPLETED = "Completed";
-            const string OUR_PAYPAL_EMAIL = "OurPayPalEmail";
-
             // check that Payment_status=Completed
             // check that Txn_id has not been previously processed
             // check that Receiver_email is your Primary PayPal email
             // check that Payment_amount/Payment_currency are correct
             // process payment
             NameValueCollection payPalArguments = HttpUtility.ParseQueryString(payPalRequestString);
-            if (payPalArguments[IPN.Payment.PAYMENT_STATUS] != COMPLETED ||
-                _appSettings[OUR_PAYPAL_EMAIL] != payPalArguments[IPN.Transaction.RECEIVER_EMAIL] ||
+            if (payPalArguments[IPN.Payment.PAYMENT_STATUS] != IPN.Payment.Status.COMPLETED ||
+                _appSettings[AppSettings.OUR_PAYPAL_EMAIL] != payPalArguments[IPN.Transaction.RECEIVER_EMAIL] ||
                     _donationRepository.Contains(payPalArguments[IPN.Transaction.TXN_ID]))
                 return;
 
@@ -95,14 +92,12 @@ namespace WasteProducts.Logic.Services.Donations
         /// <param name="payPalArguments">PayPal arguments.</param>
         private Donor FillDonor(NameValueCollection payPalArguments)
         {
-            const string VERIFIED = "verified";
-
             return new Donor
             {
                 Address = FillAddress(payPalArguments),
                 Id = payPalArguments[IPN.Buyer.PAYER_ID],
                 Email = payPalArguments[IPN.Buyer.PAYER_EMAIL],
-                IsVerified = payPalArguments[IPN.Payment.PAYER_STATUS] == VERIFIED,
+                IsVerified = payPalArguments[IPN.Payment.PAYER_STATUS] == IPN.Payment.PayerStatus.VERIFIED,
                 FirstName = payPalArguments[IPN.Buyer.FIRST_NAME],
                 LastName = payPalArguments[IPN.Buyer.LAST_NAME]
             };
@@ -114,14 +109,12 @@ namespace WasteProducts.Logic.Services.Donations
         /// <param name="payPalArguments">PayPal arguments.</param>
         private Address FillAddress(NameValueCollection payPalArguments)
         {
-            const string CONFIRMED = "confirmed";
-
             return new Address
             {
                 City = payPalArguments[IPN.Buyer.ADDRESS_CITY],
                 Country = payPalArguments[IPN.Buyer.ADDRESS_COUNTRY],
                 State = payPalArguments[IPN.Buyer.ADDRESS_STATE],
-                IsConfirmed = payPalArguments[IPN.Buyer.ADDRESS_STATUS] == CONFIRMED,
+                IsConfirmed = payPalArguments[IPN.Buyer.ADDRESS_STATUS] == IPN.Buyer.AddressStatus.CONFIRMED,
                 Name = payPalArguments[IPN.Buyer.ADDRESS_NAME],
                 Street = payPalArguments[IPN.Buyer.ADDRESS_STREET],
                 Zip = payPalArguments[IPN.Buyer.ADDRESS_ZIP]
@@ -133,11 +126,10 @@ namespace WasteProducts.Logic.Services.Donations
         /// </summary>
         /// <param name="payPalTimeAndDate">PayPal time and date.</param>
         private DateTime ConvertPayPalDateTime(string payPalTimeAndDate)
-        {
-            const string PAYPAL_TIME_FORMAT = "PayPalTimeFormat";
+        {            
             const string PAYPAL_SANDBOX_TIME_FORMAT = "ddd MMM dd yyyy HH:mm:ss \"GMT\"zz\"00\"";
 
-            string[] dateFormats = { _appSettings[PAYPAL_TIME_FORMAT], PAYPAL_SANDBOX_TIME_FORMAT };
+            string[] dateFormats = { _appSettings[AppSettings.PAYPAL_TIME_FORMAT], PAYPAL_SANDBOX_TIME_FORMAT };
             DateTime.TryParseExact(
                 payPalTimeAndDate,
                 dateFormats, CultureInfo.InvariantCulture,
