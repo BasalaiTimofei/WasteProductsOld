@@ -536,6 +536,11 @@
                 /// and the funds have been added successfully to your account balance.
                 /// </summary>
                 public const string COMPLETED = "Completed";
+
+                /// <summary>
+                /// A payment has been accepted.
+                /// </summary>
+                public const string PROCESSED = "Processed";
             }
 
             /// <summary>
