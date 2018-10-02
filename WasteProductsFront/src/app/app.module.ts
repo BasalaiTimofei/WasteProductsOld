@@ -53,6 +53,7 @@ import { ImagePreviewService } from './services/image-preview/image-preview.serv
 import { AccountModule } from './modules/account/account.module';
 import { UserdataComponent } from './components/user/settings/userdata/userdata.component';
 import { UserformfieldComponent } from './components/user/settings/userformfield/userformfield.component';
+import { ChangePasswordComponent } from './components/user/settings/change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -95,6 +96,7 @@ import { UserformfieldComponent } from './components/user/settings/userformfield
     GroupsOfUserComponent,
     UserdataComponent,
     UserformfieldComponent,
+    ChangePasswordComponent,
   ],
   imports: [
     BrowserModule,

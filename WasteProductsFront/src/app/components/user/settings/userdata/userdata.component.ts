@@ -21,6 +21,7 @@ export class UserdataComponent implements OnInit {
       err => console.error(err)
       );
   }
+
   updateUserNameAndEmail() {
     this.userService.updateUserName(this.user.UserName).subscribe(
       err => console.error(err)
