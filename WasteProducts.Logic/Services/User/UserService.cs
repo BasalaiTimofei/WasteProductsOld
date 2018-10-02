@@ -85,11 +85,24 @@ namespace WasteProducts.Logic.Services.Users
 
         public async Task GenerateEmailChangingTokenAsync(string userId, string newEmail)
         {
-            var token = await _repo.GenerateEmailChangingTokenAsync(userId, newEmail).ConfigureAwait(false);
-            var fullpath = $@"http://localhost:2189/user/{userId}/confirmemailchanging/{token}";
+            if (!_mailService.IsValidEmail(newEmail))
+            {
+                //throws 400
+                throw new ValidationException("New email is not valid.");
+            }
+            else if (!(await _repo.IsEmailAvailableAsync(newEmail)))
+            {
+                // throws 409 conflict
+                throw new OperationCanceledException("Please provide valid and unique Email.");
+            }
+            else
+            {
+                var token = await _repo.GenerateEmailChangingTokenAsync(userId, newEmail).ConfigureAwait(false);
+                var fullpath = $@"http://localhost:2189/user/{userId}/confirmemailchanging/{token}";
 
-            await _mailService.SendAsync(newEmail, UserResources.NewEmailConfirmationHeader, string.Format(UserResources.NewEmailConfirmationBody, fullpath));
-        }
+                await _mailService.SendAsync(newEmail, UserResources.NewEmailConfirmationHeader, string.Format(UserResources.NewEmailConfirmationBody, fullpath));
+            }
+            }
 
         public Task ChangePasswordAsync(string userId, string oldPassword, string newPassword)
         {

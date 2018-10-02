@@ -399,9 +399,10 @@ namespace WasteProducts.Web.Controllers.Api
             var validator = new EmailValidator();
             validator.ValidateAndThrow(newEmail);
 
-            await _service.UpdateEmailAsync(id, newEmail.EmailOfTheUser);
+            //await _service.UpdateEmailAsync(id, newEmail.EmailOfTheUser);
+            await _service.GenerateEmailChangingTokenAsync(id, newEmail.EmailOfTheUser);
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Ok("Confirmation is sent to your new Email. Please confirm new Email.");
         }
 
         /// <summary>

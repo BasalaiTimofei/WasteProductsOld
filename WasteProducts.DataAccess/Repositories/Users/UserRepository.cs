@@ -103,6 +103,11 @@ namespace WasteProducts.DataAccess.Repositories.Users
                 _context.NewEmailConfirmators.Remove(confirm);
                 await _context.SaveChangesAsync().ConfigureAwait(false);
             }
+            else
+            {
+                throw new UnauthorizedAccessException("Token is not valid.");
+            }
+
         }
 
         public async Task<string> GenerateEmailChangingTokenAsync(string userId, string newEmail)
