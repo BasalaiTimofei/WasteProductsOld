@@ -18,7 +18,7 @@ namespace WasteProducts.Logic.Validators.Groups
             .Length(4, 50);
 
             RuleFor(x => x.Information)
-                .Length(5, 255);
+                .Length(0, 255);
 
             RuleFor(x => x.GroupProductComments)
                 .Null();

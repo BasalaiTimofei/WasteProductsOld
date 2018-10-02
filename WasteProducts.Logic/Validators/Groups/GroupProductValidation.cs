@@ -14,7 +14,7 @@ namespace WasteProducts.Logic.Validators.Groups
             .NotNull();
 
             RuleFor(x => x.Information)
-                .Length(5, 255);
+                .Length(0, 255);
         }
     }
 }
