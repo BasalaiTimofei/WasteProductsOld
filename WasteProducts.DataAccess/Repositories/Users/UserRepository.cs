@@ -60,11 +60,14 @@ namespace WasteProducts.DataAccess.Repositories.Users
                 UserName = userName,
                 Created = DateTime.UtcNow
             };
+
             await _manager.CreateAsync(user, password).ConfigureAwait(false);
-            if (await _manager.FindByIdAsync(id).ConfigureAwait(false) is null)
+
+            if (await _manager.FindByIdAsync(id).ConfigureAwait(false) != null)
             {
                 _manager.UserTokenProvider = new EmailTokenProvider<UserDB>();
                 var token = await _manager.GenerateEmailConfirmationTokenAsync(id).ConfigureAwait(false);
+
                 return (id, token);
             }
             else
