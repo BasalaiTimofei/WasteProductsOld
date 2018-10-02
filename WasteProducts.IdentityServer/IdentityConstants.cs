@@ -4,6 +4,7 @@ namespace WasteProducts.IdentityServer
 {
     public class IdentityConstants
     {
+        public static string WasteProducts_Api_ClientID = "wasteproducts.api";
         public static string WasteProducts_Api_Scope = "wasteproducts-api";
         public static string WasteProducts_Api_Name = "Waste Products Web Api";
         public static string WasteProducts_Api_Description = "Waste Products Web Api description";

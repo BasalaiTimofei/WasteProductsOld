@@ -14,10 +14,18 @@ namespace WasteProducts.IdentityServer.Extensions
                 subApp.UseIdentityServer(new IdentityServerOptions
                 {
                     SiteName = "Waste Products Identity Server",
-                    SigningCertificate = CertificateLoader.Get(),
+                    SigningCertificate = CertificateLoader.Load(),
                     Factory = new IdentityServerServiceFactory().Configure(),
 
                     RequireSsl = true,
+
+                    LoggingOptions = new LoggingOptions
+                    {
+                        EnableHttpLogging = true,
+                        EnableKatanaLogging = true,
+                        EnableWebApiDiagnostics = true,
+                        WebApiDiagnosticsIsVerbose = false
+                    }
                 });
 
             });

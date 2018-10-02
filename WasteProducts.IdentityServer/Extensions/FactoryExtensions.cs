@@ -4,6 +4,7 @@ using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.DataAccess.Contexts;
 using WasteProducts.DataAccess.Repositories;
 using WasteProducts.IdentityServer.Config;
+using WasteProducts.IdentityServer.Services;
 
 namespace WasteProducts.IdentityServer.Extensions
 {
@@ -14,8 +15,8 @@ namespace WasteProducts.IdentityServer.Extensions
             factory.Register(new Registration<ISearchRepository, LuceneSearchRepository>());
 
             factory
-                .UseInMemoryClients(Clients.Get())
-                .UseInMemoryScopes(Scopes.Get());
+                .UseInMemoryClients(Clients.Load())
+                .UseInMemoryScopes(Scopes.Load());
 
             factory.Register(new Registration<WasteContext>());
             factory.Register(new Registration<UserStore>());

@@ -79,7 +79,7 @@
     <Compile Include="Extensions\FactoryExtensions.cs" />
     <Compile Include="Extensions\IdentityServerMiddlewareExtensions.cs" />
     <Compile Include="IdentityConstants.cs" />
-    <Compile Include="IdentityUserService.cs" />
+    <Compile Include="Services\IdentityUserService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -97,5 +97,6 @@
     <EmbeddedResource Include="Certificate\idsrv3test.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

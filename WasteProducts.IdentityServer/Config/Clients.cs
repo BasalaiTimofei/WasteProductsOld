@@ -6,7 +6,7 @@ namespace WasteProducts.IdentityServer.Config
 {
     public static class Clients
     {
-        public static IEnumerable<Client> Get()
+        public static IEnumerable<Client> Load()
         {
             return new List<Client>
             {
@@ -58,6 +58,38 @@ namespace WasteProducts.IdentityServer.Config
                     RefreshTokenUsage = TokenUsage.OneTimeOnly,
                     RefreshTokenExpiration = TokenExpiration.Sliding
                 },
+
+                ///////////////////////////////////////////////////////////////
+                //// MVC No Library Client
+                ///////////////////////////////////////////////////////////////
+                //new Client
+                //{
+                //    ClientName = "OpenID Connect without Client Library Sample",
+                //    ClientId = IdentityConstants.WasteProducts_Api_ClientID,
+                //    Flow = Flows.Implicit,
+                //    ClientSecrets = new List<Secret>()
+                //    {
+                //        new Secret(IdentityConstants.WasteProducts_Api_Secret.Sha256())
+                //    },
+
+                //    AllowedScopes = new List<string>
+                //    {
+                //        Constants.StandardScopes.OpenId,
+                //        Constants.StandardScopes.Profile,
+                //        Constants.StandardScopes.Email,
+                //        Constants.StandardScopes.Roles
+                //    },
+
+                //    ClientUri = "https://identityserver.io",
+
+                //    RequireConsent = true,
+                //    AllowRememberConsent = true,
+
+                //    RedirectUris = new List<string>
+                //    {
+                //        "http://localhost:11716/account/signInCallback",
+                //    },
+                //},
             };
         }
     }

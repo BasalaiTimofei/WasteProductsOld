@@ -117,7 +117,7 @@ export class AuthenticationService extends BaseService {
       issuer: environment.iderntityHostUrl, // Url of the Identity Provider
       clientId: environment.clientId, // The SPA's id. The SPA is registerd with this id at the auth-server
 
-      redirectUri: window.location.origin + '/index.html', // URL of the SPA to redirect the user to after login
+      redirectUri: window.location.origin, // URL of the SPA to redirect the user to after login
       scope: 'openid profile email wasteproducts-api', // set the scope for the permissions the client should request
 
       showDebugInformation: !environment.production,
