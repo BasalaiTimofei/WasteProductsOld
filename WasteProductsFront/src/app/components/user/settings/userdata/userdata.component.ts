@@ -2,11 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../../../../models/users/user';
 import { UserService } from '../../../../services/user/user.service';
 
-@Component({
+@Component ({
   selector: 'app-userdata',
-  template: `
-  <form novalidate>...</form>
-  `,
   templateUrl: './userdata.component.html',
   styleUrls: ['./userdata.component.css']
 })
