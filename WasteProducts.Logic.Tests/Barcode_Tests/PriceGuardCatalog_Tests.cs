@@ -189,9 +189,9 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
             {
                 StatusCode = 200,
                 Page = @"<h1 class=""op-title"">Имя</h1>
-<tr>\n<td class=""vat nw"">\n<span class=""op-param-name"">Производитель</span>\n</td>\n<td class=""pl15 vat"">\n<span>\n\n<span>\n<a class=""op-param-link"" href=""../search?g=food&amp;q=Nesquik&amp;t=vendor"" title=""Найти все предложения с «Nesquik»""><span class=""op-param-value nw"">Марка</span></a>\n</span>\n\n</span>\n</td>\n</tr>
-<tr>\n<td class=""vat nw"">\n<span class=""op-param-name"">Страна-изготовитель</span>\n</td>\n<td class=""pl15 vat"">\n<span>\n\n<span>\n<a class=""op-param-link"" href=""../search?g=1121180086&amp;q=%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D1%8F&amp;t=country"" title=""Найти все предложения с «Россия»""><span class=""op-param-value nw"">Страна</span></a>\n</span>\n\n</span>\n</td>\n</tr><tr>\n<td class=""vat nw"">\n<span class=""op-param-name"">Срок годности</span>\n</td>\n<td class=""pl15 vat"">\n<span class=""op-param-value"">9 мес.</span>\n</td>\n</tr>
-<img class=""op-image"" src=""ссылкаНаКартинку"" "
+                         <tr>\n<td class=""vat nw"">\n<span class=""op-param-name"">Производитель</span>\n</td>\n<td class=""pl15 vat"">\n<span>\n\n<span>\n<a class=""op-param-link"" href=""../search?g=food&amp;q=Nesquik&amp;t=vendor"" title=""Найти все предложения с «Nesquik»""><span class=""op-param-value nw"">Марка</span></a>\n</span>\n\n</span>\n</td>\n</tr>
+                         <tr>\n<td class=""vat nw"">\n<span class=""op-param-name"">Страна-изготовитель</span>\n</td>\n<td class=""pl15 vat"">\n<span>\n\n<span>\n<a class=""op-param-link"" href=""../search?g=1121180086&amp;q=%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D1%8F&amp;t=country"" title=""Найти все предложения с «Россия»""><span class=""op-param-value nw"">Страна</span></a>\n</span>\n\n</span>\n</td>\n</tr><tr>\n<td class=""vat nw"">\n<span class=""op-param-name"">Срок годности</span>\n</td>\n<td class=""pl15 vat"">\n<span class=""op-param-value"">9 мес.</span>\n</td>\n</tr>
+                         <img class=""op-image"" src=""ссылкаНаКартинку"" "
             };
 
             var httpHelper = new Mock<IHttpHelper>();
@@ -210,10 +210,10 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
 
             Assert.IsTrue(result != null);
             Assert.AreEqual(expected: "Имя", actual: result.ProductName);
-            Assert.AreEqual(expected: "Марка", actual: result.Brend);
+            Assert.AreEqual(expected: "Марка", actual: result.Brand);
             Assert.AreEqual(expected: "Страна", actual: result.Country);
             Assert.AreEqual(expected: "", actual: result.Composition);
-            httpHelper.Verify(m => m.DownloadPictureAsync("ссылкаНаКартинку"), () => Times.Exactly(1));
+            Assert.AreEqual(expected: "ссылкаНаКартинку", actual: result.PicturePath);
         }
     }
 }

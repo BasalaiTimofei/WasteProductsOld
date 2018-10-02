@@ -2,6 +2,7 @@
 using System;
 using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Barcods;
+using System.Drawing;
 
 namespace WasteProducts.Logic.Mappings.Barcods
 {

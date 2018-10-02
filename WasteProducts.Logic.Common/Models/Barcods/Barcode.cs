@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using WasteProducts.Logic.Common.Models.Products;
+﻿using WasteProducts.Logic.Common.Models.Products;
 
 namespace WasteProducts.Logic.Common.Models.Barcods
 {
@@ -31,7 +30,7 @@ namespace WasteProducts.Logic.Common.Models.Barcods
         /// <summary>
         /// Product brand.
         /// </summary>
-        public string Brend { get; set; }
+        public string Brand { get; set; }
 
         /// <summary>
         /// Product country.
@@ -44,9 +43,9 @@ namespace WasteProducts.Logic.Common.Models.Barcods
         public double Weight { get; set; }
 
         /// <summary>
-        /// Link to picture.
+        /// Product picture path.
         /// </summary>
-        public Image Picture { get; set; }
+        public string PicturePath { get; set; }
 
         /// <summary>
         /// Specifies the concreat product

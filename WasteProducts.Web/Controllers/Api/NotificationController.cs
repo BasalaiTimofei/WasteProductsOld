@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Ninject.Extensions.Logging;
+using Swagger.Net.Annotations;
+using System;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Ninject.Extensions.Logging;
-using Swagger.Net.Annotations;
 using WasteProducts.Logic.Common.Models.Notifications;
 using WasteProducts.Logic.Common.Services.Notifications;
 
@@ -29,13 +26,35 @@ namespace WasteProducts.Web.Controllers.Api
             _notificationService = notificationService;
         }
 
-        [HttpPost, Route("user/{userId}/notificate")]
-        [SwaggerResponse(HttpStatusCode.NoContent, "Notification was sent.")]
-        public async Task<IHttpActionResult> NotificateUser(string userId, [FromBody] Notification notification)
+        /// <summary>
+        /// Returns all user notifications
+        /// </summary>
+        /// <param name="userId">user id</param>
+        /// <returns></returns>
+        [HttpGet, Route("user/{userId}/notifications/")]
+        [SwaggerResponse(HttpStatusCode.OK, "Notifications was fetched.")]
+        public async Task<IHttpActionResult> NotifyUser(string userId)
         {
-            await _notificationService.NotificateUserAsync(userId, notification).ConfigureAwait(true);
+            var notifications = await _notificationService.GetUserNotificationsAsync(userId).ConfigureAwait(true);
+
+            return Ok(notifications);
+        }
+
+        /// <summary>
+        /// Sends notification message to user
+        /// </summary>
+        /// <param name="userId">user id</param>
+        /// <param name="notificationMessage">notification message</param>
+        /// <returns></returns>
+        [HttpPost, Route("user/{userId}/notify")]
+        [SwaggerResponse(HttpStatusCode.NoContent, "Notification was sent.")]
+        public async Task<IHttpActionResult> NotifyUser(string userId, [FromBody] NotificationMessage notificationMessage)
+        {
+            await _notificationService.NotifyAsync(notificationMessage, userId).ConfigureAwait(true);
 
             return StatusCode(HttpStatusCode.NoContent);
         }
+
+        
     }
 }

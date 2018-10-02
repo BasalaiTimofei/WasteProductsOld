@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-
 /* Services */
 import { BaseService } from 'src/app/services/base/base.service';
 import { LoggingService } from 'src/app/services/logging/logging.service';
 import { OAuthService, JwksValidationHandler, AuthConfig } from 'angular-oauth2-oidc';
-
-// Environment
-import { environment } from '../../../../environments/environment';
+/* Environment */
+import { environment } from 'src/environments/environment';
 
 declare interface Claims {
   /**
@@ -42,30 +40,39 @@ declare interface Claims {
 export class AuthenticationService extends BaseService {
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  public constructor(private oauthService: OAuthService, loggingService: LoggingService) {
+  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+
+  constructor(private oauthService: OAuthService, loggingService: LoggingService) {
     super(loggingService);
     this.configureOauth();
   }
 
-  public logIn(): void {
+  logIn(): void {
     this.oauthService.initImplicitFlow();
   }
 
-  public logOut(): void {
+  logOut(): void {
     this.oauthService.logOut();
   }
 
-  public getClaims(): Claims {
-    return <Claims>this.oauthService.getIdentityClaims();
-  }
-
-  public getProfile(): object {
+  getProfile(): object {
     return this.oauthService.loadUserProfile();
   }
 
-  public isInScope(scope: string): boolean {
+  getAccessToken(): string {
+    return this.oauthService.getAccessToken();
+  }
+
+  getClaims(): Claims {
+    return <Claims>this.oauthService.getIdentityClaims();
+  }
+
+  getUserId(): string {
+    return this.getClaims().sub;
+  }
+
+  isInScope(scope: string): boolean {
     const scopesString = (<Array<string>>this.oauthService.getGrantedScopes())[0];
     const scopes = scopesString.split(' ');
     return scopes.includes(scope);
@@ -75,16 +82,20 @@ export class AuthenticationService extends BaseService {
     // set storage for tokens
     this.oauthService.setStorage(sessionStorage);
     // set AuthConfig
-    this.oauthService.configure(this.getAuthConfig());
+    this.oauthService.configure(this.createAuthConfig());
     // set automatic refresh
-    this.oauthService.setupAutomaticSilentRefresh();
+    // this.oauthService.setupAutomaticSilentRefresh();
     // set token validation handler
     this.oauthService.tokenValidationHandler = new JwksValidationHandler();
 
     // subscribe to login/logout events
-    this.oauthService.events.subscribe(event =>
-      this.isAuthenticatedSubject.next(this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken())
-    );
+    this.oauthService.events.subscribe(event => {
+      const oldValue = this.isAuthenticatedSubject.value;
+      const newValue = this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken();
+      if (oldValue !== newValue) {
+        this.isAuthenticatedSubject.next(newValue);
+      }
+    });
 
     // trying to load DiscoveryDocument
     this.oauthService.loadDiscoveryDocument()
@@ -101,13 +112,12 @@ export class AuthenticationService extends BaseService {
       .catch(() => this.logError('The AuthenticationService can not connect to the IdentityServer or load DiscoveryDocument from it'));
   }
 
-  private getAuthConfig(): AuthConfig {
+  private createAuthConfig(): AuthConfig {
     return {
       issuer: environment.iderntityHostUrl, // Url of the Identity Provider
       clientId: environment.clientId, // The SPA's id. The SPA is registerd with this id at the auth-server
 
       redirectUri: window.location.origin + '/index.html', // URL of the SPA to redirect the user to after login
-
       scope: 'openid profile email wasteproducts-api', // set the scope for the permissions the client should request
 
       showDebugInformation: !environment.production,
