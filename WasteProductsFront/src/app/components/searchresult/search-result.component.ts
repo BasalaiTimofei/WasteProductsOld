@@ -69,7 +69,7 @@ export class SearchresultComponent implements OnDestroy {
   addToMyProducts(productId: string) {
     const dialog: FormPreviewOverlay = this.previewDialogForm.open({
       // TODO Заменить путем из реквеста и название продукта
-      form: { name: 'Добавить', route: productId, rate: 12, comment: 'ddddddddd', id: productId}
+      form: { name: 'Добавить в Мой список', id: productId }
     });
   }
 

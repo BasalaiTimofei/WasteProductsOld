@@ -35,7 +35,7 @@ export class FormProductOverlayComponent {
 
   @HostListener('document:keydown', ['$event']) private handleKeydown(event: KeyboardEvent) {
     if (event.keyCode === ESCAPE) {
-      this.dialogRef.close();
+      this.closeForm();
     }
   }
   constructor(

@@ -8,9 +8,6 @@ import { FILE_PREVIEW_DIALOG_DATA } from '../../components/form-product-overlay/
 
 export interface Form {
   name: string;
-  route: string;
-  rate: number;
-  comment: string;
   id: string;
 }
 
