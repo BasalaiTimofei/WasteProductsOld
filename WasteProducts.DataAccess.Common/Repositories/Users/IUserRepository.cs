@@ -186,6 +186,13 @@ namespace WasteProducts.DataAccess.Common.Repositories.Users
         Task<bool> IsEmailAvailableAsync(string email);
 
         /// <summary>
+        /// Returns true if there us no User with such Username. Returns false is there is a User with the UserName.
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        Task<bool> IsUserNameAvailable(string userName);
+
+        /// <summary>
         /// Remove a claim from a user.
         /// </summary>
         /// <param name="userId">Specific claim will be removed from the user.</param>
