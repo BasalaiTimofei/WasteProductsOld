@@ -70,7 +70,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             var result = categoryService.Add(It.IsAny<string>());
 
-            Assert.That(result, Is.Null);
+            Assert.That(result, Is.TypeOf(typeof(Task<string>)));
         }
 
         [Test]
@@ -282,7 +282,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             var categoryService = new CategoryService(mockCategoryRepo.Object, mapper);
             categoryService.Delete(It.IsAny<string>());
 
-            mockCategoryRepo.Verify(m => m.DeleteAsync(It.IsAny<CategoryDB>()), Times.Once);
+            mockCategoryRepo.Verify(m => m.DeleteAsync(It.IsAny<string>()), Times.Once);
         }
     }
 }
