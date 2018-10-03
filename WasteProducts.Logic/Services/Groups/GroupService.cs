@@ -25,6 +25,8 @@ namespace WasteProducts.Logic.Services.Groups
         public async Task<string> Create(Group item)
         {
             var result = _mapper.Map<GroupDB>(item);
+            result.GroupBoards = null;
+            result.GroupUsers = null;
 
             var model = (await _dataBase.Find<GroupDB>(
                 x => x.AdminId == result.AdminId)).FirstOrDefault();
