@@ -48,7 +48,7 @@ export class FormProductOverlayComponent {
     public snackBar: MatSnackBar,
     private router: Router) { }
 
-  addToMyProducts(comment: string, rate: number) { // TODO. Refactoring
+  addToMyProducts(comment: string, rate: number) {
     // this.productService.addProductDescription(rate, comment, this.form.id);
     this.router.navigate(['searchresults', this.form.searchQuery]);
     this.closeForm();

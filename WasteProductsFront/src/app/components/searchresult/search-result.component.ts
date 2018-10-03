@@ -101,10 +101,10 @@ export class SearchresultComponent implements OnDestroy {
     });
   }
 
-  showPreview(picturePath: string) {
+  showPreview(productName: string, picturePath: string) {
     const dialog: ImagePreviewOverlay = this.previewDialog.open({
       // TODO Заменить путем из реквеста и название продукта
-      image: { name: 'Название продукта', url: 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg' } // picturePath
+      image: { name: productName, url: 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg' } // picturePath
     });
   }
 
