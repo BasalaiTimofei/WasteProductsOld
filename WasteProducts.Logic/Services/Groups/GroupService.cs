@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,14 +39,17 @@ namespace WasteProducts.Logic.Services.Groups
             result.Deleted = null;
             result.IsNotDeleted = true;
 
-            result.GroupUsers.Add(new GroupUserDB
+            result.GroupUsers = new List<GroupUserDB>
             {
-                GroupId = result.Id,
-                UserId = result.AdminId,
-                IsConfirmed = true,
-                RightToCreateBoards = true,
-                Created = DateTime.UtcNow,
-            });
+                new GroupUserDB
+                {
+                    GroupId = result.Id,
+                    UserId = result.AdminId,
+                    IsConfirmed = true,
+                    RightToCreateBoards = true,
+                    Created = DateTime.UtcNow,
+                }
+            };
 
             _dataBase.Create(result);
             await _dataBase.Save();
