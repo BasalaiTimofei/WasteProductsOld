@@ -112,37 +112,13 @@ namespace WasteProducts.Logic.Tests.Product_Tests
         }
 
         [Test]
-        public void AddToCategory_AddsCategoryInProduct_CallsMethod_UpdateOfRepository()
+        public void AddToCategory_AddsCategoryInProduct_CallsMethod_AddOfRepository()
         {
-            selectedList.Add(productDB);
-            mockProductRepository.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(Task.FromResult((IEnumerable<ProductDB>)selectedList));
-
-            mockCategoryRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<string>()))
-                .Returns(Task.FromResult(categoryDB));
-
             using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mockBarcodeService.Object, mapper))
             {
                 productService.AddToCategoryAsync(product.Id, category.Id);
 
-                mockProductRepository.Verify(m => m.UpdateAsync(It.IsAny<ProductDB>()), Times.Once);
-            }
-        }
-
-        [Test]
-        public void AddToCategory_DoesNotAddCategoryInProduct_DoesNotCallMethod_UpdateOfRepository()
-        {
-            mockProductRepository.Setup(repo => repo.SelectWhereAsync(It.IsAny<Predicate<ProductDB>>()))
-                .Returns(Task.FromResult((IEnumerable<ProductDB>)selectedList));
-
-            mockCategoryRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<string>()))
-                .Returns(Task.FromResult(categoryDB));
-
-            using (var productService = new ProductService(mockProductRepository.Object, mockCategoryRepository.Object, mockBarcodeService.Object, mapper))
-            {
-                productService.AddToCategoryAsync(product.Id, category.Id);
-
-                mockProductRepository.Verify(m => m.UpdateAsync(It.IsAny<ProductDB>()), Times.Never);
+                mockProductRepository.Verify(m => m.AddToCategoryAsync(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             }
         }
 
@@ -249,7 +225,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             {
                 productService.DeleteAsync(It.IsAny<string>());
 
-                mockProductRepository.Verify(m => m.DeleteAsync(It.IsAny<ProductDB>()), Times.Once);
+                mockProductRepository.Verify(m => m.DeleteAsync(It.IsAny<string>()), Times.Once);
             }
         }
 
@@ -263,7 +239,7 @@ namespace WasteProducts.Logic.Tests.Product_Tests
             {
                 productService.DeleteAsync(It.IsAny<string>());
 
-                mockProductRepository.Verify(m => m.DeleteAsync(It.IsAny<ProductDB>()), Times.Never);
+                mockProductRepository.Verify(m => m.DeleteAsync(It.IsAny<string>()), Times.Never);
             }
         }
 

@@ -53,24 +53,20 @@ namespace WasteProducts.DataAccess.Repositories.Products
 
             product.Marked = true;
 
-            await UpdateAsync(product);
+            await UpdateAsync(product).ConfigureAwait(false);
             
         }
 
         /// <inheritdoc/>
         public async Task<ProductDB> GetByNameAsync(string name)
         {
-            return await _context.Products.FirstOrDefaultAsync(p => p.Name == name).ConfigureAwait(false); 
+            return await _context.Products.Where(p => p.Marked == false).FirstOrDefaultAsync(p => p.Name == name).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
         public async Task<IEnumerable<ProductDB>> SelectAllAsync()
         {
-            return await Task.Run(() =>
-            {
-                var result = _context.Products.ToList();
-                return result.Where(p => p.Marked == false);
-            });
+            return await _context.Products.Where(p => p.Marked == false).ToListAsync().ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -80,7 +76,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
 
             return await Task.Run(() =>
             {
-                return _context.Products.Where(condition).ToList();
+                return _context.Products.Include(p => p.Category).Where(condition).ToList();
             });
                 
         }
@@ -88,18 +84,25 @@ namespace WasteProducts.DataAccess.Repositories.Products
         /// <inheritdoc />
         public async Task <IEnumerable<ProductDB>> SelectByCategoryAsync(CategoryDB category)
         {
-            return await Task.Run(() =>
-            {
-                return _context.Products.Where(p => p.Category.Id == category.Id).ToList();
-            });
+            return await _context.Products.Where(p => p.Category.Id == category.Id && p.Marked == false).ToListAsync().ConfigureAwait(false);
         }
 
         /// <inheritdoc />
         public async Task<ProductDB> GetByIdAsync(string id)
         {
-            var result = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+            return await _context.Products.FirstOrDefaultAsync(p => p.Id == id && p.Marked == false).ConfigureAwait(false);
+        }
 
-            return (result.Marked == true) ? null : result;
+        /// <inheritdoc />
+        public async Task AddToCategoryAsync(string productId, string categoryId)
+        {
+            var productDB = await _context.Products.Include(p => p.Category).FirstOrDefaultAsync(p => p.Id == productId).ConfigureAwait(false);
+            var categoryDB = await _context.Categories.FirstOrDefaultAsync(c => c.Id == categoryId).ConfigureAwait(false);
+
+            productDB.Category = categoryDB;
+            productDB.Modified = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -109,11 +112,12 @@ namespace WasteProducts.DataAccess.Repositories.Products
 
             var entry = _context.Entry(productInDb);
             entry.CurrentValues.SetValues(product);
+
             entry.Property(p => p.Modified).CurrentValue = DateTime.UtcNow;
 
             entry.Property(p => p.Id).IsModified = false;
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false) ;
         }
 
         /// <summary>

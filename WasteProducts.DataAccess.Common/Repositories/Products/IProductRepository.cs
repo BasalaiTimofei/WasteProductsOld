@@ -64,6 +64,13 @@ namespace WasteProducts.DataAccess.Common.Repositories.Products
         Task<ProductDB> GetByNameAsync(string name);
 
         /// <summary>
+        /// Adds the product to the specific category.
+        /// </summary>
+        /// <param name="productId">Id of the specific product.</param>
+        /// <param name="categoryId">Id of the specific category.</param>
+        Task AddToCategoryAsync(string productId, string categoryId);
+
+        /// <summary>
         /// Updating the specific product
         /// </summary>
         /// <param name="product">The specific product for updating</param>
