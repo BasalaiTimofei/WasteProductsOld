@@ -57,7 +57,7 @@ import { AccountModule } from './modules/account/account.module';
 import { UserdataComponent } from './components/user/settings/userdata/userdata.component';
 import { UserformfieldComponent } from './components/user/settings/userformfield/userformfield.component';
 import { ChangePasswordComponent } from './components/user/settings/change-password/change-password.component';
-
+import { SlideshowComponent } from './components/common/slideshow/slideshow.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -102,6 +102,7 @@ import { ChangePasswordComponent } from './components/user/settings/change-passw
     ChangePasswordComponent,
     FormProductOverlayComponent,
     FormOverlayWrapperComponent,
+    SlideshowComponent,
   ],
   imports: [
     BrowserModule,
