@@ -41,15 +41,17 @@ namespace WasteProducts.DataAccess.Repositories
         {
             string assemblyFilename = Assembly.GetAssembly(typeof(LuceneSearchRepository)).Location;
             string assemblyPath = Path.GetDirectoryName(assemblyFilename);
-            string indexStoragePath = @"c:\Waste_LuceneSearchIndexes"; //WebConfigurationManager.AppSettings[INDEX_STORAGE_PATH_SETTING_STR]; ;
-            if (!string.IsNullOrEmpty(indexStoragePath))
-            {
-                IndexPath = Path.Combine(assemblyPath, indexStoragePath);
-            }
-            else
-            {
-                throw new LuceneSearchRepositoryException(Resources.LuceneSearchRepository.IndexPathNotFound);
-            }
+            string indexStoragePath = @"C:\Applications\WasteBack\LuceneSearchIndexes"; //WebConfigurationManager.AppSettings[INDEX_STORAGE_PATH_SETTING_STR];
+            IndexPath = indexStoragePath;
+
+            //if (!string.IsNullOrEmpty(indexStoragePath))
+            //{
+            //    IndexPath = Path.Combine(assemblyPath, indexStoragePath);
+            //}
+            //else
+            //{
+            //    throw new LuceneSearchRepositoryException(Resources.LuceneSearchRepository.IndexPathNotFound);
+            //}
 
             _analyzer = new RussianAnalyzer(MATCH_LUCENE_VERSION);
 
@@ -58,7 +60,7 @@ namespace WasteProducts.DataAccess.Repositories
                 _directory = FSDirectory.Open(IndexPath);
                 _writer = new IndexWriter(_directory, new IndexWriterConfig(MATCH_LUCENE_VERSION, _analyzer)
                 {
-                    OpenMode = OpenMode.CREATE_OR_APPEND
+                    OpenMode = OpenMode.CREATE
                 });
                 if (IndexWriter.IsLocked(_directory))
                 {
