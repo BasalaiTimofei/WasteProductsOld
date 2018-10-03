@@ -1,6 +1,6 @@
-<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+<div><form [formGroup]="productForm" (ngSubmit)="onSubmit()">
   <div><input type="file" (change)="onFileSelected($event)"></div>
-  <input formControlName="avgRating" id="avgRating"  type="number" class="form-control" placeholder="Ваша оценка продукта от 0 до 5"  >
+  <input formControlName="avgRating" id="avgRating"  type="number" class="form-control" placeholder="Ваша оценка продукта от 1 до 5"  >
   <div *ngIf="formErrors.avgRating" class="alert alert-danger">
       {{ formErrors.avgRating }}
     </div>
@@ -10,4 +10,4 @@
     </div>
   <div><button type="submit" [disabled]="!productForm.valid" (click)="addProduct()" mat-flat-button>Добавить продукт</button></div>
   <div><button (click)="hideBlockAdd()" mat-flat-button>Отмена</button></div>
-</form>
+</form></div>
