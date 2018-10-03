@@ -41,15 +41,17 @@ namespace WasteProducts.DataAccess.Repositories
         {
             string assemblyFilename = Assembly.GetAssembly(typeof(LuceneSearchRepository)).Location;
             string assemblyPath = Path.GetDirectoryName(assemblyFilename);
-            string indexStoragePath = WebConfigurationManager.AppSettings[INDEX_STORAGE_PATH_SETTING_STR]; ;
-            if (!string.IsNullOrEmpty(indexStoragePath))
-            {
-                IndexPath = Path.Combine(assemblyPath, indexStoragePath);
-            }
-            else
-            {
-                throw new LuceneSearchRepositoryException(Resources.LuceneSearchRepository.IndexPathNotFound);
-            }
+            string indexStoragePath = @"C:\Applications\WasteBack\LuceneSearchIndexes"; //WebConfigurationManager.AppSettings[INDEX_STORAGE_PATH_SETTING_STR];
+            IndexPath = indexStoragePath;
+
+            //if (!string.IsNullOrEmpty(indexStoragePath))
+            //{
+            //    IndexPath = Path.Combine(assemblyPath, indexStoragePath);
+            //}
+            //else
+            //{
+            //    throw new LuceneSearchRepositoryException(Resources.LuceneSearchRepository.IndexPathNotFound);
+            //}
 
             _analyzer = new RussianAnalyzer(MATCH_LUCENE_VERSION);
 

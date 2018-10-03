@@ -55,6 +55,6 @@ namespace WasteProducts.Logic.Common.Models.Products
         /// <summary>
         /// Defines the Average Rating of the product.
         /// </summary>
-        public decimal? AvgRating { get; }
+        public decimal? AvgRating { get; set; }
     }
 }
