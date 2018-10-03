@@ -43,10 +43,13 @@ namespace WasteProducts.Logic.Services.Users
 
         public async Task<(string id, string token)> RegisterAsync(string email, string userName, string password, string path)
         {
-            if (!_mailService.IsValidEmail(email) || !(await _repo.IsEmailAvailableAsync(email)))
+            if (!_mailService.IsValidEmail(email))
+                throw new ValidationException("Plese provide valid Email.");
+
+            if (!(await _repo.IsEmailAvailableAsync(email)) || !(await _repo.IsUserNameAvailable(userName)))
             {
                 // throws 409 conflict
-                throw new OperationCanceledException("Please provide valid and unique Email.");
+                throw new OperationCanceledException("Please provide unique Email and User Name.");
             }
             var (id, token) = await _repo.AddAsync(email, userName, password);
             if(path != null)
