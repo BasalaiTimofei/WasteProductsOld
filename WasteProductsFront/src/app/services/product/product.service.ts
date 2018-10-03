@@ -17,10 +17,12 @@ import { ProductDescription } from '../../models/products/product-description';
 export class ProductService extends BaseHttpService {
   constructor(httpService: HttpClient, private authServise: AuthenticationService, loggingService: LoggingService) {
     super(httpService, loggingService);
+    this.baseProdApiUrl = `${environment.apiHostUrl}/api/products`;
+    this.baseUserApiUrl = `${environment.apiHostUrl}/api/user/${this.authServise.getUserId()}`;
   }
 
-  private baseProdApiUrl = `${environment.apiHostUrl}/api/products`;
-  private baseUserApiUrl = `${environment.apiHostUrl}/api/user/${this.authServise.getUserId()}`;
+  private baseProdApiUrl;
+  private baseUserApiUrl;
 
   createProduct(rating: number, description: string) {
     const createProdUrl = this.baseProdApiUrl;

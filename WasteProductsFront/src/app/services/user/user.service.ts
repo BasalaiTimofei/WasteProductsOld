@@ -12,9 +12,10 @@ import { AuthenticationService } from '../../modules/account/services/authentica
 export class UserService extends BaseHttpService  {
   constructor(private httpClient: HttpClient, private authServise: AuthenticationService, loggingService: LoggingService) {
     super(httpClient, loggingService);
+    this.apiUrlPlusUserId = `${environment.apiHostUrl}/api/user/${this.authServise.getUserId()}`;
    }
 
-   private apiUrlPlusUserId = `${environment.apiHostUrl}/api/user/${this.authServise.getUserId()}`;
+   private apiUrlPlusUserId;
 
   addFriend(friendId: string) {
     const url = `${this.apiUrlPlusUserId}/friends/${friendId}`;
