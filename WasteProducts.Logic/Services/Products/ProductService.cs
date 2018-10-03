@@ -138,21 +138,13 @@ namespace WasteProducts.Logic.Services.Products
                     string.Equals(p.Id, id, StringComparison.CurrentCultureIgnoreCase),
                 out var products)) return null;
 
-            return _productRepository.DeleteAsync(_mapper.Map<ProductDB>(products.First()));
+            return _productRepository.DeleteAsync(id);
         }
 
         /// <inheritdoc/>
         public Task AddToCategoryAsync(string productId, string categoryId)
         {
-            if (!IsProductsInDB(p =>
-                string.Equals(p.Id, productId, StringComparison.Ordinal),
-                out var products)) return null;
-
-            var productFromDB = products.First();
-
-            productFromDB.Category = _categoryRepository.GetByIdAsync(categoryId).Result;
-
-            return _productRepository.UpdateAsync(productFromDB);
+            return _productRepository.AddToCategoryAsync(productId, categoryId);
         }
 
         public void Dispose()

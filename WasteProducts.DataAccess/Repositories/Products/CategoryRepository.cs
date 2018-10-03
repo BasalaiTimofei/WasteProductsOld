@@ -25,6 +25,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
         {
             category.Id = Guid.NewGuid().ToString();
             _context.Categories.Add(category);
+
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return category.Id;
@@ -43,7 +44,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
 
             (_context.Categories as DbSet).AddRange(categories);
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return ids;
         }
@@ -73,36 +74,39 @@ namespace WasteProducts.DataAccess.Repositories.Products
         /// <inheritdoc/>
         public async Task <IEnumerable<CategoryDB>> SelectAllAsync()
         {
-            return await Task.Run(() => _context.Categories.ToList()).ConfigureAwait(false);
+            return await  _context.Categories.Where(c => c.Marked == false).ToListAsync().ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task <IEnumerable<CategoryDB>> SelectWhereAsync(Predicate<CategoryDB> predicate)
+        public async Task<IEnumerable<CategoryDB>> SelectWhereAsync(Predicate<CategoryDB> predicate)
         {
             var condition = new Func<CategoryDB, bool>(predicate);
 
-            return await Task.Run(() => _context.Categories.Where(condition).ToList()).ConfigureAwait(false);
+            return await Task.Run(() => _context.Categories.Where(condition).ToList());
         }
 
         /// <inheritdoc/>
         public async Task <CategoryDB> GetByIdAsync(string id)
         {
-            return await _context.Categories.FirstOrDefaultAsync(p => p.Id == id).ConfigureAwait(false);
+            return await _context.Categories.FirstOrDefaultAsync(c => c.Id == id && c.Marked == false).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
         public async Task <CategoryDB> GetByNameAsync(string name)
         {
-            return await _context.Categories.FirstOrDefaultAsync(p => p.Name == name).ConfigureAwait(false);
+            return await _context.Categories.FirstOrDefaultAsync(c => c.Name == name && c.Marked == false).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
         public async Task UpdateAsync(CategoryDB category)
         {
-            _context.Entry(category).State = EntityState.Modified;
+            var categoryInDb = await _context.Categories.FirstOrDefaultAsync(c => c.Id == category.Id).ConfigureAwait(false);
+
+            var entry = _context.Entry(categoryInDb);
+            entry.CurrentValues.SetValues(category);
+            entry.Property(c => c.Id).IsModified = false;
 
             await _context.SaveChangesAsync().ConfigureAwait(false);
-
         }
 
         /// <summary>

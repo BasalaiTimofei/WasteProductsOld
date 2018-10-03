@@ -67,7 +67,9 @@ namespace WasteProducts.Web.Controllers.Api
         {
             var id = await _categoryService.Add(name);
 
-            return Created("api/category/" + id, GetById(id));
+            if (id == null) return BadRequest("Category exists");
+
+            return Created("api/category/"+id, await _categoryService.GetById(id));
         }
 
         /// <summary>
@@ -98,7 +100,7 @@ namespace WasteProducts.Web.Controllers.Api
         {
             await _categoryService.Update(data);
 
-            return Ok(GetById(data.Id));
+            return Ok(await _categoryService.GetById(data.Id));
         }
     }
 }

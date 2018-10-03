@@ -90,9 +90,11 @@ namespace WasteProducts.Web.Controllers.Api
         [SwaggerResponse(HttpStatusCode.BadRequest, "Incorrect Id")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         [HttpDelete, Route("{id}")]
-        public async Task Delete([FromUri] string id)
+        public async Task<IHttpActionResult> Delete([FromUri] string id)
         {
             await _productService.DeleteAsync(id);
+
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -110,7 +112,7 @@ namespace WasteProducts.Web.Controllers.Api
         {
             await _productService.AddToCategoryAsync(productId, categoryId);
 
-            return Ok(await GetById(productId));
+            return Ok(await _productService.GetByIdAsync(productId));
         }
 
         /// <summary>
@@ -127,7 +129,7 @@ namespace WasteProducts.Web.Controllers.Api
         {
             await _productService.UpdateAsync(data);
 
-            return Ok(await GetById(data.Id));
+            return Ok(await _productService.GetByIdAsync(data.Id));
         }
     }
 
