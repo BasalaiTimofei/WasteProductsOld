@@ -51,6 +51,7 @@ export class SearchresultComponent implements OnDestroy {
       });
       this.setVariablesToDefault();
       this.search(query);
+      this.query = query;
     });
   }
 
@@ -61,6 +62,7 @@ export class SearchresultComponent implements OnDestroy {
 
   public search(query: string): void {
     this.searchService.getDefault(query).toPromise().then((data) => {
+      if (data !== null) {
         this.searchResult = data;
 
         if (!this.searchResult) {
@@ -69,6 +71,9 @@ export class SearchresultComponent implements OnDestroy {
 
         this.length = this.searchResult.length;
         this.changePageEvent();
+      } else {
+        this.errorMessage = 'Поиск не дал результатов...';
+      }
     }).catch((e: HttpErrorResponse) => {
         this.errorMessage = 'Поиск не дал результатов...';
         if (e.status === 204) {
