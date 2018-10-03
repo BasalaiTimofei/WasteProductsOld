@@ -70,6 +70,14 @@ namespace WasteProducts.Logic.Common.Services.Users
         Task<bool> ConfirmEmailAsync(string userId, string token);
 
         /// <summary>
+        /// Confirms new email with email confirmation token.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <param name="token">Confirmation token.</param>
+        /// <returns></returns>
+        Task ConfirmEmailChangingAsync(string userId, string token);
+
+        /// <summary>
         /// Deletes a specific friend from the specific user's friend list.
         /// </summary>
         /// <param name="userId">From the list of friends of the user with this ID the deletingFriend user will be deleted.</param>
@@ -90,6 +98,14 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// <param name="userId">Deleting user's ID.</param>
         /// <returns></returns>
         Task DeleteUserAsync(string userId);
+
+        /// <summary>
+        /// Generates email changing token.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <param name="newEmail">New email of the user.</param>
+        /// <returns>Email confirmation token.</returns>
+        Task GenerateEmailChangingTokenAsync(string userId, string newEmail);
 
         /// <summary>
         /// Gets info about all Users in the database.
