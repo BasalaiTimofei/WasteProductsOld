@@ -28,25 +28,6 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         }
 
         /// <summary>
-        /// Get group object by id group
-        /// </summary>
-        /// <param name="groupId">Primary key</param>
-        /// <returns>200(Object) || 404</returns>
-        [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Get group", typeof(Group))]
-        [SwaggerResponse(HttpStatusCode.NotFound, "Incorrect id group")]
-        [HttpGet, Route("{groupId}", Name = "GetGroupById")]
-        public async Task<IHttpActionResult> GetGroupById([FromUri]string groupId)
-        {
-            var item = await _groupService.FindById(groupId);
-            if (item == null)
-            {
-                return NotFound();
-            }
-            return Ok(item);
-        }
-
-        /// <summary>
         /// Get group object by id user
         /// </summary>
         /// <param name="userId">Primary key</param>
@@ -54,7 +35,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get group", typeof(Group))]
         [SwaggerResponse(HttpStatusCode.NotFound, "Incorrect id user")]
-        [HttpGet, Route("user/{userid}", Name = "GetGroupByUserId")]
+        [HttpGet, Route("{userid}", Name = "GetGroupByUserId")]
         public async Task<IHttpActionResult> GetGroupByUserId(string userId)
         {
             var item = await _groupService.FindByAdmin(userId);
