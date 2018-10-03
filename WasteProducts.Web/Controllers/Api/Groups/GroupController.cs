@@ -12,7 +12,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
     /// <summary>
     /// ApiController management Group.
     /// </summary>
-    [RoutePrefix("api/groups")]
+    [RoutePrefix("api")]
     public class GroupController : BaseApiController
     {
         private IGroupService _groupService;
@@ -30,12 +30,31 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <summary>
         /// Get group object by id user
         /// </summary>
+        /// <param name="groupId">Primary key</param>
+        /// <returns>200(Object) || 404</returns>
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Get group", typeof(Group))]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Incorrect id user")]
+        [HttpGet, Route("groups/{groupId}")]
+        public async Task<IHttpActionResult> GetGroupByGroupId(string groupId)
+        {
+            var item = await _groupService.FindById(groupId);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
+
+        /// <summary>
+        /// Get group object by id user
+        /// </summary>
         /// <param name="userId">Primary key</param>
         /// <returns>200(Object) || 404</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get group", typeof(Group))]
         [SwaggerResponse(HttpStatusCode.NotFound, "Incorrect id user")]
-        [HttpGet, Route("{userid}", Name = "GetGroupByUserId")]
+        [HttpGet, Route("user/{userId}/groups")]
         public async Task<IHttpActionResult> GetGroupByUserId(string userId)
         {
             var item = await _groupService.FindByAdmin(userId);
@@ -54,7 +73,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.Created, "Group create", typeof(Group))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
-        [HttpPost, Route("")]
+        [HttpPost, Route("groups")]
         public async Task<IHttpActionResult> Create(Group item)
         {
             var groupId = await _groupService.Create(item);
@@ -70,7 +89,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Group update", typeof(Group))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
-        [HttpPut, Route("{groupId}")]
+        [HttpPut, Route("groups/{groupId}")]
         public async Task<IHttpActionResult> Update(Group item)
         {
             await _groupService.Update(item);
@@ -87,7 +106,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.Redirect, "Group delete")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
-        [HttpDelete, Route("{groupId}/{adminId}")]
+        [HttpDelete, Route("groups/{groupId}/{adminId}")]
         public async Task<IHttpActionResult> Delete([FromUri]string groupId, [FromUri]string adminId)
         {
             var item = new Group { Id = groupId, AdminId = adminId };
