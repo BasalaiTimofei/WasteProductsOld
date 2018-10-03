@@ -60,7 +60,7 @@ namespace WasteProducts.DataAccess.Repositories
                 _directory = FSDirectory.Open(IndexPath);
                 _writer = new IndexWriter(_directory, new IndexWriterConfig(MATCH_LUCENE_VERSION, _analyzer)
                 {
-                    OpenMode = OpenMode.CREATE
+                    OpenMode = OpenMode.CREATE_OR_APPEND
                 });
                 if (IndexWriter.IsLocked(_directory))
                 {
