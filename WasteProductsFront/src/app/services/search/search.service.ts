@@ -30,9 +30,11 @@ export class SearchService extends BaseHttpService {
   getDefault(query: string): Observable<SearchProduct[]> {
     return this.httpService.get<SearchProduct[]>(this.URL_SEARCH + '/products/default', this.getOptions(query)).pipe(
       map(res => {
+        if (res != null) {
         const result: any = res;
-        return result.map((item) => new SearchProduct(item.Id, item.Name, false));
-      }), catchError(this.handleError('getDefault', []))
+        return result.map((item) => new SearchProduct(item.Id, item.Name, false, item.PicturePath));
+        }
+      }), catchError(this.handleError('Error in search.service getDefault()', []))
     );
   }
 
@@ -44,10 +46,6 @@ export class SearchService extends BaseHttpService {
       }),
       catchError(this.handleError('getTopSearchQueries', []))
     );
-  }
-
-  gettest(query: string) {
-    return this.httpService.get('http://localhost:2189/api/search/products/default?query=' + query, { observe: 'response' });
   }
 
   private getOptions(query: string) {

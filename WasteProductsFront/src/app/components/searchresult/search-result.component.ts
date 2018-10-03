@@ -5,6 +5,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
+import { Router } from '@angular/router';
 
 import { SearchProduct } from '../../models/search-product';
 import { SearchService } from '../../services/search/search.service';
@@ -40,7 +41,8 @@ export class SearchresultComponent implements OnDestroy {
               private previewDialogForm: FormPreviewService,
               private previewDialog: ImagePreviewService,
               public snackBar: MatSnackBar,
-              public authService: AuthenticationService) {
+              public authService: AuthenticationService,
+              private router: Router) {
 
       this.route.params.pipe(takeUntil(this.destroy$)).subscribe(({ query }: Params) => {
         if (!query) {
@@ -62,7 +64,7 @@ export class SearchresultComponent implements OnDestroy {
 
   public search(query: string): void {
     this.searchService.getDefault(query).toPromise().then((data) => {
-      if (data !== null) {
+      if (data !== undefined) {
         this.searchResult = data;
 
         if (!this.searchResult) {
@@ -72,7 +74,8 @@ export class SearchresultComponent implements OnDestroy {
         this.length = this.searchResult.length;
         this.changePageEvent();
       } else {
-        this.errorMessage = 'Поиск не дал результатов...';
+        this.tempProducts = null;
+        this.length = 0;
       }
     }).catch((e: HttpErrorResponse) => {
         this.errorMessage = 'Поиск не дал результатов...';
@@ -90,6 +93,7 @@ export class SearchresultComponent implements OnDestroy {
 
   removeFromMyProducts(productId: string) {
     this.productService.deleteUserProduct(productId);
+    this.router.navigate(['searchresults', this.query]);
     this.snackBar.open(this.responseMessage, null, {
       duration: 4000,
       verticalPosition: 'top',
@@ -97,11 +101,15 @@ export class SearchresultComponent implements OnDestroy {
     });
   }
 
-  showPreview() {
+  showPreview(picturePath: string) {
     const dialog: ImagePreviewOverlay = this.previewDialog.open({
       // TODO Заменить путем из реквеста и название продукта
-      image: { name: 'Название продукта', url: 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg' }
+      image: { name: 'Название продукта', url: 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg' } // picturePath
     });
+  }
+
+  showDetails(id: string) {
+    // this.router.navigate(['', id]);
   }
 
   public changePageEvent(event?: PageEvent) {
