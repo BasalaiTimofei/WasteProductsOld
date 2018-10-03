@@ -20,7 +20,7 @@ export class ProductService extends BaseHttpService {
   }
 
   private baseProdApiUrl = `${environment.apiHostUrl}/api/products`;
-  private baseUserApiUrl = `${environment.apiHostUrl}/api/user/${this.authServise.getUserId}`;
+  private baseUserApiUrl = `${environment.apiHostUrl}/api/user/${this.authServise.getUserId()}`;
 
   createProduct(rating: number, description: string) {
     const createProdUrl = this.baseProdApiUrl;
