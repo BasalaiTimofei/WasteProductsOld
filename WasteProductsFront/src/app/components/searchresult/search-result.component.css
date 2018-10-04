@@ -11,5 +11,9 @@ mat-list-item {
   transition: background-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 mat-list-item:hover {
-  background-color: #f1f1f1;
+  background-color: #a2dee9;
+}
+
+mat-list {
+  background-color: white;
 }
