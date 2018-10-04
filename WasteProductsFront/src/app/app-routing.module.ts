@@ -45,10 +45,9 @@ const routes: Routes = [
   { path: 'details/:id', component: NotificationDetailsComponent },
   { path: 'common/mainpage', component: MainPageComponent },
 
-  { path: 'friends', component: FriendsComponent },
-  { path: 'settings', component: SettingsComponent },
-  { path: 'changepassword', component: ChangePasswordComponent },
-  { path: 'confirmemailchanging', component: ConfirmEmailChangingComponent},
+  { path: 'friends', component: FriendsComponent, canActivate: [AuthenticationGuard] },
+  { path: 'settings', component: SettingsComponent, canActivate: [AuthenticationGuard] },
+  { path: 'changepassword', component: ChangePasswordComponent, canActivate: [AuthenticationGuard] },
 
   { path: 'products', component: ProductsComponent, children: [
     { path: 'add-product', component: AddProductComponent }
