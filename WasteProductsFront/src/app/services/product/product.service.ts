@@ -18,7 +18,8 @@ export class ProductService extends BaseHttpService {
   constructor(httpService: HttpClient, private authServise: AuthenticationService, loggingService: LoggingService) {
     super(httpService, loggingService);
     this.baseProdApiUrl = `${environment.apiHostUrl}/api/products`;
-    this.baseUserApiUrl = `${environment.apiHostUrl}/api/user/${this.authServise.getUserId()}`;
+    // this.baseUserApiUrl = `${environment.apiHostUrl}/api/user/${this.authServise.getUserId()}`;
+    this.baseUserApiUrl = `${environment.apiHostUrl}/api/user/0`;
   }
 
   private baseProdApiUrl;

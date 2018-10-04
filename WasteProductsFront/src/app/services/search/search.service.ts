@@ -32,7 +32,7 @@ export class SearchService extends BaseHttpService {
       map(res => {
         if (res != null) {
         const result: any = res;
-        return result.map((item) => new SearchProduct(item.Id, item.Name, false, item.PicturePath));
+        return result.map((item) => new SearchProduct(item.Id, item.Name, false, item.PicturePath)); // вместо false получать статус наличия
         }
       }), catchError(this.handleError('Error in search.service getDefault()', []))
     );

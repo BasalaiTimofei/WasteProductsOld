@@ -50,7 +50,8 @@ export class SearchresultComponent implements OnDestroy {
       }
       this.authService.isAuthenticated$.toPromise<boolean>().then(res => {
         this.isAuth = res;
-      });
+      }).catch();
+      this.isAuth = true;
       this.setVariablesToDefault();
       this.search(query);
       this.query = query;
@@ -79,15 +80,12 @@ export class SearchresultComponent implements OnDestroy {
       }
     }).catch((e: HttpErrorResponse) => {
         this.errorMessage = 'Поиск не дал результатов...';
-        if (e.status === 204) {
-            this.statusCode = e.status;
-        }
     });
   }
 
   addToMyProducts(productId: string) {
     const dialog: FormPreviewOverlay = this.previewDialogForm.open({
-      form: { name: 'Добавить в Мой список', id: productId, searchQuery: this.query }
+      form: { name: 'Добавить в Мои продукты', id: productId, searchQuery: this.query }
     });
   }
 
@@ -104,7 +102,7 @@ export class SearchresultComponent implements OnDestroy {
   showPreview(productName: string, picturePath: string) {
     const dialog: ImagePreviewOverlay = this.previewDialog.open({
       // TODO Заменить путем из реквеста и название продукта
-      image: { name: productName, url: 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg' } // picturePath
+      image: { name: productName, url: picturePath } // https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg
     });
   }
 
