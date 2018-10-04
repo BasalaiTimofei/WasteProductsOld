@@ -44,12 +44,17 @@ export class UserService extends BaseHttpService  {
     return this.httpClient.put(url, bodyObj);
   }
 
-  updateEmail(email: string)  {
+  updateEmail(email: string) {
     const url = `${this.apiUrlPlusUserId}/updateemail`;
     const bodyObj = {
       EmailOfTheUser: email,
     };
     return this.httpClient.put(url, bodyObj);
+  }
+
+  confirmEmailChanging(token: string) {
+    const url = `${this.apiUrlPlusUserId}/confirmemailchanging/${token}`;
+    return this.httpClient.put(url, null);
   }
 
   updatePassword(oldPassword: string, newPassword: string) {

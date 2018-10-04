@@ -101,11 +101,10 @@ namespace WasteProducts.Logic.Services.Users
             else
             {
                 var token = await _repo.GenerateEmailChangingTokenAsync(userId, newEmail).ConfigureAwait(false);
-                var fullpath = $@"http://localhost:2189/user/{userId}/confirmemailchanging/{token}";
 
-                await _mailService.SendAsync(newEmail, UserResources.NewEmailConfirmationHeader, string.Format(UserResources.NewEmailConfirmationBody, fullpath));
+                await _mailService.SendAsync(newEmail, UserResources.NewEmailConfirmationHeader, string.Format(UserResources.NewEmailConfirmationBody, token));
             }
-            }
+        }
 
         public Task ChangePasswordAsync(string userId, string oldPassword, string newPassword)
         {

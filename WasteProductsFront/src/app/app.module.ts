@@ -57,6 +57,7 @@ import { AccountModule } from './modules/account/account.module';
 import { UserdataComponent } from './components/user/settings/userdata/userdata.component';
 import { UserformfieldComponent } from './components/user/settings/userformfield/userformfield.component';
 import { ChangePasswordComponent } from './components/user/settings/change-password/change-password.component';
+import { ConfirmEmailChangingComponent } from './components/user/settings/confirm-email-changing/confirm-email-changing.component';
 
 @NgModule({
   declarations: [
@@ -102,6 +103,7 @@ import { ChangePasswordComponent } from './components/user/settings/change-passw
     ChangePasswordComponent,
     FormProductOverlayComponent,
     FormOverlayWrapperComponent,
+    ConfirmEmailChangingComponent,
   ],
   imports: [
     BrowserModule,
