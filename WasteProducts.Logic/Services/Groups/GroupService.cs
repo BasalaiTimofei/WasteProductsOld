@@ -29,10 +29,10 @@ namespace WasteProducts.Logic.Services.Groups
             result.GroupBoards = null;
             result.GroupUsers = null;
 
-            var searchResult = await _dataBase.Find<GroupDB>(x => x.AdminId == result.AdminId).ConfigureAwait(false);
+            var searchResult = await _dataBase.Find<GroupDB>(
+                x => x.AdminId == result.AdminId&& x.Name == result.Name&& x.IsNotDeleted).ConfigureAwait(false);
 
-            var model = searchResult.FirstOrDefault();
-            if (model != null)
+            if (searchResult.Any())
             {
                 throw new ValidationException("Group already exists");
             }
@@ -64,8 +64,8 @@ namespace WasteProducts.Logic.Services.Groups
         {
             var result = _mapper.Map<GroupDB>(item);
 
-            var searchResult = await _dataBase.Find<GroupDB>(x => x.Id == result.Id && x.IsNotDeleted)
-                .ConfigureAwait(false);
+            var searchResult = await _dataBase.Find<GroupDB>(
+                x => x.Id == result.Id && x.IsNotDeleted).ConfigureAwait(false);
 
             var model = searchResult.FirstOrDefault();
             if (model == null)
@@ -85,9 +85,7 @@ namespace WasteProducts.Logic.Services.Groups
         public async Task Delete(string groupId)
         {
             var searchResult = await _dataBase.GetWithInclude<GroupDB>(x => x.Id == groupId && x.IsNotDeleted,
-                y => y.GroupBoards.Select(z => z.GroupProducts),
-                m => m.GroupUsers
-            ).ConfigureAwait(false);
+                y => y.GroupBoards.Select(z => z.GroupProducts),m => m.GroupUsers).ConfigureAwait(false);
 
             var model = searchResult.FirstOrDefault();
             if (model == null)
@@ -113,7 +111,7 @@ namespace WasteProducts.Logic.Services.Groups
 
         public Task<Group> FindById(string groupId)
         {
-            return FindBy(g => g.Id == groupId).ContinueWith(r=> r.Result.FirstOrDefault());
+            return FindBy(g => g.Id == groupId).ContinueWith(r => r.Result.FirstOrDefault());
         }
 
         public Task<IEnumerable<Group>> FindByAdmin(string userId)
