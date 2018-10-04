@@ -141,7 +141,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
                 It.IsAny<Expression<Func<GroupDB, object>>[]>()))
                 .ReturnsAsync(_selectedList);
 
-            Task.Run(() => _groupService.Delete(_group)).Wait();
+            Task.Run(() => _groupService.Delete(_group.Id)).Wait();
 
             _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupDB>()), Times.Once);
             _groupRepositoryMock.Verify(m => m.DeleteAll(It.IsAny<List<GroupProductDB>>()), Times.Once);
@@ -154,7 +154,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
                 It.IsAny<Expression<Func<GroupDB, object>>[]>()))
                 .ReturnsAsync(_selectedList);
 
-            Assert.ThrowsAsync<ValidationException>(() => _groupService.Delete(_group));
+            Assert.ThrowsAsync<ValidationException>(() => _groupService.Delete(_group.Id));
         }
 
         [Test]
