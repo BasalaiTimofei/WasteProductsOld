@@ -51,7 +51,7 @@ export class SearchresultComponent implements OnDestroy {
       this.authService.isAuthenticated$.toPromise<boolean>().then(res => {
         this.isAuth = res;
       }).catch();
-      this.isAuth = true; // MyStubs
+      // this.isAuth = true; // MyStubs
       this.setVariablesToDefault();
       this.search(query);
       this.query = query;
@@ -100,7 +100,7 @@ export class SearchresultComponent implements OnDestroy {
   }
 
   showPreview(productName: string, picturePath: string) {
-    picturePath = 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg'; // MyStubs
+    // picturePath = 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg'; // MyStubs
     const dialog: ImagePreviewOverlay = this.previewDialog.open({
       image: { name: productName, url: picturePath }
     });
