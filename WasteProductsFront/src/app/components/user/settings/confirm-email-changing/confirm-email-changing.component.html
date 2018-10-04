@@ -1,0 +1,9 @@
+<div>
+  <label>Подтвердение смены email</label>
+  <label>Для подтверждения смены email введите код, отправленный вам на ваш новый почтовый ящик:</label>
+  <input #newEmailTokenInput type="password">
+  <div *ngIf="this.isConfirmed === false">Изменение email произошло с ошибкой, возможно, неправильный код подтверждения</div>
+</div>
+<div>
+  <button (click)="this.confirmNewEmail(newEmailTokenInput.value)">Подтвердить</button>
+</div>

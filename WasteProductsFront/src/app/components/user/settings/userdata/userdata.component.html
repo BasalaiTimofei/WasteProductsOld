@@ -3,6 +3,8 @@
   <label>Имя:</label>
   <input id="name" type="text" name="name" required minlength="4" maxlength="16" [(ngModel)]="user.UserName">
   <label><input type="submit" class="submit" value="Изменить"></label>
+  <div *ngIf="this.isUserNameChanged">Username был успешно изменен</div>
+  <div *ngIf="!this.isUserNameChanged">Ошибка при изменении username. Возможно, username не уникален.</div>
 </div>
 </form>
 <form novalidate (ngSubmit)="updateEmail(g)" #g="ngForm">
@@ -10,6 +12,7 @@
         <label>Эл. почта:</label>
         <input id="email" type="text" name="email" required [(ngModel)]="user.Email" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,3}$" title="type email">
         <label><input type="submit" class="submit" value="Изменить"></label>
+        <div *ngIf="this.isEmailChangingRequestSent">Письмо с инструкцией по изменению вашего email отправлены на ваш новый почтовый адрес</div>
     </div>
 </form>
 <div>

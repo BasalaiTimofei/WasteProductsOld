@@ -93,7 +93,7 @@ namespace WasteProducts.Logic.Tests.UserTests
         [Test]
         public async Task UserIntegrTest_01AddingUserWithIncorrectEmail()
         {
-            Assert.ThrowsAsync<TaskCanceledException>(async () => await _userService.RegisterAsync("Incorrect email", "NewLogin", "qwerty", null).ConfigureAwait(false));
+            Assert.ThrowsAsync<ValidationException>(async () => await _userService.RegisterAsync("Incorrect email", "NewLogin", "qwerty", null).ConfigureAwait(false));
 
             //User user = await _userService.LogInByEmailAsync("Incorrect email", "qwerty").ConfigureAwait(false);
             //Assert.IsNull(user);
@@ -130,7 +130,7 @@ namespace WasteProducts.Logic.Tests.UserTests
         [Test]
         public async Task UserIntegrTest_04RegisteringUserWithNullArguements()
         {
-            Assert.ThrowsAsync<TaskCanceledException>(async () => await _userService.RegisterAsync(null, "Sergei1", "qwert1", null).ConfigureAwait(false));
+            Assert.ThrowsAsync<ValidationException>(async () => await _userService.RegisterAsync(null, "Sergei1", "qwert1", null).ConfigureAwait(false));
             Assert.ThrowsAsync<TaskCanceledException>(async () => await _userService.RegisterAsync("test101someemail@gmail.com", null, "qwert2", null).ConfigureAwait(false));
 
             //User user1 = await _userService.LogInByNameAsync("Sergei1", "qwert1").ConfigureAwait(false);

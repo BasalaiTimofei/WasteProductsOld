@@ -61,6 +61,7 @@ import { SlideshowComponent } from './components/common/slideshow/slideshow.comp
 import { AllToListComponent } from './components/products/all-to-list/all-to-list.component';
 import { SliderComponent } from './components/common/slider/slider.component';
 import { NguCarouselModule } from '@ngu/carousel';
+import { ConfirmEmailChangingComponent } from './components/user/settings/confirm-email-changing/confirm-email-changing.component';
 
 @NgModule({
   declarations: [
@@ -109,6 +110,7 @@ import { NguCarouselModule } from '@ngu/carousel';
     SlideshowComponent,
     AllToListComponent,
     SliderComponent,
+    ConfirmEmailChangingComponent,
   ],
   imports: [
     BrowserModule,

@@ -12,13 +12,13 @@ namespace WasteProducts.IdentityServer.Extensions
     {
         public static IdentityServerServiceFactory Configure(this IdentityServerServiceFactory factory)
         {
-            factory.Register(new Registration<ISearchRepository, LuceneSearchRepository>());
+            //factory.Register(new Registration<ISearchRepository, LuceneSearchRepository>());
 
             factory
                 .UseInMemoryClients(Clients.Load())
                 .UseInMemoryScopes(Scopes.Load());
 
-            factory.Register(new Registration<WasteContext>());
+            factory.Register(new Registration<WasteContext>(resolver => new WasteContext(null)));
             factory.Register(new Registration<UserStore>());
             factory.Register(new Registration<UserManager>());
             factory.UserService = new Registration<IUserService, IdentityUserService>();

@@ -16,11 +16,6 @@ namespace WasteProducts.Logic.Validators.Groups
 
             RuleFor(x => x.Information)
                 .Length(0, 255);
-
-            RuleFor(x => x.GroupBoards)
-                .Null();
-            RuleFor(x => x.GroupUsers)
-                .Null();
         }
     }
 }
