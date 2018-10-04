@@ -44,7 +44,7 @@ export class UserService extends BaseHttpService  {
     return this.httpService.put(url, bodyObj);
   }
 
-  updateEmail(email: string) {
+  updateEmailRequest(email: string) {
     const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/updateemail`;
     const bodyObj = {
       EmailOfTheUser: email,
