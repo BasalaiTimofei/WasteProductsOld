@@ -1,11 +1,12 @@
 
+using Ninject.Extensions.Logging;
+using Swagger.Net.Annotations;
+using System;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Http;
 using WasteProducts.Logic.Common.Models.Groups;
 using WasteProducts.Logic.Common.Services.Groups;
-using Ninject.Extensions.Logging;
-using Swagger.Net.Annotations;
-using System.Threading.Tasks;
 
 namespace WasteProducts.Web.Controllers.Api.Groups
 {
@@ -33,17 +34,20 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <param name="groupId">Primary key</param>
         /// <returns>200(Object) || 404</returns>
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Get group", typeof(Group))]
+        [SwaggerResponse(HttpStatusCode.OK, "Get group by group id", typeof(Group))]
         [SwaggerResponse(HttpStatusCode.NotFound, "Incorrect id user")]
         [HttpGet, Route("groups/{groupId}")]
-        public async Task<IHttpActionResult> GetGroupByGroupId(string groupId)
+        public async Task<IHttpActionResult> GetGroup(string groupId)
         {
-            var item = await _groupService.FindById(groupId);
-            if (item == null)
+            using (_groupService)
             {
-                return NotFound();
+                var item = await _groupService.FindById(groupId);
+                if (item == null)
+                {
+                    return NotFound();
+                }
+                return Ok(item);
             }
-            return Ok(item);
         }
 
         /// <summary>
@@ -52,17 +56,20 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <param name="userId">Primary key</param>
         /// <returns>200(Object) || 404</returns>
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Get group", typeof(Group))]
+        [SwaggerResponse(HttpStatusCode.OK, "Get user group by user id", typeof(Group))]
         [SwaggerResponse(HttpStatusCode.NotFound, "Incorrect id user")]
         [HttpGet, Route("user/{userId}/group")]
-        public async Task<IHttpActionResult> GetGroupByUserId(string userId)
+        public async Task<IHttpActionResult> GetUserGroup(string userId)
         {
-            var item = await _groupService.FindByAdmin(userId);
-            if (item == null)
+            using (_groupService)
             {
-                return NotFound();
+                var item = await _groupService.FindByAdmin(userId);
+                if (item == null)
+                {
+                    return NotFound();
+                }
+                return Ok(item);
             }
-            return Ok(item);
         }
 
         /// <summary>
@@ -76,9 +83,15 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [HttpPost, Route("groups")]
         public async Task<IHttpActionResult> Create(Group item)
         {
-            var groupId = await _groupService.Create(item);
+            using (_groupService)
+            {
+                var group = await _groupService.Create(item);
 
-            return Created($"{groupId}", item);
+                var uriBuilder = new UriBuilder(Request.RequestUri);
+                uriBuilder.Path += $"/{group.Id}";
+
+                return Created(uriBuilder.Uri, group);
+            }
         }
 
         /// <summary>
@@ -94,25 +107,23 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         {
             await _groupService.Update(item);
 
-            return Ok(item);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
         /// Group delete
         /// </summary>
         /// <param name="groupId">Primary key</param>
-        /// <param name="adminId">Primary key</param>
         /// <returns>302(url)</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.Redirect, "Group delete")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
-        [HttpDelete, Route("groups/{groupId}/{adminId}")]
-        public async Task<IHttpActionResult> Delete([FromUri]string groupId, [FromUri]string adminId)
+        [HttpDelete, Route("groups/{groupId}")]
+        public async Task<IHttpActionResult> Delete([FromUri]string groupId)
         {
-            var item = new Group { Id = groupId, AdminId = adminId };
-            await _groupService.Delete(item);
+            await _groupService.Delete(groupId);
 
-            return Redirect($"");
+            return StatusCode(HttpStatusCode.NoContent);
         }
     }
 }
