@@ -35,11 +35,7 @@ export class AllToListComponent implements OnInit {
 this.productService.getProducts().subscribe(
     res => {
       // this.userProducts = res;
-      this.data = res;
-      // tslint:disable-next-line:prefer-const
-      for (let item of this.data) {
-        this.products.push(item);
-      }
+      this.products = res;
     },
     err => console.error(err)
   );
