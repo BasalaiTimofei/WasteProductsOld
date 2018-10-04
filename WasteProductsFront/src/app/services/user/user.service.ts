@@ -12,23 +12,23 @@ import { AuthenticationService } from '../../modules/account/services/authentica
 export class UserService extends BaseHttpService  {
   constructor(httpClient: HttpClient, private authServise: AuthenticationService, loggingService: LoggingService) {
     super(httpClient, loggingService);
-    this.userApiUrl = `${environment.apiHostUrl}/api/user/`;
+    this.baseUserApiUrl = `${environment.apiHostUrl}/api/user/`;
    }
 
-   private userApiUrl;
+   private baseUserApiUrl;
 
   addFriend(friendId: string) {
-    const url = `${this.userApiUrl}/${this.authServise.getUserId()}/friends/${friendId}`;
+    const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/friends/${friendId}`;
     this.httpService.put(url, null);
   }
 
   getFriends() {
-    const url = `${this.userApiUrl}/${this.authServise.getUserId()}/friends`;
+    const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/friends`;
     return this.httpService.get<User[]>(url);
   }
 
   deleteFriend(friendId: string) {
-    const url = `${this.userApiUrl}/${this.authServise.getUserId()}/friends/${friendId}`;
+    const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/friends/${friendId}`;
     this.httpService.delete(url);
   }
 
@@ -37,7 +37,7 @@ export class UserService extends BaseHttpService  {
   }
 
   updateUserName(userName: string) {
-    const url = `${this.userApiUrl}/${this.authServise.getUserId()}/updateusername`;
+    const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/updateusername`;
     const bodyObj = {
       UserName: userName
     };
@@ -45,7 +45,7 @@ export class UserService extends BaseHttpService  {
   }
 
   updateEmail(email: string) {
-    const url = `${this.userApiUrl}/${this.authServise.getUserId()}/updateemail`;
+    const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/updateemail`;
     const bodyObj = {
       EmailOfTheUser: email,
     };
@@ -53,12 +53,12 @@ export class UserService extends BaseHttpService  {
   }
 
   confirmEmailChanging(token: string) {
-    const url = `${this.userApiUrl}/${this.authServise.getUserId()}/confirmemailchanging/${token}`;
+    const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/confirmemailchanging/${token}`;
     return this.httpService.put(url, null);
   }
 
   updatePassword(oldPassword: string, newPassword: string) {
-    const url = `${this.userApiUrl}/${this.authServise.getUserId()}/changepassword`;
+    const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/changepassword`;
     const bodyObj = {
       OldPassword: oldPassword,
       NewPassword: newPassword
