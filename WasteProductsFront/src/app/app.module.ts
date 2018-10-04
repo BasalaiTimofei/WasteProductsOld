@@ -59,6 +59,9 @@ import { UserformfieldComponent } from './components/user/settings/userformfield
 import { ChangePasswordComponent } from './components/user/settings/change-password/change-password.component';
 import { SlideshowComponent } from './components/common/slideshow/slideshow.component';
 import { AllToListComponent } from './components/products/all-to-list/all-to-list.component';
+import { SliderComponent } from './components/common/slider/slider.component';
+import { NguCarouselModule } from '@ngu/carousel';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -105,6 +108,7 @@ import { AllToListComponent } from './components/products/all-to-list/all-to-lis
     FormOverlayWrapperComponent,
     SlideshowComponent,
     AllToListComponent,
+    SliderComponent,
   ],
   imports: [
     BrowserModule,
@@ -116,6 +120,7 @@ import { AllToListComponent } from './components/products/all-to-list/all-to-lis
     AppRoutingModule,
     CdkTableModule,
     OverlayModule,
+    NguCarouselModule,
 
     /* Custom modules */
     AccountModule
