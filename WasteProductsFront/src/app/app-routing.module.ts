@@ -53,8 +53,8 @@ const routes: Routes = [
 
   { path: 'products', component: ProductsComponent, children: [
     { path: 'add-product', component: AddProductComponent },
-    { path: 'all-to-list', component: AllToListComponent },
   ]},
+  { path: 'all-to-list', component: AllToListComponent },
   { path: 'groups', component: GroupsComponent },
   { path: 'products/myproducts', component: ToListComponent },
   { path: 'groups/mygroups', component: GroupsOfUserComponent},
