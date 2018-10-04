@@ -111,55 +111,19 @@ namespace WasteProducts.Logic.Services.Groups
             await _dataBase.Save().ConfigureAwait(false);
         }
 
-        public async Task<Group> FindById(string groupId)
+        public Task<Group> FindById(string groupId)
         {
-            var model = (await _dataBase.GetWithInclude<GroupDB>(
-                    x => x.Id == groupId,
-                    y => y.GroupBoards.Select(z => z.GroupProducts),
-                    k => k.GroupBoards.Select(e => e.GroupComments),
-                    m => m.GroupUsers)).FirstOrDefault();
-            if (model == null)
-            {
-                return null;
-            }
-
-            var result = _mapper.Map<Group>(model);
-
-            return result;
+            return FindBy(g => g.Id == groupId).ContinueWith(r=> r.Result.FirstOrDefault());
         }
 
-        public async Task<Group> FindByAdmin(string userId)
+        public Task<IEnumerable<Group>> FindByAdmin(string userId)
         {
-            var model = (await _dataBase.GetWithInclude<GroupDB>(
-                    x => x.AdminId == userId,
-                    y => y.GroupBoards.Select(z => z.GroupProducts),
-                    k => k.GroupBoards.Select(e => e.GroupComments),
-                    m => m.GroupUsers)).FirstOrDefault();
-            if (model == null)
-            {
-                return null;
-            }
-
-            var result = _mapper.Map<Group>(model);
-
-            return result;
+            return FindBy(g => g.AdminId == userId);
         }
 
-        public async Task<Group> FindByName(string name)
+        public Task<IEnumerable<Group>> FindByName(string name)
         {
-            var model = (await _dataBase.GetWithInclude<GroupDB>(
-                    x => x.Name == name,
-                    y => y.GroupBoards.Select(z => z.GroupProducts),
-                    k => k.GroupBoards.Select(e => e.GroupComments),
-                    m => m.GroupUsers)).FirstOrDefault();
-            if (model == null)
-            {
-                return null;
-            }
-
-            var result = _mapper.Map<Group>(model);
-
-            return result;
+            return FindBy(g => g.Name == name);
         }
 
         public void Dispose()
@@ -170,6 +134,15 @@ namespace WasteProducts.Logic.Services.Groups
                 _disposed = true;
                 GC.SuppressFinalize(this);
             }
+        }
+
+        private Task<IEnumerable<Group>> FindBy(Func<GroupDB, bool> predicate)
+        {
+            return _dataBase.GetWithInclude(
+                predicate,
+                y => y.GroupBoards.Select(z => z.GroupProducts),
+                k => k.GroupBoards.Select(e => e.GroupComments),
+                m => m.GroupUsers).ContinueWith(result => _mapper.Map<IEnumerable<Group>>(result));
         }
 
         ~GroupService()
