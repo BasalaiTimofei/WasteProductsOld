@@ -24,6 +24,8 @@ namespace WasteProducts.Logic.Services.Groups
         public async Task<string> Create(GroupBoard item)
         {
             var result = _mapper.Map<GroupBoardDB>(item);
+            result.GroupProducts = null;
+            result.GroupComments = null;
 
             var modelUser = (await _dataBase.Find<GroupUserDB>(
                 x => x.RightToCreateBoards == true

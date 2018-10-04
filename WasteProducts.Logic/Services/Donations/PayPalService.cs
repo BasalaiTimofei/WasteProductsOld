@@ -80,10 +80,23 @@ namespace WasteProducts.Logic.Services.Donations
                 Donor = FillDonor(payPalArguments),
                 TransactionId = payPalArguments[IPN.Transaction.TXN_ID],
                 Date = ConvertPayPalDateTime(payPalArguments[IPN.Payment.PAYMENT_DATE]),
-                Gross = Convert.ToDecimal(payPalArguments[IPN.Payment.MC_GROSS]),
+                Gross = ConvertFrom(payPalArguments[IPN.Payment.MC_GROSS]),
                 Currency = payPalArguments[IPN.Payment.MC_CURRENCY],
-                Fee = Convert.ToDecimal(payPalArguments[IPN.Payment.MC_FEE])
+                Fee = ConvertFrom(payPalArguments[IPN.Payment.MC_FEE])
             };
+        }
+
+        /// <summary>
+        /// Converts the specified String representation of a number to an equivalent Decimal number.
+        /// </summary>
+        /// <param name="s">A String containing a number to convert.</param>
+        /// <returns>A Decimal number equivalent to the value of value.</returns>
+        private decimal ConvertFrom(string s)
+        {
+            return Convert.ToDecimal(
+                    s,
+                    CultureInfo.InvariantCulture.NumberFormat
+                    );
         }
 
         /// <summary>

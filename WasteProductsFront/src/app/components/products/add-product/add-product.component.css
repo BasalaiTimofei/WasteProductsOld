@@ -10,10 +10,26 @@ div button {
     padding: 10px 20px;
     text-align: center;
     text-decoration: none;
-    display: inline-block;
+    display: grid;
     font-size: 16px
 }
 input{
   padding-left: 10px;
   margin: 20px;
+}
+
+div form {
+    float: right;
+    margin-right: 10%
+    
+}
+
+input{
+    width:95%;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: grid;
+    font-size: 16px
 }

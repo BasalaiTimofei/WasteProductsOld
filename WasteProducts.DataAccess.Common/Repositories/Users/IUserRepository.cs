@@ -80,6 +80,14 @@ namespace WasteProducts.DataAccess.Common.Repositories.Users
         Task<bool> ConfirmEmailAsync(string userId, string token);
 
         /// <summary>
+        /// Confirms new email with email confirmation token.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <param name="token">Confirmation token.</param>
+        /// <returns></returns>
+        Task ConfirmEmailChangingAsync(string userId, string token);
+
+        /// <summary>
         /// Deletes the record of the specific user.
         /// </summary>
         /// <param name="userId">ID of the specific user to delete.</param>
@@ -99,6 +107,14 @@ namespace WasteProducts.DataAccess.Common.Repositories.Users
         /// <param name="productId">ID of specific product to remove from the user's list of products.</param>
         /// <returns>Boolean represents whether operation succeed or not.</returns>
         Task DeleteProductAsync(string userId, string productId);
+
+        /// <summary>
+        /// Generates email changing token.
+        /// </summary>
+        /// <param name="userId">ID of the user.</param>
+        /// <param name="newEmail">New email of the user.</param>
+        /// <returns>Email confirmation token.</returns>
+        Task<string> GenerateEmailChangingTokenAsync(string userId, string newEmail);
 
         /// <summary>
         /// Generates a password reset token for the specific user and returns tuple where item1 is ID of the user and item2 is the token.
@@ -184,6 +200,13 @@ namespace WasteProducts.DataAccess.Common.Repositories.Users
         /// <param name="email">Checking email.</param>
         /// <returns>True if email is available, false if it's not.</returns>
         Task<bool> IsEmailAvailableAsync(string email);
+
+        /// <summary>
+        /// Returns true if there us no User with such Username. Returns false is there is a User with the UserName.
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        Task<bool> IsUserNameAvailable(string userName);
 
         /// <summary>
         /// Remove a claim from a user.

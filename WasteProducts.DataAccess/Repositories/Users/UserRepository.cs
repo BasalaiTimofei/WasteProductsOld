@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bogus;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
@@ -22,21 +23,25 @@ namespace WasteProducts.DataAccess.Repositories.Users
 
         private readonly UserManager<UserDB> _manager;
 
+        private readonly Faker _faker;
+
         private readonly IMapper _mapper;
 
         private bool _disposed;
 
-        public UserRepository(WasteContext context, IMapper mapper)
+        public UserRepository(WasteContext context, Faker faker, IMapper mapper)
         {
             _context = context;
+            
             _store = new UserStore<UserDB>(_context)
             {
                 DisposeContext = true
             };
             _manager = new UserManager<UserDB>(_store);
 
-            _mapper = mapper;
+            _faker = faker;
 
+            _mapper = mapper;
         }
 
         public void Dispose()
@@ -60,18 +65,23 @@ namespace WasteProducts.DataAccess.Repositories.Users
                 UserName = userName,
                 Created = DateTime.UtcNow
             };
-            await _manager.CreateAsync(user, password).ConfigureAwait(false);
-            if (await _manager.FindByIdAsync(id).ConfigureAwait(false) is null)
+
+            var result = await _manager.CreateAsync(user, password).ConfigureAwait(false);
+            
+            if(!result.Succeeded)
+            {
+                throw new OperationCanceledException("User cannot be registered.");
+            }
+
+            if (await _manager.FindByIdAsync(id).ConfigureAwait(false) != null)
             {
                 _manager.UserTokenProvider = new EmailTokenProvider<UserDB>();
                 var token = await _manager.GenerateEmailConfirmationTokenAsync(id).ConfigureAwait(false);
+
                 return (id, token);
             }
             else
-            {
-                // throws 409 conflict
-                throw new OperationCanceledException("Id is not unique.");
-            }
+                throw new OperationCanceledException("User cannot be registered.");
         }
 
         public async Task<bool> ConfirmEmailAsync(string userId, string token)
@@ -83,6 +93,46 @@ namespace WasteProducts.DataAccess.Repositories.Users
                 throw new UnauthorizedAccessException("Incorrect userId or token. Email is not confirmed."); 
             }
             return true;
+        }
+
+        public async Task ConfirmEmailChangingAsync(string userId, string token)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
+            var confirm = await _context.NewEmailConfirmators.FirstOrDefaultAsync(n => n.UserId == userId && n.Token == token).ConfigureAwait(false);
+
+            if (user != null && confirm != null)
+            {
+                user.Email = confirm.NewEmail;
+                user.EmailConfirmed = true;
+
+                _context.NewEmailConfirmators.Remove(confirm);
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+            }
+            else
+            {
+                throw new UnauthorizedAccessException("Token is not valid.");
+            }
+
+        }
+
+        public async Task<string> GenerateEmailChangingTokenAsync(string userId, string newEmail)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
+            if (user != null)
+            {
+                var token = _faker.Phone.Random.String(5, 5, 'a', 'z');
+                var newEmailConfirmator = new NewEmailConfirmator
+                {
+                    UserId = userId,
+                    NewEmail = newEmail,
+                    Created = DateTime.UtcNow,
+                    Token = token
+                };
+                _context.NewEmailConfirmators.Add(newEmailConfirmator);
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                return token;
+            }
+            throw new KeyNotFoundException("There is no User with such ID");
         }
 
         public async Task<(string id, string token)> GeneratePasswordResetTokenAsync(string email)
@@ -296,7 +346,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
 
                 var entry = _context.Entry(user);
 
-                entry.State = EntityState.Unchanged;
+                //entry.State = EntityState.Unchanged;
                 entry.Property(u => u.UserName).IsModified = true;
                 entry.Property(u => u.Modified).IsModified = true;
 
@@ -305,6 +355,11 @@ namespace WasteProducts.DataAccess.Repositories.Users
             }
             else
                 throw new OperationCanceledException("The User Name is not available.");
+        }
+
+        public async Task<bool> IsUserNameAvailable(string userName)
+        {
+            return !(await _context.Users.AnyAsync(u => u.UserName == userName).ConfigureAwait(false));
         }
 
         // Business logic below
@@ -388,10 +443,19 @@ namespace WasteProducts.DataAccess.Repositories.Users
 
         public async Task<IList<UserProductDescriptionDB>> GetUserProductDescriptionsAsync(string userId)
         {
-            var user = await _context.Users.Include(u => u.ProductDescriptions).FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
+            var user =
+                await _context.Users
+                .Include(u => u.ProductDescriptions.Select(pd => pd.Product))
+                .FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
+
             if (user == null)
             {
                 throw new KeyNotFoundException("There is no User with such userId.");
+            }
+
+            foreach (var pd in user.ProductDescriptions)
+            {
+                pd.Product.UserDescriptions.Select(ud => ud);
             }
             return user.ProductDescriptions;
         }

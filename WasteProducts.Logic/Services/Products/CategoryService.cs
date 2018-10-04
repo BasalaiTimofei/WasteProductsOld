@@ -29,11 +29,11 @@ namespace WasteProducts.Logic.Services.Products
         {
             if (IsCategoryInDB(p =>
                 string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase),
-                out var categories)) return null;
+                out var categories)) return Task.FromResult<string>(null);
 
             var newCategory = new Category { Name = name };
-            return _categoryRepository.AddAsync(_mapper.Map<CategoryDB>(newCategory))
-                .ContinueWith(c => c.Result);
+            return _categoryRepository.AddAsync(_mapper.Map<CategoryDB>(newCategory));
+                
         }
 
         /// <inheritdoc/>
@@ -80,7 +80,10 @@ namespace WasteProducts.Logic.Services.Products
         {
             if (!IsCategoryInDB(c =>
                     string.Equals(c.Id, category.Id, StringComparison.Ordinal),
-                out var categories)) return null;
+                out var categories))
+            {
+                return null;
+            }
 
             return _categoryRepository.UpdateAsync(_mapper.Map<CategoryDB>(category));
         }
@@ -92,8 +95,7 @@ namespace WasteProducts.Logic.Services.Products
                     string.Equals(p.Id, id, StringComparison.Ordinal),
                 out var categories)) return null;
 
-            var categoryFromDB = categories.ToList().First();
-            return _categoryRepository.DeleteAsync(categoryFromDB);
+            return _categoryRepository.DeleteAsync(id);
         }
 
         private bool IsCategoryInDB(Predicate<CategoryDB> conditionPredicate, out IEnumerable<CategoryDB> categories)
