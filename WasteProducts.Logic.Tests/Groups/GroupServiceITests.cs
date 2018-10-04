@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Groups;
@@ -193,7 +194,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
                 It.IsAny<Expression<Func<GroupDB, object>>[]>()))
                 .ReturnsAsync(_selectedList);
 
-            var result = Task.Run(() => _groupService.FindByAdmin("1")).Result;
+            var result = Task.Run(() => _groupService.FindByAdmin("1")).Result.FirstOrDefault();
             Assert.AreEqual(_group.Id, result.Id);
             Assert.AreEqual(_group.Name, result.Name);
             Assert.AreEqual(_group.Information, result.Information);
@@ -207,7 +208,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
                 It.IsAny<Expression<Func<GroupDB, object>>[]>()))
                 .ReturnsAsync(_selectedList);
 
-            var result = Task.Run(() => _groupService.FindByAdmin("2")).Result; ;
+            var result = Task.Run(() => _groupService.FindByAdmin("2")).Result.FirstOrDefault();
             Assert.AreEqual(null, result);
         }
     }

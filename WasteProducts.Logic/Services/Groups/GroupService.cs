@@ -142,7 +142,7 @@ namespace WasteProducts.Logic.Services.Groups
                 predicate,
                 y => y.GroupBoards.Select(z => z.GroupProducts),
                 k => k.GroupBoards.Select(e => e.GroupComments),
-                m => m.GroupUsers).ContinueWith(result => _mapper.Map<IEnumerable<Group>>(result));
+                m => m.GroupUsers).ContinueWith(result => _mapper.Map<IEnumerable<Group>>(result.Result));
         }
 
         ~GroupService()
