@@ -8,7 +8,7 @@ namespace WasteProducts.Logic.Mappings.Users
     {
         public GroupOfUserProfile()
         {
-            CreateMap<GroupUserDB, GroupOfUser>().ForMember(m => m.Id, cfg => cfg.MapFrom(g => g.Group.Id));
+            CreateMap<GroupUserDB, GroupOfUser>().ForMember(m => m.Id, cfg => cfg.MapFrom(g => g.GroupId));
             CreateMap<GroupUserDB, GroupOfUser>().ForMember(m => m.Name, cfg => cfg.MapFrom(g => g.Group.Name));
         }
     }
