@@ -18,7 +18,6 @@ import { NotFoundComponent } from './components/common/not-found/not-found.compo
 import { DefaultComponent } from './components/common/default/default.component';
 import { FriendsComponent } from './components/user/friends/friends.component';
 import { ProductsComponent } from './components/products/products.component';
-import { GroupsComponent } from './components/groups/groups.component';
 import { SettingsComponent } from './components/user/settings/settings.component';
 import { RegisterComponent } from './components/user/register/register.component';
 import { ToListComponent } from './components/products/to-list/to-list.component';
@@ -52,11 +51,14 @@ import { GroupsOfUserComponent } from './components/groups/groups-of-user/groups
 import { ImagePreviewService } from './services/image-preview/image-preview.service';
 import { FormPreviewService } from './services/form-preview/form-preview.service';
 
-/* Custom Modules */
-import { AccountModule } from './modules/account/account.module';
+
 import { UserdataComponent } from './components/user/settings/userdata/userdata.component';
 import { UserformfieldComponent } from './components/user/settings/userformfield/userformfield.component';
 import { ChangePasswordComponent } from './components/user/settings/change-password/change-password.component';
+
+/* Custom Modules */
+import { AccountModule } from './modules/account/account.module';
+import { GroupsModule } from './modules/groups/groups.module';
 
 @NgModule({
   declarations: [
@@ -69,7 +71,6 @@ import { ChangePasswordComponent } from './components/user/settings/change-passw
     DefaultComponent,
     FriendsComponent,
     ProductsComponent,
-    GroupsComponent,
     SettingsComponent,
     RegisterComponent,
     ToListComponent,
@@ -115,7 +116,8 @@ import { ChangePasswordComponent } from './components/user/settings/change-passw
     OverlayModule,
 
     /* Custom modules */
-    AccountModule
+    AccountModule,
+    GroupsModule,
   ],
   providers: [ImagePreviewService,
               FormPreviewService],

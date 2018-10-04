@@ -6,7 +6,6 @@ import { RegisterComponent } from './components/user/register/register.component
 import { MainPageComponent } from './components/common/main-page/main-page.component';
 import { FriendsComponent } from './components/user/friends/friends.component';
 import { ProductsComponent } from './components/products/products.component';
-import { GroupsComponent } from './components/groups/groups.component';
 import { SettingsComponent } from './components/user/settings/settings.component';
 import { ToListComponent } from './components/products/to-list/to-list.component';
 import { SearchComponent } from './components/search/search.component';
@@ -54,7 +53,7 @@ const routes: Routes = [
   { path: 'products', component: ProductsComponent, children: [
     { path: 'add-product', component: AddProductComponent }
   ]},
-  { path: 'groups', component: GroupsComponent },
+ /*  { path: 'groups', component: GroupsComponent }, */
   { path: 'products/myproducts', component: ToListComponent },
   { path: 'groups/mygroups', component: GroupsOfUserComponent},
   { path: 'searchresults/:query', component: SearchresultComponent },
