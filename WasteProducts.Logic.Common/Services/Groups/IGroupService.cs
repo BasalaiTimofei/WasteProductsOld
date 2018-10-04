@@ -14,7 +14,7 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// Create new group
         /// </summary>
         /// <param name="item">Object</param>
-        Task<string> Create(Group item);
+        Task<Group> Create(Group item);
 
         /// <summary>
         /// Add or corect information in group
@@ -25,8 +25,8 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// <summary>
         /// Group delete
         /// </summary>
-        /// <param name="item">Primary key</param>
-        Task Delete(Group item);
+        /// <param name="groupId">Primary key</param>
+        Task Delete(string groupId);
 
         /// <summary>
         /// Search group by id
