@@ -12,7 +12,7 @@ import { AuthenticationService } from '../../modules/account/services/authentica
 export class UserService extends BaseHttpService  {
   constructor(httpClient: HttpClient, private authServise: AuthenticationService, loggingService: LoggingService) {
     super(httpClient, loggingService);
-    this.baseUserApiUrl = `${environment.apiHostUrl}/api/user/`;
+    this.baseUserApiUrl = `${environment.apiHostUrl}/api/user`;
    }
 
    private baseUserApiUrl;
@@ -50,6 +50,11 @@ export class UserService extends BaseHttpService  {
       EmailOfTheUser: email,
     };
     return this.httpService.put(url, bodyObj);
+  }
+
+  confirmEmail(id: string, token: string) {
+    const url = `${this.baseUserApiUrl}/${id}/confirmemail/${token}`;
+    return this.httpService.put(url, null);
   }
 
   confirmEmailChanging(token: string) {

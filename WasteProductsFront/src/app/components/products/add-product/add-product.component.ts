@@ -82,9 +82,6 @@ constructor(private http: HttpClient, private productService: ProductService,
     console.log(this.productForm.value);
 }
 
-
-
-
 onFileSelected(event) {
   this.selectedFile = <File>event.target.files[0];
 

@@ -32,6 +32,11 @@
           <button mat-button type="submit" ng-disabled="ngForm.invalid">Submit</button>
         </div>
 
+        <div *ngIf="this.isEmailConfirmationRequested">
+          <div>Для завершения регистрации введите код подтверждения email, отправленный на ваш почтовый адрес.</div>
+          <div><input #emailTokenInput type="text"></div>
+          <div><button (click)="this.confirmEmail(emailTokenInput.value)">Подтвердить</button></div>
+        </div>
 
       </form>
     </div>
