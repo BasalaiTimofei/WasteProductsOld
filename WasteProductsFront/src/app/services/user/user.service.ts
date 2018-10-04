@@ -33,7 +33,7 @@ export class UserService extends BaseHttpService  {
   }
 
   getUserSettings() {
-    return this.httpService.get<User>(`this.userApiUrl/${this.authServise.getUserId()}`);
+    return this.httpService.get<User>(`${this.baseUserApiUrl}/${this.authServise.getUserId()}`);
   }
 
   updateUserName(userName: string) {
