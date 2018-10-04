@@ -91,7 +91,6 @@ export class SearchresultComponent implements OnDestroy {
 
   removeFromMyProducts(productId: string) {
     this.productService.deleteUserProduct(productId);
-    this.router.navigate(['searchresults', this.query]);
     this.snackBar.open(this.responseMessage, null, {
       duration: 4000,
       verticalPosition: 'top',

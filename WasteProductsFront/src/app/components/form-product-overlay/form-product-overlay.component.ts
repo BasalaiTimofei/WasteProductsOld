@@ -49,8 +49,7 @@ export class FormProductOverlayComponent {
     if (!comment) {
       this.errorValidation = true;
     } else {
-      // this.productService.addProductDescription(rate, comment, this.form.id); // MyStubs
-      this.router.navigate(['searchresults', this.form.searchQuery]);
+      this.productService.addProductDescription(rate, comment, this.form.id);
       this.closeForm();
       this.snackBar.open('Продукт добавлен успешно!', null, {
             duration: 4000,

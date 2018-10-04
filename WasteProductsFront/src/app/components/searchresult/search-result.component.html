@@ -7,7 +7,7 @@
       <mat-toolbar color="">Результаты поиска</mat-toolbar>
         <mat-list>
           <mat-list-item *ngFor="let result of tempProducts">
-            <img mat-list-icon *ngIf="result.PicturePath === null; else noIcon"
+            <img mat-list-icon *ngIf="result.PicturePath !== null; else noIcon"
                 src="result.PicturePath"
                 (click)="showPreview(result.Name, result.PicturePath)"
                 matTooltip="Открыть в исходном размере" >
@@ -15,6 +15,7 @@
               <img mat-list-icon src="../../../favicon.ico"
                                 matTooltip="Изображение отсутствует" >
             </ng-template>
+            <p mat-line> {{result.Id}} </p>
             <p mat-line> {{result.Name}} </p>
             <div *ngIf="isAuth">
               <div *ngIf="!result.IsAdded; else added">
