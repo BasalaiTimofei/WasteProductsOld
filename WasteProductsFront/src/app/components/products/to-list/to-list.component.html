@@ -26,7 +26,8 @@
   <!-- Composition Column -->
   <ng-container matColumnDef="Composition">
     <th mat-header-cell *matHeaderCellDef>Состав</th>
-    <td mat-cell *matCellDef="let row">{{row.Product.Composition}}</td>
+    <td mat-cell floatLabel="always" *matCellDef="let row">
+      {{row.Product.Composition}}</td>
   </ng-container>
 
   <!-- IsHidden Column -->
