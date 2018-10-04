@@ -2,7 +2,6 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { Product } from '../../../models/products/product';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { ProductService } from '../../../services/product/product.service';
-import { UserProduct } from '../../../models/users/user-product';
 import { Router } from '@angular/router';
 
 
@@ -19,11 +18,12 @@ export class AllToListComponent implements OnInit {
     private router: Router) {}
 
   products: Product[] = [];
-  userProducts: UserProduct[] = [];
+  //userProducts: UserProduct[] = [];
 
-  data: UserProduct[] = this.userProducts;
+  //data: UserProduct[] = this.userProducts;
+  data: Product[] = this.products;
   dataSource = new MatTableDataSource(this.data);
-  displayedColumns: string[] = ['Name', 'AvgRating', 'Composition', 'IsHidden'];
+  displayedColumns: string[] = ['Name', 'AvgRating', 'Composition'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
