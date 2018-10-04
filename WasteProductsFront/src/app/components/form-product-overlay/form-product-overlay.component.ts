@@ -45,17 +45,18 @@ export class FormProductOverlayComponent {
     public snackBar: MatSnackBar,
     private router: Router) { }
 
-  addToMyProducts(comment: string, rate: number) {
+  async addToMyProducts(comment: string, rate: number) {
     if (!comment) {
       this.errorValidation = true;
     } else {
       this.productService.addProductDescription(rate, comment, this.form.id);
       this.closeForm();
       this.snackBar.open('Продукт добавлен успешно!', null, {
-            duration: 4000,
+            duration: 3000,
             verticalPosition: 'top',
             horizontalPosition: 'center'
       });
+      await this.delay(3500);
       location.reload(true);
     }
   }
@@ -74,5 +75,9 @@ export class FormProductOverlayComponent {
 
   closeForm() {
     this.dialogRef.close();
+  }
+
+  async delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 }

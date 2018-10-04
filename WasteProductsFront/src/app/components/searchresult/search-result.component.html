@@ -15,7 +15,6 @@
               <img mat-list-icon src="../../../favicon.ico"
                                 matTooltip="Изображение отсутствует" >
             </ng-template>
-            <p mat-line> {{result.Id}} </p>
             <p mat-line> {{result.Name}} </p>
             <div *ngIf="isAuth">
               <div *ngIf="!result.IsAdded; else added">

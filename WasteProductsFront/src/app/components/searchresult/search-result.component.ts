@@ -89,13 +89,14 @@ export class SearchresultComponent implements OnDestroy {
     });
   }
 
-  removeFromMyProducts(productId: string) {
+  async removeFromMyProducts(productId: string) {
     this.productService.deleteUserProduct(productId);
     this.snackBar.open(this.responseMessage, null, {
-      duration: 4000,
+      duration: 3000,
       verticalPosition: 'top',
       horizontalPosition: 'center'
     });
+    await this.delay(3500);
     location.reload(true);
   }
 
@@ -123,5 +124,9 @@ export class SearchresultComponent implements OnDestroy {
     this.pageSize = 5;
     this.pageIndex = 0;
     this.length = 0;
+  }
+
+  async delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 }

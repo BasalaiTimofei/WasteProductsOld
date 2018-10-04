@@ -7,6 +7,7 @@ import { catchError, map } from 'rxjs/operators';
 import { BaseHttpService } from '../base/base-http.service';
 import { LoggingService } from '../logging/logging.service';
 import { ProductService } from '../product/product.service';
+import { AuthenticationService } from '../../modules/account/services/authentication.service';
 
 // models
 import { SearchProduct } from '../../models/search-product';
@@ -23,18 +24,22 @@ import { UserProduct } from '../../models/users/user-product';
 export class SearchService extends BaseHttpService {
   private URL_SEARCH = `${environment.apiHostUrl}/api/search`;  // URL to web api
 
-  public userProductsId: UserProduct[];
+  public userProductsId: UserProduct[] = [];
   public searchProducts: SearchProduct[];
 
   public constructor(httpService: HttpClient,
                     loggingService: LoggingService,
-                    public productService: ProductService) {
+                    public productService: ProductService,
+                    public authService: AuthenticationService) {
     super(httpService, loggingService);
+
+    if (!authService.isAuthenticated$) { // !authService.isAuthenticated$ // MyStubs
     this.productService.getUserProducts().toPromise().then(
       res => {
         this.userProductsId = res;
       } ,
       err => console.error(err));
+    }
   }
 
   getDefault(query: string): Observable<SearchProduct[]> {
