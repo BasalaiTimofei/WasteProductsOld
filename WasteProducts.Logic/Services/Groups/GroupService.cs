@@ -13,7 +13,7 @@ namespace WasteProducts.Logic.Services.Groups
 {
     public class GroupService : IGroupService
     {
-        private IGroupRepository _dataBase;
+        private readonly IGroupRepository _dataBase;
         private readonly IMapper _mapper;
         private bool _disposed;
 
@@ -23,16 +23,19 @@ namespace WasteProducts.Logic.Services.Groups
             _mapper = mapper;
         }
 
-        public async Task<string> Create(Group item)
+        public async Task<Group> Create(Group item)
         {
             var result = _mapper.Map<GroupDB>(item);
             result.GroupBoards = null;
             result.GroupUsers = null;
 
-            var model = (await _dataBase.Find<GroupDB>(
-                x => x.AdminId == result.AdminId)).FirstOrDefault();
+            var searchResult = await _dataBase.Find<GroupDB>(x => x.AdminId == result.AdminId).ConfigureAwait(false);
+
+            var model = searchResult.FirstOrDefault();
             if (model != null)
+            {
                 throw new ValidationException("Group already exists");
+            }
 
             result.Id = Guid.NewGuid().ToString();
             result.Created = DateTime.UtcNow;
@@ -52,41 +55,46 @@ namespace WasteProducts.Logic.Services.Groups
             };
 
             _dataBase.Create(result);
-            await _dataBase.Save();
-            return result.Id.ToString();
+            await _dataBase.Save().ConfigureAwait(false);
+
+            return _mapper.Map<Group>(result);
         }
 
         public async Task Update(Group item)
         {
             var result = _mapper.Map<GroupDB>(item);
 
-            var model = (await _dataBase.Find<GroupDB>(
-                x => x.Id == result.Id
-                && x.AdminId == result.AdminId
-                && x.IsNotDeleted == true)).FirstOrDefault();
+            var searchResult = await _dataBase.Find<GroupDB>(x => x.Id == result.Id && x.IsNotDeleted)
+                .ConfigureAwait(false);
+
+            var model = searchResult.FirstOrDefault();
             if (model == null)
+            {
                 throw new ValidationException("Group not found");
+            }
 
             model.Information = result.Information;
             model.Name = result.Name;
             model.Modified = DateTime.UtcNow;
 
             _dataBase.Update(model);
-            await _dataBase.Save();
+
+            await _dataBase.Save().ConfigureAwait(false);
         }
 
-        public async Task Delete(Group item)
+        public async Task Delete(string groupId)
         {
-            var result = _mapper.Map<GroupDB>(item);
+            var searchResult = await _dataBase.GetWithInclude<GroupDB>(x => x.Id == groupId,
+                b => b.IsNotDeleted,
+                y => y.GroupBoards
+                    .Select(z => z.GroupProducts),
+                m => m.GroupUsers).ConfigureAwait(false);
 
-            var model = (await _dataBase.GetWithInclude<GroupDB>(
-                x => x.Id == result.Id,
-                a => a.AdminId == result.AdminId,
-                b=>b.IsNotDeleted == true,
-                y => y.GroupBoards.Select(z => z.GroupProducts),
-                m => m.GroupUsers)).FirstOrDefault();
+            var model = searchResult.FirstOrDefault();
             if (model == null)
+            {
                 throw new ValidationException("Group not found");
+            }
 
             model.IsNotDeleted = false;
             model.Deleted = DateTime.UtcNow;
@@ -100,7 +108,8 @@ namespace WasteProducts.Logic.Services.Groups
             }
             _dataBase.DeleteAll(model.GroupUsers);
             _dataBase.Update(model);
-            await _dataBase.Save();
+
+            await _dataBase.Save().ConfigureAwait(false);
         }
 
         public async Task<Group> FindById(string groupId)
@@ -111,7 +120,9 @@ namespace WasteProducts.Logic.Services.Groups
                     k => k.GroupBoards.Select(e => e.GroupComments),
                     m => m.GroupUsers)).FirstOrDefault();
             if (model == null)
+            {
                 return null;
+            }
 
             var result = _mapper.Map<Group>(model);
 
@@ -126,7 +137,9 @@ namespace WasteProducts.Logic.Services.Groups
                     k => k.GroupBoards.Select(e => e.GroupComments),
                     m => m.GroupUsers)).FirstOrDefault();
             if (model == null)
+            {
                 return null;
+            }
 
             var result = _mapper.Map<Group>(model);
 
@@ -141,7 +154,9 @@ namespace WasteProducts.Logic.Services.Groups
                     k => k.GroupBoards.Select(e => e.GroupComments),
                     m => m.GroupUsers)).FirstOrDefault();
             if (model == null)
+            {
                 return null;
+            }
 
             var result = _mapper.Map<Group>(model);
 
