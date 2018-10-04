@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { PageEvent } from '@angular/material';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
@@ -51,7 +51,7 @@ export class SearchresultComponent implements OnDestroy {
       this.authService.isAuthenticated$.toPromise<boolean>().then(res => {
         this.isAuth = res;
       }).catch();
-      this.isAuth = true;
+      this.isAuth = true; // MyStubs
       this.setVariablesToDefault();
       this.search(query);
       this.query = query;
@@ -100,14 +100,14 @@ export class SearchresultComponent implements OnDestroy {
   }
 
   showPreview(productName: string, picturePath: string) {
+    picturePath = 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg'; // MyStubs
     const dialog: ImagePreviewOverlay = this.previewDialog.open({
-      // TODO Заменить путем из реквеста и название продукта
-      image: { name: productName, url: picturePath } // https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg
+      image: { name: productName, url: picturePath }
     });
   }
 
   showDetails(id: string) {
-    // this.router.navigate(['', id]);
+    // this.router.navigate(['', id]); // MyStubs
   }
 
   public changePageEvent(event?: PageEvent) {

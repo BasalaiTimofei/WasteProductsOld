@@ -7,7 +7,7 @@
       <mat-toolbar color="">Результаты поиска</mat-toolbar>
         <mat-list>
           <mat-list-item *ngFor="let result of tempProducts">
-            <img mat-list-icon *ngIf="result.PicturePath !== null; else noIcon"
+            <img mat-list-icon *ngIf="result.PicturePath === null; else noIcon"
                 src="result.PicturePath"
                 (click)="showPreview(result.Name, result.PicturePath)"
                 matTooltip="Открыть в исходном размере" >
@@ -24,7 +24,7 @@
               </div>
             </div>
             <button matSuffix mat-button mat-icon-button>
-              <mat-icon matTooltip="Подробнее" (click)="showDetails(result.Id)">assignment</mat-icon> <!--TODO переход на страницу "Детали продукта"-->
+              <mat-icon matTooltip="Подробнее" (click)="showDetails(result.Id)">assignment</mat-icon> <!--MyStubs-->
             </button>
             <ng-template #added>
               <button  matSuffix mat-button mat-icon-button (click)="removeFromMyProducts(result.Id)">

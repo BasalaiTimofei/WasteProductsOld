@@ -22,6 +22,9 @@
     <mat-form-field class="full-width" [hideRequiredMarker]="false">
       <textarea #comment matInput placeholder="Мой комментарий" value="" required></textarea>
     </mat-form-field>
+    <div class="error-validation" *ngIf="errorValidation">
+      <p>Поле Мой комментарий не может быть пустым</p>
+    </div>
     <button type="submit" (click)="addToMyProducts(comment.value, rate.value)" mat-button>Добавить</button>
     <button mat-button (click)="closeForm()">Отмена</button>
   </form>

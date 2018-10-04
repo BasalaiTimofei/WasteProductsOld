@@ -31,7 +31,7 @@ export class SearchService extends BaseHttpService {
     return this.httpService.get<SearchProduct[]>(this.URL_SEARCH + '/products/default', this.getOptions(query)).pipe(
       map(res => {
         if (res != null) {
-        const result: any = res;
+        const result: any = res; // MyStubs
         return result.map((item) => new SearchProduct(item.Id, item.Name, false, item.PicturePath)); // вместо false получать статус наличия
         }
       }), catchError(this.handleError('Error in search.service getDefault()', []))

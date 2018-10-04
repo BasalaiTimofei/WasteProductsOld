@@ -1,14 +1,11 @@
-import { Component, Input, Inject, HostListener, EventEmitter, NgZone, ViewChild } from '@angular/core';
-import { trigger, state, style, transition, animate, AnimationEvent, group, query } from '@angular/animations';
+import { Component, Inject, HostListener, EventEmitter } from '@angular/core';
+import { trigger, state, style, transition, animate, AnimationEvent } from '@angular/animations';
 import { MatSnackBar } from '@angular/material';
-import { CdkTextareaAutosize } from '@angular/cdk/text-field';
-import { take } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { FormPreviewOverlay } from './form-preview-overlay';
 import { FILE_PREVIEW_DIALOG_DATA } from './form-preview-overlay.tokens';
 import { ProductService } from '../../services/product/product.service';
-import { HttpResponse } from '@angular/common/http';
 
 const ESCAPE = 27;
 const ANIMATION_TIMINGS = '400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
@@ -34,6 +31,7 @@ const ANIMATION_TIMINGS = '400ms cubic-bezier(0.25, 0.8, 0.25, 1)';
 export class FormProductOverlayComponent {
   animationState: 'void' | 'enter' | 'leave' = 'enter';
   animationStateChanged = new EventEmitter<AnimationEvent>();
+  errorValidation = false;
 
   @HostListener('document:keydown', ['$event']) private handleKeydown(event: KeyboardEvent) {
     if (event.keyCode === ESCAPE) {
@@ -41,7 +39,6 @@ export class FormProductOverlayComponent {
     }
   }
   constructor(
-    private ngZone: NgZone,
     public dialogRef: FormPreviewOverlay,
     @Inject(FILE_PREVIEW_DIALOG_DATA) public form: any,
     private productService: ProductService,
@@ -49,14 +46,18 @@ export class FormProductOverlayComponent {
     private router: Router) { }
 
   addToMyProducts(comment: string, rate: number) {
-    // this.productService.addProductDescription(rate, comment, this.form.id);
-    this.router.navigate(['searchresults', this.form.searchQuery]);
-    this.closeForm();
-    this.snackBar.open('Продукт добавлен успешно!', null, {
-      duration: 4000,
-      verticalPosition: 'top',
-      horizontalPosition: 'center'
-    });
+    if (!comment) {
+      this.errorValidation = true;
+    } else {
+      // this.productService.addProductDescription(rate, comment, this.form.id); // MyStubs
+      this.router.navigate(['searchresults', this.form.searchQuery]);
+      this.closeForm();
+      this.snackBar.open('Продукт добавлен успешно!', null, {
+            duration: 4000,
+            verticalPosition: 'top',
+            horizontalPosition: 'center'
+      });
+    }
   }
 
   onAnimationStart(event: AnimationEvent) {

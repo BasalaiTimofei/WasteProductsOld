@@ -19,7 +19,7 @@ export class ProductService extends BaseHttpService {
     super(httpService, loggingService);
     this.baseProdApiUrl = `${environment.apiHostUrl}/api/products`;
     // this.baseUserApiUrl = `${environment.apiHostUrl}/api/user/${this.authServise.getUserId()}`;
-    this.baseUserApiUrl = `${environment.apiHostUrl}/api/user/0`;
+    this.baseUserApiUrl = `${environment.apiHostUrl}/api/user/0`; // MyStub
   }
 
   private baseProdApiUrl;
