@@ -4,7 +4,7 @@
   <input id="name" type="text" name="name" required minlength="4" maxlength="16" [(ngModel)]="this.user.UserName">
   <label><input type="submit" class="submit" value="Изменить"></label>
   <div *ngIf="this.isUserNameChanged">Username был успешно изменен</div>
-  <div *ngIf="!this.isUserNameChanged">Ошибка при изменении username. Возможно, username не уникален.</div>
+  <div *ngIf="this.isUserNameChanged === false">Ошибка при изменении username. Возможно, username не уникален.</div>
 </div>
 </form>
 <form novalidate (ngSubmit)="updateEmail(g)" #g="ngForm">
