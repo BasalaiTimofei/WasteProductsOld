@@ -7,8 +7,7 @@ import { UserQuery } from '../../models/top-query';
 import { Router } from '@angular/router';
 
 import {FormControl} from '@angular/forms';
-// TODO: В результаты поиска выводить кнопку "Добавить в мои продукты" для авторизованных. При нажатии появляется форма с двумя полями
-// коммент и рейтинг (int). Далее Добавить и /api/user/{userId}/products/{productId}. UserID вытягиваем из product.service getUserId()
+
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
@@ -50,29 +49,11 @@ export class SearchComponent implements OnInit {
             this.errorStatusCode = err.status;
           }
         });
-      }
+    }
   }
 
   clearQueries() {
     this.query = '';
     this.topQueries = [];
   }
-
-  private handleError<T> (operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-
-      // TODO: better job of transforming error for user consumption
-      this.log(`${operation} failed: ${error.message}`);
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
-  }
-    /** Log a HeroService message with the MessageService */
-    private log(message: string) {
-      // this.messageService.add(`HeroService: ${message}`);
-    }
 }

@@ -162,7 +162,8 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                         Name = $"{_faker.Lorem.Word()} group",
                         Information = _faker.Lorem.Sentence(),
                         AdminId = i.ToString(),
-                        Created = DateTime.UtcNow.AddDays(-4)
+                        Created = DateTime.UtcNow.AddDays(-4),
+                        IsNotDeleted = true
                     };
                     _context.Groups.Add(group);
 

@@ -55,6 +55,7 @@ import { FormPreviewService } from './services/form-preview/form-preview.service
 import { UserdataComponent } from './components/user/settings/userdata/userdata.component';
 import { UserformfieldComponent } from './components/user/settings/userformfield/userformfield.component';
 import { ChangePasswordComponent } from './components/user/settings/change-password/change-password.component';
+import { ConfirmEmailChangingComponent } from './components/user/settings/confirm-email-changing/confirm-email-changing.component';
 
 /* Custom Modules */
 import { AccountModule } from './modules/account/account.module';
@@ -103,6 +104,7 @@ import { GroupsModule } from './modules/groups/groups.module';
     ChangePasswordComponent,
     FormProductOverlayComponent,
     FormOverlayWrapperComponent,
+    ConfirmEmailChangingComponent,
   ],
   imports: [
     BrowserModule,

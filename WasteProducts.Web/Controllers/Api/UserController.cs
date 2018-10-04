@@ -281,7 +281,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// </summary>
         /// <param name="id">ID of the user.</param>
         /// <param name="token">Confirmation token.</param>
-        [HttpGet, Route("{id}/confirmemailchanging/{token}")]
+        [HttpPut, Route("{id}/confirmemailchanging/{token}")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "Incorrect token.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the deletion.")]
         public async Task<IHttpActionResult> ConfirmChangedEmail([FromUri] string id, [FromUri] string token)
