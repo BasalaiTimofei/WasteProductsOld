@@ -1,18 +1,20 @@
 <form novalidate (ngSubmit)="updateUserName(f)" #f="ngForm">
 <div>
   <label>Имя:</label>
-  <input id="name" type="text" name="name" required minlength="4" maxlength="16" [(ngModel)]="user.UserName">
+  <input id="name" type="text" name="name" required minlength="4" maxlength="16" [(ngModel)]="this.user.UserName">
   <label><input type="submit" class="submit" value="Изменить"></label>
   <div *ngIf="this.isUserNameChanged">Username был успешно изменен</div>
-  <div *ngIf="!this.isUserNameChanged">Ошибка при изменении username. Возможно, username не уникален.</div>
+  <div *ngIf="this.isUserNameChanged === false">Ошибка при изменении username. Возможно, username не уникален.</div>
 </div>
 </form>
 <form novalidate (ngSubmit)="updateEmail(g)" #g="ngForm">
     <div>
         <label>Эл. почта:</label>
-        <input id="email" type="text" name="email" required [(ngModel)]="user.Email" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,3}$" title="type email">
+        <input id="email" type="text" name="email" required [(ngModel)]="this.user.Email" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,3}$" title="type email">
         <label><input type="submit" class="submit" value="Изменить"></label>
-        <div *ngIf="this.isEmailChangingRequestSent">Письмо с инструкцией по изменению вашего email отправлены на ваш новый почтовый адрес</div>
+        <div *ngIf="this.isEmailChangingRequestSent">
+          <app-confirm-email-changing></app-confirm-email-changing>
+        </div>
     </div>
 </form>
 <div>
