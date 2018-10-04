@@ -84,11 +84,10 @@ namespace WasteProducts.Logic.Services.Groups
 
         public async Task Delete(string groupId)
         {
-            var searchResult = await _dataBase.GetWithInclude<GroupDB>(x => x.Id == groupId,
-                b => b.IsNotDeleted,
-                y => y.GroupBoards
-                    .Select(z => z.GroupProducts),
-                m => m.GroupUsers).ConfigureAwait(false);
+            var searchResult = await _dataBase.GetWithInclude<GroupDB>(x => x.Id == groupId && x.IsNotDeleted,
+                y => y.GroupBoards.Select(z => z.GroupProducts),
+                m => m.GroupUsers
+            ).ConfigureAwait(false);
 
             var model = searchResult.FirstOrDefault();
             if (model == null)
