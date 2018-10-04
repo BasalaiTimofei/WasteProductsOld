@@ -54,7 +54,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get group", typeof(Group))]
         [SwaggerResponse(HttpStatusCode.NotFound, "Incorrect id user")]
-        [HttpGet, Route("user/{userId}/groups")]
+        [HttpGet, Route("user/{userId}/group")]
         public async Task<IHttpActionResult> GetGroupByUserId(string userId)
         {
             var item = await _groupService.FindByAdmin(userId);
