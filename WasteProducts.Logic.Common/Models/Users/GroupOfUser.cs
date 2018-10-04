@@ -11,6 +11,11 @@
         public string Id { get; set; }
 
         /// <summary>
+        /// ID of the group admin.
+        /// </summary>
+        public string AdminId { get; set; }
+
+        /// <summary>
         /// Name of the group.
         /// </summary>
         public string Name { get; set; }
