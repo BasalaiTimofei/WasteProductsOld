@@ -6,6 +6,8 @@ import { catchError, map } from 'rxjs/operators';
 
 import { BaseHttpService } from '../base/base-http.service';
 import { LoggingService } from '../logging/logging.service';
+import { ProductService } from '../product/product.service';
+import { AuthenticationService } from '../../modules/account/services/authentication.service';
 
 // models
 import { SearchProduct } from '../../models/search-product';
@@ -13,6 +15,7 @@ import { UserQuery } from '../../models/top-query';
 
 // environment
 import { environment } from '../../../environments/environment';
+import { UserProduct } from '../../models/users/user-product';
 
 
 @Injectable({
@@ -21,18 +24,32 @@ import { environment } from '../../../environments/environment';
 export class SearchService extends BaseHttpService {
   private URL_SEARCH = `${environment.apiHostUrl}/api/search`;  // URL to web api
 
+  public userProductsId: UserProduct[] = [];
   public searchProducts: SearchProduct[];
 
-  public constructor(httpService: HttpClient, loggingService: LoggingService) {
+  public constructor(httpService: HttpClient,
+                    loggingService: LoggingService,
+                    public productService: ProductService,
+                    public authService: AuthenticationService) {
     super(httpService, loggingService);
+
+    if (!authService.isAuthenticated$) { // !authService.isAuthenticated$ // MyStubs
+    this.productService.getUserProducts().toPromise().then(
+      res => {
+        this.userProductsId = res;
+      } ,
+      err => console.error(err));
+    }
   }
 
   getDefault(query: string): Observable<SearchProduct[]> {
     return this.httpService.get<SearchProduct[]>(this.URL_SEARCH + '/products/default', this.getOptions(query)).pipe(
       map(res => {
+        if (res !== null) {
         const result: any = res;
-        return result.map((item) => new SearchProduct(item.Id, item.Name, false));
-      }), catchError(this.handleError('getDefault', []))
+        return result.map((item) => new SearchProduct(item.Id, item.Name, this.checkExistInUserProducts(item.Id), item.PicturePath));
+        }
+      }), catchError(this.handleError('Error in search.service getDefault()', []))
     );
   }
 
@@ -46,13 +63,15 @@ export class SearchService extends BaseHttpService {
     );
   }
 
-  gettest(query: string) {
-    return this.httpService.get('http://localhost:2189/api/search/products/default?query=' + query, { observe: 'response' });
-  }
-
   private getOptions(query: string) {
     return {
       params: new HttpParams().set('query', query)
     };
+  }
+
+  private checkExistInUserProducts(id: string): boolean {
+      return this.userProductsId.some(function(item) {
+        return item.Product.Id === id;
+      });
   }
 }
