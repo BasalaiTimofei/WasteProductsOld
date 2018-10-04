@@ -107,8 +107,8 @@ onUpload(rating, descrText) {
   }
 }
 
-addProduct() {
-  this.productService.addProductDescription(this.product.Rating, this.product.Description, '');
+addProduct(productId: string) {
+  this.productService.addProductDescription(this.product.Rating, this.product.Description, productId);
   this.router.navigate(['/products']);
 }
 

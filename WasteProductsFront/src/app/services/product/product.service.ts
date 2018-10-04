@@ -57,7 +57,7 @@ export class ProductService extends BaseHttpService {
   }
 
   getProducts() {
-    const url = `${this.baseProdApiUrl}/products`;
+    const url = `${this.baseProdApiUrl}`;
     return this.httpService.get<Product[]>(url);
   }
 

@@ -30,7 +30,7 @@ const routes: Routes = [
   { path: '', component: DefaultComponent, pathMatch: 'full' },
   { path: 'register', component: AccountRegisterComponent },
   {
-    path: 'account', canActivate: [AuthenticationGuard],
+    path: 'account', /*canActivate: [AuthenticationGuard],*/
     children: [
       { path: '', component: AccountComponent, pathMatch: 'full' },
       {
@@ -46,9 +46,9 @@ const routes: Routes = [
   { path: 'details/:id', component: NotificationDetailsComponent },
   { path: 'common/mainpage', component: MainPageComponent },
 
-  { path: 'friends', component: FriendsComponent, canActivate: [AuthenticationGuard] },
-  { path: 'settings', component: SettingsComponent, canActivate: [AuthenticationGuard] },
-  { path: 'changepassword', component: ChangePasswordComponent, canActivate: [AuthenticationGuard] },
+  { path: 'friends', component: FriendsComponent, /*canActivate: [AuthenticationGuard]*/ },
+  { path: 'settings', component: SettingsComponent, /*canActivate: [AuthenticationGuard]*/ },
+  { path: 'changepassword', component: ChangePasswordComponent, /*canActivate: [AuthenticationGuard]*/ },
 
   { path: 'products', component: ProductsComponent, children: [
     { path: 'add-product', component: AddProductComponent },
