@@ -35,9 +35,9 @@ export class UserdataComponent implements OnInit {
   }
 
   updateEmail() {
-    this.isEmailChangingRequestSent = true;
     this.userService.updateEmailRequest(this.user.Email)
     .subscribe(
+      res => this.isEmailChangingRequestSent = true,
       err => console.log(err)
     );
   }
