@@ -80,7 +80,12 @@ namespace WasteProducts.Logic.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to На нашем сайте был сделан запрос на изменение email на этот email. Если вы не делали этого запроса, просим вас проигнорировать это письмо. Иначе, для того, чтобы изменить email, вы должны перейти по ссылке, указаной ниже. Ссылка для изменения email:
+        ///   Looks up a localized string similar to На нашем сайте был сделан запрос на изменение электронной почты аккаунта на этот email. Если вы не делали этого запроса, просим вас проигнорировать это письмо. Иначе, для того, чтобы изменить email, вы должны перейти на страницу подтверждения по ссылке и ввести на этой странице код, указанный ниже.
+        ///
+        ///Ссылка для изменения email:
+        ///http://waste-products.belpyro.net/confirmemailchanging/
+        ///
+        ///Код подтверждения смены email:
         ///{0}.
         /// </summary>
         internal static string NewEmailConfirmationBody {
