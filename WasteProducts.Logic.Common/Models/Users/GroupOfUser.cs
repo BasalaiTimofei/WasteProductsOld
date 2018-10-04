@@ -16,6 +16,11 @@
         public string Name { get; set; }
 
         /// <summary>
+        /// Information about group
+        /// </summary>
+        public string Information { get; set; }
+
+        /// <summary>
         /// True if user can create boards;
         /// false - user can't create boards.
         /// </summary>
