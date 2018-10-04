@@ -96,6 +96,7 @@ export class SearchresultComponent implements OnDestroy {
       verticalPosition: 'top',
       horizontalPosition: 'center'
     });
+    location.reload(true);
   }
 
   showPreview(productName: string, picturePath: string) {

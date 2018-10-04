@@ -56,6 +56,7 @@ export class FormProductOverlayComponent {
             verticalPosition: 'top',
             horizontalPosition: 'center'
       });
+      location.reload(true);
     }
   }
 
