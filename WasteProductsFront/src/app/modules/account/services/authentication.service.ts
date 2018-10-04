@@ -78,8 +78,8 @@ export class AuthenticationService extends BaseHttpService {
   }
 
   getUserId(): string {
-	const claims = this.getClaims();
-	if(claims){ return this.getClaims().sub; }
+  const claims = this.getClaims();
+  if (claims) { return this.getClaims().sub; }
     return null;
   }
 
