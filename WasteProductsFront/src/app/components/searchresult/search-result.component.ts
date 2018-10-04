@@ -2,13 +2,18 @@ import { Component, OnDestroy } from '@angular/core';
 import { PageEvent } from '@angular/material';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material';
 
 import { SearchProduct } from '../../models/search-product';
 import { SearchService } from '../../services/search/search.service';
+import { ProductService } from '../../services/product/product.service';
+import { FormPreviewService } from '../../services/form-preview/form-preview.service';
+import { FormPreviewOverlay } from '../form-product-overlay/form-preview-overlay';
 import { ImagePreviewService } from '../../services/image-preview/image-preview.service';
 import { ImagePreviewOverlay } from '../image-preview/image-preview-overlay';
+import { AuthenticationService } from '../../modules/account/services/authentication.service';
 
 @Component({
   selector: 'app-search-result',
@@ -17,7 +22,9 @@ import { ImagePreviewOverlay } from '../image-preview/image-preview-overlay';
 })
 export class SearchresultComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
+  public isAuth: boolean;
 
+  responseMessage = 'Продукт удален из Мои продукты';
   query: string;
   searchResult: SearchProduct[];
   statusCode: number;
@@ -27,14 +34,23 @@ export class SearchresultComponent implements OnDestroy {
   pageIndex = 0;
   length = 0;
 
-  constructor(private searchService: SearchService, private route: ActivatedRoute, private previewDialog: ImagePreviewService) {
-    this.route.params.pipe(takeUntil(this.destroy$)).subscribe(({ query }: Params) => {
+  constructor(private searchService: SearchService,
+              private productService: ProductService,
+              private route: ActivatedRoute,
+              private previewDialogForm: FormPreviewService,
+              private previewDialog: ImagePreviewService,
+              public snackBar: MatSnackBar,
+              public authService: AuthenticationService) {
+
+      this.route.params.pipe(takeUntil(this.destroy$)).subscribe(({ query }: Params) => {
         if (!query) {
             return;
-        }
-
-        this.setVariablesToDefault();
-        this.search(query);
+      }
+      this.authService.isAuthenticated$.toPromise<boolean>().then(res => {
+        this.isAuth = res;
+      });
+      this.setVariablesToDefault();
+      this.search(query);
     });
   }
 
@@ -58,6 +74,21 @@ export class SearchresultComponent implements OnDestroy {
         if (e.status === 204) {
             this.statusCode = e.status;
         }
+    });
+  }
+
+  addToMyProducts(productId: string) {
+    const dialog: FormPreviewOverlay = this.previewDialogForm.open({
+      form: { name: 'Добавить в Мой список', id: productId, searchQuery: this.query }
+    });
+  }
+
+  removeFromMyProducts(productId: string) {
+    this.productService.deleteUserProduct(productId);
+    this.snackBar.open(this.responseMessage, null, {
+      duration: 4000,
+      verticalPosition: 'top',
+      horizontalPosition: 'center'
     });
   }
 

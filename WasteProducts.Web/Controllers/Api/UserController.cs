@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
@@ -69,7 +68,7 @@ namespace WasteProducts.Web.Controllers.Api
         public async Task<IHttpActionResult> GetById(string id)
         {
             var user = await _service.GetAsync(id);
-            
+
             return Ok(user);
         }
 
@@ -278,6 +277,21 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         /// <summary>
+        /// Confirms user's new changed email by the confirmation token.
+        /// </summary>
+        /// <param name="id">ID of the user.</param>
+        /// <param name="token">Confirmation token.</param>
+        [HttpPut, Route("{id}/confirmemailchanging/{token}")]
+        [SwaggerResponse(HttpStatusCode.Unauthorized, "Incorrect token.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the deletion.")]
+        public async Task<IHttpActionResult> ConfirmChangedEmail([FromUri] string id, [FromUri] string token)
+        {
+            await _service.ConfirmEmailChangingAsync(id, token);
+
+            return Ok("Email is successfully changed.");
+        }
+
+        /// <summary>
         /// Changes old password of the user with the specific ID to the new password.
         /// </summary>
         /// <param name="id">ID of the user changing its password.</param>
@@ -367,9 +381,10 @@ namespace WasteProducts.Web.Controllers.Api
             var validator = new EmailValidator();
             validator.ValidateAndThrow(newEmail);
 
-            await _service.UpdateEmailAsync(id, newEmail.EmailOfTheUser);
+            //await _service.UpdateEmailAsync(id, newEmail.EmailOfTheUser);
+            await _service.GenerateEmailChangingTokenAsync(id, newEmail.EmailOfTheUser);
 
-            return StatusCode(HttpStatusCode.NoContent);
+            return Ok("Confirmation is sent to your new Email. Please confirm new Email.");
         }
 
         /// <summary>

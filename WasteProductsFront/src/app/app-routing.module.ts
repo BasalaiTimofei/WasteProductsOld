@@ -2,14 +2,12 @@ import { NgModule, Component } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DefaultComponent } from './components/common/default/default.component';
 import { NotFoundComponent } from './components/common/not-found/not-found.component';
-import { RegisterComponent } from './components/user/register/register.component';
 import { MainPageComponent } from './components/common/main-page/main-page.component';
 import { FriendsComponent } from './components/user/friends/friends.component';
 import { ProductsComponent } from './components/products/products.component';
 import { GroupsComponent } from './components/groups/groups.component';
 import { SettingsComponent } from './components/user/settings/settings.component';
 import { ToListComponent } from './components/products/to-list/to-list.component';
-import { SearchComponent } from './components/search/search.component';
 import { SearchresultComponent } from './components/searchresult/search-result.component';
 import { GroupsOfUserComponent } from './components/groups/groups-of-user/groups-of-user.component';
 
@@ -21,9 +19,11 @@ import { AccountRegisterComponent } from './modules/account/components/account-r
 import { AuthenticationGuard } from './modules/account/guards/authentication.guard';
 
 /* Environment */
-import { environment } from '../environments/environment';
 import { NotificationListComponent } from './modules/account/components/notification-list/notification-list.component';
 import { NotificationDetailsComponent } from './modules/account/components/notification-details/notification-details.component';
+import { AddProductComponent } from './components/products/add-product/add-product.component';
+import { ChangePasswordComponent } from './components/user/settings/change-password/change-password.component';
+import { ConfirmEmailChangingComponent } from './components/user/settings/confirm-email-changing/confirm-email-changing.component';
 
 const routes: Routes = [
   { path: '', component: DefaultComponent, pathMatch: 'full' },
@@ -44,10 +44,15 @@ const routes: Routes = [
   },
   { path: 'details/:id', component: NotificationDetailsComponent },
   { path: 'common/mainpage', component: MainPageComponent },
-  { path: 'user/friends', component: FriendsComponent },
-  { path: 'products', component: ProductsComponent },
+
+  { path: 'friends', component: FriendsComponent, canActivate: [AuthenticationGuard] },
+  { path: 'settings', component: SettingsComponent, canActivate: [AuthenticationGuard] },
+  { path: 'changepassword', component: ChangePasswordComponent, canActivate: [AuthenticationGuard] },
+
+  { path: 'products', component: ProductsComponent, children: [
+    { path: 'add-product', component: AddProductComponent }
+  ]},
   { path: 'groups', component: GroupsComponent },
-  { path: 'user/settings', component: SettingsComponent },
   { path: 'products/myproducts', component: ToListComponent },
   { path: 'groups/mygroups', component: GroupsOfUserComponent},
   { path: 'searchresults/:query', component: SearchresultComponent },

@@ -41,7 +41,8 @@ namespace WasteProducts.DataAccess.Repositories
         {
             string assemblyFilename = Assembly.GetAssembly(typeof(LuceneSearchRepository)).Location;
             string assemblyPath = Path.GetDirectoryName(assemblyFilename);
-            string indexStoragePath = WebConfigurationManager.AppSettings[INDEX_STORAGE_PATH_SETTING_STR]; ;
+            string indexStoragePath = WebConfigurationManager.AppSettings[INDEX_STORAGE_PATH_SETTING_STR];
+
             if (!string.IsNullOrEmpty(indexStoragePath))
             {
                 IndexPath = Path.Combine(assemblyPath, indexStoragePath);

@@ -124,6 +124,15 @@
   <data name="EmailConfirmationHeader" xml:space="preserve">
     <value>Подтверждение регистрации на WasteProducts</value>
   </data>
+  <data name="NewEmailConfirmationBody" xml:space="preserve">
+    <value>На нашем сайте был сделан запрос на изменение электронной почты аккаунта на этот email. Если вы не делали этого запроса, просим вас проигнорировать это письмо. Иначе, для того, чтобы изменить email, на странице настроек аккаунта вы должны ввести код, указанный ниже.
+
+Код подтверждения смены email:
+{0}</value>
+  </data>
+  <data name="NewEmailConfirmationHeader" xml:space="preserve">
+    <value>Подтверждение нового email на WasteProducts</value>
+  </data>
   <data name="ResetPasswordBody" xml:space="preserve">
     <value>На нашем сайте был сделан запрос на восстановление пароля аккаунта, привязанного к этому email. Если вы не делали этого запроса, просим вас проигнорировать это письмо. Иначе, для того, чтобы восстановить пароль, вы должны перейти по ссылке, указанной ниже. Ссылка для восстановления пароля:
 {0}</value>
