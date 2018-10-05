@@ -100,15 +100,15 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Clears search index.
+        /// Re-creates search index.
         /// </summary>
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Clear search index.")]
-        [HttpGet, Route("clear")]
-        public IHttpActionResult ClearIndex()
+        [SwaggerResponse(HttpStatusCode.NoContent, "Re-create search index.")]
+        [HttpGet, Route("recreate")]
+        public async Task<IHttpActionResult> RecreateIndex()
         {
-            _searchService.ClearSearchIndex();
-            return Ok();
+            await _searchService.RecreateIndex();
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
     }

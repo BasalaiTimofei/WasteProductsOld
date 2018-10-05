@@ -12,10 +12,12 @@ import { AccountRegisterComponent } from './components/account-register/account-
 import { AccountComponent } from './components/account/account.component';
 import { NotificationListComponent } from './components/notification-list/notification-list.component';
 import { NotificationDetailsComponent } from './components/notification-details/notification-details.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 /* Pipes */
 import { TruncatePipe } from './pipes/truncate.pipe';
 // Environment
 import { environment } from 'src/environments/environment';
+
 
 function createConfig(): SignalRConfiguration {
   const config = new SignalRConfiguration();
@@ -51,6 +53,7 @@ function createConfig(): SignalRConfiguration {
     AccountComponent,
     NotificationListComponent,
     NotificationDetailsComponent,
+    ResetPasswordComponent,
   ],
   exports: [
     OAuthModule, // TODO: check
