@@ -16,7 +16,8 @@
                                 matTooltip="Изображение отсутствует" >
             </ng-template>
             <p mat-line> {{result.Name}} </p>
-            <div *ngIf="isAuthenificated$ | async">
+            <!--div *ngIf="isAuthenificated$ | async"-->
+            <div *ngIf="true">
               <div *ngIf="!result.IsAdded; else added">
                 <button  matSuffix mat-button mat-icon-button (click)="addToMyProducts(result.Id)">
                   <mat-icon matTooltip="Добавить продукт в Мои продукты">star_border</mat-icon>

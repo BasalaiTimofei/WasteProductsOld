@@ -66,24 +66,22 @@ export class SearchresultComponent implements OnDestroy, OnInit {
     this.isAuthenificated$ = this.authService.isAuthenticated$; // MyStubs
   }
 
-  public search(query: string): void {
-    this.searchService.getDefault(query).toPromise().then((data) => {
-      if (data !== undefined) {
-        this.searchResult = data;
-
-        if (!this.searchResult) {
-            return;
-        }
-
+  public async search(query: string) {
+    const response = await this.searchService.getDefault(query);
+      if (response !== undefined) {
+        response.toPromise().then((data) => {
+          this.searchResult = data;
+        });
+        if (this.searchResult) {
         this.length = this.searchResult.length;
         this.changePageEvent();
+        } else {
+          this.tempProducts = null;
+          this.length = 0;
+        }
       } else {
-        this.tempProducts = null;
-        this.length = 0;
+        return;
       }
-    }).catch((e: HttpErrorResponse) => {
-        this.errorMessage = 'Поиск не дал результатов...';
-    });
   }
 
   addToMyProducts(productId: string) {

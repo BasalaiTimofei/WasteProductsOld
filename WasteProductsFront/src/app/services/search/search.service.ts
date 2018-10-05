@@ -32,17 +32,16 @@ export class SearchService extends BaseHttpService {
                     public productService: ProductService,
                     public authService: AuthenticationService) {
     super(httpService, loggingService);
-
-    if (!authService.isAuthenticated$) { // !authService.isAuthenticated$ // MyStubs
-    this.productService.getUserProducts().toPromise().then(
-      res => {
-        this.userProductsId = res;
-      } ,
-      err => console.error(err));
-    }
   }
 
-  getDefault(query: string): Observable<SearchProduct[]> {
+  async getDefault(query: string): Promise<Observable<SearchProduct[]>> { // : Observable<SearchProduct[]>
+    if (true) { // MyStubs this.authService.isAuthenticated$
+      await this.productService.getUserProducts().toPromise().then(
+        res => {
+          this.userProductsId = res;
+        } ,
+      err => console.error(err));
+    }
     return this.httpService.get<SearchProduct[]>(this.URL_SEARCH + '/products/default', this.getOptions(query)).pipe(
       map(res => {
         if (res !== null) {
