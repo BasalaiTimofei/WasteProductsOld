@@ -10,6 +10,8 @@ using WasteProducts.DataAccess.Common.Repositories.Diagnostic;
 using WasteProducts.DataAccess.Contexts;
 using System.Data.Entity;
 using WasteProducts.DataAccess.Common.Models.Groups;
+using System.IO;
+using System.Reflection;
 
 namespace WasteProducts.DataAccess.Repositories.Diagnostic
 {
@@ -126,7 +128,7 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
 
                 _context.Categories.Add(category1);
                 _context.Categories.Add(category2);
-
+                
                 for (int i = 0; i < 6; i++)
                 {
                     var prod = new ProductDB
@@ -138,7 +140,8 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                         Category = i > 2 ? category1 : category2,
                         Composition = _faker.Lorem.Sentence(),
                         Marked = false,
-                    };
+                        PicturePath = "/Content/favicon.png"
+                };
                     _context.Products.Add(prod);
                     var descr = new UserProductDescriptionDB
                     {

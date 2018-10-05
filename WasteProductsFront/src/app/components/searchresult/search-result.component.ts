@@ -15,6 +15,7 @@ import { FormPreviewOverlay } from '../form-product-overlay/form-preview-overlay
 import { ImagePreviewService } from '../../services/image-preview/image-preview.service';
 import { ImagePreviewOverlay } from '../image-preview/image-preview-overlay';
 import { AuthenticationService } from '../../modules/account/services/authentication.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-search-result',
@@ -34,6 +35,7 @@ export class SearchresultComponent implements OnDestroy {
   pageSize = 5;
   pageIndex = 0;
   length = 0;
+  baseUrl = environment.apiHostUrl;
 
   constructor(private searchService: SearchService,
               private productService: ProductService,
@@ -99,9 +101,8 @@ export class SearchresultComponent implements OnDestroy {
   }
 
   showPreview(productName: string, picturePath: string) {
-    // picturePath = 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg'; // MyStubs
     const dialog: ImagePreviewOverlay = this.previewDialog.open({
-      image: { name: productName, url: picturePath }
+      image: { name: productName, url: this.baseUrl + picturePath }
     });
   }
 
