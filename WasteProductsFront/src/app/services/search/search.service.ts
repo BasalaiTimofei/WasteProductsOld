@@ -39,14 +39,13 @@ export class SearchService extends BaseHttpService {
       await this.productService.getUserProducts().toPromise().then(
         res => {
           this.userProductsId = res;
-        } ,
-      err => console.error(err));
+        }, catchError(this.handleError('Error in search.service getDefault()', [])));
     }
     return this.httpService.get<SearchProduct[]>(this.URL_SEARCH + '/products/default', this.getOptions(query)).pipe(
       map(res => {
         if (res !== null) {
-        const result: any = res;
-        return result.map((item) => new SearchProduct(item.Id, item.Name, this.checkExistInUserProducts(item.Id), item.PicturePath));
+            const result: any = res;
+          return result.map((item) => new SearchProduct(item.Id, item.Name, this.checkExistInUserProducts(item.Id), item.PicturePath));
         }
       }), catchError(this.handleError('Error in search.service getDefault()', []))
     );

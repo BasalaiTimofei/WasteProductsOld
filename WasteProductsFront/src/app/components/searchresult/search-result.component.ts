@@ -68,19 +68,17 @@ export class SearchresultComponent implements OnDestroy, OnInit {
 
   public async search(query: string) {
     const response = await this.searchService.getDefault(query);
-      if (response !== undefined) {
+      if (response) {
         response.toPromise().then((data) => {
           this.searchResult = data;
         });
         if (this.searchResult) {
-        this.length = this.searchResult.length;
-        this.changePageEvent();
-        } else {
-          this.tempProducts = null;
-          this.length = 0;
+          this.length = this.searchResult.length;
+          this.changePageEvent();
         }
       } else {
-        return;
+          this.tempProducts = null;
+          this.length = 0;
       }
   }
 
