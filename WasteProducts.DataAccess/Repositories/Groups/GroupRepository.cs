@@ -85,9 +85,9 @@ namespace WasteProducts.DataAccess.Repositories.Groups
             return Task.FromResult(query.Where(predicate));
         }
 
-        public async Task Save()
+        public Task Save()
         {
-            _context.SaveChanges();
+            return _context.SaveChangesAsync();
         }
 
         public void Dispose()

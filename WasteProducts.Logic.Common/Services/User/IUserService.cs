@@ -193,9 +193,8 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// <param name="email">Email of the new user.</param>
         /// <param name="userName">UserName of the new user.</param>
         /// <param name="password">Password of the new user.</param>
-        /// <param name="path">Layout of the path to the ConfirmEmail reference.</param>
         /// <returns>Data containing in the email, returns for test purposes.</returns>
-        Task<(string id, string token)> RegisterAsync(string email, string userName, string password, string path);
+        Task<(string id, string token)> RegisterAsync(string email, string userName, string password);
 
         /// <summary>
         /// Remove a claim from a user.

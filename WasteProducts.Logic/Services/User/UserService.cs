@@ -41,7 +41,7 @@ namespace WasteProducts.Logic.Services.Users
             }
         }
 
-        public async Task<(string id, string token)> RegisterAsync(string email, string userName, string password, string path)
+        public async Task<(string id, string token)> RegisterAsync(string email, string userName, string password)
         {
             if (!_mailService.IsValidEmail(email))
                 throw new ValidationException("Plese provide valid Email.");
@@ -52,11 +52,8 @@ namespace WasteProducts.Logic.Services.Users
                 throw new OperationCanceledException("Please provide unique Email and User Name.");
             }
             var (id, token) = await _repo.AddAsync(email, userName, password);
-            if(path != null)
-            {
-                var fullpath = string.Format(path, id, token);
-                await _mailService.SendAsync(email, UserResources.EmailConfirmationHeader, string.Format(UserResources.EmailConfirmationBody, fullpath));
-            }
+            var body = string.Format(UserResources.EmailConfirmationBody, token);
+            await _mailService.SendAsync(email, UserResources.EmailConfirmationHeader, body);
             return (id, token);
         }
 

@@ -10,7 +10,6 @@ import { UserService } from '../../../../services/user/user.service';
 export class UserdataComponent implements OnInit {
 
   user: User = new User();
-  isConfirmed: string;
   isEmailChangingRequestSent: boolean;
   isUserNameChanged: boolean;
 
