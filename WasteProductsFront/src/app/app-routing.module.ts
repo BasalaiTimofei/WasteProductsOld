@@ -50,7 +50,7 @@ const routes: Routes = [
   { path: 'settings', component: SettingsComponent, canActivate: [AuthenticationGuard] },
   { path: 'changepassword', component: ChangePasswordComponent, canActivate: [AuthenticationGuard] },
 
-  { path: 'products', component: ProductsComponent, children: [
+  { path: 'products', component: ProductsComponent, canActivate: [AuthenticationGuard], children: [
     { path: 'add-product', component: AddProductComponent },
   ]},
   { path: 'all-to-list', component: AllToListComponent },
