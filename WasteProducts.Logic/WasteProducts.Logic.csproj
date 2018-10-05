@@ -110,6 +110,7 @@
     <Compile Include="Extensions\KernelInterceptionExtensions.cs" />
     <Compile Include="InjectorModule.cs" />
     <Compile Include="Interceptors\ArgumentValidationInterceptor.cs" />
+    <Compile Include="Interceptors\BeforeInvokeAsyncInterceptor.cs" />
     <Compile Include="Interceptors\TraceInterceptor.cs" />
     <Compile Include="Mappings\Barcods\BarcodeProfile.cs" />
     <Compile Include="Mappings\Products\CategoryProfile.cs" />

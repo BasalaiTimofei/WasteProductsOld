@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
-using FluentValidation;
+﻿using FluentValidation;
 using Ninject.Extensions.Interception;
+using System;
+using System.Linq;
 using WasteProducts.Logic.Resources;
 
 namespace WasteProducts.Logic.Interceptors
@@ -9,7 +9,7 @@ namespace WasteProducts.Logic.Interceptors
     /// <summary>
     /// Interceptor for trace validating method arguments
     /// </summary>
-    public class ArgumentValidationInterceptor : AsyncInterceptor
+    public class ArgumentValidationInterceptor : BeforeInvokeAsyncInterceptor
     {
         private readonly IValidator _validator;
         private readonly Type _entityType;
@@ -30,7 +30,7 @@ namespace WasteProducts.Logic.Interceptors
         {
             var methodArguments = invocation.Request.Arguments;
 
-            foreach (var arg in methodArguments.Where(arg => arg?.GetType() == _entityType ))
+            foreach (var arg in methodArguments.Where(arg => arg?.GetType() == _entityType))
             {
                 var validationResult = _validator.Validate(arg);
 
