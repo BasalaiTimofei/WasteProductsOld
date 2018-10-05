@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Params } from '@angular/router';
@@ -22,7 +22,7 @@ import { environment } from '../../../environments/environment';
   templateUrl: './search-result.component.html',
   styleUrls: ['./search-result.component.css']
 })
-export class SearchresultComponent implements OnDestroy {
+export class SearchresultComponent implements OnDestroy, OnInit {
   private destroy$ = new Subject<void>();
   isAuthenificated$: Observable<boolean>;
 
@@ -50,7 +50,6 @@ export class SearchresultComponent implements OnDestroy {
         if (!query) {
             return;
       }
-      this.isAuthenificated$ = this.authService.isAuthenticated$; // MyStubs
 
       this.setVariablesToDefault();
       this.search(query);
@@ -61,6 +60,10 @@ export class SearchresultComponent implements OnDestroy {
   public ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  public ngOnInit(): void {
+    this.isAuthenificated$ = this.authService.isAuthenticated$; // MyStubs
   }
 
   public search(query: string): void {
