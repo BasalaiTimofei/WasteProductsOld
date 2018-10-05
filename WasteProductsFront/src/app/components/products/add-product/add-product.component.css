@@ -1,13 +1,13 @@
 div{
-    padding-inline-start : 20px;
-    padding-block-start: 20px;
+    float: right;
+    margin-right: 10%
 }
 div button {
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
     width:100%;
     border: none;
-    padding: 10px 20px;
+    padding: 10px 10px;
     text-align: center;
     text-decoration: none;
     display: grid;
@@ -15,21 +15,5 @@ div button {
 }
 input{
   padding-left: 10px;
-  margin: 20px;
-}
-
-class form {
-    float: right;
-    margin-right: 10%
-    
-}
-
-input{
-    width:95%;
-    border: none;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: grid;
-    font-size: 16px
+  margin: 10px;
 }
