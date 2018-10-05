@@ -1,9 +1,11 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, EventEmitter, Input, Output } from '@angular/core';
 import { Product } from '../../../models/products/product';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { TableDataSource, ValidatorService } from 'angular4-material-table';
 import { ProductService } from '../../../services/product/product.service';
 import { UserProduct } from '../../../models/users/user-product';
 import { Router } from '@angular/router';
+import { ProductsComponent } from '../products.component';
 
 @Component({
   selector: 'app-to-list',
@@ -19,6 +21,8 @@ export class ToListComponent implements OnInit {
 
   products: Product[] = [];
   userProducts: UserProduct[] = [];
+  @Input() input = this.userProducts ;
+  @Output() personListChange = new EventEmitter<Product[]>();
 
   data: UserProduct[] = this.userProducts;
   dataSource = new MatTableDataSource(this.data);
@@ -26,6 +30,8 @@ export class ToListComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+
+  datasourceSubject: TableDataSource<Product>;
 
   ngOnInit() {
     this.paginator.length = this.data.length;
@@ -38,7 +44,7 @@ this.productService.getUserProducts().subscribe(
       for (let item of res) {
         this.products.push(item.Product);
       }
-    } ,
+    },
     err => console.error(err));
   }
 

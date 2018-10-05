@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{29548066-7171-40CD-86C2-5312AAD536BE}</ProjectGuid>
+    <ProjectGuid>{55C1DCEB-D89B-4A93-A8F4-F2AC0C621A49}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WasteProducts.IdentityServer</RootNamespace>
