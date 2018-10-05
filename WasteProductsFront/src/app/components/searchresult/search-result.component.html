@@ -8,7 +8,7 @@
         <mat-list>
           <mat-list-item *ngFor="let result of tempProducts">
             <img mat-list-icon *ngIf="result.PicturePath !== null; else noIcon"
-                src="result.PicturePath"
+                src="{{result.PicturePath}}"
                 (click)="showPreview(result.Name, result.PicturePath)"
                 matTooltip="Открыть в исходном размере" >
             <ng-template #noIcon>
