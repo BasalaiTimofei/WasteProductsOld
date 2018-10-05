@@ -23,6 +23,8 @@ import { NotificationListComponent } from './modules/account/components/notifica
 import { NotificationDetailsComponent } from './modules/account/components/notification-details/notification-details.component';
 import { AddProductComponent } from './components/products/add-product/add-product.component';
 import { ChangePasswordComponent } from './components/user/settings/change-password/change-password.component';
+import { AllToListComponent } from './components/products/all-to-list/all-to-list.component';
+import { ConfirmEmailChangingComponent } from './components/user/settings/confirm-email-changing/confirm-email-changing.component';
 import { ResetPasswordComponent } from './modules/account/components/reset-password/reset-password.component';
 
 const routes: Routes = [
@@ -50,10 +52,10 @@ const routes: Routes = [
   { path: 'changepassword', component: ChangePasswordComponent, canActivate: [AuthenticationGuard] },
   { path: 'resetpassword', component: ResetPasswordComponent },
 
-  { path: 'products', component: ProductsComponent, canActivate: [AuthenticationGuard],
-   children: [
-    { path: 'add-product', component: AddProductComponent }
+  { path: 'products', component: ProductsComponent, canActivate: [AuthenticationGuard], children: [
+    { path: 'add-product', component: AddProductComponent },
   ]},
+  { path: 'all-to-list', component: AllToListComponent },
   { path: 'groups', component: GroupsComponent },
   { path: 'products/myproducts', component: ToListComponent },
   { path: 'groups/mygroups', component: GroupsOfUserComponent},

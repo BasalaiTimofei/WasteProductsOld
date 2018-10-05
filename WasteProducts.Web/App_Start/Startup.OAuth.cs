@@ -19,4 +19,19 @@ namespace WasteProducts.Web
             app.UseIdentityServer();
         }
     }
+
+    //public partial class Startup
+    //{
+    //    private void ConfigureOAuth(IAppBuilder app)
+    //    {
+    //        app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
+    //        {
+    //            Authority = @"https://localhost:44326/identity",
+    //            RequiredScopes = new[] { IdentityConstants.WasteProducts_Api_Scope },
+    //            ValidationMode = ValidationMode.ValidationEndpoint
+    //        });
+
+    //        app.UseIdentityServer();
+    //    }
+    //}
 }

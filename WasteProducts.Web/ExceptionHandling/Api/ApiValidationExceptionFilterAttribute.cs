@@ -38,7 +38,6 @@ namespace WasteProducts.Web.ExceptionHandling.Api
             }
 
             actionExecutedContext.Response = actionExecutedContext.Request.CreateErrorResponse(HttpStatusCode.BadRequest, modelState);
-            actionExecutedContext.Response.ReasonPhrase += $": {exception.Message.Replace("\\", string.Empty)}";
         }
     }
 }

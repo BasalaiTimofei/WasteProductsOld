@@ -24,6 +24,11 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         public virtual string UserId { get; set; }
 
         /// <summary>
+        /// Unique username
+        /// </summary>
+        public virtual string UserName { get; set; }
+
+        /// <summary>
         /// User entity.
         /// </summary>
         public virtual UserDB User { get; set; }
