@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Groups;
@@ -70,7 +69,7 @@ namespace WasteProducts.Logic.Services.Groups
             var model = searchResult.FirstOrDefault();
             if (model == null)
             {
-                throw new ValidationException("Group not found");
+                throw new ArgumentException("Group not found");
             }
 
             model.Information = result.Information;
@@ -90,7 +89,7 @@ namespace WasteProducts.Logic.Services.Groups
             var model = searchResult.FirstOrDefault();
             if (model == null)
             {
-                throw new ValidationException("Group not found");
+                throw new ArgumentException("Group not found");
             }
 
             model.IsNotDeleted = false;
