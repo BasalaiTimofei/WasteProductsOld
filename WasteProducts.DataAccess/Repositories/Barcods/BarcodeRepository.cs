@@ -57,7 +57,7 @@ namespace WasteProducts.DataAccess.Repositories.Barcods
             return await Task.Run(() =>
             {
                 return _wasteContext.Barcodes.ToList();
-            });
+            }).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace WasteProducts.DataAccess.Repositories.Barcods
             barcode.Created = DateTime.UtcNow;
             _wasteContext.Barcodes.Add(barcode);
 
-            await _wasteContext.SaveChangesAsync();
+            await _wasteContext.SaveChangesAsync().ConfigureAwait(false);
 
             return barcode.Id;
         }
@@ -98,7 +98,7 @@ namespace WasteProducts.DataAccess.Repositories.Barcods
             }
             _wasteContext.Configuration.AutoDetectChangesEnabled = true;
 
-            await _wasteContext.SaveChangesAsync();
+            await _wasteContext.SaveChangesAsync().ConfigureAwait(false);
 
             return ids;
         }
@@ -112,7 +112,7 @@ namespace WasteProducts.DataAccess.Repositories.Barcods
             _wasteContext.Entry(barcode).State = EntityState.Modified;
             var barcodeDB = await _wasteContext.Barcodes.FirstOrDefaultAsync(b => b.Id == barcode.Id);
             barcodeDB.Modified = DateTime.UtcNow;
-            await _wasteContext.SaveChangesAsync();
+            await _wasteContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
         /// <summary>

@@ -30,18 +30,12 @@ export class AddProductComponent implements OnInit {
     'discription': {
       'required': 'Обязательное поле.',
     }
-  };
+  }
 
 constructor(private http: HttpClient, private productService: ProductService,
   private router: Router, private fb: FormBuilder) { }
 
-  selectedFile: File = null;
-
-  isHidden = false;
-
-  enableAdd = true;
-
-  buildForm() {
+  buildForm(){
     this.productForm = this.fb.group({
       'avgRating': [this.product.Rating, [
         Validators.required,
@@ -51,7 +45,7 @@ constructor(private http: HttpClient, private productService: ProductService,
       'discription': [this.product.Description, [
         Validators.required
       ]]
-    });
+    })
 
     this.productForm.valueChanges.subscribe(data => this.onValueChange(data));
 
@@ -59,28 +53,33 @@ constructor(private http: HttpClient, private productService: ProductService,
   }
 
   onValueChange(data?: any) {
-    if (!this.productForm) { return; }
-    const form = this.productForm;
+    if (!this.productForm) return;
+    let form = this.productForm;
 
-    // tslint:disable-next-line:forin
-    for (const field in this.formErrors) {
-        this.formErrors[field] = '';
-        const control = form.get(field);
+    for (let field in this.formErrors) {
+        this.formErrors[field] = "";
+        let control = form.get(field);
 
         if (control && control.dirty && !control.valid) {
-            const message = this.validationMessages[field];
-            // tslint:disable-next-line:forin
-            for (const key in control.errors) {
-                this.formErrors[field] += message[key] + ' ';
+            let message = this.validationMessages[field];
+            for (let key in control.errors) {
+                this.formErrors[field] += message[key] + " ";
             }
         }
     }
   }
 
   onSubmit() {
-    console.log('submitted');
+    console.log("submitted");
     console.log(this.productForm.value);
 }
+
+selectedFile: File = null;
+
+isHidden = false;
+
+enableAdd: boolean = true;
+
 
 onFileSelected(event) {
   this.selectedFile = <File>event.target.files[0];
@@ -98,27 +97,27 @@ onUpload(rating, descrText) {
     .subscribe(
       res => this.productService.addProductDescription(Number(rating), descrText, String(res)), // res is an ID of added product
       err => console.log(err));
-
+      
       // Если продукт добавился div скрывается!
       this.router.navigate(['/products']);
   }
 }
 
-addProduct() {
+addProduct(){
   this.productService.addProductDescription(this.product.Rating, this.product.Description, '');
   this.router.navigate(['/products']);
 }
 
-  disabled(): void {
-    const discription = document.getElementById('discription');
-    discription.removeAttribute('disabled');
-    const rat = document.getElementById('avgRating');
+  disabled(): void{
+    let discription = document.getElementById('discription');
+    discription.removeAttribute('disabled')
+    let rat = document.getElementById('avgRating');
     rat.removeAttribute('disabled');
   }
 
   ngOnInit() {
-    const discription = document.getElementById('discription');
-    const rat = document.getElementById('avgRating');
+    let discription = document.getElementById('discription');
+    let rat = document.getElementById('avgRating');
     discription.attributes.setNamedItem(document.createAttribute('disabled'));
     rat.attributes.setNamedItem(document.createAttribute('disabled'));
 
@@ -128,7 +127,7 @@ addProduct() {
   turnedOffWhile() {
   }
 
-  hideBlockAdd() {
-    this.router.navigate(['/products']);
+  hideBlockAdd(){
+    this.router.navigate(['/products'])
   }
 }

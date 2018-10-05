@@ -1,4 +1,4 @@
-<div><form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+<!-- <div><form [formGroup]="productForm" (ngSubmit)="onSubmit()">
   <div><input type="file" (change)="onFileSelected($event)"></div>
   <input formControlName="avgRating" id="avgRating"  type="number" class="form-control" placeholder="Ваша оценка продукта от 1 до 5"  >
   <div *ngIf="formErrors.avgRating" class="alert alert-danger">
@@ -10,4 +10,17 @@
     </div>
   <div><button type="submit" [disabled]="!productForm.valid" (click)="addProduct()" mat-flat-button>Добавить продукт</button></div>
   <div><button (click)="hideBlockAdd()" mat-flat-button>Отмена</button></div>
-</form></div>
+</form></div> -->
+
+<!-- <div style="border-style: groove; margin: 20px;">todo change style of the outer div -->
+  <div form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+    <div><input type="file" (change)="onFileSelected($event)"></div>
+    <input #inputRating type="number" min = "1" max="5" class="form-control" placeholder="Ваша оценка продукта от 1 до 5" required="" autofocus="">
+    <input #inputDescription type="text" class="form-control" placeholder="Ваше описание продукта" required="" autofocus="">
+    <div class="btn-group">
+      
+    <div><button (click)="onUpload(inputRating.value, inputDescription.value)" mat-flat-button>Добавить продукт</button></div>
+    <div><button (click)="hideBlockAdd()" mat-flat-button>Отмена</button></div>
+  </div></div>
+  <!-- </div> -->
+  
