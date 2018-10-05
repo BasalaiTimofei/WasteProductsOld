@@ -20,7 +20,6 @@ import { FriendsComponent } from './components/user/friends/friends.component';
 import { ProductsComponent } from './components/products/products.component';
 import { GroupsComponent } from './components/groups/groups.component';
 import { SettingsComponent } from './components/user/settings/settings.component';
-import { RegisterComponent } from './components/user/register/register.component';
 import { ToListComponent } from './components/products/to-list/to-list.component';
 import { AddProductComponent } from './components/products/add-product/add-product.component';
 import { DeleteProductComponent } from './components/products/delete-product/delete-product.component';
@@ -57,6 +56,7 @@ import { AccountModule } from './modules/account/account.module';
 import { UserdataComponent } from './components/user/settings/userdata/userdata.component';
 import { UserformfieldComponent } from './components/user/settings/userformfield/userformfield.component';
 import { ChangePasswordComponent } from './components/user/settings/change-password/change-password.component';
+import { ConfirmEmailChangingComponent } from './components/user/settings/confirm-email-changing/confirm-email-changing.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +71,6 @@ import { ChangePasswordComponent } from './components/user/settings/change-passw
     ProductsComponent,
     GroupsComponent,
     SettingsComponent,
-    RegisterComponent,
     ToListComponent,
     AddProductComponent,
     DeleteProductComponent,
@@ -102,6 +101,7 @@ import { ChangePasswordComponent } from './components/user/settings/change-passw
     ChangePasswordComponent,
     FormProductOverlayComponent,
     FormOverlayWrapperComponent,
+    ConfirmEmailChangingComponent,
   ],
   imports: [
     BrowserModule,

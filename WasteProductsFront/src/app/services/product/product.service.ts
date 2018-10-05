@@ -17,17 +17,19 @@ import { ProductDescription } from '../../models/products/product-description';
 export class ProductService extends BaseHttpService {
   constructor(httpService: HttpClient, private authServise: AuthenticationService, loggingService: LoggingService) {
     super(httpService, loggingService);
+    this.baseProdApiUrl = `${environment.apiHostUrl}/api/products`;
+    this.baseUserApiUrl = `${environment.apiHostUrl}/api/user`;
   }
 
-  private baseProdApiUrl = `${environment.apiHostUrl}/api/products`;
-  private baseUserApiUrl = `${environment.apiHostUrl}/api/user/${this.authServise.getUserId}`;
+  private baseProdApiUrl;
+  private baseUserApiUrl;
 
   createProduct(rating: number, description: string) {
     const createProdUrl = this.baseProdApiUrl;
     let productId: string;
     this.httpService.post(createProdUrl, null).subscribe(res => productId = <string>res, err => console.error(err));
 
-    const addProdUrl = `${this.baseUserApiUrl}/products/${productId}`;
+    const addProdUrl = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/products/${productId}`;
 
     const descr = new ProductDescription();
     descr.Rating = rating;
@@ -41,7 +43,7 @@ export class ProductService extends BaseHttpService {
     description.Rating = rating;
     description.Description = descrText;
 
-    const url = `${this.baseUserApiUrl}/products/${productId}`;
+    const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/products/${productId}`;
     this.httpService.post(url, description)
     .subscribe(
       res => console.log(res),
@@ -49,12 +51,12 @@ export class ProductService extends BaseHttpService {
   }
 
   getUserProducts() {
-    const url = `${this.baseUserApiUrl}/products`;
+    const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/products`;
     return this.httpService.get<UserProduct[]>(url);
    }
 
    updateUserProduct(productId: string, rating: number, descrText: string) {
-    const url = `${this.baseUserApiUrl}/products/${productId}`;
+    const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/products/${productId}`;
 
     const description = new ProductDescription();
     description.Rating = rating;
@@ -64,7 +66,7 @@ export class ProductService extends BaseHttpService {
    }
 
    deleteUserProduct(productId: string) {
-    const url = `${this.baseUserApiUrl}/products/${productId}`;
+    const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/products/${productId}`;
     this.httpService.delete(url)
     .subscribe(
       res => console.log(res),

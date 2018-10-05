@@ -8,10 +8,9 @@
   (@slideContent.start)="onAnimationStart($event)">
 
   <form class="product-form">
-    <mat-form-field>
+    <mat-form-field [hideRequiredMarker]="false">
       <mat-label>Мой рейнтинг</mat-label>
-      <mat-select #rate value="0">
-        <mat-option value="0">0</mat-option>
+      <mat-select #rate value="1" required>
         <mat-option value="1">1</mat-option>
         <mat-option value="2">2</mat-option>
         <mat-option value="3">3</mat-option>
@@ -19,9 +18,12 @@
         <mat-option value="5">5</mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field class="full-width">
-      <textarea #comment matInput placeholder="Мой комментарий" value=""></textarea>
+    <mat-form-field class="full-width" [hideRequiredMarker]="false">
+      <textarea #comment matInput placeholder="Мой комментарий" value="" required></textarea>
     </mat-form-field>
+    <div class="error-validation" *ngIf="errorValidation">
+      <p>Поле Мой комментарий не может быть пустым</p>
+    </div>
     <button type="submit" (click)="addToMyProducts(comment.value, rate.value)" mat-button>Добавить</button>
     <button mat-button (click)="closeForm()">Отмена</button>
   </form>

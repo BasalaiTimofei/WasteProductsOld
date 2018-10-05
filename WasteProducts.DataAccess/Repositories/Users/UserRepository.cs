@@ -66,7 +66,12 @@ namespace WasteProducts.DataAccess.Repositories.Users
                 Created = DateTime.UtcNow
             };
 
-            await _manager.CreateAsync(user, password).ConfigureAwait(false);
+            var result = await _manager.CreateAsync(user, password).ConfigureAwait(false);
+            
+            if(!result.Succeeded)
+            {
+                throw new OperationCanceledException("User cannot be registered.");
+            }
 
             if (await _manager.FindByIdAsync(id).ConfigureAwait(false) != null)
             {
@@ -76,10 +81,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
                 return (id, token);
             }
             else
-            {
-                // throws 409 conflict
-                throw new OperationCanceledException("User was not created.");
-            }
+                throw new OperationCanceledException("User cannot be registered.");
         }
 
         public async Task<bool> ConfirmEmailAsync(string userId, string token)
@@ -353,6 +355,11 @@ namespace WasteProducts.DataAccess.Repositories.Users
             }
             else
                 throw new OperationCanceledException("The User Name is not available.");
+        }
+
+        public async Task<bool> IsUserNameAvailable(string userName)
+        {
+            return !(await _context.Users.AnyAsync(u => u.UserName == userName).ConfigureAwait(false));
         }
 
         // Business logic below

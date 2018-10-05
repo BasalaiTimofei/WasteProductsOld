@@ -11,9 +11,19 @@
         public string Id { get; set; }
 
         /// <summary>
+        /// ID of the group admin.
+        /// </summary>
+        public string AdminId { get; set; }
+
+        /// <summary>
         /// Name of the group.
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Information about group
+        /// </summary>
+        public string Information { get; set; }
 
         /// <summary>
         /// True if user can create boards;

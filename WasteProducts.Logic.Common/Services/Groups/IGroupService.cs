@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models.Groups;
 
@@ -14,7 +15,7 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// Create new group
         /// </summary>
         /// <param name="item">Object</param>
-        Task<string> Create(Group item);
+        Task<Group> Create(Group item);
 
         /// <summary>
         /// Add or corect information in group
@@ -25,8 +26,8 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// <summary>
         /// Group delete
         /// </summary>
-        /// <param name="item">Primary key</param>
-        Task Delete(Group item);
+        /// <param name="groupId">Primary key</param>
+        Task Delete(string groupId);
 
         /// <summary>
         /// Search group by id
@@ -40,13 +41,13 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// </summary>
         /// <param name="userId">Primary key</param>
         /// <returns>Object</returns>
-        Task<Group> FindByAdmin(string userId);
+        Task<IEnumerable<Group>> FindByAdmin(string userId);
 
         /// <summary>
         /// Search group by its name
         /// </summary>
         /// <param name="name">Name of the group</param>
         /// <returns>Object</returns>
-        Task<Group> FindByName(string name);
+        Task<IEnumerable<Group>> FindByName(string name);
     }
 }

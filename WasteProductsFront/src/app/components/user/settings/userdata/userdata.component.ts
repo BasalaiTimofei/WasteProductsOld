@@ -9,27 +9,34 @@ import { UserService } from '../../../../services/user/user.service';
 })
 export class UserdataComponent implements OnInit {
 
-  user: User;
-  isConfirmed: string;
+  user: User = new User();
+  isEmailChangingRequestSent: boolean;
+  isUserNameChanged: boolean;
 
-  constructor(public userService: UserService) {
-   }
+  constructor(public userService: UserService) { }
 
   ngOnInit() {
+    this.isEmailChangingRequestSent = false;
+    this.isUserNameChanged = null;
     this.userService.getUserSettings().subscribe(
       res => this.user = res,
-      err => console.error(err)
-      );
-      console.log(this.user);
+      err => console.error(err));
+    console.log(this.user);
   }
+
   updateUserName() {
-    this.userService.updateUserName(this.user.UserName).subscribe(
-      err => console.log(err)
+    this.isUserNameChanged = null;
+    this.userService.updateUserName(this.user.UserName)
+    .subscribe(
+      res => this.isUserNameChanged = true,
+      err => this.isUserNameChanged = false
     );
   }
 
   updateEmail() {
-    this.userService.updateEmail(this.user.Email).subscribe(
+    this.userService.updateEmailRequest(this.user.Email)
+    .subscribe(
+      res => this.isEmailChangingRequestSent = true,
       err => console.log(err)
     );
   }

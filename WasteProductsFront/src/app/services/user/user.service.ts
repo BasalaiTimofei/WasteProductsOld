@@ -10,53 +10,64 @@ import { AuthenticationService } from '../../modules/account/services/authentica
   providedIn: 'root'
 })
 export class UserService extends BaseHttpService  {
-  constructor(private httpClient: HttpClient, private authServise: AuthenticationService, loggingService: LoggingService) {
+  constructor(httpClient: HttpClient, private authServise: AuthenticationService, loggingService: LoggingService) {
     super(httpClient, loggingService);
+    this.baseUserApiUrl = `${environment.apiHostUrl}/api/user`;
    }
 
-   private apiUrlPlusUserId = `${environment.apiHostUrl}/api/user/${this.authServise.getUserId()}`;
+   private baseUserApiUrl;
 
   addFriend(friendId: string) {
-    const url = `${this.apiUrlPlusUserId}/friends/${friendId}`;
-    this.httpClient.put(url, null);
+    const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/friends/${friendId}`;
+    this.httpService.put(url, null);
   }
 
   getFriends() {
-    const url = `${this.apiUrlPlusUserId}/friends`;
-    return this.httpClient.get<User[]>(url);
+    const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/friends`;
+    return this.httpService.get<User[]>(url);
   }
 
   deleteFriend(friendId: string) {
-    const url = `${this.apiUrlPlusUserId}/friends/${friendId}`;
-    this.httpClient.delete(url);
+    const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/friends/${friendId}`;
+    this.httpService.delete(url);
   }
 
   getUserSettings() {
-    return this.httpClient.get<User>(this.apiUrlPlusUserId);
+    return this.httpService.get<User>(`${this.baseUserApiUrl}/${this.authServise.getUserId()}`);
   }
 
   updateUserName(userName: string) {
-    const url = `${this.apiUrlPlusUserId}/updateusername`;
+    const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/updateusername`;
     const bodyObj = {
       UserName: userName
     };
-    return this.httpClient.put(url, bodyObj);
+    return this.httpService.put(url, bodyObj);
   }
 
-  updateEmail(email: string)  {
-    const url = `${this.apiUrlPlusUserId}/updateemail`;
+  updateEmailRequest(email: string) {
+    const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/updateemail`;
     const bodyObj = {
       EmailOfTheUser: email,
     };
-    return this.httpClient.put(url, bodyObj);
+    return this.httpService.put(url, bodyObj);
+  }
+
+  confirmEmail(id: string, token: string) {
+    const url = `${this.baseUserApiUrl}/${id}/confirmemail/${token}`;
+    return this.httpService.put(url, null);
+  }
+
+  confirmEmailChanging(token: string) {
+    const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/confirmemailchanging/${token}`;
+    return this.httpService.put(url, null);
   }
 
   updatePassword(oldPassword: string, newPassword: string) {
-    const url = `${this.apiUrlPlusUserId}/changepassword`;
+    const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/changepassword`;
     const bodyObj = {
       OldPassword: oldPassword,
       NewPassword: newPassword
     };
-    return this.httpClient.put(url, bodyObj);
+    return this.httpService.put(url, bodyObj);
   }
 }
