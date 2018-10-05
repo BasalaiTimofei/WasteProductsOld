@@ -30,6 +30,6 @@
   padding:0;
 }
 
-body, html{
+body, html, .container{
   height:100%;
 }
