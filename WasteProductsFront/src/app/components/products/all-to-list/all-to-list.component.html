@@ -54,12 +54,13 @@
       <div class="example-element-detail container"
            [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
         <div class="row">
-          <img class="product-picture" src="{{element.PicturePath}}"> 
+          <img class="product-picture" href="#" 
+            [src]="element.PicturePath == '/Content/favicon.png' ? defualtImage : element.PicturePath"> 
           <div class="col">
             <span>Производитель: </span> {{element.Brand}}
           </div>
           <div class="col"><span>Страна: </span> {{element.Country}}</div>
-          <div class="col"><span>Состав: </span>{{element.Composition}}</div>
+          <div class="col"><span>Состав: </span>{{element.Composition}}</div> 
         </div>
         
       </div>
