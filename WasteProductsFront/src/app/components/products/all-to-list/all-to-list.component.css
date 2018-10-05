@@ -10,10 +10,14 @@
       background-color: lightcoral
   }
 
+  .product-picture {
+      background-image: url(https://cdn.fishki.net/upload/post/2017/03/19/2245758/tn/02-funny-cat-wallpapercat-wallpaper.jpg);
+      background-position: center center;
+      background-size: contain;
+      width: 25%;
+      height: 100%;
+  }
 
-
-
-  
   table {
     width: 100%;
   }
