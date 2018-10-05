@@ -16,6 +16,11 @@
         public virtual string UserId { get; set; }
 
         /// <summary>
+        /// Unique username
+        /// </summary>
+        public virtual string UserName { get; set; }
+
+        /// <summary>
         /// True if user can create boards;
         /// false - user can't create boards.
         /// </summary>

@@ -16,6 +16,11 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         public virtual string ProductId { get; set; }
 
         /// <summary>
+        /// Unique name of concrete Product.
+        /// </summary>
+        public virtual string Name { get; set; }
+
+        /// <summary>
         /// This product
         /// </summary>
         public virtual ProductDB Product { get; set; }
@@ -33,7 +38,7 @@ namespace WasteProducts.DataAccess.Common.Models.Groups
         /// <summary>
         /// Additional information
         /// </summary>
-        public string Information { get; set; }
+        public virtual string Information { get; set; }
 
         /// <summary>
         /// Model modification time

@@ -16,6 +16,11 @@ namespace WasteProducts.Logic.Common.Models.Groups
         public virtual string ProductId { get; set; }
 
         /// <summary>
+        /// Unique name of concrete Product.
+        /// </summary>
+        public virtual string Name { get; set; }
+
+        /// <summary>
         /// Foreign key
         /// </summary>
         public virtual string GroupBoardId { get; set; }
@@ -23,6 +28,6 @@ namespace WasteProducts.Logic.Common.Models.Groups
         /// <summary>
         /// Additional information
         /// </summary>
-        public string Information { get; set; }
+        public virtual string Information { get; set; }
     }
 }
