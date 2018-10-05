@@ -13,8 +13,8 @@
   .product-picture {
       background-position: center center;
       background-size: contain;
-      width: 25%;
-      height: 100%;
+      width: 225px;
+      height: 225px;
   }
 
   table {

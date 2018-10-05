@@ -31,7 +31,7 @@ export class AllToListComponent implements OnInit {
   //data: UserProduct[] = this.userProducts;
   data: Product[] = this.products;
   dataSource = new MatTableDataSource(this.data);
-  displayedColumns: string[] = ['Id', 'Name', 'AvgRating', 'Weight'];
+  displayedColumns: string[] = ['Id', 'Name', 'AvgRating'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;

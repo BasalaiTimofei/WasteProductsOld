@@ -54,8 +54,7 @@
       <div class="example-element-detail container"
            [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
         <div class="row">
-          <!-- <img src="{{element.PicturePath}}">  -->
-          <div class="background-image: url({{element.PicturePath}});" class="product-picture col"></div>
+          <img class="product-picture" src="{{element.PicturePath}}"> 
           <div class="col">
             <span>Производитель: </span> {{element.Brand}}
           </div>
