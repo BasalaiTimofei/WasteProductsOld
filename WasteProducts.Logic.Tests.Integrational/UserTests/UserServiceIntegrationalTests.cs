@@ -445,8 +445,7 @@ namespace WasteProducts.Logic.Tests.UserTests
             };
             using (var gService = _kernel.Get<IGroupService>())
             {
-                await gService.Create(group);
-                var groupFromDB = await gService.FindByName(name);
+                var groupFromDB = await gService.Create(group);
                 Assert.AreEqual(info, groupFromDB.Information);
                 _groupIds.Add(groupFromDB.Id);
             }

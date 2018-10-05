@@ -1,8 +1,8 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
@@ -15,15 +15,16 @@ import { FormPreviewOverlay } from '../form-product-overlay/form-preview-overlay
 import { ImagePreviewService } from '../../services/image-preview/image-preview.service';
 import { ImagePreviewOverlay } from '../image-preview/image-preview-overlay';
 import { AuthenticationService } from '../../modules/account/services/authentication.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-search-result',
   templateUrl: './search-result.component.html',
   styleUrls: ['./search-result.component.css']
 })
-export class SearchresultComponent implements OnDestroy {
+export class SearchresultComponent implements OnDestroy, OnInit {
   private destroy$ = new Subject<void>();
-  public isAuth: boolean;
+  isAuthenificated$: Observable<boolean>;
 
   responseMessage = 'Продукт удален из Мои продукты';
   query: string;
@@ -34,6 +35,7 @@ export class SearchresultComponent implements OnDestroy {
   pageSize = 5;
   pageIndex = 0;
   length = 0;
+  baseUrl = environment.apiHostUrl;
 
   constructor(private searchService: SearchService,
               private productService: ProductService,
@@ -48,10 +50,7 @@ export class SearchresultComponent implements OnDestroy {
         if (!query) {
             return;
       }
-      this.authService.isAuthenticated$.toPromise<boolean>().then(res => {
-        this.isAuth = res;
-      }).catch();
-      // this.isAuth = true; // MyStubs
+
       this.setVariablesToDefault();
       this.search(query);
       this.query = query;
@@ -61,6 +60,10 @@ export class SearchresultComponent implements OnDestroy {
   public ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  public ngOnInit(): void {
+    this.isAuthenificated$ = this.authService.isAuthenticated$; // MyStubs
   }
 
   public search(query: string): void {
@@ -101,9 +104,8 @@ export class SearchresultComponent implements OnDestroy {
   }
 
   showPreview(productName: string, picturePath: string) {
-    // picturePath = 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg'; // MyStubs
     const dialog: ImagePreviewOverlay = this.previewDialog.open({
-      image: { name: productName, url: picturePath }
+      image: { name: productName, url: this.baseUrl + picturePath }
     });
   }
 

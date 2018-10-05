@@ -8,7 +8,7 @@
         <mat-list>
           <mat-list-item *ngFor="let result of tempProducts">
             <img mat-list-icon *ngIf="result.PicturePath !== null; else noIcon"
-                src="result.PicturePath"
+                src="{{baseUrl}}{{result.PicturePath}}"
                 (click)="showPreview(result.Name, result.PicturePath)"
                 matTooltip="Открыть в исходном размере" >
             <ng-template #noIcon>
@@ -16,7 +16,7 @@
                                 matTooltip="Изображение отсутствует" >
             </ng-template>
             <p mat-line> {{result.Name}} </p>
-            <div *ngIf="isAuth">
+            <div *ngIf="isAuthenificated$ | async">
               <div *ngIf="!result.IsAdded; else added">
                 <button  matSuffix mat-button mat-icon-button (click)="addToMyProducts(result.Id)">
                   <mat-icon matTooltip="Добавить продукт в Мои продукты">star_border</mat-icon>

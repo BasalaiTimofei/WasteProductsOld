@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Groups;
@@ -30,11 +29,11 @@ namespace WasteProducts.Logic.Services.Groups
             result.GroupUsers = null;
 
             var searchResult = await _dataBase.Find<GroupDB>(
-                x => x.AdminId == result.AdminId&& x.Name == result.Name&& x.IsNotDeleted).ConfigureAwait(false);
+                x => x.AdminId == result.AdminId && x.Name == result.Name && x.IsNotDeleted).ConfigureAwait(false);
 
             if (searchResult.Any())
             {
-                throw new ValidationException("Group already exists");
+                throw new ArgumentException("Group already exists");
             }
 
             result.Id = Guid.NewGuid().ToString();
@@ -70,7 +69,7 @@ namespace WasteProducts.Logic.Services.Groups
             var model = searchResult.FirstOrDefault();
             if (model == null)
             {
-                throw new ValidationException("Group not found");
+                throw new ArgumentException("Group not found");
             }
 
             model.Information = result.Information;
@@ -85,12 +84,12 @@ namespace WasteProducts.Logic.Services.Groups
         public async Task Delete(string groupId)
         {
             var searchResult = await _dataBase.GetWithInclude<GroupDB>(x => x.Id == groupId && x.IsNotDeleted,
-                y => y.GroupBoards.Select(z => z.GroupProducts),m => m.GroupUsers).ConfigureAwait(false);
+                y => y.GroupBoards.Select(z => z.GroupProducts), m => m.GroupUsers).ConfigureAwait(false);
 
             var model = searchResult.FirstOrDefault();
             if (model == null)
             {
-                throw new ValidationException("Group not found");
+                throw new ArgumentException("Group not found");
             }
 
             model.IsNotDeleted = false;
