@@ -41,36 +41,15 @@ export class AllToListComponent implements OnInit {
     this.paginator.length = this.data.length;
     this.dataSource.sort = this.sort;
 
-this.productService.getProducts().subscribe(
-    res => {
-      // this.userProducts = res;
-      // for (let item of res) {
-      //   if (item.PicturePath == null) item.PicturePath = this.defualtImage; 
-      // }
-      this.products = res;
-      
-    },
-    err => console.error(err)
-  );
-
-// this.productService.getUserProducts().subscribe(
-//     res => {
-//       // this.userProducts = res;
-//       this.products = res;
-//       // tslint:disable-next-line:prefer-const
-//       for (let item of res) {
-//         this.products.push(item.Product);
-//       }
-//     } ,
-//     err => console.error(err));
-//   }
-
-//     applyFilter(filterValue: any) {
-//       this.dataSource.filter = filterValue.trim().toLowerCase();
-//     }
-    
-//     showAllToTable() {
-//       this.router.navigate(['/products/all-to-list']);
-    }
-
+    this.productService.getProducts().subscribe(
+      res => {
+        // this.userProducts = res;
+        // for (let item of res) {
+        //   if (item.PicturePath == null) item.PicturePath = this.defualtImage; 
+        // }
+        this.products = res;
+      },
+      err => console.error(err)
+    );
+  }
 }
