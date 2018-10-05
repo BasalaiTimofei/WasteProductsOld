@@ -47,6 +47,7 @@ import { GroupUserGetEntitleComponent } from './components/groups/user/group-use
 import { FooterComponent } from './components/common/footer/footer.component';
 import { DonateComponent } from './components/donate/donate.component';
 import { GroupsOfUserComponent } from './components/groups/groups-of-user/groups-of-user.component';
+import { MatToolbarModule, MatTableModule } from '@angular/material';
 
 /* Services */
 import { ImagePreviewService } from './services/image-preview/image-preview.service';
@@ -123,6 +124,8 @@ import { ConfirmEmailChangingComponent } from './components/user/settings/confir
     CdkTableModule,
     OverlayModule,
     NguCarouselModule,
+    MatToolbarModule,
+    MatTableModule,
 
     /* Custom modules */
     AccountModule
