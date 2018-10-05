@@ -46,7 +46,7 @@ namespace WasteProducts.Logic.Services.Barcods
             var code = _scanner.Scan(imageStream);
 
             if (code == null)
-                return null;
+                return Task.FromResult<Barcode>(null);
 
             //если получили валидный код - найти информацию о товаре в репозитории
             var productDB = _repositoryProduct.SelectWhereAsync(
@@ -58,14 +58,14 @@ namespace WasteProducts.Logic.Services.Barcods
             //если она есть - вернуть ее
             if (((List<ProductDB>)productDB).Count != 0)
             {
-                return null;   
+                return Task.FromResult<Barcode>(null);   
             }
 
             //если ее нет - получить инфу из веб каталога
             var barcode = _catalog.GetAsync(code).Result;
 
             if (barcode == null)
-                return null;
+                return Task.FromResult<Barcode>(null);
 
             //вернуть ее
             return Task.FromResult(barcode);
