@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { PageEvent } from '@angular/material';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
@@ -23,7 +23,7 @@ import { AuthenticationService } from '../../modules/account/services/authentica
 })
 export class SearchresultComponent implements OnDestroy {
   private destroy$ = new Subject<void>();
-  public isAuth: boolean;
+  isAuthenificated$: Observable<boolean>;
 
   responseMessage = 'Продукт удален из Мои продукты';
   query: string;
@@ -48,10 +48,8 @@ export class SearchresultComponent implements OnDestroy {
         if (!query) {
             return;
       }
-      this.authService.isAuthenticated$.toPromise<boolean>().then(res => {
-        this.isAuth = res;
-      }).catch();
-      // this.isAuth = true; // MyStubs
+      this.isAuthenificated$ = this.authService.isAuthenticated$; // MyStubs
+
       this.setVariablesToDefault();
       this.search(query);
       this.query = query;
