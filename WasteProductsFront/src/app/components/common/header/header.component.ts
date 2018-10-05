@@ -9,7 +9,12 @@ export class HeaderComponent implements OnInit {
 
   constructor() { }
 
+  btnClick= function () {
+    //this.router.navigateByUrl('/products/all-to-list');
+};
+
   ngOnInit() {
+    
   }
 
 }
