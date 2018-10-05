@@ -1,12 +1,16 @@
 ﻿using AutoMapper;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Barcods;
+using WasteProducts.DataAccess.Common.Models.Products;
 using WasteProducts.DataAccess.Common.Repositories.Barcods;
+using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.Logic.Common.Factories;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Services.Barcods;
+using WasteProducts.Logic.Common.Services.Products;
 
 namespace WasteProducts.Logic.Services.Barcods
 {
@@ -17,13 +21,15 @@ namespace WasteProducts.Logic.Services.Barcods
         IBarcodeScanService _scanner;
         IBarcodeCatalogSearchService _catalog;
         IBarcodeRepository _repository;
+        IProductRepository _repositoryProduct;
         IMapper _mapper;
 
-        public BarcodeService(IServiceFactory serviceFactory, IBarcodeRepository repository, IMapper mapper)
+        public BarcodeService(IServiceFactory serviceFactory, IBarcodeRepository repository, IProductRepository repositoryProduct, IMapper mapper)
         {
             _scanner = serviceFactory.CreateBarcodeScanService();
             _catalog = serviceFactory.CreateSearchBarcodeService();
             _repository = repository;
+            _repositoryProduct = repositoryProduct;
             _mapper = mapper;
         }
 
@@ -40,14 +46,20 @@ namespace WasteProducts.Logic.Services.Barcods
             var code = _scanner.Scan(imageStream);
 
             if (code == null)
-                return Task.FromResult(_barcode);
+                return null;
 
             //если получили валидный код - найти информацию о товаре в репозитории
-            var barcodeDB = _repository.GetByCodeAsync(code).Result;
-
+            var productDB = _repositoryProduct.SelectWhereAsync(
+                p => 
+                    !(p.Barcode == null) && 
+                    !string.IsNullOrEmpty(p.Barcode.Code) && 
+                    string.Equals(p.Barcode.Code, code, System.StringComparison.Ordinal))
+                .Result;
             //если она есть - вернуть ее
-            if (barcodeDB != null)
-                return Task.FromResult(_mapper.Map<Barcode>(barcodeDB));
+            if (((List<ProductDB>)productDB).Count != 0)
+            {
+                return null;   
+            }
 
             //если ее нет - получить инфу из веб каталога
             var barcode = _catalog.GetAsync(code).Result;
