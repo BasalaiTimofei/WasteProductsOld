@@ -51,46 +51,31 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         }
 
         /// <summary>
-        /// Get group object by id user
-        /// </summary>
-        /// <param name="userId">Primary key</param>
-        /// <returns>200(Object) || 404</returns>
-        [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.OK, "Get user group by user id", typeof(Group))]
-        [SwaggerResponse(HttpStatusCode.NotFound, "Incorrect id user")]
-        [HttpGet, Route("user/{userId}/group")]
-        public async Task<IHttpActionResult> GetUserGroup(string userId)
-        {
-            using (_groupService)
-            {
-                var item = await _groupService.FindByAdmin(userId);
-                if (item == null)
-                {
-                    return NotFound();
-                }
-                return Ok(item);
-            }
-        }
-
-        /// <summary>
         /// Group create
         /// </summary>
         /// <param name="item">Object</param>
         /// <returns>201(Group id, Object)</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.Created, "Group create", typeof(Group))]
-        [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
+        [SwaggerResponse(HttpStatusCode.Conflict, "Group already exists")]
         [HttpPost, Route("groups")]
         public async Task<IHttpActionResult> Create(Group item)
         {
             using (_groupService)
             {
-                var group = await _groupService.Create(item);
+                try
+                {
+                    var group = await _groupService.Create(item);
 
-                var uriBuilder = new UriBuilder(Request.RequestUri);
-                uriBuilder.Path += $"/{group.Id}";
+                    var uriBuilder = new UriBuilder(Request.RequestUri);
+                    uriBuilder.Path += $"/{group.Id}";
 
-                return Created(uriBuilder.Uri, group);
+                    return Created(uriBuilder.Uri, group);
+                }
+                catch (ArgumentException e)
+                {
+                    return Conflict();
+                }
             }
         }
 
