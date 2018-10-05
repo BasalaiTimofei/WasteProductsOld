@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using WasteProducts.Logic.Resources;
 using FluentValidation;
+using WasteProducts.Logic.Common.Models.Users.WebUsers;
 
 namespace WasteProducts.Logic.Services.Users
 {
@@ -108,19 +109,14 @@ namespace WasteProducts.Logic.Services.Users
             return _repo.ChangePasswordAsync(userId, newPassword, oldPassword);
         }
 
-        public async Task<(string id, string token)> ResetPasswordRequestAsync(string email, string path)
+        public async Task<ResetPasswordResult> ResetPasswordRequestAsync(string email)
         {
-            if (path != null)
-            {
-                var (id, token) = await _repo.GeneratePasswordResetTokenAsync(email);
-                var fullpath = string.Format(path, id, token);
-                await _mailService.SendAsync(email, UserResources.ResetPasswordHeader, string.Format(UserResources.ResetPasswordBody, fullpath));
-                return (id, token);
-            }
-            else
-            {
-                return (null, null);
-            }
+            var (id, token) = await _repo.GeneratePasswordResetTokenAsync(email);
+
+            var body = string.Format(UserResources.ResetPasswordBody, token);
+            await _mailService.SendAsync(email, UserResources.ResetPasswordHeader, body);
+
+            return new ResetPasswordResult { UserId = id, Token = token };
         }
 
         public Task ResetPasswordAsync(string userId, string token, string newPassword)

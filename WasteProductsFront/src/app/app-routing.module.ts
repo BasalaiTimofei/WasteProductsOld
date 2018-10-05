@@ -23,6 +23,7 @@ import { NotificationListComponent } from './modules/account/components/notifica
 import { NotificationDetailsComponent } from './modules/account/components/notification-details/notification-details.component';
 import { AddProductComponent } from './components/products/add-product/add-product.component';
 import { ChangePasswordComponent } from './components/user/settings/change-password/change-password.component';
+import { ResetPasswordComponent } from './modules/account/components/reset-password/reset-password.component';
 
 const routes: Routes = [
   { path: '', component: DefaultComponent, pathMatch: 'full' },
@@ -47,6 +48,7 @@ const routes: Routes = [
   { path: 'friends', component: FriendsComponent, canActivate: [AuthenticationGuard] },
   { path: 'settings', component: SettingsComponent, canActivate: [AuthenticationGuard] },
   { path: 'changepassword', component: ChangePasswordComponent, canActivate: [AuthenticationGuard] },
+  { path: 'resetpassword', component: ResetPasswordComponent },
 
   { path: 'products', component: ProductsComponent, canActivate: [AuthenticationGuard],
    children: [
