@@ -8,6 +8,7 @@ using WasteProducts.DataAccess.Common.Repositories.Search;
 using WasteProducts.Logic.Common.Models.Products;
 using WasteProducts.Logic.Common.Models.Search;
 using WasteProducts.Logic.Common.Services;
+using WasteProducts.Logic.Common.Services.Products;
 using WasteProducts.Logic.Resources;
 
 namespace WasteProducts.Logic.Services
@@ -23,10 +24,14 @@ namespace WasteProducts.Logic.Services
         public int MaxResultCount { get; set; } = DEFAULT_MAX_LUCENE_RESULTS;
 
         private readonly ISearchRepository _repository;
+        private readonly IProductService _productService;
+        private readonly IMapper _mapper;
 
-        public LuceneSearchService(ISearchRepository repository)
+        public LuceneSearchService(ISearchRepository repository, IProductService productService, IMapper mapper)
         {
             _repository = repository;
+            _productService = productService;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -177,6 +182,17 @@ namespace WasteProducts.Logic.Services
         public async Task<IEnumerable<UserQuery>> GetSimilarQueriesAsync(string query)
         {
             return await Task.Run(() => GetSimilarQueries(query));
+        }
+
+        public async Task RecreateIndex()
+        {
+            var products = await _productService.GetAllAsync();
+            _repository.Clear();
+            foreach (var product in products)
+            {
+                ProductDB productDbEntity = _mapper.Map<Product, ProductDB>(product);
+                this.AddToSearchIndex(productDbEntity);
+            }
         }
 
         private void CheckQuery(BoostedSearchQuery query)

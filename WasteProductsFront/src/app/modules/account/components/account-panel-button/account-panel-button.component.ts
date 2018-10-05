@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { AuthenticationService } from '../../services/authentication.service';
 import { NotificationService } from '../../services/notification.service';
 /* Materials */
