@@ -18,7 +18,7 @@ input{
   margin: 20px;
 }
 
-div form {
+class form {
     float: right;
     margin-right: 10%
     

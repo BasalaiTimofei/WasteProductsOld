@@ -23,12 +23,14 @@ import { NotificationListComponent } from './modules/account/components/notifica
 import { NotificationDetailsComponent } from './modules/account/components/notification-details/notification-details.component';
 import { AddProductComponent } from './components/products/add-product/add-product.component';
 import { ChangePasswordComponent } from './components/user/settings/change-password/change-password.component';
+import { AllToListComponent } from './components/products/all-to-list/all-to-list.component';
+import { ConfirmEmailChangingComponent } from './components/user/settings/confirm-email-changing/confirm-email-changing.component';
 
 const routes: Routes = [
   { path: '', component: DefaultComponent, pathMatch: 'full' },
   { path: 'register', component: AccountRegisterComponent },
   {
-    path: 'account', canActivate: [AuthenticationGuard],
+    path: 'account', /*canActivate: [AuthenticationGuard],*/
     children: [
       { path: '', component: AccountComponent, pathMatch: 'full' },
       {
@@ -44,14 +46,14 @@ const routes: Routes = [
   { path: 'details/:id', component: NotificationDetailsComponent },
   { path: 'common/mainpage', component: MainPageComponent },
 
-  { path: 'friends', component: FriendsComponent, canActivate: [AuthenticationGuard] },
-  { path: 'settings', component: SettingsComponent, canActivate: [AuthenticationGuard] },
-  { path: 'changepassword', component: ChangePasswordComponent, canActivate: [AuthenticationGuard] },
+  { path: 'friends', component: FriendsComponent, /*canActivate: [AuthenticationGuard]*/ },
+  { path: 'settings', component: SettingsComponent, /*canActivate: [AuthenticationGuard]*/ },
+  { path: 'changepassword', component: ChangePasswordComponent, /*canActivate: [AuthenticationGuard]*/ },
 
-  { path: 'products', component: ProductsComponent, canActivate: [AuthenticationGuard],
-   children: [
-    { path: 'add-product', component: AddProductComponent }
+  { path: 'products', component: ProductsComponent, children: [
+    { path: 'add-product', component: AddProductComponent },
   ]},
+  { path: 'all-to-list', component: AllToListComponent },
   { path: 'groups', component: GroupsComponent },
   { path: 'products/myproducts', component: ToListComponent },
   { path: 'groups/mygroups', component: GroupsOfUserComponent},

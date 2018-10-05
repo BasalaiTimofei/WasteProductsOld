@@ -4,30 +4,32 @@
   </mat-form-field>
 </div>
 
-<table mat-table [dataSource]="userProducts" matSort class="mat-elevation-z12 app-products-table">
+<table mat-table [dataSource]="products" matSort class="mat-elevation-z12 app-products-table">
   <!-- Id Column -->
   <ng-container matColumnDef="Id">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
-    <td mat-cell *matCellDef="let row">{{row.Product.Id}}</td>
+    <td mat-cell *matCellDef="let row">{{row.Id}}</td>
+  </ng-container>
+
+   <!-- Name Column -->
+  
+   <ng-container matColumnDef="Name">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Наименование</th>
+    <td mat-cell *matCellDef="let row">{{row.Name}}</td>
   </ng-container>
 
   <!-- AvgRating Column -->
   <ng-container matColumnDef="AvgRating">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Рейтинг</th>
-    <td mat-cell *matCellDef="let row"> {{row.Product.AvgRating}} </td>
+    <td mat-cell *matCellDef="let row"> {{row.AvgRating}} </td>
   </ng-container>
 
-  <!-- Name Column -->
-  <ng-container matColumnDef="Name">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Наименование</th>
-    <td mat-cell *matCellDef="let row">{{row.Product.Name}}</td>
-  </ng-container>
+ 
 
   <!-- Composition Column -->
-  <ng-container matColumnDef="Composition">
-    <th mat-header-cell *matHeaderCellDef>Состав</th>
-    <td mat-cell floatLabel="always" *matCellDef="let row">
-      {{row.Product.Composition}}</td>
+  <ng-container matColumnDef="Brand">
+    <th mat-header-cell *matHeaderCellDef>Бренд</th>
+    <td mat-cell *matCellDef="let row">{{row.Brand}}</td>
   </ng-container>
 
   <!-- IsHidden Column -->
