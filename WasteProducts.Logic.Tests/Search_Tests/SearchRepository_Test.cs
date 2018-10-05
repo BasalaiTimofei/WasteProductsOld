@@ -451,36 +451,5 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             var result = sut.GetAll<TestProduct>("product", new string[] { "Name", "Composition" }, new ReadOnlyDictionary<string, float>(boostValues), 1000);
             Assert.AreEqual(5, result.Count());
         }
-
-
-        //Test for context. It will be deleted
-        public class TestContext : WasteContext
-        {
-            public TestContext(ISearchRepository repo) : base(repo)
-            {
-
-            }
-
-            public new void DetectAndSaveChanges(params Type[] types)
-            {
-                base.DetectAndSaveChanges(types);
-            }
-        }
-
-        [Test]
-        public void _DetectChanges_AddNewEntity_Result_Entity_added()
-        {
-            sut = new LuceneSearchRepository(true);
-            TestContext context = new TestContext(sut);
-            ProductDB product = new ProductDB() { Id = "1", Name = "Title", Composition = "Composition", Modified = DateTime.Now.ToUniversalTime() };
-            context.Products.Add(product);
-
-            context.DetectAndSaveChanges(typeof(ProductDB));
-
-            var productFromRepo = sut.GetById<ProductDB>("1");
-
-            Assert.AreNotEqual(null, productFromRepo);
-            Assert.AreEqual("1", productFromRepo.Id);
-        }
     }
 }
