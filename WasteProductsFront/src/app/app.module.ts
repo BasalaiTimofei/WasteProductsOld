@@ -59,7 +59,6 @@ import { ConfirmEmailChangingComponent } from './components/user/settings/confir
 
 /* Custom Modules */
 import { AccountModule } from './modules/account/account.module';
-import { GroupsModule } from './modules/groups/groups.module';
 
 @NgModule({
   declarations: [
@@ -113,18 +112,19 @@ import { GroupsModule } from './modules/groups/groups.module';
     BrowserAnimationsModule,
     HttpClientModule,
     MaterialModule,
-    AppRoutingModule,
     CdkTableModule,
     OverlayModule,
 
     /* Custom modules */
     AccountModule,
-    GroupsModule,
+
+    /* MUST bee last */
+    AppRoutingModule,
   ],
   providers: [ImagePreviewService,
-              FormPreviewService],
+    FormPreviewService],
   entryComponents: [ImagePreviewComponent,
-                    FormProductOverlayComponent],
+    FormProductOverlayComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

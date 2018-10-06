@@ -10,8 +10,7 @@
   </mat-form-field>
 
 </mat-dialog-content>
-<mat-dialog-actions>
+<mat-dialog-actions class="justify-content-between">
   <button mat-button [mat-dialog-close]>Cancel</button>
-  <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
   <button mat-button [mat-dialog-close]="model.data">{{model.action}}</button>
 </mat-dialog-actions>

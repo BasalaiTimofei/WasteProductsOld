@@ -41,19 +41,25 @@ const routes: Routes = [
       { path: 'details/:id', component: NotificationDetailsComponent },
     ]
   },
-  { path: 'details/:id', component: NotificationDetailsComponent },
+  {
+    path: 'groups',
+    loadChildren: './modules/groups/groups.module#GroupsModule'
+  },
   { path: 'common/mainpage', component: MainPageComponent },
 
   { path: 'friends', component: FriendsComponent, canActivate: [AuthenticationGuard] },
   { path: 'settings', component: SettingsComponent, canActivate: [AuthenticationGuard] },
   { path: 'changepassword', component: ChangePasswordComponent, canActivate: [AuthenticationGuard] },
 
-  { path: 'products', component: ProductsComponent, children: [
-    { path: 'add-product', component: AddProductComponent }
-  ]},
- /*  { path: 'groups', component: GroupsComponent }, */
+  {
+    path: 'products', component: ProductsComponent, children: [
+      { path: 'add-product', component: AddProductComponent }
+    ]
+  },
+  /*  { path: 'groups', component: GroupsComponent }, */
+  /* { path: 'groups/mygroups', component: GroupsOfUserComponent }, */
   { path: 'products/myproducts', component: ToListComponent },
-  { path: 'groups/mygroups', component: GroupsOfUserComponent},
+
   { path: 'searchresults/:query', component: SearchresultComponent },
   { path: '**', component: NotFoundComponent },
 ];

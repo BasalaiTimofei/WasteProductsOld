@@ -16,21 +16,14 @@ import { GroupInfoModel, GroupModel, GroupOfUserModel } from '../models/group';
 })
 export class GroupsService extends BaseHttpService {
 
+
   private apiUrl = `${environment.apiHostUrl}/api/groups`;
 
   constructor(httpClient: HttpClient, loggingService: LoggingService) {
     super(httpClient, loggingService);
   }
 
-  getUserGroup(userId: string): Observable<GroupModel> {
-    const url = `${environment.apiHostUrl}/api/user/${userId}/group`;
-    return this.httpService.get<GroupModel>(url).pipe(
-      tap(response => this.logDebug('fetched own group by user id')),
-      catchError(this.handleError('getUserGroup', new GroupModel()))
-    );
-  }
-
-  getUserOtherGroups(userId: string): Observable<GroupOfUserModel[]> {
+  getUserGroups(userId: string): Observable<GroupOfUserModel[]> {
     const url = `${environment.apiHostUrl}/api/user/${userId}/groups`;
     return this.httpService.get<GroupOfUserModel[]>(url).pipe(
       tap(response => this.logDebug('fetched other group by user id')),
@@ -38,30 +31,37 @@ export class GroupsService extends BaseHttpService {
     );
   }
 
-  crateGroup(userId: string, groupInfo: GroupInfoModel): Observable<GroupModel> {
-    const data = Object.assign(new GroupModel, groupInfo);
-    data.AdminId = userId;
-
-    return this.httpService.put<GroupModel>(this.apiUrl, groupInfo).pipe(
-      tap(response => this.logDebug('creating group')),
-      catchError(this.handleError('crateGroup', new GroupModel()))
-    );
-  }
-
   getGroup(groupId: string): Observable<GroupModel> {
     const url = `${this.apiUrl}/${groupId}`;
+
     return this.httpService.get<GroupModel>(url).pipe(
       tap(response => this.logDebug('fetched group by group id')),
       catchError(this.handleError('getGroup', new GroupModel()))
     );
   }
 
-  updateInfo(groupId: string, groupInfo: GroupInfoModel): Observable<GroupModel> {
+  createGroup(userId: string, groupInfo: GroupInfoModel): Observable<GroupModel> {
+    return this.httpService.post<GroupModel>(this.apiUrl, groupInfo).pipe(
+      tap(response => this.logDebug('creating group')),
+      catchError(this.handleError('crateGroup', new GroupModel()))
+    );
+  }
+
+  updateGroup(groupId: string, groupInfo: GroupInfoModel): Observable<any> {
     const url = `${this.apiUrl}/${groupId}`;
 
     return this.httpService.put<GroupModel>(url, groupInfo).pipe(
       tap(response => this.logDebug('updating group')),
-      catchError(this.handleError('getGroup', new GroupModel()))
+      catchError(this.handleError('getGroup'))
+    );
+  }
+
+  deleteGroup(groupId: string): Observable<any> {
+    const url = `${this.apiUrl}/${groupId}`;
+
+    return this.httpService.delete(url).pipe(
+      tap(response => this.logDebug('deleting group by group id')),
+      catchError(this.handleError('deleteGroup'))
     );
   }
 }

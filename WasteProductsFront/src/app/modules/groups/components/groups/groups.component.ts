@@ -18,15 +18,22 @@ export class GroupsComponent implements OnInit {
   private userId: string;
   private groupsSubject: BehaviorSubject<GroupOfUserModel[]> = new BehaviorSubject<GroupOfUserModel[]>([]);
 
-  myGroup: GroupModel;
+  ownGroups: Observable<GroupOfUserModel[]> = this.groupsSubject.asObservable();
   otherGroups: Observable<GroupOfUserModel[]> = this.groupsSubject.asObservable();
 
-  constructor(authService: AuthenticationService, private groupsService: GroupsService, private dialog: MatDialog) {
-    this.userId = authService.getUserId(); // this.authService.getUserId();
+  constructor(
+    private authService: AuthenticationService,
+    private groupsService: GroupsService,
+    private dialog: MatDialog) {
   }
 
   ngOnInit() {
-    this.update();
+    this.userId = '0'; // this.authService.getUserId();
+
+    this.ownGroups = this.groupsSubject.pipe(map(groups => groups.filter(group => group.AdminId === this.userId)));
+    this.otherGroups = this.groupsSubject.pipe(map(groups => groups.filter(group => !this.contains(this.ownGroups, group))));
+
+    this.getGroups();
   }
 
   createGroup() {
@@ -35,21 +42,53 @@ export class GroupsComponent implements OnInit {
         // width: '250px',
         data: {
           action: 'Create',
-          data: { Name: 'My super group', Information: ':)' }
+          data: {
+            AdminId: this.userId,
+            Name: 'My super group',
+            Information: ':)'
+          }
         }
       });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.groupsService.crateGroup(this.userId, result).subscribe(myGroup => {
-        this.myGroup = myGroup;
-      });
+      if (result) {
+        this.groupsService.createGroup(this.userId, result).subscribe(() => this.getGroups());
+      }
     });
   }
 
-  private update() {
-    if (this.userId) {
-      this.groupsService.getUserGroup(this.userId).subscribe(group => this.myGroup = group);
-      this.groupsService.getUserOtherGroups(this.userId).subscribe(groups => this.groupsSubject.next(groups));
-    }
+  comeInToGroup() {
+
   }
+
+  deleteGroup(groupId: string, event: Event) {
+    this.onItemClick(event);
+
+    this.groupsService.deleteGroup(groupId).subscribe(() => this.getGroups());
+  }
+
+  leftGroup(groupId: string, event: Event) {
+    this.onItemClick(event);
+
+    this.groupsService.getGroup(groupId).subscribe(() => this.getGroups());
+  }
+
+
+  private onItemClick(event: Event) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+
+
+  private getGroups() {
+    this.groupsService.getUserGroups(this.userId).subscribe(groups => this.groupsSubject.next(groups));
+  }
+
+  private contains<T>(observable: Observable<Array<T>>, item: T): boolean {
+    let result;
+    observable.pipe(map(array => array.includes(item))).subscribe(r => result = r);
+    return result;
+  }
+
+
 }

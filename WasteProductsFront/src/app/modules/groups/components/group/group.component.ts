@@ -35,11 +35,13 @@ export class GroupComponent implements OnInit {
         }
       });
 
-    dialogRef.afterClosed().subscribe(result => this.updateInfo(result));
+    dialogRef.afterClosed().subscribe(result => {
+      this.updateInfo(result);
+    });
   }
 
   updateInfo(groupInfo: GroupInfoModel) {
-    this.groupsService.updateInfo(this.group.Id, groupInfo).subscribe(group => this.group = group);
+    this.groupsService.updateGroup(this.group.Id, groupInfo).subscribe(group => this.group = Object.assign(this.group, groupInfo));
   }
 
 }

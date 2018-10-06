@@ -1,3 +1,38 @@
-<p>
-  board works!
-</p>
+<mat-card class="dashboard-card">
+  <mat-card-header>
+    <mat-card-title>
+      {{board.Name}}
+      <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu" xPosition="before">
+        <button mat-menu-item (click)="edit()">Edit</button>
+        <button mat-menu-item (click)="remove()">Remove</button>
+      </mat-menu>
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="dashboard-card-content">
+    <p>{{board.Information}}</p>
+
+    <mat-nav-list>
+
+      <a mat-list-item *ngFor="let product of board.GroupProducts" class="border border-dark rounded">
+        <h4 mat-line>{{ product.Name | titlecase }}</h4>
+        <p mat-line>{{ product.Information }}</p>
+        <button mat-icon-button matTooltip="Left group" (click)="deleteProduct(product.Id, $event)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </a>
+      <a mat-list-item>
+        <button mat-icon-button matTooltip="Add product" (click)="deleteProduct(product.Id, $event)">
+          <mat-icon>add</mat-icon>
+        </button>
+      </a>
+    </mat-nav-list>
+
+    <!--    <div class="card-footer" *ngIf="hideAddProduct">
+        <app-group-product-create (cancel)="cancel()"></app-group-product-create>
+    </div> -->
+
+  </mat-card-content>
+</mat-card>

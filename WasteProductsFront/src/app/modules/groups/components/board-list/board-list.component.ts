@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { BoardModel } from '../../models/board';
+import { BoardService } from '../../services/board.service';
 
 @Component({
   selector: 'app-board-list',
@@ -7,9 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BoardListComponent implements OnInit {
 
-  constructor() { }
+  @Input() boards: BoardModel[];
+
+  @Output() listChangedEvent: EventEmitter<any> = new EventEmitter<any>();
+
+
+  constructor(private boardService: BoardService) { }
 
   ngOnInit() {
   }
 
+  addBoard() {
+
+
+  }
+
+  removeBoard(boardId: any) {
+    this.boardService.deleteBoard(boardId).subscribe(() => {
+      this.listChangedEvent.emit(null);
+    });
+  }
 }

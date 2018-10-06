@@ -2,48 +2,60 @@
   <mat-card-title>
 
     <mat-toolbar color="primary">
-      <span>My groups</span>
+      <mat-icon>group_work</mat-icon><span class="px-3">My groups</span>
     </mat-toolbar>
 
   </mat-card-title>
   <mat-card-content>
-
-    <mat-list>
-
-      <h2 mat-subheader>Your groups:</h2>
-      <ng-container *ngIf="myGroup; else elseTemplate">
-        <mat-list-item>
-          <mat-icon mat-list-icon>group</mat-icon>
-          <h4 mat-line>{{ myGroup.Name }}</h4>
-          <p mat-line> {{ myGroup.Information }} </p>
-        </mat-list-item>
-      </ng-container>
-      <ng-template #elseTemplate>
-        <mat-list-item>
-          <h4 mat-line class="text-center">You haven't own group yet</h4>
-          <button mat-button mat-line (click)="createGroup()">
-            <mat-icon>group_add</mat-icon> Create own group
-          </button>
-        </mat-list-item>
-      </ng-template>
+    <mat-nav-list>
 
       <mat-divider></mat-divider>
 
-      <h2 mat-subheader>Your other groups: </h2>
-      <ng-container *ngIf="(otherGroups | async).length > 0; else elseTemplate">
-          <mat-list-item *ngFor="let group of otherGroups | async">
-              <mat-icon mat-list-icon>group</mat-icon>
-              <h4 mat-line>{{ group.Name }}</h4>
-              <p mat-line> {{ group.Information }} </p>
-            </mat-list-item>
-        </ng-container>
-        <ng-template #elseTemplate>
-          <mat-list-item>
-            <p mat-line class="lead text-center">You haven't other groups</p>
-          </mat-list-item>
-        </ng-template>
+      <h2 mat-subheader><b>Your own groups:</b></h2>
+      <ng-container *ngIf="(ownGroups | async).length > 0; else elseTemplate1">
+        <a mat-list-item *ngFor="let group of ownGroups | async" [routerLink]="[group.Id]">
+          <mat-icon mat-list-icon>group</mat-icon>
+          <h4 mat-line>{{ group.Name | titlecase }}</h4>
+          <p mat-line> {{ group.Information }} </p>
+          <button mat-icon-button matTooltip="Delete group" (click)="deleteGroup(group.Id, $event)">
+              <mat-icon>delete</mat-icon>
+            </button>
+        </a>
+      </ng-container>
+      <ng-template #elseTemplate1>
+        <mat-list-item>
+          <p mat-line class="lead text-center">You haven't own group yet</p>
 
-    </mat-list>
+        </mat-list-item>
+      </ng-template>
 
+      <a mat-list-item class="mb-3" (click)="createGroup()">
+        <mat-icon>group_add</mat-icon><span class="px-3">Create own group</span>
+      </a>
+
+      <mat-divider></mat-divider>
+
+      <h2 mat-subheader><b>Your other groups:</b></h2>
+      <ng-container *ngIf="(otherGroups | async).length > 0; else elseTemplate2">
+        <a mat-list-item *ngFor="let group of otherGroups | async" [routerLink]="[group.Id]">
+          <mat-icon mat-list-icon>group</mat-icon>
+          <h4 mat-line>{{ group.Name | titlecase }}</h4>
+          <p mat-line>{{ group.Information }}</p>
+          <button mat-icon-button matTooltip="Left group" (click)="leftGroup(group.Id, $event)">
+            <mat-icon>backspace</mat-icon>
+          </button>
+        </a>
+      </ng-container>
+      <ng-template #elseTemplate2>
+        <mat-list-item>
+          <p mat-line class="lead text-center">You haven't other groups</p>
+        </mat-list-item>
+      </ng-template>
+
+      <a mat-list-item (click)="comeInToGroup()">
+        <mat-icon>search</mat-icon><span class="px-3">Find group</span>
+      </a>
+
+    </mat-nav-list>
   </mat-card-content>
 </mat-card>
