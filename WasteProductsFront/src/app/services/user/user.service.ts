@@ -5,6 +5,8 @@ import { User } from 'src/app/models/users/user';
 import { environment } from '../../../environments/environment';
 import { LoggingService } from '../logging/logging.service';
 import { AuthenticationService } from '../../modules/account/services/authentication.service';
+import { Email } from '../../modules/account/models/email';
+import { ResetPasswordResult } from '../../modules/account/models/reset-password-result';
 
 @Injectable({
   providedIn: 'root'
@@ -47,7 +49,7 @@ export class UserService extends BaseHttpService  {
   updateEmailRequest(email: string) {
     const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/updateemail`;
     const bodyObj = {
-      EmailOfTheUser: email,
+      EmailOfTheUser: email
     };
     return this.httpService.put(url, bodyObj);
   }
@@ -67,6 +69,22 @@ export class UserService extends BaseHttpService  {
     const bodyObj = {
       OldPassword: oldPassword,
       NewPassword: newPassword
+    };
+    return this.httpService.put(url, bodyObj);
+  }
+
+  resetPasswordRequest(email: string) {
+    const url = `${this.baseUserApiUrl}/resetpasswordrequest`;
+    const bodyObj = {
+      EmailOfTheUser: email
+    };
+    return this.httpService.put(url, bodyObj);
+  }
+
+  resetPassword(resetResult: ResetPasswordResult, newPassword: string) {
+    const url = `${this.baseUserApiUrl}/${resetResult.UserId}/resetpasswordresponse/${resetResult.Token}`;
+    const bodyObj = {
+      Password: newPassword
     };
     return this.httpService.put(url, bodyObj);
   }

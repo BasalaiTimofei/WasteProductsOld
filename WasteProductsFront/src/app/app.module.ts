@@ -20,7 +20,6 @@ import { FriendsComponent } from './components/user/friends/friends.component';
 import { ProductsComponent } from './components/products/products.component';
 import { GroupsComponent } from './components/groups/groups.component';
 import { SettingsComponent } from './components/user/settings/settings.component';
-import { RegisterComponent } from './components/user/register/register.component';
 import { ToListComponent } from './components/products/to-list/to-list.component';
 import { AddProductComponent } from './components/products/add-product/add-product.component';
 import { DeleteProductComponent } from './components/products/delete-product/delete-product.component';
@@ -47,6 +46,7 @@ import { GroupUserGetEntitleComponent } from './components/groups/user/group-use
 import { FooterComponent } from './components/common/footer/footer.component';
 import { DonateComponent } from './components/donate/donate.component';
 import { GroupsOfUserComponent } from './components/groups/groups-of-user/groups-of-user.component';
+import { MatToolbarModule, MatTableModule } from '@angular/material';
 
 /* Services */
 import { ImagePreviewService } from './services/image-preview/image-preview.service';
@@ -57,6 +57,10 @@ import { AccountModule } from './modules/account/account.module';
 import { UserdataComponent } from './components/user/settings/userdata/userdata.component';
 import { UserformfieldComponent } from './components/user/settings/userformfield/userformfield.component';
 import { ChangePasswordComponent } from './components/user/settings/change-password/change-password.component';
+import { SlideshowComponent } from './components/common/slideshow/slideshow.component';
+import { AllToListComponent } from './components/products/all-to-list/all-to-list.component';
+import { SliderComponent } from './components/common/slider/slider.component';
+import { NguCarouselModule } from '@ngu/carousel';
 import { ConfirmEmailChangingComponent } from './components/user/settings/confirm-email-changing/confirm-email-changing.component';
 
 @NgModule({
@@ -72,7 +76,6 @@ import { ConfirmEmailChangingComponent } from './components/user/settings/confir
     ProductsComponent,
     GroupsComponent,
     SettingsComponent,
-    RegisterComponent,
     ToListComponent,
     AddProductComponent,
     DeleteProductComponent,
@@ -103,6 +106,9 @@ import { ConfirmEmailChangingComponent } from './components/user/settings/confir
     ChangePasswordComponent,
     FormProductOverlayComponent,
     FormOverlayWrapperComponent,
+    SlideshowComponent,
+    AllToListComponent,
+    SliderComponent,
     ConfirmEmailChangingComponent,
   ],
   imports: [
@@ -115,6 +121,9 @@ import { ConfirmEmailChangingComponent } from './components/user/settings/confir
     AppRoutingModule,
     CdkTableModule,
     OverlayModule,
+    NguCarouselModule,
+    MatToolbarModule,
+    MatTableModule,
 
     /* Custom modules */
     AccountModule

@@ -29,7 +29,7 @@ namespace WasteProducts.Logic.Tests.Search_Tests
             };
 
             mockRepo = new Mock<ISearchRepository>();
-            sut = new LuceneSearchService(mockRepo.Object);
+            sut = new LuceneSearchService(mockRepo.Object, null, null);
         }
 
         private IEnumerable<TestUser> users;

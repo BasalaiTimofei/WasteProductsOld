@@ -222,11 +222,11 @@ namespace WasteProducts.Logic.Tests.UserTests
             var (id, token) = await _userService.RegisterAsync(email, "TestName", "TestPassword123").ConfigureAwait(false);
             if (await _userService.ConfirmEmailAsync(id, token).ConfigureAwait(false))
             {
-                (id, token) = await _userService.ResetPasswordRequestAsync(email, "Айди юзера: {0} и токен: {1}").ConfigureAwait(false);
-                await _userService.ResetPasswordAsync(id, token, "newPassword").ConfigureAwait(false);
+                var resetResult = await _userService.ResetPasswordRequestAsync(email).ConfigureAwait(false);
+                await _userService.ResetPasswordAsync(resetResult.UserId, resetResult.Token, "newPassword").ConfigureAwait(false);
                 var user = await _userService.LogInByNameAsync("TestName", "newPassword").ConfigureAwait(false);
                 Assert.IsNotNull(user);
-                Assert.AreEqual(id, user.Id);
+                Assert.AreEqual(resetResult.UserId, user.Id);
             }
             else
             {
@@ -445,8 +445,7 @@ namespace WasteProducts.Logic.Tests.UserTests
             };
             using (var gService = _kernel.Get<IGroupService>())
             {
-                await gService.Create(group);
-                var groupFromDB = await gService.FindByName(name);
+                var groupFromDB = await gService.Create(group);
                 Assert.AreEqual(info, groupFromDB.Information);
                 _groupIds.Add(groupFromDB.Id);
             }

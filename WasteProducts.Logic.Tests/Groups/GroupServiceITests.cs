@@ -3,10 +3,10 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using FluentValidation;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
 using WasteProducts.Logic.Common.Models.Groups;
@@ -110,7 +110,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupDB, bool>>()))
                 .ReturnsAsync(_selectedList);
 
-            Assert.ThrowsAsync<ValidationException>(()=> _groupService.Create(_group));
+            Assert.ThrowsAsync<ArgumentException>(()=> _groupService.Create(_group));
         }
 
         [Test]
@@ -125,12 +125,12 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupDB>()), Times.Once);
         }
         [Test]
-        public void GroupService_02_Update_02_Group_Did_Not_Created_or_User_Is_Not_Admin()
+        public void GroupService_02_Update_02_Group_Did_Not_Created_or_User_Is_Not_Exists()
         {
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupDB, bool>>()))
                 .ReturnsAsync(_selectedList);
 
-            Assert.ThrowsAsync<ValidationException>(() => _groupService.Update(_group));
+            Assert.ThrowsAsync<ArgumentException>(() => _groupService.Update(_group));
         }
 
         [Test]
@@ -155,7 +155,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
                 It.IsAny<Expression<Func<GroupDB, object>>[]>()))
                 .ReturnsAsync(_selectedList);
 
-            Assert.ThrowsAsync<ValidationException>(() => _groupService.Delete(_group.Id));
+            Assert.ThrowsAsync<ArgumentException>(() => _groupService.Delete(_group.Id));
         }
 
         [Test]

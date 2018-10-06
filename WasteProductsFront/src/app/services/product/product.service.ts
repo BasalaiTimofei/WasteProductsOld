@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { AuthenticationService } from '../../modules/account/services/authentication.service';
 import { ProductDescription } from '../../models/products/product-description';
+import { Product } from '../../models/products/product';
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +55,12 @@ export class ProductService extends BaseHttpService {
     // const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/products`; // MyStubs
     const url = `${this.baseUserApiUrl}/0/products`;
     return this.httpService.get<UserProduct[]>(url);
-   }
+  }
+
+  getProducts() {
+    const url = `${this.baseProdApiUrl}`;
+    return this.httpService.get<Product[]>(url);
+  }
 
    updateUserProduct(productId: string, rating: number, descrText: string) {
     const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/products/${productId}`;
