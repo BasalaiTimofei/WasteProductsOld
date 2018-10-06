@@ -222,11 +222,11 @@ namespace WasteProducts.Logic.Tests.UserTests
             var (id, token) = await _userService.RegisterAsync(email, "TestName", "TestPassword123").ConfigureAwait(false);
             if (await _userService.ConfirmEmailAsync(id, token).ConfigureAwait(false))
             {
-                var resetResult = await _userService.ResetPasswordRequestAsync(email).ConfigureAwait(false);
-                await _userService.ResetPasswordAsync(resetResult.UserId, resetResult.Token, "newPassword").ConfigureAwait(false);
+                (id, token) = await _userService.ResetPasswordRequestAsync(email).ConfigureAwait(false);
+                await _userService.ResetPasswordAsync(id, token, "newPassword").ConfigureAwait(false);
                 var user = await _userService.LogInByNameAsync("TestName", "newPassword").ConfigureAwait(false);
                 Assert.IsNotNull(user);
-                Assert.AreEqual(resetResult.UserId, user.Id);
+                Assert.AreEqual(id, user.Id);
             }
             else
             {
