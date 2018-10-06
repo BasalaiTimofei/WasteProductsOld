@@ -174,6 +174,7 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                     {
                         var groupUser = new GroupUserDB
                         {
+                            UserName = $"UserName{i}",
                             UserId = j.ToString(),
                             GroupId = group.Id,
                             IsConfirmed = true,
@@ -202,6 +203,7 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                         {
                             Id = Guid.NewGuid().ToString(),
                             GroupBoardId = groupBoard.Id,
+                            Name = _faker.Commerce.ProductName(),
                             ProductId = _random.Next(0, 6).ToString(),
                             Information = _faker.Lorem.Sentence()
                         };
