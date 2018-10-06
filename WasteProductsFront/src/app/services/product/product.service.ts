@@ -52,8 +52,7 @@ export class ProductService extends BaseHttpService {
   }
 
   getUserProducts() {
-    // const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/products`; // MyStubs
-    const url = `${this.baseUserApiUrl}/0/products`;
+    const url = `${this.baseUserApiUrl}/${this.authServise.getUserId()}/products`;
     return this.httpService.get<UserProduct[]>(url);
   }
 
