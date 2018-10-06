@@ -7,9 +7,9 @@ namespace WasteProducts.Logic.Validators.Products
     {
         public ProductValidator()
         {
-            RuleFor(x => x.Name).NotEmpty();
-            RuleFor(x => x.Category.Name).NotEmpty().When(x => x.Category != null);
-            RuleFor(x => x.Barcode.Code).NotEmpty().Matches(@"\d{13}").When(x => x.Barcode != null);
+            //RuleFor(x => x.Name).NotEmpty();
+            //RuleFor(x => x.Category.Name).NotEmpty().When(x => x.Category != null);
+            //RuleFor(x => x.Barcode.Code).NotEmpty().Matches(@"\d{13}").When(x => x.Barcode != null);
         }
     }
 }

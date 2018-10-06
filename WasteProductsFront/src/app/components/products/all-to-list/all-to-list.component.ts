@@ -41,7 +41,7 @@ export class AllToListComponent implements OnInit {
     this.productService.getProducts().subscribe(
       res => {
         for (let item of res) {
-          if (item.PicturePath == null) item.PicturePath = this.defualtImage; 
+          if (item.PicturePath == "http://waste-api.belpyro.net/Content/favicon.png") item.PicturePath = this.defualtImage; 
         }
         this.products = res;
       },
