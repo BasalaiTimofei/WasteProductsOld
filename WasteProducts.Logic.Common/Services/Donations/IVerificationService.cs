@@ -1,4 +1,6 @@
-﻿namespace WasteProducts.Logic.Common.Services.Donations
+﻿using System.Threading.Tasks;
+
+namespace WasteProducts.Logic.Common.Services.Donations
 {
     /// <summary>
     /// Provides the verification method for requests.
@@ -6,9 +8,9 @@
     public interface IVerificationService
     {
         /// <summary>
-        /// Verify a request.
+        /// Asynchronously verify a request.
         /// </summary>
         /// <param name="requestString">The request string for verification.</param>
-        bool IsVerified(string requestString);
+        Task<bool> IsVerifiedAsync(string requestString);
     }
 }
