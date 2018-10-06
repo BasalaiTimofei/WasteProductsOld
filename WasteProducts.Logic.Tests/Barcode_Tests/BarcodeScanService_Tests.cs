@@ -117,7 +117,7 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
             using (_stream = new MemoryStream())
             {
                 _imageOriginal.Save(_stream, ImageFormat.Bmp);
-                using (var result = service.Resize(_stream, 400, 400))
+                using (var result = service.Resize(_stream))
                     _image = new Bitmap(result);
             }
 

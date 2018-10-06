@@ -13,7 +13,6 @@ namespace WasteProducts.IdentityServer
         public static string WasteProducts_Front_ClientID = "wasteproducts.front.angular";
         public static string WasteProducts_Front_ClientUrl = "http://waste-products.belpyro.net";
         public static string WasteProducts_Front_ClientName = "Waste Products Angular Client";
-
     }
 
     //public class IdentityConstants

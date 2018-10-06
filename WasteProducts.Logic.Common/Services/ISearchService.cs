@@ -95,6 +95,12 @@ namespace WasteProducts.Logic.Common.Services
         void OptimizeSearchIndex();
 
         /// <summary>
+        /// This method re-creates search index based on the info from DB.
+        /// </summary>
+        Task RecreateIndex();
+
+
+        /// <summary>
         /// Return list of products by search query
         /// </summary>
         /// <param name="query">Search query</param>

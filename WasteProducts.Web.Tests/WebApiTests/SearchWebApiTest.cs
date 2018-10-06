@@ -39,7 +39,7 @@ namespace WasteProducts.Web.Tests.WebApiTests
         {
             Mock<ILogger> _mockLogger = new Mock<ILogger>();
             LuceneSearchRepository repo = new LuceneSearchRepository(true);
-            LuceneSearchService service = new LuceneSearchService(repo);
+            LuceneSearchService service = new LuceneSearchService(repo, null, null);
             SearchController sut = new SearchController(service, _mockLogger.Object);
 
             service.AddToSearchIndex<ProductDB>(products);
