@@ -47,12 +47,12 @@ const routes: Routes = [
   { path: 'details/:id', component: NotificationDetailsComponent },
   { path: 'common/mainpage', component: MainPageComponent },
 
-  { path: 'friends', component: FriendsComponent, canActivate: [AuthenticationGuard] },
-  { path: 'settings', component: SettingsComponent, canActivate: [AuthenticationGuard] },
-  { path: 'changepassword', component: ChangePasswordComponent, canActivate: [AuthenticationGuard] },
+  { path: 'friends', component: FriendsComponent, /*canActivate: [AuthenticationGuard]*/ },
+  { path: 'settings', component: SettingsComponent, /*canActivate: [AuthenticationGuard]*/ },
+  { path: 'changepassword', component: ChangePasswordComponent, /*canActivate: [AuthenticationGuard]*/ },
   { path: 'resetpassword', component: ResetPasswordComponent },
 
-  { path: 'products', component: ProductsComponent, canActivate: [AuthenticationGuard], children: [
+  { path: 'products', component: ProductsComponent, /*canActivate: [AuthenticationGuard],*/ children: [
     { path: 'add-product', component: AddProductComponent },
   ]},
   { path: 'all-to-list', component: AllToListComponent },
