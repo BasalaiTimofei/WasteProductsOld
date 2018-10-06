@@ -26,9 +26,6 @@ export class AllToListComponent implements OnInit {
     private router: Router) {}
 
   products: Product[] = [];
-  //userProducts: UserProduct[] = [];
-
-  //data: UserProduct[] = this.userProducts;
   defualtImage: string = '../assets/img/tenor.gif';
   data: Product[] = this.products;
   dataSource = new MatTableDataSource(this.data);
@@ -43,10 +40,9 @@ export class AllToListComponent implements OnInit {
 
     this.productService.getProducts().subscribe(
       res => {
-        // this.userProducts = res;
-        // for (let item of res) {
-        //   if (item.PicturePath == null) item.PicturePath = this.defualtImage; 
-        // }
+        for (let item of res) {
+          if (item.PicturePath == null) item.PicturePath = this.defualtImage; 
+        }
         this.products = res;
       },
       err => console.error(err)
