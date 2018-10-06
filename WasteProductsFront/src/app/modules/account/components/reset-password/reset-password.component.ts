@@ -38,7 +38,6 @@ export class ResetPasswordComponent implements OnInit {
     this.service.resetPassword(this.userId, this.token, this.newPassword)
     .subscribe(
       res =>  this.router.navigate(['/']),
-      error => this.errors = error.error
     );
   }
 }
