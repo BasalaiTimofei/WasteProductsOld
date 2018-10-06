@@ -78,6 +78,7 @@ namespace WasteProducts.Logic.Services.Products
             var newProduct = new Product
             {
                 Name = name,
+                Barcode = new Barcode()
             };
 
             return _productRepository.AddAsync(_mapper.Map<ProductDB>(newProduct))

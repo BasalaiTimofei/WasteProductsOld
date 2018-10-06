@@ -95,7 +95,6 @@
     <Compile Include="Models\Security\Infrastructure\IAppUserStore.cs" />
     <Compile Include="Models\Users\Friend.cs" />
     <Compile Include="Models\Users\GroupOfUser.cs" />
-    <Compile Include="Models\Users\WebUsers\ResetPasswordResult.cs" />
     <Compile Include="Models\Users\User.cs" />
     <Compile Include="Models\Products\Product.cs" />
     <Compile Include="Models\Users\UserClaim.cs" />

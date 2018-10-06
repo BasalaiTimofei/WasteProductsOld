@@ -109,14 +109,14 @@ namespace WasteProducts.Logic.Services.Users
             return _repo.ChangePasswordAsync(userId, newPassword, oldPassword);
         }
 
-        public async Task<ResetPasswordResult> ResetPasswordRequestAsync(string email)
+        public async Task<(string id, string token)> ResetPasswordRequestAsync(string email)
         {
-            var (id, token) = await _repo.GeneratePasswordResetTokenAsync(email);
+            var tuple = await _repo.GeneratePasswordResetTokenAsync(email);
 
-            var body = string.Format(UserResources.ResetPasswordBody, token);
+            var body = string.Format(UserResources.ResetPasswordBody, tuple.token);
             await _mailService.SendAsync(email, UserResources.ResetPasswordHeader, body);
 
-            return new ResetPasswordResult { UserId = id, Token = token };
+            return tuple;
         }
 
         public Task ResetPasswordAsync(string userId, string token, string newPassword)

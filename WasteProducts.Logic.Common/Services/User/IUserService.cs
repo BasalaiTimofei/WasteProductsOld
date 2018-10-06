@@ -231,11 +231,11 @@ namespace WasteProducts.Logic.Common.Services.Users
         Task ResetPasswordAsync(string userId, string token, string newPassword);
 
         /// <summary>
-        /// Requests an email with the password of the user registered to this email.
+        /// Requests an email with the password reset roken for the user registered to this email.
         /// </summary>
-        /// <param name="email">Email of the user forgotten its password.</param>
-        /// <returns>Data containing in the email, returns for test purposes.</returns>
-        Task<ResetPasswordResult> ResetPasswordRequestAsync(string email);
+        /// <param name="email">Email of the user forgot its password.</param>
+        /// <returns>Tuple with item1 = ID of the user and item2 = password resetting token.</returns>
+        Task<(string id, string token)> ResetPasswordRequestAsync(string email);
 
         /// <summary>
         /// Confirms group invitation if isConfirmed == true or deletes invite if isConfirmed == false.

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../../services/user/user.service';
-import { ResetPasswordResult } from '../../models/reset-password-result';
 import { Router } from '@angular/router';
 
 @Component({
@@ -16,34 +15,30 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   email: string;
+  isRequestSent: boolean;
+  userId: string;
 
   newPassword: string;
+  token: string;
 
   errors: string;
-
-  isRequestSent: boolean;
-
-  requestResult: ResetPasswordResult;
 
   ngOnInit() {
   }
 
   submitForm(email: string) {
+    this.isRequestSent = true;
     this.service.resetPasswordRequest(this.email)
     .subscribe(
-      result => {
-        this.isRequestSent = true;
-
-      },
+      result => this.userId = String(result),
       error => this.errors = error.error );
   }
 
   changePassword() {
-    this.service.resetPassword(this.requestResult, this.newPassword)
+    this.service.resetPassword(this.userId, this.token, this.newPassword)
     .subscribe(
-      res => {
-        this.router.navigate(['/']);
-      }
+      res =>  this.router.navigate(['/']),
+      error => this.errors = error.error
     );
   }
 }
