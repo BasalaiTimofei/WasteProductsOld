@@ -339,7 +339,7 @@ namespace WasteProducts.Web.Controllers.Api
             var result = await _service.ResetPasswordRequestAsync(email.EmailOfTheUser);
 
             //throws 204
-            return Ok(result);
+            return Ok(result.id);
         }
 
         /// <summary>

@@ -6,10 +6,10 @@
 
 <table mat-table [dataSource]="products" multiTemplateDataRows matSort class="mat-elevation-z12 app-products-table">
 
-    <ng-container matColumnDef="{{column}}" *ngFor="let column of displayedColumns">
-        <th mat-header-cell *matHeaderCellDef> {{column}} </th>
-        <td mat-cell *matCellDef="let product"> {{product[column]}} </td>
-      </ng-container>
+  <ng-container matColumnDef="{{column}}" *ngFor="let column of displayedColumns">
+    <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+    <td mat-cell *matCellDef="let product"> {{product[column]}} </td>
+  </ng-container>
       
   <ng-container matColumnDef="expandedDetail">
     <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
@@ -24,7 +24,6 @@
           <div class="col"><span>Страна: </span> {{element.Country}}</div>
           <div class="col"><span>Состав: </span>{{element.Composition}}</div> 
         </div>
-        
       </div>
     </td>
   </ng-container>
@@ -38,5 +37,7 @@
   <tr mat-row *matRowDef="let rrr; columns: ['expandedDetail']" class="example-detail-row"></tr>
 </table>
 <div>
-<mat-paginator #paginator [length]="dataSource.data.length" [pageIndex]="0" [pageSize]="50" [pageSizeOptions]="[3, 5, 10, 25, 50]"></mat-paginator>
+  <mat-paginator #paginator [length]="dataSource.data.length" 
+    [pageIndex]="0" [pageSize]="5" [pageSizeOptions]="[3, 5, 10, 25, 50]">
+  </mat-paginator>
 </div>
