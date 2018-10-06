@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models.Users;
+using WasteProducts.Logic.Common.Models.Users.WebUsers;
 
 namespace WasteProducts.Logic.Common.Services.Users
 {
@@ -193,9 +194,8 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// <param name="email">Email of the new user.</param>
         /// <param name="userName">UserName of the new user.</param>
         /// <param name="password">Password of the new user.</param>
-        /// <param name="path">Layout of the path to the ConfirmEmail reference.</param>
         /// <returns>Data containing in the email, returns for test purposes.</returns>
-        Task<(string id, string token)> RegisterAsync(string email, string userName, string password, string path);
+        Task<(string id, string token)> RegisterAsync(string email, string userName, string password);
 
         /// <summary>
         /// Remove a claim from a user.
@@ -234,9 +234,8 @@ namespace WasteProducts.Logic.Common.Services.Users
         /// Requests an email with the password of the user registered to this email.
         /// </summary>
         /// <param name="email">Email of the user forgotten its password.</param>
-        /// <param name="path">Layout of the path to the GeneratePassword reference.</param>
         /// <returns>Data containing in the email, returns for test purposes.</returns>
-        Task<(string id, string token)> ResetPasswordRequestAsync(string email, string path);
+        Task<ResetPasswordResult> ResetPasswordRequestAsync(string email);
 
         /// <summary>
         /// Confirms group invitation if isConfirmed == true or deletes invite if isConfirmed == false.

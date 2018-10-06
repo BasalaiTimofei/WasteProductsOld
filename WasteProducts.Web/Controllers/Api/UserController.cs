@@ -234,14 +234,14 @@ namespace WasteProducts.Web.Controllers.Api
             var validator = new RegisterUserValidator();
             validator.ValidateAndThrow(model);
 
-            var (id, token) = await _service.RegisterAsync(model.Email, model.UserName, model.Password, sb.ToString());
+            var (id, token) = await _service.RegisterAsync(model.Email, model.UserName, model.Password);
 
             if (id is null && token is null)
             {
                 // throws 409 conflict
                 throw new OperationCanceledException("Please provide unique UserName and Email.");
             }
-            return StatusCode(HttpStatusCode.Created);
+            return Ok(id);
         }
 
         /// <summary>
@@ -266,7 +266,7 @@ namespace WasteProducts.Web.Controllers.Api
         /// <param name="id">ID of the user.</param>
         /// <param name="token">Confirmation token.</param>
         /// <returns>Boolean represents whether operation succeed or no.</returns>
-        [HttpGet, Route("{id}/confirmemail/{token}")]
+        [HttpPut, Route("{id}/confirmemail/{token}")]
         [SwaggerResponse(HttpStatusCode.Unauthorized, "Incorrect token.")]
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the deletion.")]
         public async Task<IHttpActionResult> ConfirmEmail([FromUri] string id, [FromUri] string token)
@@ -327,16 +327,19 @@ namespace WasteProducts.Web.Controllers.Api
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task<IHttpActionResult> ResetPasswordRequest([FromBody] Email email)
         {
+            if(email == null)
+            {
+                throw new ValidationException("Email is empty");
+            }
+
             //throws 400
             var validator = new EmailValidator();
             validator.ValidateAndThrow(email);
 
-            var sb = new StringBuilder(Request.RequestUri.GetLeftPart(UriPartial.Authority));
-            sb.Append("/api/user/{0}/resetpasswordresponse/{1}");
-            await _service.ResetPasswordRequestAsync(email.EmailOfTheUser, sb.ToString());
+            var result = await _service.ResetPasswordRequestAsync(email.EmailOfTheUser);
 
             //throws 204
-            return StatusCode(HttpStatusCode.NoContent);
+            return Ok(result);
         }
 
         /// <summary>

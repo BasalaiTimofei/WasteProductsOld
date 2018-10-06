@@ -1,8 +1,8 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PageEvent } from '@angular/material';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
@@ -15,18 +15,23 @@ import { FormPreviewOverlay } from '../form-product-overlay/form-preview-overlay
 import { ImagePreviewService } from '../../services/image-preview/image-preview.service';
 import { ImagePreviewOverlay } from '../image-preview/image-preview-overlay';
 import { AuthenticationService } from '../../modules/account/services/authentication.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-search-result',
   templateUrl: './search-result.component.html',
   styleUrls: ['./search-result.component.css']
 })
-export class SearchresultComponent implements OnDestroy {
+export class SearchresultComponent implements OnDestroy, OnInit {
   private destroy$ = new Subject<void>();
-  public isAuth: boolean;
+  isAuthenificated$: Observable<boolean>;
+  isAuth: boolean;
 
   responseMessage = 'Продукт удален из Мои продукты';
   query: string;
+
+  private tempResultSubject: BehaviorSubject<SearchProduct[]> = new BehaviorSubject<SearchProduct[]>([]);
+  tempResult$: Observable<SearchProduct[]> = this.tempResultSubject.asObservable();
   searchResult: SearchProduct[];
   statusCode: number;
   tempProducts: SearchProduct[];
@@ -48,10 +53,7 @@ export class SearchresultComponent implements OnDestroy {
         if (!query) {
             return;
       }
-      this.authService.isAuthenticated$.toPromise<boolean>().then(res => {
-        this.isAuth = res;
-      }).catch();
-      // this.isAuth = true; // MyStubs
+
       this.setVariablesToDefault();
       this.search(query);
       this.query = query;
@@ -63,23 +65,43 @@ export class SearchresultComponent implements OnDestroy {
     this.destroy$.complete();
   }
 
-  public search(query: string): void {
-    this.searchService.getDefault(query).toPromise().then((data) => {
-      if (data !== undefined) {
-        this.searchResult = data;
+  public ngOnInit(): void {
+    this.isAuthenificated$ = this.authService.isAuthenticated$; // MyStubs
+  }
 
-        if (!this.searchResult) {
-            return;
-        }
+  public search(query: string) {
+    this.authService.isAuthenticated$.subscribe((auth) => {
+      if (auth) {
+        this.searchWithAuth(query);
+      } else {
+        this.searchWithOutAuth(query);
+      }
+    });
+  }
 
+  searchWithAuth(query: string) {
+    this.searchService.getDefaultAuth(query).subscribe((r) => {
+      this.searchResult = r;
+      if (this.searchResult) {
         this.length = this.searchResult.length;
         this.changePageEvent();
       } else {
         this.tempProducts = null;
         this.length = 0;
       }
-    }).catch((e: HttpErrorResponse) => {
-        this.errorMessage = 'Поиск не дал результатов...';
+    });
+  }
+
+  searchWithOutAuth(query: string) {
+    this.searchService.getDefault(query).subscribe((r) => {
+      this.searchResult = r;
+      if (this.searchResult) {
+        this.length = this.searchResult.length;
+        this.changePageEvent();
+      } else {
+        this.tempProducts = null;
+        this.length = 0;
+      }
     });
   }
 
@@ -101,7 +123,6 @@ export class SearchresultComponent implements OnDestroy {
   }
 
   showPreview(productName: string, picturePath: string) {
-    // picturePath = 'https://static.pexels.com/photos/371633/pexels-photo-371633.jpeg'; // MyStubs
     const dialog: ImagePreviewOverlay = this.previewDialog.open({
       image: { name: productName, url: picturePath }
     });
@@ -116,7 +137,7 @@ export class SearchresultComponent implements OnDestroy {
       this.pageIndex = event.pageIndex;
       this.pageSize = event.pageSize;
     }
-    this.tempProducts = this.searchResult.slice(this.pageSize * this.pageIndex, this.pageSize * (this.pageIndex + 1));
+    this.tempResultSubject.next(this.searchResult.slice(this.pageSize * this.pageIndex, this.pageSize * (this.pageIndex + 1)));
   return event;
   }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Models.Groups;
 
@@ -40,13 +41,13 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// </summary>
         /// <param name="userId">Primary key</param>
         /// <returns>Object</returns>
-        Task<Group> FindByAdmin(string userId);
+        Task<IEnumerable<Group>> FindByAdmin(string userId);
 
         /// <summary>
         /// Search group by its name
         /// </summary>
         /// <param name="name">Name of the group</param>
         /// <returns>Object</returns>
-        Task<Group> FindByName(string name);
+        Task<IEnumerable<Group>> FindByName(string name);
     }
 }

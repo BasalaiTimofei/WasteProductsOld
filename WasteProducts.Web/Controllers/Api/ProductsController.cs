@@ -39,7 +39,8 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpGet, Route("")]
         public async Task<IHttpActionResult> GetAll()
         {
-            return Ok(await _productService.GetAllAsync());
+            var result = await _productService.GetAllAsync();
+            return Ok(result);
         }
 
         /// <summary>

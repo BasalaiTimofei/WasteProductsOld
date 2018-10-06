@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using WasteProducts.Logic.Resources;
 using FluentValidation;
+using WasteProducts.Logic.Common.Models.Users.WebUsers;
 
 namespace WasteProducts.Logic.Services.Users
 {
@@ -41,7 +42,7 @@ namespace WasteProducts.Logic.Services.Users
             }
         }
 
-        public async Task<(string id, string token)> RegisterAsync(string email, string userName, string password, string path)
+        public async Task<(string id, string token)> RegisterAsync(string email, string userName, string password)
         {
             if (!_mailService.IsValidEmail(email))
                 throw new ValidationException("Plese provide valid Email.");
@@ -52,11 +53,8 @@ namespace WasteProducts.Logic.Services.Users
                 throw new OperationCanceledException("Please provide unique Email and User Name.");
             }
             var (id, token) = await _repo.AddAsync(email, userName, password);
-            if(path != null)
-            {
-                var fullpath = string.Format(path, id, token);
-                await _mailService.SendAsync(email, UserResources.EmailConfirmationHeader, string.Format(UserResources.EmailConfirmationBody, fullpath));
-            }
+            var body = string.Format(UserResources.EmailConfirmationBody, token);
+            await _mailService.SendAsync(email, UserResources.EmailConfirmationHeader, body);
             return (id, token);
         }
 
@@ -111,19 +109,14 @@ namespace WasteProducts.Logic.Services.Users
             return _repo.ChangePasswordAsync(userId, newPassword, oldPassword);
         }
 
-        public async Task<(string id, string token)> ResetPasswordRequestAsync(string email, string path)
+        public async Task<ResetPasswordResult> ResetPasswordRequestAsync(string email)
         {
-            if (path != null)
-            {
-                var (id, token) = await _repo.GeneratePasswordResetTokenAsync(email);
-                var fullpath = string.Format(path, id, token);
-                await _mailService.SendAsync(email, UserResources.ResetPasswordHeader, string.Format(UserResources.ResetPasswordBody, fullpath));
-                return (id, token);
-            }
-            else
-            {
-                return (null, null);
-            }
+            var (id, token) = await _repo.GeneratePasswordResetTokenAsync(email);
+
+            var body = string.Format(UserResources.ResetPasswordBody, token);
+            await _mailService.SendAsync(email, UserResources.ResetPasswordHeader, body);
+
+            return new ResetPasswordResult { UserId = id, Token = token };
         }
 
         public Task ResetPasswordAsync(string userId, string token, string newPassword)

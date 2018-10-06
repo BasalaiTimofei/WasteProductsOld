@@ -1,8 +1,9 @@
-﻿using System.Net;
+﻿using FluentValidation;
+using System;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http.Filters;
-using FluentValidation;
 
 namespace WasteProducts.Web.ExceptionHandling.Api
 {
@@ -14,20 +15,29 @@ namespace WasteProducts.Web.ExceptionHandling.Api
         /// <inheritdoc />
         public override void OnException(HttpActionExecutedContext actionExecutedContext)
         {
-            if (actionExecutedContext.Exception is ValidationException exception)
+            if (actionExecutedContext.Exception is AggregateException aggregateException)
             {
-                var modelState = actionExecutedContext.ActionContext.ModelState;
-
-                foreach (var validationFailure in exception.Errors)
+                if (aggregateException.InnerExceptions[0] is ValidationException exception)
                 {
-                    modelState.AddModelError(validationFailure.PropertyName, validationFailure.ErrorMessage);
+                    HandleValidationException(actionExecutedContext, exception);
                 }
-
-                actionExecutedContext.Response = actionExecutedContext.Request.CreateErrorResponse(HttpStatusCode.BadRequest, modelState);
-                actionExecutedContext.Response.Content = new StringContent(exception.Message, Encoding.UTF8, "text/html");
-                    
-                    //ReasonPhrase = exception.Message;
             }
+            else if (actionExecutedContext.Exception is ValidationException exception)
+            {
+                HandleValidationException(actionExecutedContext, exception);
+            }
+        }
+
+        private void HandleValidationException(HttpActionExecutedContext actionExecutedContext, ValidationException exception)
+        {
+            var modelState = actionExecutedContext.ActionContext.ModelState;
+
+            foreach (var validationFailure in exception.Errors)
+            {
+                modelState.AddModelError(validationFailure.PropertyName, validationFailure.ErrorMessage);
+            }
+
+            actionExecutedContext.Response = actionExecutedContext.Request.CreateErrorResponse(HttpStatusCode.BadRequest, modelState);
         }
     }
 }

@@ -22,7 +22,9 @@ import { NotificationListComponent } from './modules/account/components/notifica
 import { NotificationDetailsComponent } from './modules/account/components/notification-details/notification-details.component';
 import { AddProductComponent } from './components/products/add-product/add-product.component';
 import { ChangePasswordComponent } from './components/user/settings/change-password/change-password.component';
+import { AllToListComponent } from './components/products/all-to-list/all-to-list.component';
 import { ConfirmEmailChangingComponent } from './components/user/settings/confirm-email-changing/confirm-email-changing.component';
+import { ResetPasswordComponent } from './modules/account/components/reset-password/reset-password.component';
 
 const routes: Routes = [
   { path: '', component: DefaultComponent, pathMatch: 'full' },
@@ -50,14 +52,13 @@ const routes: Routes = [
   { path: 'friends', component: FriendsComponent, canActivate: [AuthenticationGuard] },
   { path: 'settings', component: SettingsComponent, canActivate: [AuthenticationGuard] },
   { path: 'changepassword', component: ChangePasswordComponent, canActivate: [AuthenticationGuard] },
+  { path: 'resetpassword', component: ResetPasswordComponent },
 
-  {
-    path: 'products', component: ProductsComponent, children: [
-      { path: 'add-product', component: AddProductComponent }
-    ]
-  },
-  /*  { path: 'groups', component: GroupsComponent }, */
-  /* { path: 'groups/mygroups', component: GroupsOfUserComponent }, */
+
+  { path: 'products', component: ProductsComponent, canActivate: [AuthenticationGuard], children: [
+    { path: 'add-product', component: AddProductComponent },
+  ]},
+  { path: 'all-to-list', component: AllToListComponent },
   { path: 'products/myproducts', component: ToListComponent },
 
   { path: 'searchresults/:query', component: SearchresultComponent },
