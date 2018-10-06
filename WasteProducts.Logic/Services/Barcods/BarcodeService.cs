@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Models.Products;
@@ -49,14 +50,11 @@ namespace WasteProducts.Logic.Services.Barcods
                 return Task.FromResult<Barcode>(null);
 
             //если получили валидный код - найти информацию о товаре в репозитории
-            var productDB = _repositoryProduct.SelectWhereAsync(
-                p => 
-                    !(p.Barcode == null) && 
-                    !string.IsNullOrEmpty(p.Barcode.Code) && 
-                    string.Equals(p.Barcode.Code, code, System.StringComparison.Ordinal))
-                .Result;
-            //если она есть - вернуть ее
-            if (((List<ProductDB>)productDB).Count != 0)
+           
+            var barcodeInDB = _repository.GetByCodeAsync(code).Result;
+
+            //если она есть - передать в ProductService null
+            if (barcodeInDB != null) 
             {
                 return Task.FromResult<Barcode>(null);   
             }

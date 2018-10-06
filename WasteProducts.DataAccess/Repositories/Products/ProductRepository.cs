@@ -27,7 +27,14 @@ namespace WasteProducts.DataAccess.Repositories.Products
         {
             product.Id = Guid.NewGuid().ToString();
             product.Created = DateTime.UtcNow;
+
+            product.Barcode.Id = Guid.NewGuid().ToString();
+            product.Barcode.Created = DateTime.UtcNow;
+
+            _context.Barcodes.Add(product.Barcode);
             _context.Products.Add(product);
+
+            product.Barcode.Product = null;
 
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
