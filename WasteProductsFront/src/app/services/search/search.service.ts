@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { BaseHttpService } from '../base/base-http.service';
@@ -17,50 +17,79 @@ import { UserQuery } from '../../models/top-query';
 import { environment } from '../../../environments/environment';
 import { UserProduct } from '../../models/users/user-product';
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class SearchService extends BaseHttpService {
-  private URL_SEARCH = `${environment.apiHostUrl}/api/search`;  // URL to web api
+  private URL_SEARCH = `${environment.apiHostUrl}/api/search`; // URL to web api
 
   public userProductsId: UserProduct[] = [];
   public searchProducts: SearchProduct[];
 
-  public constructor(httpService: HttpClient,
-                    loggingService: LoggingService,
-                    public productService: ProductService,
-                    public authService: AuthenticationService) {
-    super(httpService, loggingService);
+  public constructor(
+    httpService: HttpClient,
+    loggingService: LoggingService,
+    public productService: ProductService,
+    public authService: AuthenticationService ) {
 
-    if (!authService.isAuthenticated$) { // !authService.isAuthenticated$ // MyStubs
-    this.productService.getUserProducts().toPromise().then(
-      res => {
-        this.userProductsId = res;
-      } ,
-      err => console.error(err));
-    }
+      super(httpService, loggingService);
   }
 
-  getDefault(query: string): Observable<SearchProduct[]> {
-    return this.httpService.get<SearchProduct[]>(this.URL_SEARCH + '/products/default', this.getOptions(query)).pipe(
-      map(res => {
-        if (res !== null) {
-        const result: any = res;
-        return result.map((item) => new SearchProduct(item.Id, item.Name, this.checkExistInUserProducts(item.Id), item.PicturePath));
+  getDefaultAuth(query: string) {
+    const products: Subject<SearchProduct[]> = new Subject<SearchProduct[]>();
+
+    this.productService.getUserProducts().subscribe(userProducts => {
+      const searchUrl = this.URL_SEARCH + '/products/default';
+
+      this.httpService.get<SearchProduct[]>(searchUrl,  this.getOptions(query)).pipe(
+          map(searchResult => {
+            if (searchResult) {
+              return searchResult.map(p =>
+                new SearchProduct(p.Id, p.Name, this.checkExistInUserProducts(userProducts, p.Id), p.PicturePath));
+            }
+          }),
+          catchError(
+            this.handleError('Error in search.service getDefault()', [])
+          )
+        ).subscribe(p => {
+          products.next(p);
+        });
+    });
+
+    return products.asObservable();
+  }
+
+  getDefault(query: string) {
+    const products: Subject<SearchProduct[]> = new Subject<SearchProduct[]>();
+    const searchUrl = this.URL_SEARCH + '/products/default';
+
+    this.httpService.get<SearchProduct[]>(searchUrl,  this.getOptions(query)).pipe(
+      map(searchResult => {
+        if (searchResult) {
+          return searchResult.map(p =>
+              new SearchProduct(p.Id, p.Name, false, p.PicturePath));
         }
-      }), catchError(this.handleError('Error in search.service getDefault()', []))
-    );
+      }),
+      catchError(
+        this.handleError('Error in search.service getDefault()', [])
+      )
+    ).subscribe(p => {
+        products.next(p);
+      });
+
+    return products.asObservable();
   }
 
   getTopSearchQueries(query: string): Observable<UserQuery[]> {
-    return this.httpService.get<UserQuery[]>(this.URL_SEARCH + '/queries', this.getOptions(query)).pipe(
-      map(res => {
-        const result: any = res;
-        return result.map(item => new UserQuery(item.QueryString));
-      }),
-      catchError(this.handleError('getTopSearchQueries', []))
-    );
+    return this.httpService
+      .get<UserQuery[]>(this.URL_SEARCH + '/queries', this.getOptions(query))
+      .pipe(
+        map(res => {
+          const result: any = res;
+          return result.map(item => new UserQuery(item.QueryString));
+        }),
+        catchError(this.handleError('getTopSearchQueries', []))
+      );
   }
 
   private getOptions(query: string) {
@@ -69,9 +98,7 @@ export class SearchService extends BaseHttpService {
     };
   }
 
-  private checkExistInUserProducts(id: string): boolean {
-      return this.userProductsId.some(function(item) {
-        return item.Product.Id === id;
-      });
+  private checkExistInUserProducts(products: UserProduct[], id: string): boolean {
+    return products.some(item => item.Product.Id === id );
   }
 }
