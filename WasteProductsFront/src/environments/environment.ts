@@ -6,12 +6,12 @@ export const environment = {
   production: false,
   logLevel: 0,
 
-  apiHostUrl: 'https://localhost:44326',
-  // apiHostUrl: 'https://waste-api.belpyro.net',
+  // apiHostUrl: 'https://localhost:44326',
+  apiHostUrl: 'https://waste-api.belpyro.net',
 
   /* Identity */
-  iderntityHostUrl: 'https://localhost:44326/identity',
-  // iderntityHostUrl: 'https://waste-api.belpyro.net/identity',
+  // iderntityHostUrl: 'https://localhost:44326/identity',
+  iderntityHostUrl: 'https://waste-api.belpyro.net/identity',
   clientId: 'wasteproducts.front.angular',
 
   scope: 'openid profile email wasteproducts-api',

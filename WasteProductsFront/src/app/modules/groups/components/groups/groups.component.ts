@@ -30,7 +30,7 @@ export class GroupsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.userId = '0'; // this.authService.getUserId();
+    this.userId = this.authService.getUserId();
 
     this.ownGroups = this.groupsSubject.pipe(map(groups => groups.filter(group => group.AdminId === this.userId)));
     this.otherGroups = this.groupsSubject.pipe(map(groups => groups.filter(group => !this.contains(this.ownGroups, group))));

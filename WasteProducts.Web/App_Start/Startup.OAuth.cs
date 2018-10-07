@@ -12,8 +12,8 @@ namespace WasteProducts.Web
         {
             app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
             {
-                Authority = "https://localhost:44326/identity",
-                //Authority = "https://waste-api.belpyro.net/identity",
+                //Authority = "https://localhost:44326/identity",
+                Authority = "https://waste-api.belpyro.net/identity",
                 RequiredScopes = new[] { IdentityConstants.WasteProducts_Api_Scope },
                 SigningCertificate = CertificateLoader.Load(),
                 ValidationMode = ValidationMode.ValidationEndpoint

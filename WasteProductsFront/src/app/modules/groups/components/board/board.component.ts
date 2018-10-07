@@ -111,6 +111,8 @@ export class BoardComponent implements OnInit {
 
   editProduct(productId: string) {
 
+
+
   }
 
   private updateProduct(productId: string) {

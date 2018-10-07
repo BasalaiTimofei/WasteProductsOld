@@ -67,7 +67,7 @@ export class GroupComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(boardInfo => {
       if (boardInfo) {
-        boardInfo.CreatorId = '0';// this.aothService.getUserId();
+        boardInfo.CreatorId = this.aothService.getUserId();
 
         this.boardService.createBoard(this.group.Id, boardInfo).subscribe(boardModel => {
           if (boardModel) {
