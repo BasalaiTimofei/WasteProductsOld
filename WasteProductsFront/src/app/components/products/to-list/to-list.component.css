@@ -19,9 +19,20 @@
     vertical-align: middle;
 }
 
-table {
-    width: 100%;
-  }
+.product-picture {
+  background-position: center center;
+  background-size: contain;
+  width: 225px;
+  height: 225px;
+}
+
+span {
+  font-weight: bold;
+}
+
+.app-products-table[_ngcontent-c12] {
+  width: 85;
+}
   
   tr.example-detail-row {
     height: 0;
