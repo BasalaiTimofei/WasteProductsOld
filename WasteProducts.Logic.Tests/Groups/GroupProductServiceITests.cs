@@ -95,7 +95,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
                 .ReturnsAsync(_selectedUserList);
 
-            var x = Task.Run(()=>_groupProductService.Create(_groupProduct, "2", "00000000-0000-0000-0000-000000000003")).Result;
+            var x = Task.Run(()=>_groupProductService.Create(_groupProduct)).Result;
 
             _groupRepositoryMock.Verify(m => m.Create(It.IsAny<GroupProductDB>()), Times.Once);
         }
@@ -108,24 +108,18 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
                 .ReturnsAsync(_selectedUserList);
 
             Assert.ThrowsAsync<ValidationException>(()=>
-                        _groupProductService.Create(_groupProduct, "2",
-                            "00000000-0000-0000-0000-000000000003"));
+                        _groupProductService.Create(_groupProduct));
         }
 
         [Test]
         public void GroupProductService_02_Update_01_Update_Information_In_GroupProduct()
         {
             _selectedProductList.Add(_groupProductDB);
-            _selectedBoardList.Add(_groupBoardDB);
-            _selectedUserList.Add(_groupUserDB);
+
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupProductDB, Boolean>>()))
                 .ReturnsAsync(_selectedProductList);
-            _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupBoardDB, Boolean>>()))
-                .ReturnsAsync(_selectedBoardList);
-            _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
-                .ReturnsAsync(_selectedUserList);
 
-            Task.Run(()=>_groupProductService.Update(_groupProduct, "2", "00000000-0000-0000-0000-000000000003")).Wait();
+            Task.Run(()=>_groupProductService.Update(_groupProduct)).Wait();
 
             _groupRepositoryMock.Verify(m => m.Update(It.IsAny<GroupProductDB>()), Times.Once);
         }
@@ -140,8 +134,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
                 .ReturnsAsync(_selectedUserList);
 
             Assert.ThrowsAsync<ValidationException>(() =>
-                        _groupProductService.Update(_groupProduct, "2",
-                            "00000000-0000-0000-0000-000000000003"));
+                        _groupProductService.Update(_groupProduct));
         }
 
         [Test]
@@ -157,7 +150,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, Boolean>>()))
                 .ReturnsAsync(_selectedUserList);
 
-            Task.Run(()=>_groupProductService.Delete(_groupProduct, "2", "00000000-0000-0000-0000-000000000003")).Wait();
+            Task.Run(()=>_groupProductService.Delete("00000000-0000-0000-0000-000000000003")).Wait();
 
             _groupRepositoryMock.Verify(m => m.Delete(_groupProductDB), Times.Once);
         }
@@ -172,8 +165,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
                 .ReturnsAsync(_selectedUserList);
 
             Assert.ThrowsAsync<ValidationException>(() =>
-                        _groupProductService.Delete(_groupProduct, "2",
-                            "00000000-0000-0000-0000-000000000003"));
+                        _groupProductService.Delete("00000000-0000-0000-0000-000000000003"));
         }
 
         [Test]
