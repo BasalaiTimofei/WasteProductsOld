@@ -111,6 +111,11 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                 return user0;
             }
 
+            void SeedProductsByReadBarcodes()
+            {
+
+            }
+
             void CreateProductsAndAddThemToTheUser(UserDB userDB)
             {
                 var category1 = new CategoryDB

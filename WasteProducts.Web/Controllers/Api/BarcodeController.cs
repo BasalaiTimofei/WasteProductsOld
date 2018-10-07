@@ -46,7 +46,7 @@ namespace WasteProducts.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Scan photo of barcode and return a model of Barcode.
+        /// Scan photo of barcode and return a digit representation of barcode.
         /// </summary>
         /// <param name="uploadStream">Photo stream barcode.</param>
         /// <returns>Model of Barcode.</returns>
@@ -55,8 +55,7 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpPost, Route("read")]
         public async Task<IHttpActionResult> GetBarcodeAsync(Stream uploadStream)
         {
-            _barcode = await _scanner.GetBarcodeByStreamAsync(uploadStream);
-            return Ok(_barcode);
+            return Ok(_scanner.ParseBarcodePhoto(uploadStream));
         }
     }
 }
