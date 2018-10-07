@@ -63,6 +63,7 @@ import { SliderComponent } from './components/common/slider/slider.component';
 import { NguCarouselModule } from '@ngu/carousel';
 import { ConfirmEmailChangingComponent } from './components/user/settings/confirm-email-changing/confirm-email-changing.component';
 import { TitleComponent } from './components/common/title/title.component';
+import { DefaultPageCardsComponent } from './components/common/default-page-cards/default-page-cards.component';
 
 @NgModule({
   declarations: [
@@ -112,6 +113,7 @@ import { TitleComponent } from './components/common/title/title.component';
     SliderComponent,
     ConfirmEmailChangingComponent,
     TitleComponent,
+    DefaultPageCardsComponent,
   ],
   imports: [
     BrowserModule,
