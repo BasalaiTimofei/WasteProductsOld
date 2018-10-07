@@ -1,0 +1,23 @@
+<mat-card>
+  <div class="example-form">
+    <mat-form-field class="example-full-width">
+      <input matInput [(ngModel)]="query" placeholder="Поиск ...." value="">
+    </mat-form-field>
+    <button matSuffix mat-button mat-icon-button aria-label="search" (click)="search(query)">
+      <mat-icon>search</mat-icon>
+    </button>
+  </div>
+
+  <mat-list >
+    <mat-list-item *ngFor="let item of tempResult$ | async">
+      {{query}}
+    </mat-list-item>
+  </mat-list>
+
+  <mat-paginator [length]="length"
+               [pageSize]="pageSize"
+               [pageIndex]="pageIndex"
+               [pageSizeOptions]="[5, 10]"
+               (page)="pageEvent = changePageEvent($event)">
+  </mat-paginator>
+</mat-card>
