@@ -75,7 +75,8 @@ export class BoardComponent implements OnInit {
   addProduct() {
     const dialogRef = this.dialog.open<BoardProductDialogComponent, any, ProductInfoModel>(
       BoardProductDialogComponent, {
-        // width: '250px',
+        width: '450px',
+        height: '800px'
       });
 
     dialogRef.afterClosed().subscribe(productInfo => {

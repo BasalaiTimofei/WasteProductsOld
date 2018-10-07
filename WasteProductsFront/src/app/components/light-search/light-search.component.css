@@ -26,5 +26,5 @@ mat-list-item {
 }
 
 mat-list-item:hover {
-background-color: aqua;
+background-color: darkgray;
 }
