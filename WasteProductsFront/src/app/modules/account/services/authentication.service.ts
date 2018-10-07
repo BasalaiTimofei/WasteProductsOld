@@ -78,10 +78,9 @@ export class AuthenticationService extends BaseHttpService {
   }
 
   getUserId(): string {
-  // const claims = this.getClaims();
-  // if (claims) { return this.getClaims().sub; }
-  //   return null;
-    return '0';
+    const claims = this.getClaims();
+    if (claims) { return this.getClaims().sub; }
+    return null;
   }
 
   isInScope(scope: string): boolean {

@@ -5,8 +5,6 @@ import { User } from 'src/app/models/users/user';
 import { environment } from '../../../environments/environment';
 import { LoggingService } from '../logging/logging.service';
 import { AuthenticationService } from '../../modules/account/services/authentication.service';
-import { Email } from '../../modules/account/models/email';
-import { ResetPasswordResult } from '../../modules/account/models/reset-password-result';
 
 @Injectable({
   providedIn: 'root'
@@ -81,8 +79,8 @@ export class UserService extends BaseHttpService  {
     return this.httpService.put(url, bodyObj);
   }
 
-  resetPassword(resetResult: ResetPasswordResult, newPassword: string) {
-    const url = `${this.baseUserApiUrl}/${resetResult.UserId}/resetpasswordresponse/${resetResult.Token}`;
+  resetPassword(userId: string, token: string, newPassword: string) {
+    const url = `${this.baseUserApiUrl}/${userId}/resetpasswordresponse/${token}`;
     const bodyObj = {
       Password: newPassword
     };

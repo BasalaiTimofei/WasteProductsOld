@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,33 +37,36 @@ namespace WasteProducts.Logic.Services.Products
         }
 
         /// <inheritdoc/>
-        public Task<string> AddAsync(Stream imageStream)
+        public async Task<string> AddAsync(Stream imageStream)
         {
-            if (imageStream == null) return null;
-
-            var barcode = _barcodeService.GetBarcodeByStreamAsync(imageStream).Result;
-            if (barcode == null) return null;
-
-            if (IsProductsInDB(
-                p => p.Barcode != null && string.Equals(p.Barcode.Code, barcode.Code, StringComparison.CurrentCultureIgnoreCase),
-                out var products))
+            var code = _barcodeService.ParseBarcodePhoto(imageStream);
+            if (string.IsNullOrEmpty(code))
             {
-                return new Task<string>(() => products.First().Id);
+                throw new ValidationException("Barcode wasn't read from the uploaded photo");
             }
 
-            var newProduct = new Product
+            var barcodeDB = await _barcodeService.GetBarcodeFromDBAsync(code);
+            if (barcodeDB != null && IsProductsInDB(p => p.Barcode != null &&
+                    string.Equals(p.Barcode.Code, barcodeDB.Code, StringComparison.CurrentCultureIgnoreCase), out var products))
             {
-                Barcode = barcode,
-                Name = barcode.ProductName,
-                Composition =  barcode.Composition,
-                Brand = barcode.Brand,
-                Country = barcode.Country,
-                Weight = barcode.Weight,
-                PicturePath = barcode.PicturePath,
-            };
+                return products.First().Id;
+            }
+            else
+            {
+                var barcode = await _barcodeService.GetBarcodeFromCatalogAsync(code);
+                var newProduct = new Product
+                {
+                    Barcode = barcode,
+                    Name = barcode.ProductName,
+                    Composition = barcode.Composition,
+                    Brand = barcode.Brand,
+                    Country = barcode.Country,
+                    Weight = barcode.Weight,
+                    PicturePath = barcode.PicturePath,
+                };
 
-            return _productRepository.AddAsync(_mapper.Map<ProductDB>(newProduct))
-                .ContinueWith(t => t.Result);
+                return await _productRepository.AddAsync(_mapper.Map<ProductDB>(newProduct));
+            }
         }
 
         /// <inheritdoc/>
@@ -78,6 +82,7 @@ namespace WasteProducts.Logic.Services.Products
             var newProduct = new Product
             {
                 Name = name,
+                Barcode = new Barcode()
             };
 
             return _productRepository.AddAsync(_mapper.Map<ProductDB>(newProduct))

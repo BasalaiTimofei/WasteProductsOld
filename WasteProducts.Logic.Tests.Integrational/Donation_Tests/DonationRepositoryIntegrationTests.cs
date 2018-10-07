@@ -4,6 +4,7 @@ using WasteProducts.DataAccess.Repositories.Donations;
 using WasteProducts.DataAccess.Common.Repositories.Donations;
 using WasteProducts.DataAccess.Common.Models.Donations;
 using System;
+using System.Threading.Tasks;
 
 namespace WasteProducts.Logic.Tests.Donation_Tests
 {
@@ -21,7 +22,7 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
         }
 
         [Test]
-        public void _00CreateNewDonation()
+        public async Task _00CreateNewDonationAsync()
         {
             DonationDB donation = new DonationDB()
             {
@@ -32,12 +33,11 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
                 TransactionId = "1",
                 Donor = CreateDonorWithLondonAddress()
             };
-            _donationRepository.Add(donation);
-            Assert.IsTrue(_donationRepository.Contains(donation.TransactionId));
+            await AddAndAssertAsync(donation).ConfigureAwait(false);
         }
 
         [Test]
-        public void _01CreateNewDonationFromSameDonor()
+        public async Task _01CreateNewDonationFromSameDonorAsync()
         {
             DonationDB donation = new DonationDB()
             {
@@ -48,12 +48,11 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
                 TransactionId = "2",
                 Donor = CreateDonorWithLondonAddress()
             };
-            _donationRepository.Add(donation);
-            Assert.IsTrue(_donationRepository.Contains(donation.TransactionId));
+            await AddAndAssertAsync(donation).ConfigureAwait(false);
         }
 
         [Test]
-        public void _02CreateNewDonationFromChangedDonorWithUnmodifiedAddress()
+        public async Task _02CreateNewDonationFromChangedDonorWithUnmodifiedAddressAsync()
         {
             DonorDB donor = CreateDonorWithLondonAddress();
             donor.IsVerified = true;
@@ -66,12 +65,11 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
                 TransactionId = "3",
                 Donor = donor
             };
-            _donationRepository.Add(donation);
-            Assert.IsTrue(_donationRepository.Contains(donation.TransactionId));
+            await AddAndAssertAsync(donation).ConfigureAwait(false);
         }
 
         [Test]
-        public void _03CreateNewDonationFromDonorWithNewAddress_OldAddressIsNotUsed()
+        public async Task _03CreateNewDonationFromDonorWithNewAddress_OldAddressIsNotUsedAsync()
         {
             DonorDB donor = CreateDonorWithLondonAddress();
             donor.Address = CreateAmsterdamAddress();
@@ -84,12 +82,11 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
                 TransactionId = "4",
                 Donor = donor
             };
-            _donationRepository.Add(donation);
-            Assert.IsTrue(_donationRepository.Contains(donation.TransactionId));
+            await AddAndAssertAsync(donation).ConfigureAwait(false);
         }
 
         [Test]
-        public void _04CreateNewDonationFromOtherDonorWithSameAddress()
+        public async Task _04CreateNewDonationFromOtherDonorWithSameAddressAsync()
         {
             DonationDB donation = new DonationDB()
             {
@@ -100,12 +97,11 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
                 TransactionId = "5",
                 Donor = CreateDonorWithAmsterdamAddress()
             };
-            _donationRepository.Add(donation);
-            Assert.IsTrue(_donationRepository.Contains(donation.TransactionId));
+            await AddAndAssertAsync(donation).ConfigureAwait(false);
         }
 
         [Test]
-        public void _05CreateNewDonationFromDonorWithNewAddress_OldAddressIsUsed()
+        public async Task _05CreateNewDonationFromDonorWithNewAddress_OldAddressIsUsedAsync()
         {
             DonorDB donor = CreateDonorWithLondonAddress();
             DonationDB donation = new DonationDB()
@@ -117,12 +113,11 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
                 TransactionId = "6",
                 Donor = donor
             };
-            _donationRepository.Add(donation);
-            Assert.IsTrue(_donationRepository.Contains(donation.TransactionId));
+            await AddAndAssertAsync(donation).ConfigureAwait(false);
         }
 
         [Test]
-        public void _06CreateNewDonationFromDonorWithChangedButExistAddress_OldAddressIsNotUsed()
+        public async Task _06CreateNewDonationFromDonorWithChangedButExistAddress_OldAddressIsNotUsedAsync()
         {
             DonorDB donor = CreateDonorWithAmsterdamAddress();
             donor.Address = CreateLondonAddress();
@@ -135,8 +130,7 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
                 TransactionId = "7",
                 Donor = donor
             };
-            _donationRepository.Add(donation);
-            Assert.IsTrue(_donationRepository.Contains(donation.TransactionId));
+            await AddAndAssertAsync(donation).ConfigureAwait(false);
         }
 
         [OneTimeTearDown]
@@ -201,6 +195,12 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
                 IsVerified = false,
                 Address = CreateAmsterdamAddress()
             };
+        }
+
+        private async Task AddAndAssertAsync(DonationDB donation)
+        {
+            await _donationRepository.AddAsync(donation).ConfigureAwait(false);
+            Assert.IsTrue(await _donationRepository.ContainsAsync(donation.TransactionId).ConfigureAwait(false));
         }
     }
 }

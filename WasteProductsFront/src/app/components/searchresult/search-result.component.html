@@ -5,35 +5,52 @@
   <ng-template #searchResults>
     <div *ngIf="length > 0">
       <mat-toolbar color="">Результаты поиска</mat-toolbar>
-        <mat-list>
-          <mat-list-item *ngFor="let result of tempProducts">
-            <img mat-list-icon *ngIf="result.PicturePath !== null; else noIcon"
-                src="{{baseUrl}}{{result.PicturePath}}"
-                (click)="showPreview(result.Name, result.PicturePath)"
-                matTooltip="Открыть в исходном размере" >
-            <ng-template #noIcon>
-              <img mat-list-icon src="../../../favicon.ico"
-                                matTooltip="Изображение отсутствует" >
-            </ng-template>
-            <p mat-line> {{result.Name}} </p>
-            <div *ngIf="isAuthenificated$ | async">
-              <div *ngIf="!result.IsAdded; else added">
-                <button  matSuffix mat-button mat-icon-button (click)="addToMyProducts(result.Id)">
-                  <mat-icon matTooltip="Добавить продукт в Мои продукты">star_border</mat-icon>
-                </button>
-              </div>
-            </div>
-            <button matSuffix mat-button mat-icon-button>
-              <mat-icon matTooltip="Подробнее" (click)="showDetails(result.Id)">assignment</mat-icon>
-            </button>
-            <ng-template #added>
-              <button  matSuffix mat-button mat-icon-button (click)="removeFromMyProducts(result.Id)">
-                <mat-icon matTooltip="Удалить из Мои продукты">star</mat-icon><!-- Если продукт не добавлен в список юзера-->
-              </button>
-            </ng-template>
-        </mat-list-item>
-        <mat-divider></mat-divider>
-      </mat-list>
+
+      <mat-accordion class="example-headers-align">
+          <mat-expansion-panel *ngFor="let result of tempResult$ | async">
+
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <p mat-line> {{result.Name}} </p>
+              </mat-panel-title>
+
+              <mat-panel-description>
+                <span class="example-spacer"></span>
+
+                <div *ngIf="isAuthenificated$ | async">
+                <!--div *ngIf="true"-->
+
+                  <div *ngIf="!result.IsAdded; else added">
+                    <button  matSuffix mat-button mat-icon-button (click)="addToMyProducts(result.Id)">
+                      <mat-icon matTooltip="Добавить продукт в Мои продукты">star_border</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <ng-template #added>
+                  <button  matSuffix mat-button mat-icon-button (click)="removeFromMyProducts(result.Id)">
+                    <mat-icon matTooltip="Удалить из Мои продукты">star</mat-icon><!-- Если продукт не добавлен в список юзера-->
+                  </button>
+                </ng-template>
+              </mat-panel-description>
+
+            </mat-expansion-panel-header>
+            <mat-list>
+              <img *ngIf="result.PicturePath !== null; else noIcon"
+                    src="{{result.PicturePath}}"
+                    (click)="showPreview(result.Name, result.PicturePath)"
+                    matTooltip="Открыть в исходном размере" >
+              <ng-template #noIcon>
+                <img mat-list-icon src="../../../assets/img/tenor.gif"
+                    matTooltip="Изображение отсутствует" >
+              </ng-template>
+              <mat-list-item>
+                <p mat-line> <b>Состав: </b> {{result.Composition}} </p>
+                <p mat-line> <b>Рейтинг: </b> {{result.AvgRating}} </p>
+              </mat-list-item>
+            </mat-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+
       <mat-paginator [length]="length"
                [pageSize]="pageSize"
                [pageIndex]="pageIndex"

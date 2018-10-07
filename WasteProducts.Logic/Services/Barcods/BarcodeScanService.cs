@@ -5,14 +5,18 @@ using System.IO;
 using ZXing;
 using Spire.Barcode;
 using WasteProducts.Logic.Common.Services.Barcods;
-using System;
 using System.Text.RegularExpressions;
+using AForge.Imaging.Filters;
 
 namespace WasteProducts.Logic.Services.Barcods
 {
     /// <inheritdoc />
     public class BarcodeScanService : IBarcodeScanService
     {
+        private const int COEF = 400;
+        private const double RED = 0.2125;
+        private const double GREEN = 0.7154;
+        private const double BLUE = 0.0721;
         private Bitmap _image;
         private Graphics _graphics;
 
@@ -24,7 +28,7 @@ namespace WasteProducts.Logic.Services.Barcods
         public string Scan(Stream stream)
         {
             string code = null;
-            using (var resizeStream = Resize(stream, 400, 400))
+            using (var resizeStream = Resize(stream))
             {
                 try
                 {
@@ -44,23 +48,6 @@ namespace WasteProducts.Logic.Services.Barcods
         }
 
         /// <inheritdoc />
-        public Stream Resize(Stream stream, int width, int height)
-        {
-            MemoryStream resultStream = new MemoryStream();
-            Bitmap img = new Bitmap(stream);
-            Bitmap result = new Bitmap(width, height);
-            using (_graphics = Graphics.FromImage(result))
-            {
-                _graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                _graphics.DrawImage(img, 0, 0, width, height);
-                _graphics.Dispose();
-            }
-            result.Save(resultStream, ImageFormat.Bmp);
-
-            return resultStream;
-        }
-
-        /// <inheritdoc />
         public string ScanByZxing(Stream stream)
         {
             Result result = null;
@@ -72,12 +59,9 @@ namespace WasteProducts.Logic.Services.Barcods
                 },
                 AutoRotate = true
             };
-            using (stream)
-            {
-                _image = new Bitmap(stream);
-                result = barcodeReader.Decode(_image);
-            }
-            if(result == null)
+            _image = new Bitmap(stream);
+            result = barcodeReader.Decode(_image);
+            if (result == null)
             {
                 return null;
             }
@@ -93,16 +77,34 @@ namespace WasteProducts.Logic.Services.Barcods
         public string ScanBySpire(Stream stream)
         {
             string decoded = "";
-
-            using (stream)
-            {
-                decoded = BarcodeScanner.ScanOne(stream, true);
-            }
+            decoded = BarcodeScanner.ScanOne(stream, true);
             if (!IsValid(decoded))
             {
                 decoded = null;
             }
             return decoded;
+        }
+
+        /// <inheritdoc />
+        public Stream Resize(Stream stream)
+        {
+            MemoryStream resultStream = new MemoryStream();
+            Bitmap image = new Bitmap(stream);
+            double coef = (double)COEF / image.Width;
+            Bitmap result = new Bitmap((int)(image.Width * coef), (int)(image.Height * coef));
+            using (_graphics = Graphics.FromImage(result))
+            {
+                _graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                _graphics.DrawImage(image, 0, 0, result.Width, result.Height);
+                _graphics.Dispose();
+            }
+            // create grayscale filter (BT709)
+            Grayscale filter = new Grayscale(RED, GREEN, BLUE);
+            // apply the filter
+            result = filter.Apply(result);
+            result.Save(resultStream, ImageFormat.Bmp);
+
+            return resultStream;
         }
 
         /// <summary>

@@ -148,6 +148,7 @@ namespace WasteProducts.DataAccess.Repositories.Users
 
         public async Task ResetPasswordAsync(string userId, string token, string newPassword)
         {
+            _manager.UserTokenProvider = new TotpSecurityStampBasedTokenProvider<UserDB, string>();
             var result = await _manager.ResetPasswordAsync(userId, token, newPassword).ConfigureAwait(false);
 
             if(!result.Succeeded)

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
-using System.Linq;
+using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Comparers.Donations;
 using WasteProducts.DataAccess.Common.Models.Donations;
 using WasteProducts.DataAccess.Common.Repositories.Donations;
@@ -21,9 +21,9 @@ namespace WasteProducts.DataAccess.Repositories.Donations
         public DonationRepository(WasteContext context) => _context = context;
 
         /// <inheritdoc />
-        public void Add(DonationDB donation)
+        public async Task AddAsync(DonationDB donation)
         {
-            DonorDB donorFromDB = _context.Donors.Find(donation.Donor.Id);
+            DonorDB donorFromDB = await _context.Donors.FirstOrDefaultAsync(d => d.Id == donation.Donor.Id).ConfigureAwait(false);
             if (new DonorDBComparer().Equals(donorFromDB, donation.Donor))
                 donation.Donor = donorFromDB; // The donor is in the database and has not changed.
             else if (donorFromDB != null) // The donor is in the database and has changed.
@@ -36,11 +36,11 @@ namespace WasteProducts.DataAccess.Repositories.Donations
                 }
                 else  // And the address has changed too.
                 {
-                    donation.Donor = SetAddressFromDBIfExists(donation.Donor);
+                    donation.Donor = await SetAddressFromDBIfExistsAsync(donation.Donor).ConfigureAwait(false);
                     if (donation.Donor.Address.Id == default(Guid))
                     { // The changed address is not in the database.
                         AddressDB newAddress = _context.Addresses.Add(donation.Donor.Address);
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync().ConfigureAwait(false);
                         donation.Donor.AddressId = newAddress.Id;
                         donation.Donor.Address = newAddress;
                     }
@@ -53,15 +53,15 @@ namespace WasteProducts.DataAccess.Repositories.Donations
                 _context.Entry(donation.Donor).State = EntityState.Modified;
             }
             else // The donator is not in the database.
-                donation.Donor = SetAddressFromDBIfExists(donation.Donor);
+                donation.Donor = await SetAddressFromDBIfExistsAsync(donation.Donor).ConfigureAwait(false);
             _context.Donations.Add(donation);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public bool Contains(string id)
+        public async Task<bool> ContainsAsync(string id)
         {
-            return _context.Donations.Select(d => d.TransactionId).Contains(id);
+            return await _context.Donations.AnyAsync(d => d.TransactionId == id).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -94,18 +94,18 @@ namespace WasteProducts.DataAccess.Repositories.Donations
             }
         }
 
-        private DonorDB SetAddressFromDBIfExists(DonorDB donor)
+        private async Task<DonorDB> SetAddressFromDBIfExistsAsync(DonorDB donor)
         {
             AddressDB addressFromDB =
-                _context.Addresses
-                .FirstOrDefault(
+                await _context.Addresses.FirstOrDefaultAsync(
                     a => a.City == donor.Address.City
                     && a.Country == donor.Address.Country
                     && a.IsConfirmed == donor.Address.IsConfirmed
                     && a.Name == donor.Address.Name
                     && a.State == donor.Address.State
                     && a.Street == donor.Address.Street
-                    && a.Zip == donor.Address.Zip);
+                    && a.Zip == donor.Address.Zip)
+                    .ConfigureAwait(false);
             if (addressFromDB != null) // The address is in the database.
             {
                 donor.AddressId = addressFromDB.Id;

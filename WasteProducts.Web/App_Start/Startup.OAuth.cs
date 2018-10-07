@@ -26,7 +26,7 @@ namespace WasteProducts.Web
     //    {
     //        app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
     //        {
-    //            Authority = @"https://localhost:44326/identity",
+    //            Authority = @"https://localhost:44362/identity",
     //            RequiredScopes = new[] { IdentityConstants.WasteProducts_Api_Scope },
     //            ValidationMode = ValidationMode.ValidationEndpoint
     //        });

@@ -111,6 +111,11 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                 return user0;
             }
 
+            void SeedProductsByReadBarcodes()
+            {
+
+            }
+
             void CreateProductsAndAddThemToTheUser(UserDB userDB)
             {
                 var category1 = new CategoryDB
@@ -140,8 +145,8 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                         Category = i > 2 ? category1 : category2,
                         Composition = _faker.Lorem.Sentence(),
                         Marked = false,
-                        PicturePath = "/Content/favicon.png"
-                };
+                        PicturePath = "http://waste-api.belpyro.net/Content/favicon.png"
+                    };
                     _context.Products.Add(prod);
                     var descr = new UserProductDescriptionDB
                     {
