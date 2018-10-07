@@ -35,10 +35,10 @@ namespace WasteProducts.IdentityServer.Config
                         Constants.StandardScopes.Profile,
                         Constants.StandardScopes.Email,
                         Constants.StandardScopes.Roles,
-                       "wasteproducts-api"
+                       IdentityConstants.WasteProducts_Api_Scope
                     },
 
-                     RedirectUris = new List<string>
+                    RedirectUris = new List<string>
                     {
                         IdentityConstants.WasteProducts_Front_ClientUrl
                     },
@@ -65,30 +65,6 @@ namespace WasteProducts.IdentityServer.Config
                     RefreshTokenUsage = TokenUsage.ReUse,
                     RefreshTokenExpiration = TokenExpiration.Sliding
                 },
-
-
-
-                new Client
-                {
-                    ClientName = IdentityConstants.WasteProducts_Api_Name,
-                    ClientId = IdentityConstants.WasteProducts_Api_ClientID,
-                    Flow = Flows.ClientCredentials,
-
-                    ClientSecrets = new List<Secret>
-                    {
-                         new Secret(IdentityConstants.WasteProducts_Api_Secret.Sha256())
-                    },
-                      AllowedCorsOrigins = new List<string>
-                    {
-                        IdentityConstants.WasteProducts_Front_ClientUrl,
-                    },
-                    AllowedScopes = new List<string>
-                    {
-                        IdentityConstants.WasteProducts_Api_Scope
-                    }
-                },
-
-
             };
         }
     }
