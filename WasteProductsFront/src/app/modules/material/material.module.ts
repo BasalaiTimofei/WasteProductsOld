@@ -4,7 +4,7 @@ import {
   MatCardModule, MatListModule, MatIconModule, MatDividerModule, MatToolbarModule, MatMenuModule,
   MatButtonModule, MatCheckboxModule, MatProgressSpinnerModule, MatChipsModule, MatSnackBarModule,
    MatDialogModule, MatTooltipModule, MatInputModule, MatFormFieldModule, MatOptionModule,
-   MatAutocompleteModule, MatTableModule, MatPaginatorModule, MatSelectModule, MatExpansionModule,
+   MatAutocompleteModule, MatTableModule, MatPaginatorModule, MatSelectModule, MatExpansionModule
 } from '@angular/material';
 
 /* Popups & Modals */

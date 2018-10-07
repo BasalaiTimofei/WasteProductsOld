@@ -18,7 +18,6 @@ import { NotFoundComponent } from './components/common/not-found/not-found.compo
 import { DefaultComponent } from './components/common/default/default.component';
 import { FriendsComponent } from './components/user/friends/friends.component';
 import { ProductsComponent } from './components/products/products.component';
-import { GroupsComponent } from './components/groups/groups.component';
 import { SettingsComponent } from './components/user/settings/settings.component';
 import { ToListComponent } from './components/products/to-list/to-list.component';
 import { AddProductComponent } from './components/products/add-product/add-product.component';
@@ -52,8 +51,7 @@ import { MatToolbarModule, MatTableModule } from '@angular/material';
 import { ImagePreviewService } from './services/image-preview/image-preview.service';
 import { FormPreviewService } from './services/form-preview/form-preview.service';
 
-/* Custom Modules */
-import { AccountModule } from './modules/account/account.module';
+
 import { UserdataComponent } from './components/user/settings/userdata/userdata.component';
 import { UserformfieldComponent } from './components/user/settings/userformfield/userformfield.component';
 import { ChangePasswordComponent } from './components/user/settings/change-password/change-password.component';
@@ -62,6 +60,9 @@ import { AllToListComponent } from './components/products/all-to-list/all-to-lis
 import { SliderComponent } from './components/common/slider/slider.component';
 import { NguCarouselModule } from '@ngu/carousel';
 import { ConfirmEmailChangingComponent } from './components/user/settings/confirm-email-changing/confirm-email-changing.component';
+
+/* Custom Modules */
+import { AccountModule } from './modules/account/account.module';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,6 @@ import { ConfirmEmailChangingComponent } from './components/user/settings/confir
     DefaultComponent,
     FriendsComponent,
     ProductsComponent,
-    GroupsComponent,
     SettingsComponent,
     ToListComponent,
     AddProductComponent,
@@ -118,7 +118,6 @@ import { ConfirmEmailChangingComponent } from './components/user/settings/confir
     BrowserAnimationsModule,
     HttpClientModule,
     MaterialModule,
-    AppRoutingModule,
     CdkTableModule,
     OverlayModule,
     NguCarouselModule,
@@ -126,12 +125,15 @@ import { ConfirmEmailChangingComponent } from './components/user/settings/confir
     MatTableModule,
 
     /* Custom modules */
-    AccountModule
+    AccountModule,
+
+    /* MUST bee last */
+    AppRoutingModule,
   ],
   providers: [ImagePreviewService,
-              FormPreviewService],
+    FormPreviewService],
   entryComponents: [ImagePreviewComponent,
-                    FormProductOverlayComponent],
+    FormProductOverlayComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

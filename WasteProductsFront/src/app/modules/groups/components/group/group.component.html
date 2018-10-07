@@ -1,0 +1,26 @@
+<mat-card>
+  <mat-card-title>
+
+    <mat-toolbar color="primary">
+      <mat-icon>group</mat-icon><span class="px-3">{{group.Name}}</span>
+      <span class="toolbar-spacer"></span>
+      <mat-icon (click)="edit()" class="toolbar-icon">edit</mat-icon>
+    </mat-toolbar>
+
+  </mat-card-title>
+  <mat-card-content>
+
+    <div class="p-2">
+      <p class="lead">{{group.Information}}</p>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="row py-4">
+      <app-board class="col-sm-12 col-md-6"
+      *ngFor="let board of group.GroupBoards" [board]="board"
+      (removeBoardEvent)="update()"></app-board>
+    </div>
+
+  </mat-card-content>
+</mat-card>

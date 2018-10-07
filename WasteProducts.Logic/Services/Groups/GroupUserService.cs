@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
 using WasteProducts.Logic.Common.Models.Groups;
@@ -22,13 +22,12 @@ namespace WasteProducts.Logic.Services.Groups
             _mapper = mapper;
         }
 
-        public async Task Invite(GroupUser item, string adminId)
+        public async Task Invite(GroupUser item)
         {
             var result = _mapper.Map<GroupUserDB>(item);
 
             var modelGroupDB = (await _dataBase.Find<GroupDB>(
                 x => x.Id == result.GroupId
-                && x.AdminId == adminId
                 && x.IsNotDeleted == true)).FirstOrDefault();
             if (modelGroupDB == null)
                 throw new ValidationException("Group not found");
@@ -51,11 +50,10 @@ namespace WasteProducts.Logic.Services.Groups
             await _dataBase.Save();
         }
 
-        public async Task Kick(GroupUser item, string adminId)
+        public async Task Kick(GroupUser item)
         {
             var modelGroupDB = (await _dataBase.Find<GroupDB>(
                 x => x.Id == item.GroupId
-                && x.AdminId == adminId
                 && x.IsNotDeleted == true)).FirstOrDefault();
 
             if (modelGroupDB == null)

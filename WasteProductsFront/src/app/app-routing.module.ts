@@ -5,7 +5,6 @@ import { NotFoundComponent } from './components/common/not-found/not-found.compo
 import { MainPageComponent } from './components/common/main-page/main-page.component';
 import { FriendsComponent } from './components/user/friends/friends.component';
 import { ProductsComponent } from './components/products/products.component';
-import { GroupsComponent } from './components/groups/groups.component';
 import { SettingsComponent } from './components/user/settings/settings.component';
 import { ToListComponent } from './components/products/to-list/to-list.component';
 import { SearchresultComponent } from './components/searchresult/search-result.component';
@@ -44,7 +43,10 @@ const routes: Routes = [
       { path: 'details/:id', component: NotificationDetailsComponent },
     ]
   },
-  { path: 'details/:id', component: NotificationDetailsComponent },
+  {
+    path: 'groups',
+    loadChildren: './modules/groups/groups.module#GroupsModule'
+  },
   { path: 'common/mainpage', component: MainPageComponent },
 
   { path: 'friends', component: FriendsComponent, canActivate: [AuthenticationGuard] },
@@ -52,13 +54,13 @@ const routes: Routes = [
   { path: 'changepassword', component: ChangePasswordComponent, canActivate: [AuthenticationGuard] },
   { path: 'resetpassword', component: ResetPasswordComponent },
 
+
   { path: 'products', component: ProductsComponent, canActivate: [AuthenticationGuard], children: [
     { path: 'add-product', component: AddProductComponent },
   ]},
   { path: 'all-to-list', component: AllToListComponent },
-  { path: 'groups', component: GroupsComponent },
   { path: 'products/myproducts', component: ToListComponent },
-  { path: 'groups/mygroups', component: GroupsOfUserComponent},
+
   { path: 'searchresults/:query', component: SearchresultComponent },
   { path: '**', component: NotFoundComponent },
 ];

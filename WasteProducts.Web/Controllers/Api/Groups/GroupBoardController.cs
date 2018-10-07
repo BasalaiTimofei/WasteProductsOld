@@ -28,7 +28,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         }
 
         /// <summary>
-        /// Get board object by id 
+        /// Get board object by id
         /// </summary>
         /// <param name="boardId">Primary key</param>
         /// <returns>200(Object) || 404</returns>

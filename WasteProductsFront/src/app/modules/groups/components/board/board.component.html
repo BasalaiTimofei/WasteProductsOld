@@ -1,0 +1,89 @@
+<mat-card>
+  <mat-card-header class="full-width">
+    <mat-card-title>
+      <!--
+      {{board.Name}}
+      <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu" xPosition="before">
+        <button mat-menu-item (click)="editBoard()"><mat-icon >edit</mat-icon>Edit</button>
+        <button mat-menu-item (click)="deleteBoard()"><mat-icon >remove</mat-icon>Remove</button>
+      </mat-menu> -->
+
+      <mat-toolbar color="secondary">
+        <mat-icon>group</mat-icon><span class="px-3">{{board.Name}}</span>
+
+        <span class="toolbar-spacer"></span>
+
+        <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu" xPosition="before">
+          <button mat-menu-item (click)="editBoard()">
+            <mat-icon>edit</mat-icon>Edit
+          </button>
+          <button mat-menu-item (click)="deleteBoard()">
+            <mat-icon>delete</mat-icon>Delete
+          </button>
+        </mat-menu>
+      </mat-toolbar>
+
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="dashboard-card-content">
+
+    <p class="lead">{{board.Information}}</p>
+
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let product of board.GroupProducts">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h4 mat-line>{{product.Name | titlecase}}</h4>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-panel-description>
+          This is a summary of the content
+        </mat-panel-description>
+
+        <ng-template matExpansionPanelContent>
+          {{product.Information}}
+        </ng-template>
+
+        <mat-action-row>
+          <button mat-icon-button color="accent" matTooltip="Edit product" (click)="editProduct(product.Id)">
+            <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" matTooltip="Delete product" (click)="deleteProduct(product.Id)">
+            <mat-icon aria-label="Example icon-button with a heart icon">delete</mat-icon>
+          </button>
+        </mat-action-row>
+      </mat-expansion-panel>
+
+      <a mat-list-item (click)="addProduct()" matTooltip="Add product">
+        <mat-icon class="mx-auto">add</mat-icon>
+      </a>
+
+    </mat-accordion>
+
+    <!--  <mat-nav-list>
+
+      <a mat-list-item *ngFor="let product of board.GroupProducts" class="border border-dark rounded">
+        <h4 mat-line>{{ product.Name | titlecase }}</h4>
+        <p mat-line>{{ product.Information }}</p>
+        <button mat-icon-button matTooltip="Left group" (click)="deleteProduct(product.Id, $event)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </a>
+      <a mat-list-item (click)="addProduct($event)" matTooltip="Add product">
+        <mat-icon class="mx-auto">add</mat-icon>
+      </a>
+    </mat-nav-list>
+ -->
+    <!--    <div class="card-footer" *ngIf="hideAddProduct">
+        <app-group-product-create (cancel)="cancel()"></app-group-product-create>
+    </div> -->
+
+  </mat-card-content>
+</mat-card>
