@@ -37,7 +37,7 @@ export class ToListComponent implements OnInit {
 
   data: UserProduct[] = this.userProducts;
   dataSource = new MatTableDataSource<UserProduct>();
-  displayedColumns: string[] = ['Id', 'Name', 'Rating', 'Description', 'IsHidden'];
+  displayedColumns: string[] = ['Name', 'Rating', 'Description', 'IsHidden'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
