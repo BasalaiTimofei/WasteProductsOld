@@ -44,7 +44,7 @@ export class ToListComponent implements OnInit {
 
 
   ngOnInit() {
-    this.paginator.length = this.data.length;
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
 this.productService.getUserProducts().subscribe(
@@ -58,9 +58,13 @@ this.productService.getUserProducts().subscribe(
     err => console.error(err));
   }
 
-    applyFilter(filterValue: any) {
-      this.dataSource.filter = filterValue.trim().toLowerCase();
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
+  }
 
     addProduct() {
       this.router.navigate(['products/add-product']);
