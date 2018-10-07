@@ -1,5 +1,5 @@
 <mat-card>
-  <mat-card-header class="full-width" >
+  <mat-card-header class="full-width">
     <mat-card-title>
       <!--
       {{board.Name}}
@@ -17,12 +17,16 @@
         <span class="toolbar-spacer"></span>
 
         <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
-            <mat-icon>more_vert</mat-icon>
-          </button>
+          <mat-icon>more_vert</mat-icon>
+        </button>
         <mat-menu #menu="matMenu" xPosition="before">
-            <button mat-menu-item (click)="editBoard()"><mat-icon >edit</mat-icon>Edit</button>
-            <button mat-menu-item (click)="deleteBoard()"><mat-icon >remove</mat-icon>Remove</button>
-          </mat-menu>
+          <button mat-menu-item (click)="editBoard()">
+            <mat-icon>edit</mat-icon>Edit
+          </button>
+          <button mat-menu-item (click)="deleteBoard()">
+            <mat-icon>delete</mat-icon>Delete
+          </button>
+        </mat-menu>
       </mat-toolbar>
 
     </mat-card-title>
@@ -35,17 +39,29 @@
       <mat-expansion-panel *ngFor="let product of board.GroupProducts">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            <h4 mat-line>{{ product.Name | titlecase }}</h4>
+            <h4 mat-line>{{product.Name | titlecase}}</h4>
           </mat-panel-title>
         </mat-expansion-panel-header>
 
+        <mat-panel-description>
+          This is a summary of the content
+        </mat-panel-description>
+
+        <ng-template matExpansionPanelContent>
+          {{product.Information}}
+        </ng-template>
+
         <mat-action-row>
-          <button mat-icon-button>edit</button>
-          <button mat-icon-button>delete</button>
+          <button mat-icon-button color="accent" matTooltip="Edit product" (click)="editProduct(product.Id)">
+            <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" matTooltip="Delete product" (click)="deleteProduct(product.Id)">
+            <mat-icon aria-label="Example icon-button with a heart icon">delete</mat-icon>
+          </button>
         </mat-action-row>
       </mat-expansion-panel>
 
-      <a mat-list-item (click)="addProduct($event)" matTooltip="Add product">
+      <a mat-list-item (click)="addProduct()" matTooltip="Add product">
         <mat-icon class="mx-auto">add</mat-icon>
       </a>
 

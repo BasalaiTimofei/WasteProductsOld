@@ -38,13 +38,11 @@ export class BoardComponent implements OnInit {
         }
       });
 
-    dialogRef.afterClosed().subscribe(result => {
-      this.updateBoardInfo(result);
+    dialogRef.afterClosed().subscribe(boardInfo => {
+      if (boardInfo) {
+        this.updateBoardInfo(boardInfo);
+      }
     });
-  }
-
-  updateBoardInfo(boardInfo: BoardInfoModel) {
-    this.boardService.updateBoard(this.board.Id, boardInfo).subscribe(board => this.board = Object.assign(this.board, boardInfo));
   }
 
   deleteBoard() {
@@ -57,32 +55,26 @@ export class BoardComponent implements OnInit {
         }
       });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.boardService.deleteBoard(this.board.Id).subscribe(() => {
-          this.boardRemovedEvent.emit(this.board.Id);
-        });
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.boardService.deleteBoard(this.board.Id)
+          .subscribe(() => this.boardRemovedEvent.emit(this.board.Id));
       }
     });
-
   }
 
-  addProduct(event: Event) {
-    this.onItemClick(event);
-
-    this.boardService.addProduct(this.board.Id, {Name: 'Some Name', Information: 'Some Info', ProductId: '0'}).subscribe();
-  }
-
-  updateProduct(productId: string, event: Event) {
-    this.onItemClick(event);
-
-    this.boardService.updateProduct(productId, {Name: 'Some Name', Information: 'Some Info', ProductId: '0'}).subscribe();
+  private updateBoardInfo(boardInfo: BoardInfoModel) {
+    this.boardService.updateBoard(this.board.Id, boardInfo).subscribe(board => this.board = Object.assign(this.board, boardInfo));
   }
 
 
-  deleteProduct(productId: string, event: Event) {
-    this.onItemClick(event);
+  /* Products */
 
+  addProduct() {
+    this.boardService.addProduct(this.board.Id, { Name: 'Some Name', Information: 'Some Info', ProductId: '0' }).subscribe();
+  }
+
+  deleteProduct(productId: string) {
     const dialogRef = this.dialog.open<ConfirmDialogComponent, ConfirmModel, boolean>(
       ConfirmDialogComponent, {
         // width: '250px',
@@ -92,22 +84,20 @@ export class BoardComponent implements OnInit {
         }
       });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.boardService.deleteProduct(productId).subscribe((r) => {
-          remove(this.board.GroupProducts, p => p.Id === productId);
-
-        });
+    dialogRef.afterClosed().subscribe(confirmed => {
+      if (confirmed) {
+        this.boardService.deleteProduct(productId)
+          .subscribe(() => remove(this.board.GroupProducts, p => p.Id === productId));
       }
     });
   }
 
-  private onItemClick(event: Event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
+  editProduct(productId: string) {
+
   }
 
-  private removeProductArray(array: ProductModel[], elementId: string) {
-    return array.filter(e => e.Id !== elementId);
+  private updateProduct(productId: string) {
+
+    this.boardService.updateProduct(productId, { Name: 'Some Name', Information: 'Some Info', ProductId: '0' }).subscribe();
   }
 }
