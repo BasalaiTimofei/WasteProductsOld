@@ -327,16 +327,19 @@ namespace WasteProducts.Web.Controllers.Api
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the request.")]
         public async Task<IHttpActionResult> ResetPasswordRequest([FromBody] Email email)
         {
+            if(email == null)
+            {
+                throw new ValidationException("Email is empty");
+            }
+
             //throws 400
             var validator = new EmailValidator();
             validator.ValidateAndThrow(email);
 
-            var sb = new StringBuilder(Request.RequestUri.GetLeftPart(UriPartial.Authority));
-            sb.Append("/api/user/{0}/resetpasswordresponse/{1}");
-            await _service.ResetPasswordRequestAsync(email.EmailOfTheUser, sb.ToString());
+            var result = await _service.ResetPasswordRequestAsync(email.EmailOfTheUser);
 
             //throws 204
-            return StatusCode(HttpStatusCode.NoContent);
+            return Ok(result);
         }
 
         /// <summary>
