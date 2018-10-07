@@ -5,46 +5,83 @@
     </mat-toolbar>
   </mat-card-header>
   <mat-card-content>
-    <div class="container">
-      <form #registrationForm="ngForm" (ngSubmit)="submitForm(registrationForm)">
 
-        <div class="form-group">
-          <mat-form-field>
-            <input matInput placeholder="Username" type="text" name="userName" required [(ngModel)]="model.UserName">
+    <mat-vertical-stepper [linear]="true" #stepper>
+      <mat-step [stepControl]="registerFormGroup" *ngIf="registerFormGroup">
+        <form [formGroup]="registerFormGroup" (ngSubmit)="onSubmit()">
+          <ng-template matStepLabel>Заполните данные нового пользователя:</ng-template>
+
+          <mat-form-field class="field-full-width my-3">
+            <input matInput placeholder="Имя пользователя" formControlName="UserName" minlength="6" required>
+            <mat-hint>Ошибки появятся сразу при неверном вводе.</mat-hint>
+            <mat-error *ngIf="registerFormGroup.controls['UserName'].hasError('minLength') && !registerFormGroup.controls['UserName'].hasError('required')">
+              Введите имя пользователя в <strong>6 и более символов</strong>.
+            </mat-error>
+            <mat-error *ngIf="registerFormGroup.controls['UserName'].hasError('required')">
+              Имя пользователя <strong>обязательное</strong>.
+            </mat-error>
           </mat-form-field>
-        </div>
 
-        <div class="form-group">
-          <mat-form-field>
-            <input matInput placeholder="Email" type="email" name="email" required [(ngModel)]="model.Email">
+          <mat-form-field class="field-full-width my-3">
+            <input matInput placeholder="Емаил пользователя" formControlName="Email" required>
+            <mat-hint>Ошибки появятся сразу при неверном вводе.</mat-hint>
+            <mat-error *ngIf="registerFormGroup.controls['Email'].hasError('email') && !registerFormGroup.controls['Email'].hasError('required')">
+              Введите настоящий Email
+            </mat-error>
+            <mat-error *ngIf="registerFormGroup.controls['Email'].hasError('required')">
+              Email пользователя <strong>обязателен</strong>.
+            </mat-error>
           </mat-form-field>
-        </div>
 
-        <div class="form-group">
-          <mat-form-field>
-            <input matInput placeholder="Password" type="password" name="password" required [(ngModel)]="model.Password">
+          <mat-form-field class="field-full-width my-3">
+            <input matInput placeholder="Пароль" formControlName="Password" minlength="6" maxLength="12" required>
+            <mat-hint>Ошибки появятся сразу при неверном вводе.</mat-hint>
+            <mat-error *ngIf="registerFormGroup.controls['Password'].hasError('minLength') && !registerFormGroup.controls['Password'].hasError('required')">
+              Пожалуйста введите пароль от 6-и символов.
+            </mat-error>
+            <mat-error *ngIf="registerFormGroup.controls['Password'].hasError('required')">
+              Пароль <strong>обязателен</strong> для заполнения.
+            </mat-error>
           </mat-form-field>
+
+          <div>
+            <button mat-button type="submit" [disabled]="registerFormGroup.invalid">Далее</button>
+          </div>
+
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="confirmEmailGroup" *ngIf="confirmEmailGroup">
+        <form [formGroup]="confirmEmailGroup" (ngSubmit)="onConfirmEmail()">
+          <ng-template matStepLabel>Введите код подтвержденния высланный на указаный ранее емаил:</ng-template>
+          <mat-form-field class="field-full-width my-3">
+            <input matInput placeholder="Код потверждения" formControlName="confirmEmailToken" minlength="6" maxLength="6"
+              required>
+            <mat-hint>Ошибки появятся сразу при неверном вводе.</mat-hint>
+            <mat-error *ngIf="confirmEmailGroup.controls['confirmEmailToken'].hasError('pattern') && !confirmEmailGroup.controls['confirmEmailToken'].hasError('required')">
+              Код подтверждения может содержать только цыфры от 0 до 9.
+            </mat-error>
+            <mat-error *ngIf="confirmEmailGroup.controls['confirmEmailToken'].hasError('required')">
+              Пароль <strong>обязателен</strong> для заполнения.
+            </mat-error>
+            <mat-error *ngIf="errors">
+              <strong>{{errors}}</strong>
+            </mat-error>
+          </mat-form-field>
+          <div>
+            <button mat-button [disabled]="confirmEmailGroup.invalid">Завершить регистрацию</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Завершено</ng-template>
+        Поздравляем, вы зарегестрированны в системе...
+        <div>
+          <button mat-button (click)="goHomePage()">
+            <mat-icon>home</mat-icon>На главную
+          </button>
         </div>
-
-        <div class="form-group">
-          <p>{{errors}}</p>
-        </div>
-
-        <div class="form-group">
-          <button mat-button type="submit" ng-disabled="ngForm.invalid">Submit</button>
-        </div>
-
-        <div *ngIf="this.isEmailConfirmationRequested">
-          <div>Для завершения регистрации введите код подтверждения email, отправленный на ваш почтовый адрес.</div>
-          <div><input #emailTokenInput type="text"></div>
-          <div><button (click)="this.confirmEmail(emailTokenInput.value)">Подтвердить</button></div>
-        </div>
-
-      </form>
-    </div>
-
-
-
+      </mat-step>
+    </mat-vertical-stepper>
 
   </mat-card-content>
 </mat-card>

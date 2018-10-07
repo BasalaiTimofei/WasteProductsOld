@@ -27,10 +27,6 @@ export class AccountPanelButtonComponent implements OnInit {
     this.hasUnreadNotifications$ = this.notificationService.hasUnreadNotifications$;
   }
 
-  logIn(event: Event) {
-    this.authService.logIn();
-  }
-
   openSheet(): void {
     this.bottomSheet.open(AccountPanelComponent);
   }
