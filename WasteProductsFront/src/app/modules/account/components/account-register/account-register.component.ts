@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { RegistrationModel } from '../../models/registration';
 import { AuthenticationService } from '../../services/authentication.service';
 import { UserService } from '../../../../services/user/user.service';
+import { LoginModel } from '../../models/login';
 
 
 @Component({
@@ -84,7 +85,13 @@ export class AccountRegisterComponent implements OnInit {
 
       this.userService.confirmEmail(this.registredUserid, token)
         .subscribe(
-          () => this.toNextStep(),
+          () => {
+            const loginModel: LoginModel = {
+              UserName: this.registerFormGroup.controls['UserName'].value,
+              Password: this.registerFormGroup.controls['Password'].value
+            };
+            this.authService.logInResourceOwnerFlow(loginModel).subscribe(() => this.toNextStep());
+          },
           () => this.errors = 'Неверный код подтверждения');
     }
   }
