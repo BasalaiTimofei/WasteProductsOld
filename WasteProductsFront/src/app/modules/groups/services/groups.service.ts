@@ -64,4 +64,23 @@ export class GroupsService extends BaseHttpService {
       catchError(this.handleError('deleteGroup'))
     );
   }
+
+
+  comeIntoGroup(groupId: string, userId): Observable<any> {
+    const url = `${this.apiUrl}/${groupId}/invite/${userId}`;
+    return this.httpService.post(url, {}).pipe(
+      tap(response => this.logDebug('comming into group')),
+      catchError(this.handleError('comeIntoGroup'))
+    );
+
+  }
+
+  leftGroup(groupId: string, userId: string): Observable<any> {
+    const url = `${this.apiUrl}/${groupId}/kick/${userId}`;
+
+    return this.httpService.delete(url).pipe(
+      tap(response => this.logDebug('lefting group')),
+      catchError(this.handleError('leftGroup'))
+    );
+  }
 }

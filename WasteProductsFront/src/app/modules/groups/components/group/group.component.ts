@@ -36,11 +36,11 @@ export class GroupComponent implements OnInit {
       });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.updateInfo(result);
+      this.updateGroupInfo(result);
     });
   }
 
-  updateInfo(groupInfo: GroupInfoModel) {
+  updateGroupInfo(groupInfo: GroupInfoModel) {
     this.groupsService.updateGroup(this.group.Id, groupInfo).subscribe(group => this.group = Object.assign(this.group, groupInfo));
   }
 

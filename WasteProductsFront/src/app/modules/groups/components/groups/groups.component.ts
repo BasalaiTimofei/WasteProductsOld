@@ -7,6 +7,8 @@ import { AuthenticationService } from '../../../account/services/authentication.
 import { GroupModel, GroupOfUserModel, GroupInfoModel } from '../../models/group';
 import { MatDialog } from '@angular/material';
 import { GroupDialogInfoComponent } from '../group-dialog-info/group-dialog-info.component';
+import { ConfirmModel } from '../../models/confirm';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-groups',
@@ -64,13 +66,39 @@ export class GroupsComponent implements OnInit {
   deleteGroup(groupId: string, event: Event) {
     this.onItemClick(event);
 
-    this.groupsService.deleteGroup(groupId).subscribe(() => this.getGroups());
+    const dialogRef = this.dialog.open<ConfirmDialogComponent, ConfirmModel, boolean>(
+      ConfirmDialogComponent, {
+        // width: '250px',
+        data: {
+          title: 'Подтвердите',
+          question: 'Вы действительно хотите удалить группу?'
+        }
+      });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.groupsService.deleteGroup(groupId).subscribe(() => this.getGroups());
+      }
+    });
   }
 
   leftGroup(groupId: string, event: Event) {
     this.onItemClick(event);
 
-    this.groupsService.getGroup(groupId).subscribe(() => this.getGroups());
+    const dialogRef = this.dialog.open<ConfirmDialogComponent, ConfirmModel, boolean>(
+      ConfirmDialogComponent, {
+        // width: '250px',
+        data: {
+          title: 'Подтвердите',
+          question: 'Вы действительно хотите покинуть группу?'
+        }
+      });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.groupsService.leftGroup(groupId, this.userId).subscribe(() => this.getGroups());
+      }
+    });
   }
 
 
