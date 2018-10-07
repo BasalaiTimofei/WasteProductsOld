@@ -1,22 +1,20 @@
 <button mat-icon-button [matMenuTriggerFor]="menu">
-        <mat-icon>menu</mat-icon>
-      </button>
+  <mat-icon>menu</mat-icon>
+</button>
 
-      <mat-menu #menu="matMenu">
-            <button mat-menu-item [matMenuTriggerFor]="myCabinet">Мой кабинет</button>
-            <button mat-button href="#" routerLink="/all-to-list" style="margin: 10px;" routerLinkActive="active">
-                Продукты
-            </button>
-          </mat-menu>
+<mat-menu #menu="matMenu">
+  <button mat-menu-item [matMenuTriggerFor]="myCabinet">Мой кабинет</button>
+  <button mat-menu-item routerLink="/all-to-list">Продукты</button>
+</mat-menu>
 
 <mat-menu #myCabinet="matMenu">
-  <button mat-menu-item  href="#" routerLink="/friends" style="margin: 10px;" routerLinkActive="active">
-      <a>Мои друзья</a>
+  <button mat-menu-item href="#" routerLink="/friends"  routerLinkActive="active">
+    <a>Мои друзья</a>
   </button>
-  <button mat-menu-item href="#" routerLink="/products" style="margin: 10px;" routerLinkActive="active">
-      <a>Мои продукты</a>
+  <button mat-menu-item href="#" routerLink="/products" routerLinkActive="active">
+    <a>Мои продукты</a>
   </button>
-  <button mat-menu-item href="#" routerLink="/groups" style="margin: 10px;" routerLinkActive="active">
-      <a>Мои группы</a>
+  <button mat-menu-item href="#" routerLink="/groups" routerLinkActive="active">
+    <a>Мои группы</a>
   </button>
 </mat-menu>

@@ -4,9 +4,6 @@ import { NgForm } from '@angular/forms';
 import { LoginModel } from '../../models/login';
 import { AuthenticationService } from '../../services/authentication.service';
 
-
-
-
 @Component({
   selector: 'app-account-login',
   templateUrl: './account-login.component.html',

@@ -6,20 +6,16 @@
     text-decoration: none;
     font-size: 16px
 }
-.mat-button:hover {
-    color: darkgray;
-}
+
 .mat-menu-item{
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
-    text-align: center;
+    text-align: left;
     font-size: 14px;
     width: 160px;
     background-clip: padding-box;
 }
-.mat-menu-item:hover {
-    color: darkgrey;
-}
+
 .mat-menu{
     width: 130px;
 

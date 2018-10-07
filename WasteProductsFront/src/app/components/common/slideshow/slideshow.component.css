@@ -4,3 +4,7 @@ mat-card{
 .container{
 padding-right: 40px;
 }
+.slider-img{
+  width: 1240px;
+  height: 620px;
+}
