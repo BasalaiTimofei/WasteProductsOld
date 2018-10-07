@@ -1,16 +1,19 @@
 <mat-card>
   <div class="example-form">
     <mat-form-field class="example-full-width">
-      <input matInput [(ngModel)]="query" placeholder="Поиск ...." value="">
+      <input matInput [(ngModel)]="query" placeholder="Поиск ...." (keyup.enter)="search(query)">
     </mat-form-field>
-    <button matSuffix mat-button mat-icon-button aria-label="search" (click)="search(query)">
+    <button matSuffix mat-button mat-icon-button (click)="search(query)">
       <mat-icon>search</mat-icon>
     </button>
   </div>
 
   <mat-list >
     <mat-list-item *ngFor="let item of tempResult$ | async">
-      {{query}}
+      {{item.Name}}
+      <button matSuffix mat-button mat-icon-button (click)="productClicked(item.Id)">
+        <mat-icon>assignment</mat-icon>
+      </button>
     </mat-list-item>
   </mat-list>
 
