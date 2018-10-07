@@ -14,14 +14,13 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// </summary>
         /// <param name="item">Object</param>
         /// <param name="adminId">Primary key</param>
-        Task Invite(GroupUser item, string adminId);
+        Task Invite(GroupUser item);
 
         /// <summary>
         /// Kicks user from the group.
         /// </summary>
         /// <param name="item">Object</param>
-        /// <param name="adminId">Primary key</param>
-        Task Kick(GroupUser item, string adminId);
+        Task Kick(GroupUser item);
 
         /// <summary>
         /// Entitles user to create boards in the group.

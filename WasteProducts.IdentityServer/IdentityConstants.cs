@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WasteProducts.IdentityServer
+﻿namespace WasteProducts.IdentityServer
 {
     public class IdentityConstants
     {
@@ -18,3 +16,4 @@ namespace WasteProducts.IdentityServer
         //public static string WasteProducts_Front_ClientUrl = "http://localhost:4200";
     }
 }
+

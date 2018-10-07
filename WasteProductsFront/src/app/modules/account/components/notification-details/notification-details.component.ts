@@ -20,12 +20,12 @@ export class NotificationDetailsComponent implements OnInit {
     private location: Location) { }
 
   ngOnInit() {
-    this.getNotification();
+    const notificationId = this.route.snapshot.paramMap.get('id');
+    this.getNotification(notificationId);
   }
 
-  getNotification(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.notificationService.getById(id).subscribe(notfication => {
+  getNotification(notificationId: string): void {
+    this.notificationService.getById(notificationId).subscribe(notfication => {
       this.notfication = notfication;
       if (!notfication.Read) {
         this.notificationService.markAsRead(notfication.Id);

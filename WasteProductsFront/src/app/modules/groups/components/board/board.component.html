@@ -1,0 +1,70 @@
+<mat-card>
+  <mat-card-header class="full-width">
+    <mat-card-title class="full">
+      <div style="display: inline-block">
+        <h2>{{board.Name}}</h2>
+      </div>
+      <div style="display:inline-block">
+        <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu" xPosition="before">
+          <button mat-menu-item (click)="addProduct()">
+            <mat-icon>add</mat-icon>Добавить продукт
+          </button>
+          <button mat-menu-item (click)="editBoard()">
+            <mat-icon>edit</mat-icon>Редактировать
+          </button>
+          <button mat-menu-item (click)="deleteBoard()">
+            <mat-icon>delete</mat-icon>Удалить
+          </button>
+        </mat-menu>
+      </div>
+
+
+
+
+      <!-- <mat-toolbar color="secondary" class="full-width">
+        <mat-icon>group</mat-icon><span class="px-3">{{board.Name}}</span>
+
+        <span class="toolbar-spacer"></span>
+
+
+      </mat-toolbar> -->
+
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="dashboard-card-content">
+
+    <p class="lead">{{board.Information}}</p>
+
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let product of board.GroupProducts">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h4 mat-line>{{product.Name | titlecase}}</h4>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-panel-description>
+          This is a summary of the content
+        </mat-panel-description>
+
+        <ng-template matExpansionPanelContent>
+          {{product.Information}}
+        </ng-template>
+
+        <mat-action-row>
+          <button mat-icon-button color="accent" matTooltip="Edit product" (click)="editProduct(product.Id)">
+            <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" matTooltip="Delete product" (click)="deleteProduct(product.Id)">
+            <mat-icon aria-label="Example icon-button with a heart icon">delete</mat-icon>
+          </button>
+        </mat-action-row>
+      </mat-expansion-panel>
+
+    </mat-accordion>
+
+  </mat-card-content>
+</mat-card>
