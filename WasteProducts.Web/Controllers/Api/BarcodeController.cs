@@ -55,6 +55,8 @@ namespace WasteProducts.Web.Controllers.Api
         [HttpPost, Route("read")]
         public async Task<IHttpActionResult> GetBarcodeAsync(Stream uploadStream)
         {
+            // Изменить метод ParseBarcodePhoto, добавить в него Task.Run если 
+            // он и в самом деле будет использоваться через контроллер!!!
             return Ok(_scanner.ParseBarcodePhoto(uploadStream));
         }
     }
