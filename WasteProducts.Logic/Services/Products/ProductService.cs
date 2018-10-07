@@ -105,23 +105,10 @@ namespace WasteProducts.Logic.Services.Products
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<Product>> GetAllAsync()
+        public Task<IEnumerable<Product>> GetAllAsync()
         {
-            var subResult = await _productRepository.SelectAllAsync();
-
-            IEnumerable<Product> result = null;
-            try
-            {
-                result = _mapper.Map<IEnumerable<Product>>(subResult);
-            }
-            catch(Exception e)
-            {
-
-            }
-            return result;
-
-            //return _productRepository.SelectAllAsync()
-            //    .ContinueWith(t => _mapper.Map<IEnumerable<Product>>(t.Result));
+            return _productRepository.SelectAllAsync()
+                .ContinueWith(t => _mapper.Map<IEnumerable<Product>>(t.Result));
         }
 
         /// <inheritdoc/>
