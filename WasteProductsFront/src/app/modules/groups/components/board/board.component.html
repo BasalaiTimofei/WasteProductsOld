@@ -1,24 +1,36 @@
 <mat-card>
   <mat-card-header class="full-width">
-    <mat-card-title>
-
-      <mat-toolbar color="secondary">
-        <mat-icon>group</mat-icon><span class="px-3">{{board.Name}}</span>
-
-        <span class="toolbar-spacer"></span>
-
+    <mat-card-title class="full">
+      <div style="display: inline-block">
+        <h2>{{board.Name}}</h2>
+      </div>
+      <div style="display:inline-block">
         <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu" xPosition="before">
+          <button mat-menu-item (click)="addProduct()">
+            <mat-icon>add</mat-icon>Добавить продукт
+          </button>
           <button mat-menu-item (click)="editBoard()">
-            <mat-icon>edit</mat-icon>Edit
+            <mat-icon>edit</mat-icon>Редактировать
           </button>
           <button mat-menu-item (click)="deleteBoard()">
-            <mat-icon>delete</mat-icon>Delete
+            <mat-icon>delete</mat-icon>Удалить
           </button>
         </mat-menu>
-      </mat-toolbar>
+      </div>
+
+
+
+
+      <!-- <mat-toolbar color="secondary" class="full-width">
+        <mat-icon>group</mat-icon><span class="px-3">{{board.Name}}</span>
+
+        <span class="toolbar-spacer"></span>
+
+
+      </mat-toolbar> -->
 
     </mat-card-title>
   </mat-card-header>
@@ -51,10 +63,6 @@
           </button>
         </mat-action-row>
       </mat-expansion-panel>
-
-      <a mat-list-item (click)="addProduct()" matTooltip="Add product">
-        <mat-icon class="mx-auto">add</mat-icon>
-      </a>
 
     </mat-accordion>
 

@@ -14,7 +14,7 @@ export class LightSearchComponent implements OnInit {
 
   private tempResultSubject: BehaviorSubject<SearchProduct[]> = new BehaviorSubject<SearchProduct[]>([]);
   tempResult$: Observable<SearchProduct[]> = this.tempResultSubject.asObservable();
-  @Output() productClickedEvent: EventEmitter<string> = new EventEmitter<string>();
+  @Output() productClickedEvent: EventEmitter<any> = new EventEmitter<any>();
 
   query: string;
   searchResult: SearchProduct[];
@@ -41,8 +41,8 @@ export class LightSearchComponent implements OnInit {
     }
   }
 
-  productClicked(productId: string) {
-    this.productClickedEvent.emit(productId);
+  productClicked(product: any) {
+    this.productClickedEvent.emit(product);
   }
 
   public changePageEvent(event?: PageEvent) {

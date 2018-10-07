@@ -75,14 +75,14 @@ export class BoardComponent implements OnInit {
   addProduct() {
     const dialogRef = this.dialog.open<BoardProductDialogComponent, any, ProductInfoModel>(
       BoardProductDialogComponent, {
-        width: '450px',
-        height: '800px'
+        /* width: '450px',
+        height: '800px' */
       });
 
     dialogRef.afterClosed().subscribe(productInfo => {
       if (productInfo) {
         this.boardService.addProduct(this.board.Id, productInfo).subscribe(
-          () => { }
+          (p) => { this.board.GroupProducts.push(p); }
         );
       }
     });

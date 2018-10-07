@@ -10,6 +10,7 @@ import { ProductInfoModel } from '../../models/product';
 export class BoardProductDialogComponent implements OnInit {
 
   model: ProductInfoModel = new ProductInfoModel();
+  selectedProduct: any;
 
   constructor(
     private dialogRef: MatDialogRef<BoardProductDialogComponent, ProductInfoModel>) {
@@ -19,8 +20,10 @@ export class BoardProductDialogComponent implements OnInit {
   ngOnInit() {
   }
 
-  productSelected(productId: string) {
-    this.model.ProductId = productId;
+  productSelected(product: any) {
+    this.model.ProductId = product.Id;
+    this.model.Name = product.Name;
+    this.selectedProduct = product;
   }
 
 }

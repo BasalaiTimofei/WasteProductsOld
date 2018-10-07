@@ -6,4 +6,5 @@ export class ProductInfoModel {
 
 export class ProductModel extends ProductInfoModel {
   Id: string;
+  GroupBoardId: string;
 }

@@ -51,7 +51,10 @@ export class BoardService extends BaseHttpService {
   addProduct(boardId: string, productInfo: ProductInfoModel): Observable<ProductModel> {
     const url = `${this.apiUrl}/board/${boardId}/product`;
 
-    return this.httpService.post<ProductModel>(url, productInfo).pipe(
+    const data: ProductModel= Object.assign(new ProductModel(), productInfo);
+    data.GroupBoardId = boardId;
+
+    return this.httpService.post<ProductModel>(url, data).pipe(
       tap(response => this.logDebug('adding board to board')),
       catchError(this.handleError('addProduct', null))
     );
