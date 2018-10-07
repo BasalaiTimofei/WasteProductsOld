@@ -82,13 +82,14 @@ export class BoardComponent implements OnInit {
     dialogRef.afterClosed().subscribe(productInfo => {
       if (productInfo) {
         this.boardService.addProduct(this.board.Id, productInfo).subscribe(
-          (p) => { this.board.GroupProducts.push(p); }
+          product => {
+            if (product) {
+              this.board.GroupProducts.push(product);
+            }
+          }
         );
       }
     });
-
-
-
   }
 
   deleteProduct(productId: string) {

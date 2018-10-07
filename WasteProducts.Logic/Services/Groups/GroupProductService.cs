@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
 using WasteProducts.Logic.Common.Models.Groups;
@@ -29,6 +29,10 @@ namespace WasteProducts.Logic.Services.Groups
                 x => x.Id == result.GroupBoardId).ConfigureAwait(false)).FirstOrDefault();
             if (modelBoard == null)
                 throw new ValidationException("Board not found");
+
+            var modelProduct = await _dataBase.Find<GroupProductDB>(x => x.ProductId == result.ProductId).ConfigureAwait(false);
+            if (modelProduct.Any())
+                throw new ValidationException("Product already added");
 
             result.Id = Guid.NewGuid().ToString();
             result.Modified = DateTime.UtcNow;

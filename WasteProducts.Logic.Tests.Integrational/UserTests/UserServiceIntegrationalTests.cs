@@ -463,8 +463,8 @@ namespace WasteProducts.Logic.Tests.UserTests
             };
             using (var guService = _kernel.Get<IGroupUserService>())
             {
-               await guService.Invite(groupUser1, _usersIds[0]);
-               await guService.Invite(groupUser2, _usersIds[0]);
+               await guService.Invite(groupUser1);
+               await guService.Invite(groupUser2);
             }
         }
 

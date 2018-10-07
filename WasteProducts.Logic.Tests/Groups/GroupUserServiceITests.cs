@@ -3,8 +3,8 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using FluentValidation;
 using WasteProducts.DataAccess.Common.Models.Groups;
 using WasteProducts.DataAccess.Common.Repositories.Groups;
 using WasteProducts.Logic.Common.Models.Groups;
@@ -86,7 +86,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, bool>>()))
                 .ReturnsAsync(_selectedUserList);
 
-            Task.Run(()=>_groupUserService.Invite(_groupUser, "2")).Wait();
+            Task.Run(()=>_groupUserService.Invite(_groupUser)).Wait();
 
             _groupRepositoryMock.Verify(m => m.Create(It.IsAny<GroupUserDB>()), Times.Once);
         }
@@ -98,7 +98,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, bool>>()))
                 .ReturnsAsync(_selectedUserList);
 
-            Assert.ThrowsAsync<ValidationException>(()=>_groupUserService.Invite(_groupUser, "2"));
+            Assert.ThrowsAsync<ValidationException>(()=>_groupUserService.Invite(_groupUser));
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, bool>>()))
                 .ReturnsAsync(_selectedUserList);
 
-            Task.Run(() => _groupUserService.Kick(_groupUser, "2")).Wait();
+            Task.Run(() => _groupUserService.Kick(_groupUser)).Wait();
 
             _groupRepositoryMock.Verify(m => m.Delete(It.IsAny<GroupUserDB>()), Times.Once);
         }
@@ -123,7 +123,7 @@ namespace WasteProducts.Logic.Tests.GroupManagementTests
             _groupRepositoryMock.Setup(m => m.Find(It.IsAny<Func<GroupUserDB, bool>>()))
                 .ReturnsAsync(_selectedUserList);
 
-            Assert.ThrowsAsync<ValidationException>(() => _groupUserService.Kick(_groupUser, "2"));
+            Assert.ThrowsAsync<ValidationException>(() => _groupUserService.Kick(_groupUser));
         }
 
         [Test]

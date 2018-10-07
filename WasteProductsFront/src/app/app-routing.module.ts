@@ -47,7 +47,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'groups',
+    path: 'groups', canActivate: [AuthenticationGuard],
     loadChildren: './modules/groups/groups.module#GroupsModule'
   },
 
