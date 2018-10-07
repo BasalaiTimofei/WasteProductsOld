@@ -1,16 +1,16 @@
 <nav>
   <mat-nav-list>
     <mat-list-item (click)="openLink($event)">
-      <button mat-button routerLink="/account" routerLinkActive="active">Account</button>
+      <button mat-button routerLink="/settings" routerLinkActive="active">Настройки</button>
     </mat-list-item>
     <mat-list-item (click)="openLink($event)">
       <button mat-button routerLink="/account/notifications" routerLinkActive="active">
-        Notifications&nbsp;
+        Уведомления&nbsp;
         <span *ngIf="hasUnreadNotifications$ | async" class="badge badge-danger">{{unreadNotifcationsCount$ | async}}</span>
       </button>
     </mat-list-item>
     <mat-list-item (click)="openLink($event)">
-      <button mat-button routerLink="/logout">Log Out</button>
+      <button mat-button routerLink="/logout">Выйти</button>
     </mat-list-item>
   </mat-nav-list>
 </nav>
