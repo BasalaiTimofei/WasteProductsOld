@@ -6,6 +6,7 @@ using WasteProducts.DataAccess.Common.Context;
 using WasteProducts.DataAccess.Common.Repositories.Diagnostic;
 using WasteProducts.Logic.Common.Models.Diagnostic;
 using WasteProducts.Logic.Common.Services.Diagnostic;
+using WasteProducts.Logic.Common.Services.Products;
 using WasteProducts.Logic.Services;
 
 namespace WasteProducts.Logic.Tests.Diagnostic_Tests
@@ -17,6 +18,7 @@ namespace WasteProducts.Logic.Tests.Diagnostic_Tests
         private Mock<ILogger> _loggerMoq;
         private Mock<IDatabase> _databaseMoq;
         private Mock<IDiagnosticRepository> _diagRepoMoq;
+        private Mock<IProductService> _prodServiceMoq;
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
@@ -24,6 +26,7 @@ namespace WasteProducts.Logic.Tests.Diagnostic_Tests
             _loggerMoq = new Mock<ILogger>();
             _databaseMoq = new Mock<IDatabase>();
             _diagRepoMoq = new Mock<IDiagnosticRepository>();
+            _prodServiceMoq = new Mock<IProductService>();
         }
 
         [TearDown]
@@ -94,6 +97,6 @@ namespace WasteProducts.Logic.Tests.Diagnostic_Tests
             _diagRepoMoq.Verify(s => s.RecreateAsync(), Times.Once);
         }
 
-        IDbService GetDbService() => new DbService(_diagRepoMoq.Object, _databaseMoq.Object, _loggerMoq.Object);
+        IDbService GetDbService() => new DbService(_diagRepoMoq.Object, _databaseMoq.Object, _prodServiceMoq.Object, _loggerMoq.Object);
     }
 }

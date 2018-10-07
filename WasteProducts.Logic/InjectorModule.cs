@@ -153,6 +153,7 @@ namespace WasteProducts.Logic
                 {
                     cfg.AddProfile<UserProfile>();
                     cfg.AddProfile<ProductProfile>();
+                    cfg.AddProfile<BarcodeProfile>();
                     cfg.AddProfile<UserProductDescriptionProfile>();
                     cfg.AddProfile<FriendProfile>();
                     cfg.AddProfile<UserProductProfile>();
