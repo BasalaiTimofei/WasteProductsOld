@@ -10,7 +10,7 @@ input.search-style {
   transition: .3s ease-in-out;
 }
 input.search-style:focus {
-  width: 320px;
+  width: 260px;
 }
 
 .search-form {
@@ -24,7 +24,7 @@ input.search-style:focus {
 }
 
 .nav-list {
-  width: 320px;
+  width: 260px;
   background: gray;
   position: relative;
 }
