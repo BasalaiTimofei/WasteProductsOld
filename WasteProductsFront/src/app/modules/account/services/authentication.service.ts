@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 /* Services */
 import { BaseHttpService } from 'src/app/services/base/base-http.service';
 import { LoggingService } from 'src/app/services/logging/logging.service';
@@ -8,8 +9,9 @@ import { OAuthService, JwksValidationHandler, AuthConfig } from 'angular-oauth2-
 /* Environment */
 import { environment } from 'src/environments/environment';
 
-import { Registration } from '../models/registration';
+import { RegistrationModel } from '../models/registration';
 import { LoginModel } from '../models/login';
+
 
 
 declare interface Claims {
@@ -24,7 +26,7 @@ declare interface Claims {
   /**
      * Is email verified
      */
-  email_varified: string;
+  email_verified: string;
   /**
      * Full name
      */
@@ -45,26 +47,39 @@ export class AuthenticationService extends BaseHttpService {
     this.configureOauth();
   }
 
-  register(registrationModel: Registration): Observable<any> {
+  register(registrationModel: RegistrationModel): Observable<any> {
     const url = `${environment.apiHostUrl}/api/user/register`;  // URL to web api
-    return this.httpService.post<any>(url, registrationModel);
+    return this.httpService.post<any>(url, registrationModel).pipe(
+      tap(data => this.logDebug('registering new user')),
+      catchError(this.handleError('getState', null))
+    );
   }
 
-  logIn(userModel?: LoginModel): void {
-    if (userModel) {
-      this.oauthService.fetchTokenUsingPasswordFlowAndLoadUserProfile(userModel.UserName, userModel.Password)
-        .then(() => this.logDebug('LogIn completed'))
-        .catch(() => this.logError('LogIn error'));
-    } else {
-      this.oauthService.initImplicitFlow();
-    }
+  logInResourceOwnerFlow(userModel: LoginModel): Observable<boolean> {
+    const result: Subject<boolean> = new Subject<boolean>();
+
+    this.oauthService.fetchTokenUsingPasswordFlowAndLoadUserProfile(userModel.UserName, userModel.Password)
+      .then(() => {
+        result.next(true);
+        this.logDebug('LogIn completed');
+      })
+      .catch(() => {
+        result.next(false);
+        this.logError('LogIn error');
+      });
+
+    return result.asObservable();
+  }
+
+  logInImplicitFlow() {
+    this.oauthService.initImplicitFlow();
   }
 
   logOut(): void {
     this.oauthService.logOut();
   }
 
-  getProfile(): object {
+  getProfile(): Promise<object> {
     return this.oauthService.loadUserProfile();
   }
 
@@ -114,7 +129,7 @@ export class AuthenticationService extends BaseHttpService {
     // subscribe to login/logout events
     this.oauthService.events.subscribe(event => {
       const oldValue = this.isAuthenticatedSubject.value;
-      const newValue = this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken();
+      const newValue = this.oauthService.hasValidAccessToken();
       if (oldValue !== newValue) {
         this.isAuthenticatedSubject.next(newValue);
       }
@@ -132,7 +147,7 @@ export class AuthenticationService extends BaseHttpService {
       dummyClientSecret: environment.dummyClientSecret,
 
       showDebugInformation: !environment.production,
-      sessionChecksEnabled: true,
+      // sessionChecksEnabled: true,
     };
   }
 }

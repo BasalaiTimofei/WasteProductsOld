@@ -25,13 +25,14 @@ import { NotificationDetailsComponent } from './modules/account/components/notif
 import { AddProductComponent } from './components/products/add-product/add-product.component';
 import { ChangePasswordComponent } from './components/user/settings/change-password/change-password.component';
 import { AllToListComponent } from './components/products/all-to-list/all-to-list.component';
-import { ConfirmEmailChangingComponent } from './components/user/settings/confirm-email-changing/confirm-email-changing.component';
 import { ResetPasswordComponent } from './modules/account/components/reset-password/reset-password.component';
+import { AccountLogoutComponent } from './modules/account/components/account-logout/account-logout.component';
 
 const routes: Routes = [
   { path: '', component: DefaultComponent, pathMatch: 'full' },
   { path: 'register', component: AccountRegisterComponent },
   { path: 'login', component: AccountLoginComponent },
+  { path: 'logout', component: AccountLogoutComponent },
   {
     path: 'account', canActivate: [AuthenticationGuard],
     children: [
@@ -42,11 +43,9 @@ const routes: Routes = [
           { path: '', component: NotificationListComponent, pathMatch: 'full' },
           { path: 'details/:id', component: NotificationDetailsComponent },
         ]
-      },
-      { path: 'details/:id', component: NotificationDetailsComponent },
+      }
     ]
   },
-  { path: 'details/:id', component: NotificationDetailsComponent },
   { path: 'common/mainpage', component: MainPageComponent },
 
   { path: 'friends', component: FriendsComponent, canActivate: [AuthenticationGuard] },
@@ -54,13 +53,15 @@ const routes: Routes = [
   { path: 'changepassword', component: ChangePasswordComponent, canActivate: [AuthenticationGuard] },
   { path: 'resetpassword', component: ResetPasswordComponent },
 
-  { path: 'products', component: ProductsComponent, canActivate: [AuthenticationGuard], children: [
-    { path: 'add-product', component: AddProductComponent },
-  ]},
+  {
+    path: 'products', component: ProductsComponent, canActivate: [AuthenticationGuard], children: [
+      { path: 'add-product', component: AddProductComponent },
+    ]
+  },
   { path: 'all-to-list', component: AllToListComponent },
   { path: 'groups', component: GroupsComponent },
   { path: 'products/myproducts', component: ToListComponent },
-  { path: 'groups/mygroups', component: GroupsOfUserComponent},
+  { path: 'groups/mygroups', component: GroupsOfUserComponent },
   { path: 'searchresults/:query', component: SearchresultComponent },
   { path: '**', component: NotFoundComponent },
 ];
