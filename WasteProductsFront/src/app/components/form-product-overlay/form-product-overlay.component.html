@@ -24,8 +24,11 @@
     <div class="error-validation" *ngIf="errorValidation">
       <p>Поле Мой комментарий не может быть пустым</p>
     </div>
-    <button type="submit" (click)="addToMyProducts(comment.value, rate.value)" mat-button>Добавить</button>
+    <button *ngIf="!form.editMode; else editProduct" type="submit" (click)="addToMyProducts(comment.value, rate.value)" mat-button>Добавить</button>
     <button mat-button (click)="closeForm()">Отмена</button>
+    <ng-template #editProduct>
+      <button type="submit" (click)="editMyProducts(comment.value, rate.value)" mat-button>Редактировать</button>
+    </ng-template>
   </form>
 
 </div>
