@@ -29,7 +29,9 @@ namespace WasteProducts.Logic.Services.Groups
             result.GroupUsers = null;
 
             var searchResult = await _dataBase.Find<GroupDB>(
-                x => x.AdminId == result.AdminId && x.Name == result.Name && x.IsNotDeleted).ConfigureAwait(false);
+                x => x.AdminId == result.AdminId 
+                && x.Name == result.Name 
+                && x.IsNotDeleted).ConfigureAwait(false);
 
             if (searchResult.Any())
             {

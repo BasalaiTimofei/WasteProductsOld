@@ -1,21 +1,32 @@
+span {
+  font-weight: bold;
+}
+
 .app-products-table{
-    width: 95%;
-    margin: 20px auto;
+  width: 95%;
+  margin: 20px auto;
 }
 .mat-form-field {
-    font-size: 16px;
-    width: 100%;;
-  }
-  .mat-flat-button{
-      background-color: lightcoral
-  }
+  font-size: 16px;
+  width: 100%;;
+}
+.mat-flat-button{
+  background-color: lightcoral
+}
 
-  .product-picture {
-      background-position: center center;
-      background-size: contain;
-      width: 225px;
-      height: 225px;
-  }
+.product-picture {
+  background-position: center center;
+  background-size: contain;
+  width: 225px;
+  height: 225px;
+}
+
+.mat-header-cell {
+  font-weight: bold;
+  font-size: 0.8rem;
+  text-align: center;
+  vertical-align: middle;
+}
 
   table {
     width: 100%;
@@ -40,27 +51,4 @@
   .example-element-detail {
     overflow: hidden;
     display: flex;
-  }
-  
-  .example-element-diagram {
-    min-width: 80px;
-    border: 2px solid black;
-    padding: 8px;
-    font-weight: lighter;
-    margin: 8px 0;
-    height: 104px;
-  }
-  
-  .example-element-symbol {
-    font-weight: bold;
-    font-size: 40px;
-    line-height: normal;
-  }
-  
-  .example-element-description {
-    padding: 16px;
-  }
-  
-  .example-element-description-attribution {
-    opacity: 0.5;
   }

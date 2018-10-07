@@ -11,9 +11,9 @@ namespace WasteProducts.Logic.Mappings.Barcods
         public BarcodeProfile()
         {
             CreateMap<Barcode, BarcodeDB>()
-                .ForMember(m => m.Created,
-                    opt => opt.MapFrom(p => p.ProductName != null ? DateTime.UtcNow : default(DateTime)))
+
                 .ForMember(m => m.Modified, opt => opt.UseValue((DateTime?)null))
+                .ForMember(m => m.Product, opt => opt.Ignore())
                 .ReverseMap();
         }
     }

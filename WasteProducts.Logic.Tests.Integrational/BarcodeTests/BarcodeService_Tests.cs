@@ -57,7 +57,8 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
             using (Stream stream = new MemoryStream())
             {
                 _imageGood.Save(stream, ImageFormat.Bmp);
-                barcode = _service.GetBarcodeByStreamAsync(stream).Result;
+                var code = _service.ParseBarcodePhoto(stream);
+                barcode = _service.GetBarcodeFromCatalogAsync(code).Result;
             }
             
             //Assert
@@ -74,7 +75,8 @@ namespace WasteProducts.Logic.Tests.Barcode_Tests
             using (Stream stream = new MemoryStream())
             {
                 _imageBad.Save(stream, ImageFormat.Bmp);
-                barcode = _service.GetBarcodeByStreamAsync(stream).Result;
+                var code = _service.ParseBarcodePhoto(stream);
+                barcode = _service.GetBarcodeFromCatalogAsync(code).Result;
             }
 
             //Assert

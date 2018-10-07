@@ -23,8 +23,8 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// <summary>
         /// Board delete
         /// </summary>
-        /// <param name="item">Object</param>
-        Task Delete(GroupBoard item);
+        /// <param name="item">Primary key</param>
+        Task Delete(string boardId);
 
         /// <summary>
         /// Search board by id

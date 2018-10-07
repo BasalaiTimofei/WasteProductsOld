@@ -45,7 +45,8 @@ export class SearchService extends BaseHttpService {
           map(searchResult => {
             if (searchResult) {
               return searchResult.map(p =>
-                new SearchProduct(p.Id, p.Name, this.checkExistInUserProducts(userProducts, p.Id), p.PicturePath));
+                new SearchProduct(p.Id, p.Name, this.checkExistInUserProducts(userProducts, p.Id), p.PicturePath,
+                                  p.Composition, p.AvgRating));
             }
           }),
           catchError(
@@ -67,7 +68,7 @@ export class SearchService extends BaseHttpService {
       map(searchResult => {
         if (searchResult) {
           return searchResult.map(p =>
-              new SearchProduct(p.Id, p.Name, false, p.PicturePath));
+              new SearchProduct(p.Id, p.Name, false, p.PicturePath, p.Composition, p.AvgRating));
         }
       }),
       catchError(

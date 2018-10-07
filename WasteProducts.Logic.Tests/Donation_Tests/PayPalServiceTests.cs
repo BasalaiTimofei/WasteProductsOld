@@ -3,6 +3,7 @@ using Moq;
 using NUnit.Framework;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Donations;
 using WasteProducts.DataAccess.Common.Repositories.Donations;
 using WasteProducts.Logic.Common.Services.Donations;
@@ -35,58 +36,58 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
         public void SetupEachTest()
         {
             _verificationServiceMock = new Mock<IVerificationService>();            
-            _verificationServiceMock.Setup(s => s.IsVerified(It.IsAny<string>()))
-                .Returns(true);
+            _verificationServiceMock.Setup(s => s.IsVerifiedAsync(It.IsAny<string>()))
+                .Returns(Task.FromResult(true));
 
             _donationRepositoryMock = new Mock<IDonationRepository>();
-            _donationRepositoryMock.Setup(r => r.Contains(It.IsAny<string>()))
-                .Returns(false);
+            _donationRepositoryMock.Setup(r => r.ContainsAsync(It.IsAny<string>()))
+                .Returns(Task.FromResult(false));
         }
 
         [Test]
-        public void TestFraudTry()
+        public async Task TestFraudTryAsync()
         {
-            _verificationServiceMock.Setup(s => s.IsVerified(It.IsAny<string>()))
-                .Returns(false);
+            _verificationServiceMock.Setup(s => s.IsVerifiedAsync(It.IsAny<string>()))
+                .Returns(Task.FromResult(false));
 
-            Test();
+            await TestAsync().ConfigureAwait(false);
 
             WhetherAddRepositoryMethodHasBeenCalled(0);
         }
 
         [Test]
-        public void TestNotCompletedPayment()
+        public async Task TestNotCompletedPaymentAsync()
         {
-            Test(paymentStatus: IPN.Payment.Status.PROCESSED);
+            await TestAsync(paymentStatus: IPN.Payment.Status.PROCESSED).ConfigureAwait(false);
             WhetherAddRepositoryMethodHasBeenCalled(0);
         }
 
         [Test]
-        public void TestWithWrongReceiverEmail()
+        public async Task TestWithWrongReceiverEmailAsync()
         {
-            Test("WrongEmail@gmail.com");
+            await TestAsync("WrongEmail@gmail.com").ConfigureAwait(false);
             WhetherAddRepositoryMethodHasBeenCalled(0);
         }
 
         [Test]
-        public void TestAttemptToLogDonationThatHaveAlreadyBeenLogged()
+        public async Task TestAttemptToLogDonationThatHaveAlreadyBeenLoggedAsync()
         {
-            _donationRepositoryMock.Setup(r => r.Contains(It.IsAny<string>()))
-                .Returns(true);
+            _donationRepositoryMock.Setup(r => r.ContainsAsync(It.IsAny<string>()))
+                .Returns(Task.FromResult(true));
 
-            Test();
+            await TestAsync().ConfigureAwait(false);
 
             WhetherAddRepositoryMethodHasBeenCalled(0);
         }
 
         [Test]
-        public void TestCaseWhenYouNeedToLog()
+        public async Task TestCaseWhenYouNeedToLogAsync()
         {
-            Test();
+            await TestAsync().ConfigureAwait(false);
             WhetherAddRepositoryMethodHasBeenCalled(1);
         }
 
-        private void Test(string receiverEmail = AppSettings.OUR_PAYPAL_EMAIL,
+        private async Task TestAsync(string receiverEmail = AppSettings.OUR_PAYPAL_EMAIL,
             string paymentStatus = IPN.Payment.Status.COMPLETED)
         {
             PayPalService payPalService = CreatePayPalService();
@@ -95,13 +96,13 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
                 paymentStatus
                 );
 
-            payPalService.VerifyAndLog(payPalRequestString);
+            await payPalService.VerifyAndLogAsync(payPalRequestString).ConfigureAwait(false);
         }
 
         private void WhetherAddRepositoryMethodHasBeenCalled(int count)
         {
             _donationRepositoryMock
-                .Verify(d => d.Add(It.IsAny<DonationDB>()), Times.Exactly(count));
+                .Verify(d => d.AddAsync(It.IsAny<DonationDB>()), Times.Exactly(count));
         }
 
         private PayPalService CreatePayPalService()

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.Globalization;
+using System.Threading.Tasks;
 using System.Web;
 using WasteProducts.DataAccess.Common.Models.Donations;
 using WasteProducts.DataAccess.Common.Repositories.Donations;
@@ -38,20 +39,20 @@ namespace WasteProducts.Logic.Services.Donations
         }
 
         /// <summary>
-        /// Verifies that the request comes from PayPal and registers it.
+        /// Asynchronously verifies that the request comes from PayPal and registers it.
         /// </summary>
         /// <param name="payPalRequestString">String of PayPal request.</param>
-        public void VerifyAndLog(string payPalRequestString)
+        public async Task VerifyAndLogAsync(string payPalRequestString)
         {
-            if (_payPalVerificationService.IsVerified(payPalRequestString))
-                ProcessPayPalRequest(payPalRequestString);
+            if (await _payPalVerificationService.IsVerifiedAsync(payPalRequestString).ConfigureAwait(false))
+                await ProcessPayPalRequestAsync(payPalRequestString).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Processes the PayPal notification.
+        /// Asynchronously processes the PayPal notification.
         /// </summary>
         /// <param name="payPalRequestString"></param>
-        private void ProcessPayPalRequest(string payPalRequestString)
+        private async Task ProcessPayPalRequestAsync(string payPalRequestString)
         {
             // check that Payment_status=Completed
             // check that Txn_id has not been previously processed
@@ -61,12 +62,12 @@ namespace WasteProducts.Logic.Services.Donations
             NameValueCollection payPalArguments = HttpUtility.ParseQueryString(payPalRequestString);
             if (payPalArguments[IPN.Payment.PAYMENT_STATUS] != IPN.Payment.Status.COMPLETED ||
                 _appSettings[AppSettings.OUR_PAYPAL_EMAIL] != payPalArguments[IPN.Transaction.RECEIVER_EMAIL] ||
-                    _donationRepository.Contains(payPalArguments[IPN.Transaction.TXN_ID]))
+                    await _donationRepository.ContainsAsync(payPalArguments[IPN.Transaction.TXN_ID]).ConfigureAwait(false))
                 return;
 
             Donation donation = FillDonation(payPalArguments);
             DonationDB donationDB = _mapper.Map<DonationDB>(donation);
-            _donationRepository.Add(donationDB);
+            await _donationRepository.AddAsync(donationDB).ConfigureAwait(false);
         }
 
         /// <summary>

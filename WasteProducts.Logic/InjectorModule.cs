@@ -170,12 +170,8 @@ namespace WasteProducts.Logic
             Bind<IMapper>().ToMethod(ctx =>
                 new Mapper(new MapperConfiguration(cfg =>
                 {
-                    cfg.CreateMap<Product, ProductDB>()
-                        .ForMember(m => m.Created,
-                            opt => opt.MapFrom(p => p.Name != null ? DateTime.UtcNow : default(DateTime)))
-                        .ForMember(m => m.Modified, opt => opt.UseValue((DateTime?)null))
-                        .ForMember(m => m.Barcode, opt => opt.Ignore())
-                        .ReverseMap();
+                    cfg.AddProfile<ProductProfile>();
+                    cfg.AddProfile<BarcodeProfile>();
                     cfg.AddProfile<CategoryProfile>();
                 })))
                 .WhenInjectedExactlyInto<ProductService>();
