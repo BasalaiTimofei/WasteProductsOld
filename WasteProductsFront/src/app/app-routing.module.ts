@@ -58,9 +58,9 @@ const routes: Routes = [
       { path: 'add-product', component: AddProductComponent },
     ]
   },
-  { path: 'all-to-list', component: AllToListComponent },
+  { path: 'all-to-list', component: AllToListComponent, canActivate: [AuthenticationGuard] },
   { path: 'groups', component: GroupsComponent, canActivate: [AuthenticationGuard] },
-  { path: 'products/myproducts', component: ToListComponent },
+  { path: 'products/myproducts', component: ToListComponent, canActivate: [AuthenticationGuard] },
   { path: 'groups/mygroups', component: GroupsOfUserComponent , canActivate: [AuthenticationGuard] },
   { path: 'searchresults/:query', component: SearchresultComponent },
   { path: '**', component: NotFoundComponent },
