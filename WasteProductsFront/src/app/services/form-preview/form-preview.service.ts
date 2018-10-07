@@ -12,6 +12,7 @@ export interface Form {
   searchQuery?: string;
   rate?: number;
   comment?: string;
+  editMode: boolean;
 }
 
 interface FilePreviewDialogConfig {
