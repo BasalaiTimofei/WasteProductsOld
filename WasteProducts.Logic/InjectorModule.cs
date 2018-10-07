@@ -225,6 +225,39 @@ namespace WasteProducts.Logic
             .WhenInjectedExactlyInto<GroupUserService>();
 
             Bind<IMapper>().ToMethod(ctx =>
+                    new Mapper(new MapperConfiguration(cfg =>
+                    {
+                        cfg.AddProfile<GroupBoardProfile>();
+                        cfg.AddProfile<GroupCommentProfile>();
+                        cfg.AddProfile<GroupProductProfile>();
+                        cfg.AddProfile<GroupProfile>();
+                        cfg.AddProfile<GroupUserProfile>();
+                    })))
+                .WhenInjectedExactlyInto<GroupBoardService>();
+
+            Bind<IMapper>().ToMethod(ctx =>
+                    new Mapper(new MapperConfiguration(cfg =>
+                    {
+                        cfg.AddProfile<GroupBoardProfile>();
+                        cfg.AddProfile<GroupCommentProfile>();
+                        cfg.AddProfile<GroupProductProfile>();
+                        cfg.AddProfile<GroupProfile>();
+                        cfg.AddProfile<GroupUserProfile>();
+                    })))
+                .WhenInjectedExactlyInto<GroupProductService>();
+
+            Bind<IMapper>().ToMethod(ctx =>
+                    new Mapper(new MapperConfiguration(cfg =>
+                    {
+                        cfg.AddProfile<GroupBoardProfile>();
+                        cfg.AddProfile<GroupCommentProfile>();
+                        cfg.AddProfile<GroupProductProfile>();
+                        cfg.AddProfile<GroupProfile>();
+                        cfg.AddProfile<GroupUserProfile>();
+                    })))
+                .WhenInjectedExactlyInto<GroupCommentService>();
+
+            Bind<IMapper>().ToMethod(ctx =>
             new Mapper(new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<AddressProfile>();

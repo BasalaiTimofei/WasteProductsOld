@@ -1,9 +1,5 @@
 ﻿using IdentityServer3.AccessTokenValidation;
 using Owin;
-using Serilog;
-using System.Linq;
-using System.Threading.Tasks;
-using Thinktecture.IdentityModel.Owin.ResourceAuthorization;
 using WasteProducts.IdentityServer;
 using WasteProducts.IdentityServer.Certificate;
 using WasteProducts.IdentityServer.Extensions;
@@ -16,7 +12,7 @@ namespace WasteProducts.Web
         {
             app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
             {
-                //Authority = "https://localhost:44362/identity",
+                //Authority = "https://localhost:44326/identity",
                 Authority = "https://waste-api.belpyro.net/identity",
                 RequiredScopes = new[] { IdentityConstants.WasteProducts_Api_Scope },
                 SigningCertificate = CertificateLoader.Load(),

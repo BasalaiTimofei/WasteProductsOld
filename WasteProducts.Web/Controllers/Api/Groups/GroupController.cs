@@ -35,7 +35,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <returns>200(Object) || 404</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Get group by group id", typeof(Group))]
-        [SwaggerResponse(HttpStatusCode.NotFound, "Incorrect id user")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Incorrect group")]
         [HttpGet, Route("groups/{groupId}")]
         public async Task<IHttpActionResult> GetGroup(string groupId)
         {

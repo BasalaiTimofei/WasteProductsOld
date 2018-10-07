@@ -30,16 +30,16 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <summary>
         /// Invite send
         /// </summary>
-        /// <param name="item">Object</param>
-        /// <param name="adminId">Primary key</param>
+        /// <param name="groupId">group id</param>
+        /// <param name="userId">user Id</param>
         /// <returns>200</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Invite send", typeof(GroupUser))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
-        [HttpPost, Route("{groupId}/invite/{adminId}")]
-        public async Task<IHttpActionResult> Invite(GroupUser item, [FromUri]string adminId)
+        [HttpPost, Route("{groupId}/invite/{userId}")]
+        public async Task<IHttpActionResult> Invite([FromUri]string groupId, [FromUri]string userId)
         {
-            await _groupUserService.Invite(item, adminId);
+            await _groupUserService.Invite(new GroupUser() { GroupId = groupId, UserId = userId });
 
             return Ok();
         }
@@ -47,16 +47,16 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <summary>
         /// User delete
         /// </summary>
-        /// <param name="item">Object</param>
-        /// <param name="adminId">Primary key</param>
+        /// <param name="groupId">group id</param>
+        /// <param name="userId">user Id</param>
         /// <returns>200</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "User delete", typeof(GroupUser))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
-        [HttpPost, Route("{groupId}/kick/{adminId}")]
-        public async Task<IHttpActionResult> Kick(GroupUser item, [FromUri]string adminId)
+        [HttpDelete, Route("{groupId}/kick/{userId}")]
+        public async Task<IHttpActionResult> Kick([FromUri]string groupId, [FromUri]string userId)
         {
-            await _groupUserService.Kick(item, adminId);
+            await _groupUserService.Kick(new GroupUser(){ GroupId = groupId, UserId = userId});
 
             return Ok();
         }

@@ -21,8 +21,11 @@ export class BaseHttpService extends BaseService {
       /** Log with the LoggingService */
       this.logError(`"${operation}" failed: ${error.message}`);
 
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
+      if (result) {
+        // Let the app keep running by returning an empty result.
+        return of(result as T);
+      }
+      return error;
     };
   }
 }

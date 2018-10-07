@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>{{model.action}} группу</h2>
+<mat-dialog-content>
+
+  <mat-form-field class="full-width">
+    <input matInput placeholder="Имя группы" [(ngModel)]="model.data.Name" />
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <textarea matInput placeholder="Информация о группе" class="full-width" [(ngModel)]="model.data.Information"></textarea>
+  </mat-form-field>
+
+</mat-dialog-content>
+<mat-dialog-actions class="justify-content-between">
+  <button mat-button [mat-dialog-close]>Нет, не хочу</button>
+  <button mat-button [mat-dialog-close]="model.data">{{model.action}}</button>
+</mat-dialog-actions>
