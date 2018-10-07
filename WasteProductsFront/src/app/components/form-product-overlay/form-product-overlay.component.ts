@@ -65,7 +65,8 @@ export class FormProductOverlayComponent {
     if (!comment) {
       this.errorValidation = true;
     } else {
-      this.productService.updateUserProduct(this.form.id, rate, comment );
+      this.productService.updateUserProduct(this.form.id, rate, comment)
+      .subscribe(res => res, err => err);
       this.closeForm();
       this.snackBar.open('Продукт отредактирован успешно!', null, {
             duration: 3000,
