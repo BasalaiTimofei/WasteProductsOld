@@ -1,6 +1,6 @@
 <mat-card>
-  <div class="example-form">
-    <mat-form-field class="example-full-width">
+  <div class="full-width">
+    <mat-form-field class="full-width">
       <input matInput [(ngModel)]="query" placeholder="Поиск ...." (keyup.enter)="search(query)">
     </mat-form-field>
     <button matSuffix mat-button mat-icon-button (click)="search(query)">
@@ -14,10 +14,7 @@
     </mat-list-item>
   </mat-list>
 
-  <mat-paginator [length]="length"
-               [pageSize]="pageSize"
-               [pageIndex]="pageIndex"
-               [pageSizeOptions]="[5, 10]"
+  <mat-paginator [length]="length"  [hidePageSize]="true" [pageSize]="5" [pageIndex]="pageIndex"
                (page)="pageEvent = changePageEvent($event)">
   </mat-paginator>
 </mat-card>

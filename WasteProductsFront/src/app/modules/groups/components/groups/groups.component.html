@@ -2,7 +2,7 @@
   <mat-card-title>
 
     <mat-toolbar color="primary">
-      <mat-icon>group_work</mat-icon><span class="px-3">My groups</span>
+      <mat-icon>group_work</mat-icon><span class="px-3">Мои группы:</span>
     </mat-toolbar>
 
   </mat-card-title>
@@ -11,7 +11,7 @@
 
       <mat-divider></mat-divider>
 
-      <h2 mat-subheader><b>Your own groups:</b></h2>
+      <h2 mat-subheader><b>Твои группы:</b></h2>
       <ng-container *ngIf="(ownGroups | async).length > 0; else elseTemplate1">
         <a mat-list-item *ngFor="let group of ownGroups | async" [routerLink]="[group.Id]">
           <mat-icon mat-list-icon>group</mat-icon>
@@ -24,18 +24,18 @@
       </ng-container>
       <ng-template #elseTemplate1>
         <mat-list-item>
-          <p mat-line class="lead text-center">You haven't own group yet</p>
+          <p mat-line class="lead text-center">У тебя нет своих групп, ещё пока...</p>
 
         </mat-list-item>
       </ng-template>
 
       <a mat-list-item class="mb-3" (click)="createGroup()">
-        <mat-icon>group_add</mat-icon><span class="px-3">Create own group</span>
+        <mat-icon>group_add</mat-icon><span class="px-3">Создать свою группу</span>
       </a>
 
       <mat-divider></mat-divider>
 
-      <h2 mat-subheader><b>Your other groups:</b></h2>
+      <h2 mat-subheader><b>Чужие группы:</b></h2>
       <ng-container *ngIf="(otherGroups | async).length > 0; else elseTemplate2">
         <a mat-list-item *ngFor="let group of otherGroups | async" [routerLink]="[group.Id]">
           <mat-icon mat-list-icon>group</mat-icon>
@@ -48,12 +48,12 @@
       </ng-container>
       <ng-template #elseTemplate2>
         <mat-list-item>
-          <p mat-line class="lead text-center">You haven't other groups</p>
+          <p mat-line class="lead text-center">Ты не вошол ни в одну из групп, ещё пока..</p>
         </mat-list-item>
       </ng-template>
 
       <a mat-list-item (click)="comeInToGroup()">
-        <mat-icon>search</mat-icon><span class="px-3">Find group</span>
+        <mat-icon>search</mat-icon><span class="px-3">Найти группу</span>
       </a>
 
     </mat-nav-list>

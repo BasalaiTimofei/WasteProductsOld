@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -30,14 +31,22 @@ namespace WasteProducts.Web.ExceptionHandling.Api
 
         private void HandleValidationException(HttpActionExecutedContext actionExecutedContext, ValidationException exception)
         {
-            var modelState = actionExecutedContext.ActionContext.ModelState;
-
-            foreach (var validationFailure in exception.Errors)
+            if (exception.Errors.Any())
             {
-                modelState.AddModelError(validationFailure.PropertyName, validationFailure.ErrorMessage);
-            }
+                var modelState = actionExecutedContext.ActionContext.ModelState;
 
-            actionExecutedContext.Response = actionExecutedContext.Request.CreateErrorResponse(HttpStatusCode.BadRequest, modelState);
+                foreach (var validationFailure in exception.Errors)
+                {
+                    modelState.AddModelError(validationFailure.PropertyName, validationFailure.ErrorMessage);
+                }
+
+                actionExecutedContext.Response = actionExecutedContext.Request.CreateErrorResponse(HttpStatusCode.BadRequest, modelState);
+            }
+            else
+            {
+                actionExecutedContext.Response = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                actionExecutedContext.Response.Content = new StringContent(exception.Message);
+            }
         }
     }
 }
