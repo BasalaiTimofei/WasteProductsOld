@@ -1,5 +1,6 @@
 ﻿using IdentityServer3.AccessTokenValidation;
 using Owin;
+using WasteProducts.IdentityServer;
 using WasteProducts.IdentityServer.Certificate;
 using WasteProducts.IdentityServer.Extensions;
 
