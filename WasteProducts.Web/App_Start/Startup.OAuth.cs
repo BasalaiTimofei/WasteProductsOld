@@ -10,36 +10,13 @@ using WasteProducts.IdentityServer.Extensions;
 
 namespace WasteProducts.Web
 {
-    //public partial class Startup
-    //{
-    //    private void ConfigureOAuth(IAppBuilder app)
-    //    {
-    //        app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
-    //        {
-    //            Authority = "https://waste-api.belpyro.net/identity",
-    //            RequiredScopes = new[] { IdentityConstants.WasteProducts_Api_Scope },
-    //            SigningCertificate = CertificateLoader.Load(),
-    //            ValidationMode = ValidationMode.ValidationEndpoint
-    //        });
-
-    //        app.UseIdentityServer();
-    //        app.UseResourceAuthorization(new AuthorizationManager());
-    //    }
-    //}
-
     public partial class Startup
     {
         private void ConfigureOAuth(IAppBuilder app)
         {
-            //Log.Logger = new LoggerConfiguration()
-            //  //.WriteTo.LiterateConsole(outputTemplate: "{Timestamp:HH:MM} [{Level}] ({Name:l}){NewLine} {Message}{NewLine}{Exception}")
-            //  //.WriteTo.TraceSource(traceSourceName: "IdentityServer3")
-            //  .WriteTo.
-            //  .CreateLogger();
-
             app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
             {
-                Authority = "https://localhost:44378/identity",
+                Authority = "https://waste-api.belpyro.net/identity",
                 RequiredScopes = new[] { IdentityConstants.WasteProducts_Api_Scope },
                 SigningCertificate = CertificateLoader.Load(),
                 ValidationMode = ValidationMode.ValidationEndpoint
@@ -48,6 +25,24 @@ namespace WasteProducts.Web
             app.UseIdentityServer();
             app.UseResourceAuthorization(new AuthorizationManager());
         }
+    }
+
+    public partial class Startup
+    {
+        //private void ConfigureOAuth(IAppBuilder app)
+        //{
+
+        //    app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
+        //    {
+        //        Authority = "https://localhost:44378/identity",
+        //        RequiredScopes = new[] { IdentityConstants.WasteProducts_Api_Scope },
+        //        SigningCertificate = CertificateLoader.Load(),
+        //        ValidationMode = ValidationMode.ValidationEndpoint
+        //    });
+
+        //    app.UseIdentityServer();
+        //    app.UseResourceAuthorization(new AuthorizationManager());
+        //}
     }
 
     public class AuthorizationManager : ResourceAuthorizationManager
