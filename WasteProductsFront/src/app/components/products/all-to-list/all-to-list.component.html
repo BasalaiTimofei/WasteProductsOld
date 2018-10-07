@@ -9,9 +9,8 @@
 
     <ng-container matColumnDef="{{column}}" *ngFor="let column of displayedColumns">
       <th mat-header-cell *matHeaderCellDef [ngSwitch]="column"> 
-        <span *ngSwitchCase="'Id'">{{headerNames[0]}}</span>
-        <span *ngSwitchCase="'Name'">{{headerNames[1]}}</span>
-        <span *ngSwitchCase="'AvgRating'">{{headerNames[2]}}</span>
+        <span *ngSwitchCase="'Name'">{{headerNames[0]}}</span>
+        <span *ngSwitchCase="'AvgRating'">{{headerNames[1]}}</span>
       </th>
       <td mat-cell *matCellDef="let product"> {{product[column]}} </td>
     </ng-container>
