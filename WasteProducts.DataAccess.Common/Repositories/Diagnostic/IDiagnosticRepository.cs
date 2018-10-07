@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace WasteProducts.DataAccess.Common.Repositories.Diagnostic
@@ -17,7 +18,8 @@ namespace WasteProducts.DataAccess.Common.Repositories.Diagnostic
         /// <summary>
         /// Seeds database with test data.
         /// </summary>
+        /// <param name="prodIds">Collection of pre-seeded real product IDs.</param>
         /// <returns></returns>
-        Task SeedAsync();
+        Task SeedAsync(IList<string> prodIds);
     }
 }

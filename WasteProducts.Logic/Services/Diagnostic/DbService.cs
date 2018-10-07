@@ -69,16 +69,18 @@ namespace WasteProducts.Logic.Services
         /// <inheritdoc />
         public async Task SeedAsync()
         {
+            var prodIds = new List<string>(10);
+
             foreach (var bitmap in GetListOfPhotos())
             {
                 using (Stream stream = new MemoryStream())
                 {
                     bitmap.Save(stream, ImageFormat.Bmp);
-                    await _prodService.AddAsync(stream);
+                    prodIds.Add(await _prodService.AddAsync(stream));
                 }
             }
             
-            await _diagRepo.SeedAsync();
+            await _diagRepo.SeedAsync(prodIds);
         }
 
         /// <inheritdoc />
