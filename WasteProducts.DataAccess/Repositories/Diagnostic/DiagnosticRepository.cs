@@ -10,8 +10,6 @@ using WasteProducts.DataAccess.Common.Repositories.Diagnostic;
 using WasteProducts.DataAccess.Contexts;
 using System.Data.Entity;
 using WasteProducts.DataAccess.Common.Models.Groups;
-using System.IO;
-using System.Reflection;
 
 namespace WasteProducts.DataAccess.Repositories.Diagnostic
 {
@@ -64,7 +62,7 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
             await CreateUsers();
             var user = AddFriendsToFirstUser();
 
-            CreateProductsAndAddThemToTheUser(user);
+            CreateProductsAndAddThemToTheUsers(user);
 
             CreateGroups();
 
@@ -111,7 +109,7 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                 return user0;
             }
 
-            void CreateProductsAndAddThemToTheUser(UserDB userDB)
+            void CreateProductsAndAddThemToTheUsers(UserDB userDB)
             {
                 var category1 = new CategoryDB
                 {

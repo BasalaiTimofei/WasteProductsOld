@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using WasteProducts.Logic.Resources;
 using FluentValidation;
-using WasteProducts.Logic.Common.Models.Users.WebUsers;
 
 namespace WasteProducts.Logic.Services.Users
 {

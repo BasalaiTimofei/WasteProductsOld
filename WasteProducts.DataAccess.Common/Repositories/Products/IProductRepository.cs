@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Models.Products;
 
 namespace WasteProducts.DataAccess.Common.Repositories.Products
@@ -14,8 +15,9 @@ namespace WasteProducts.DataAccess.Common.Repositories.Products
         /// Adding new product
         /// </summary>
         /// <param name="product">The specific product for adding</param>
+        ///// <param name="barcode">Barcode of the specific product for adding</param>
         /// <returns>Id of the added product.</returns>
-        Task<string> AddAsync(ProductDB product);
+        Task<string> AddAsync(ProductDB product/*, BarcodeDB barcode*/);
 
         /// <summary>
         /// Deleting the specific product

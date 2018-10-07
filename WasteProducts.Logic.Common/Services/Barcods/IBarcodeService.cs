@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
+using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Barcods;
 
 namespace WasteProducts.Logic.Common.Services.Barcods
@@ -7,7 +9,7 @@ namespace WasteProducts.Logic.Common.Services.Barcods
     /// <summary>
     /// This interface provides barcodes methods.
     /// </summary>
-    public interface IBarcodeService
+    public interface IBarcodeService : IDisposable
     {
         /// <summary>
         /// Add new barcode in the repository.
@@ -17,11 +19,25 @@ namespace WasteProducts.Logic.Common.Services.Barcods
         Task<string> AddAsync(Barcode barcode);
 
         /// <summary>
-        /// Scan photo of barcode and return a model of Barcode.
+        /// Parses photo of barcode and returns its digit representation.
         /// </summary>
-        /// <param name="stream">Photo stream barcode.</param>
-        /// <returns>Model of Barcode.</returns>
-        Task<Barcode> GetBarcodeByStreamAsync(Stream stream);
+        /// <param name="imageStream">Stream of the photo.</param>
+        /// <returns>Code of the barcode.</returns>
+        string ParseBarcodePhoto(Stream imageStream);
+
+        /// <summary>
+        /// Gets BarcodeDB by its code.
+        /// </summary>
+        /// <param name="code">Code of product.</param>
+        /// <returns>BarcodeDB entity.</returns>
+        Task<BarcodeDB> GetBarcodeFromDBAsync(string code);
+
+        /// <summary>
+        /// Gets barcode and information about product from product catalog by code.
+        /// </summary>
+        /// <param name="code">Code of product.</param>
+        /// <returns>Barcode entity.</returns>
+        Task<Barcode> GetBarcodeFromCatalogAsync(string code);
 
         /// <summary>
         ///  Return a model of Barcode by code.

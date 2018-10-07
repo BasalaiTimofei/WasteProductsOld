@@ -24,8 +24,8 @@ export class AllToListComponent implements OnInit {
   products: Product[] = [];
   defualtImage: string = '../assets/img/tenor.gif';
   dataSource = new MatTableDataSource<Product>();
-  displayedColumns: string[] = ['Id', 'Name', 'AvgRating'];
-  headerNames: string[] = ['Id', 'Наименование', 'Средний рейтинг'];
+  displayedColumns: string[] = ['Name', 'AvgRating'];
+  headerNames: string[] = ['Наименование', 'Средняя оценка'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;

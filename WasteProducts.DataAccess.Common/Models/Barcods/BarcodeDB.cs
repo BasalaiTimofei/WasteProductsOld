@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using WasteProducts.DataAccess.Common.Models.Products;
 
 namespace WasteProducts.DataAccess.Common.Models.Barcods
@@ -31,6 +32,7 @@ namespace WasteProducts.DataAccess.Common.Models.Barcods
         /// <summary>
         /// Specifies the concreat product
         /// </summary>
+        [JsonIgnore]
         public virtual ProductDB Product { get; set; }
     }
 }

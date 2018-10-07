@@ -139,6 +139,11 @@
     <Compile Include="Mappings\Groups\GroupProfile.cs" />
     <Compile Include="Mappings\Groups\GroupCommentProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\BarcodePhotos.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BarcodePhotos.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\DbServiceResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -214,6 +219,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="InterceptorResources.resx" />
+    <EmbeddedResource Include="Properties\BarcodePhotos.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>BarcodePhotos.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\DbServiceResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>DbServiceResources.Designer.cs</LastGenOutput>
@@ -231,6 +240,32 @@
       <LastGenOutput>UserResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\SeedingBarcodes\Barcode01.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SeedingBarcodes\Barcode02.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SeedingBarcodes\Barcode03.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SeedingBarcodes\Barcode04.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SeedingBarcodes\Barcode05.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SeedingBarcodes\Barcode06.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SeedingBarcodes\Barcode07.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SeedingBarcodes\Barcode08.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SeedingBarcodes\Barcode09.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

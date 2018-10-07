@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Security.Cryptography.X509Certificates;
-using IdentityServer3.Core.Configuration;
+﻿using IdentityServer3.Core.Configuration;
 using Owin;
 using WasteProducts.IdentityServer.Certificate;
 
@@ -25,6 +23,10 @@ namespace WasteProducts.IdentityServer.Extensions
                         EnableKatanaLogging = true,
                         EnableWebApiDiagnostics = true,
                         WebApiDiagnosticsIsVerbose = false
+                    },
+                    AuthenticationOptions = new AuthenticationOptions
+                    {
+                        EnablePostSignOutAutoRedirect = true
                     }
                 });
 

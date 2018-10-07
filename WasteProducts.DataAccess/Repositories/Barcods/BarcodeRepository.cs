@@ -33,8 +33,7 @@ namespace WasteProducts.DataAccess.Repositories.Barcods
         /// <returns>Barcode with the specific ID.</returns>
         public async Task<BarcodeDB> GetByIdAsync(string id)
         {
-            var barcode = await _wasteContext.Barcodes.FirstOrDefaultAsync(b => b.Id == id);
-            return barcode;
+            return await _wasteContext.Barcodes.FirstOrDefaultAsync(b => b.Id == id).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -44,8 +43,7 @@ namespace WasteProducts.DataAccess.Repositories.Barcods
         /// <returns>Barcode with the specific code.</returns>
         public async Task<BarcodeDB> GetByCodeAsync(string code)
         {
-            var barcode = await _wasteContext.Barcodes.SingleOrDefaultAsync(c => c.Code == code);
-            return barcode;
+            return await _wasteContext.Barcodes.SingleOrDefaultAsync(c => c.Code == code).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -54,10 +52,7 @@ namespace WasteProducts.DataAccess.Repositories.Barcods
         /// <returns>A list of all barcodes.</returns>
         public async Task<IEnumerable<BarcodeDB>> SelectAllAsync()
         {
-            return await Task.Run(() =>
-            {
-                return _wasteContext.Barcodes.ToList();
-            }).ConfigureAwait(false);
+            return await _wasteContext.Barcodes.ToListAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -145,6 +140,11 @@ namespace WasteProducts.DataAccess.Repositories.Barcods
 
                 _disposed = true;
             }
+        }
+
+        ~BarcodeRepository()
+        {
+            Dispose();
         }
     }
 }
