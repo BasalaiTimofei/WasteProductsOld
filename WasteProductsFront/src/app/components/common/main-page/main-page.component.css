@@ -1,31 +1,26 @@
 .mat-button {
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
-    width:100%;
     border: none;
-    padding: 10px 20px;
     text-align: center;
     text-decoration: none;
-    display: inline-block;
     font-size: 16px
 }
 .mat-button:hover {
-    background-color: #ff5050;
-    color: white;
+    color: darkgray;
 }
 .mat-menu-item{
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
-    display: inline-block;
-    text-align: left;
+    text-align: center;
     font-size: 14px;
-    width: 50%;
+    width: 150px;
+    background-clip: padding-box;
 }
 .mat-menu-item:hover {
-    background-color: #ffcccc;
-    color: whitesmoke;
+    color: darkgrey;
 }
 .mat-menu{
-    width:10%;
-    display: inline-block;
+    width: 130px;
+
 }
