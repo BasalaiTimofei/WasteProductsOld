@@ -78,7 +78,7 @@ this.productService.getUserProducts().subscribe(
 
     editSlectedProduct(productId: string) {
       const dialog: FormPreviewOverlay = this.previewDialogForm.open({
-        form: { name: 'Добавить в Мои продукты', id: productId }
+        form: { name: 'Редактировать Мои продукты', id: productId, editMode: true }
       });
     }
   }

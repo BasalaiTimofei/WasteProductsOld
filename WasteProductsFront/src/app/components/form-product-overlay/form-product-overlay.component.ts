@@ -61,6 +61,22 @@ export class FormProductOverlayComponent {
     }
   }
 
+  async editMyProducts(comment: string, rate: number) {
+    if (!comment) {
+      this.errorValidation = true;
+    } else {
+      this.productService.updateUserProduct(this.form.id, rate, comment );
+      this.closeForm();
+      this.snackBar.open('Продукт отредактирован успешно!', null, {
+            duration: 3000,
+            verticalPosition: 'top',
+            horizontalPosition: 'center'
+      });
+      await this.delay(3500);
+      location.reload(true);
+    }
+  }
+
   onAnimationStart(event: AnimationEvent) {
     this.animationStateChanged.emit(event);
   }
