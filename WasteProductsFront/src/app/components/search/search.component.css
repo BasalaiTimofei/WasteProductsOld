@@ -1,5 +1,5 @@
 input.search-style {
-  width: 180px;
+  width: 160px;
   height: 42px;
   padding-left: 15px;
   padding-right: 15px;
@@ -10,7 +10,7 @@ input.search-style {
   transition: .3s ease-in-out;
 }
 input.search-style:focus {
-  width: 260px;
+  width: 220px;
 }
 
 .search-form {
@@ -24,7 +24,7 @@ input.search-style:focus {
 }
 
 .nav-list {
-  width: 260px;
+  width: 220px;
   background: gray;
   position: relative;
 }

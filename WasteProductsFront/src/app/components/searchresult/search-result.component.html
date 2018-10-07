@@ -17,8 +17,9 @@
               <mat-panel-description>
                 <span class="example-spacer"></span>
 
-                <!--div *ngIf="isAuthenificated$ | async"-->
-                <div *ngIf="true">
+                <div *ngIf="isAuthenificated$ | async">
+                <!--div *ngIf="true"-->
+
                   <div *ngIf="!result.IsAdded; else added">
                     <button  matSuffix mat-button mat-icon-button (click)="addToMyProducts(result.Id)">
                       <mat-icon matTooltip="Добавить продукт в Мои продукты">star_border</mat-icon>
@@ -34,15 +35,14 @@
 
             </mat-expansion-panel-header>
             <mat-list>
-
-                  <img example-spacer *ngIf="result.PicturePath !== null; else noIcon"
-                        src="{{result.PicturePath}}"
-                        (click)="showPreview(result.Name, result.PicturePath)"
-                        matTooltip="Открыть в исходном размере" >
-                  <ng-template #noIcon>
-                    <img mat-list-icon src="../../../assets/img/tenor.gif"
-                        matTooltip="Изображение отсутствует" >
-                  </ng-template>
+              <img *ngIf="result.PicturePath !== null; else noIcon"
+                    src="{{result.PicturePath}}"
+                    (click)="showPreview(result.Name, result.PicturePath)"
+                    matTooltip="Открыть в исходном размере" >
+              <ng-template #noIcon>
+                <img mat-list-icon src="../../../assets/img/tenor.gif"
+                    matTooltip="Изображение отсутствует" >
+              </ng-template>
               <mat-list-item>
                 <p mat-line> <b>Состав: </b> {{result.Composition}} </p>
                 <p mat-line> <b>Рейтинг: </b> {{result.AvgRating}} </p>
