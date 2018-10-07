@@ -1,4 +1,7 @@
-body{
-    margin: 0;
-    padding: 0
+
+mat-card{
+    background-color: rgb(236, 236, 236)
+}
+container{
+    position: center;
 }
