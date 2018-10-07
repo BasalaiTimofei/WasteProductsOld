@@ -9,6 +9,7 @@ using WasteProducts.DataAccess.Common.Models.Donations;
 using WasteProducts.DataAccess.Common.Repositories.Donations;
 using WasteProducts.Logic.Common.Models.Donations;
 using WasteProducts.Logic.Common.Services.Donations;
+using WasteProducts.Logic.Common.Services.Mail;
 using WasteProducts.Logic.Constants.Donations;
 
 namespace WasteProducts.Logic.Services.Donations

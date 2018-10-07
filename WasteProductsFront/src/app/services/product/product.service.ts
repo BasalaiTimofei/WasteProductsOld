@@ -68,7 +68,7 @@ export class ProductService extends BaseHttpService {
     description.Rating = rating;
     description.Description = descrText;
 
-    this.httpService.put(url, description);
+    return this.httpService.put(url, description);
    }
 
    deleteUserProduct(productId: string) {

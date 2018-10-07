@@ -1,6 +1,6 @@
 <ng-container *ngIf="isAuthenificated$ | async; else elseTemplate">
   <button mat-button (click)="openSheet($event)">
-    Open panel
+    Управление аккаунтом
     <span *ngIf="hasUnreadNotifications$ | async" class="badge badge-secondary">New</span>
   </button>
 </ng-container>

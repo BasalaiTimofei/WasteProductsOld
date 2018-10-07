@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Donations;
 using WasteProducts.DataAccess.Common.Repositories.Donations;
 using WasteProducts.Logic.Common.Services.Donations;
+using WasteProducts.Logic.Common.Services.Mail;
 using WasteProducts.Logic.Constants.Donations;
 using WasteProducts.Logic.Mappings.Donations;
 using WasteProducts.Logic.Services.Donations;
