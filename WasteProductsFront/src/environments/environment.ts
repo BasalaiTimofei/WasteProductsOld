@@ -7,13 +7,12 @@ export const environment = {
   logLevel: 0,
 
   /* Api */
-   apiHostUrl: 'http://localhost:2189',
-  // apiHostUrl: 'http://waste-api.belpyro.net',
+  // apiHostUrl: 'http://localhost:2189',
+   apiHostUrl: 'http://waste-api.belpyro.net',
 
   /* Identity */
-  //iderntityHostUrl: 'https://localhost:44333/identity',
-  //iderntityHostUrl: 'https://waste-api.belpyro.net/identity',
-    iderntityHostUrl: 'https://localhost:44378/identity',
+  iderntityHostUrl: 'https://waste-api.belpyro.net/identity',
+  //  iderntityHostUrl: 'https://localhost:44378/identity',
   clientId: 'wasteproducts.front.angular',
 
 
@@ -21,8 +20,8 @@ export const environment = {
  
    dummyClientSecret: 'F0E56438-BCDE-401E-BDE5-303BA812186F',
  
-   //urlDiscoveryDocument : 'https://waste-api.belpyro.net/identity/.well-known/openid-configuration'
-   urlDiscoveryDocument : 'https://localhost:44378/identity/.well-known/openid-configuration'
+   urlDiscoveryDocument : 'https://waste-api.belpyro.net/identity/.well-known/openid-configuration'
+   //urlDiscoveryDocument : 'https://localhost:44378/identity/.well-known/openid-configuration'
  
 
 
