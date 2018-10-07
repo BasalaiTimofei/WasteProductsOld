@@ -26,6 +26,5 @@ namespace WasteProducts.IdentityServer
     //    public static string WasteProducts_Front_ClientID = "wasteproducts.front.angular";
     //    public static string WasteProducts_Front_ClientUrl = @"http://localhost:4200";
     //    public static string WasteProducts_Front_ClientName = "Waste Products Angular Client";
-
     //}
 }

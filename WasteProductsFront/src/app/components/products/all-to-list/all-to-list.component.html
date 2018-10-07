@@ -4,7 +4,8 @@
   </mat-form-field>
 </div>
 
-<table mat-table [dataSource]="products" multiTemplateDataRows matSort class="mat-elevation-z12 app-products-table">
+<div>
+<table mat-table [dataSource]="dataSource" multiTemplateDataRows matSort class="mat-elevation-z12 app-products-table">
 
   <ng-container matColumnDef="{{column}}" *ngFor="let column of displayedColumns">
     <th mat-header-cell *matHeaderCellDef> {{column}} </th>
@@ -34,10 +35,7 @@
     [class.example-expanded-row]="expandedElement === row"
     (click)="expandedElement = row">
   </tr>
-  <tr mat-row *matRowDef="let rrr; columns: ['expandedDetail']" class="example-detail-row"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
 </table>
-<div>
-  <mat-paginator #paginator [length]="dataSource.data.length" 
-    [pageIndex]="0" [pageSize]="5" [pageSizeOptions]="[3, 5, 10, 25, 50]">
-  </mat-paginator>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>

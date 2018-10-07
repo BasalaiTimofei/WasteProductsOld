@@ -5,7 +5,6 @@ import { ProductService } from '../../../services/product/product.service';
 import { Router } from '@angular/router';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
-
 @Component({
   selector: 'app-all-to-list',
   templateUrl: './all-to-list.component.html',
@@ -22,20 +21,19 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 })
 export class AllToListComponent implements OnInit {
 
-  constructor (public productService: ProductService,
-    private router: Router) {}
-
   products: Product[] = [];
   defualtImage: string = '../assets/img/tenor.gif';
-  data: Product[] = this.products;
-  dataSource = new MatTableDataSource(this.data);
+  dataSource = new MatTableDataSource<Product>();
   displayedColumns: string[] = ['Id', 'Name', 'AvgRating'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  constructor (public productService: ProductService,
+    private router: Router) {}
+
   ngOnInit() {
-    this.paginator.length = this.data.length;
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
     this.productService.getProducts().subscribe(
@@ -44,8 +42,17 @@ export class AllToListComponent implements OnInit {
           if (item.PicturePath == "http://waste-api.belpyro.net/Content/favicon.png") item.PicturePath = this.defualtImage; 
         }
         this.products = res;
+        this.dataSource.data = res;
       },
       err => console.error(err)
     );
+  }
+
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 }
