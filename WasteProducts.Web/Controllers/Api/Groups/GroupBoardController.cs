@@ -55,8 +55,10 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponse(HttpStatusCode.OK, "Board create", typeof(GroupBoard))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
         [HttpPost, Route("{groupId}/board")]
-        public async Task<IHttpActionResult> Create(GroupBoard item)
+        public async Task<IHttpActionResult> Create([FromUri]string groupId, GroupBoard item)
         {
+            item.GroupId = groupId;
+
             item.Id = await _groupBoardService.Create(item);
 
             return Ok(item);

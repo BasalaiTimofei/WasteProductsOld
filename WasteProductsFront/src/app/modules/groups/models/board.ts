@@ -2,6 +2,7 @@ import { ProductModel } from './product';
 import { CommentModel } from './comment';
 
 export class BoardInfoModel {
+  CreatorId: string;
   Name: string;
   Information: string;
 }

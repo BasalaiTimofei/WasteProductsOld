@@ -6,11 +6,11 @@ export const environment = {
   production: false,
   logLevel: 0,
 
-  apiHostUrl: 'https://localhost:44362',
+  apiHostUrl: 'https://localhost:44326',
   // apiHostUrl: 'https://waste-api.belpyro.net',
 
   /* Identity */
-  iderntityHostUrl: 'https://localhost:44362/identity',
+  iderntityHostUrl: 'https://localhost:44326/identity',
   // iderntityHostUrl: 'https://waste-api.belpyro.net/identity',
   clientId: 'wasteproducts.front.angular',
 

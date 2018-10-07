@@ -18,9 +18,10 @@
 
     <div class="row py-4">
       <app-board class="col-sm-12 col-md-6"
-      *ngFor="let board of group.GroupBoards" [board]="board"
-      (removeBoardEvent)="update()"></app-board>
+      *ngFor="let board of group.GroupBoards" [board]="board" (boardRemovedEvent)="update()"></app-board>
     </div>
+
+    <button mat-button (click)="addBoard()"><mat-icon>add</mat-icon></button>
 
   </mat-card-content>
 </mat-card>

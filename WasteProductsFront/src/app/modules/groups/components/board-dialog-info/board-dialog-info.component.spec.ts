@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BoardDialogAddComponent } from './board-dialog-add.component';
+import { BoardDialogInfoComponent } from './board-dialog-info.component';
 
-describe('BoardDialogAddComponent', () => {
-  let component: BoardDialogAddComponent;
-  let fixture: ComponentFixture<BoardDialogAddComponent>;
+describe('BoardDialogInfoComponent', () => {
+  let component: BoardDialogInfoComponent;
+  let fixture: ComponentFixture<BoardDialogInfoComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ BoardDialogAddComponent ]
+      declarations: [ BoardDialogInfoComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BoardDialogAddComponent);
+    fixture = TestBed.createComponent(BoardDialogInfoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

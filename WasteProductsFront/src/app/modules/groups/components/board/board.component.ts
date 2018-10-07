@@ -9,6 +9,7 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 import { remove } from 'lodash';
 import { ConfirmModel } from '../../models/confirm';
 import { BoardProductDialogComponent } from '../board-product-dialog/board-product-dialog.component';
+import { BoardDialogInfoComponent } from '../board-dialog-info/board-dialog-info.component';
 
 @Component({
   selector: 'app-board',
@@ -30,11 +31,11 @@ export class BoardComponent implements OnInit {
   }
 
   editBoard() {
-    const dialogRef = this.dialog.open<GroupDialogInfoComponent, { action: string, data: BoardInfoModel }, BoardInfoModel>(
-      GroupDialogInfoComponent, {
+    const dialogRef = this.dialog.open<BoardDialogInfoComponent, { action: string, data: BoardInfoModel }, BoardInfoModel>(
+      BoardDialogInfoComponent, {
         // width: '250px',
         data: {
-          action: 'Update',
+          action: 'Изменить',
           data: Object.assign(new BoardInfoModel(), this.board)
         }
       });

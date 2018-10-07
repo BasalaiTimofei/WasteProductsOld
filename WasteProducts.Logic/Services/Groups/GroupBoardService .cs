@@ -75,7 +75,7 @@ namespace WasteProducts.Logic.Services.Groups
             model.Modified = DateTime.UtcNow;
 
             _dataBase.DeleteAll(model.GroupProducts);
-            _dataBase.Update(model);
+            _dataBase.Delete(model);
             await _dataBase.Save();
         }
 

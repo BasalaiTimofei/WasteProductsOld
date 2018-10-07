@@ -8,13 +8,12 @@ import { BoardComponent } from './components/board/board.component';
 import { GroupComponent } from './components/group/group.component';
 import { BoardListComponent } from './components/board-list/board-list.component';
 /* Dialogs */
-import { BoardDialogAddComponent } from './components/board-dialog-add/board-dialog-add.component';
-import { BoardDialogRemoveComponent } from './components/board-dialog-remove/board-dialog-remove.component';
 import { GroupDialogInfoComponent } from './components/group-dialog-info/group-dialog-info.component';
 import { GroupsComponent } from './components/groups/groups.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { LightSearchComponent } from '../../components/light-search/light-search.component';
 import { BoardProductDialogComponent } from './components/board-product-dialog/board-product-dialog.component';
+import { BoardDialogInfoComponent } from './components/board-dialog-info/board-dialog-info.component';
 
 
 
@@ -29,13 +28,14 @@ import { BoardProductDialogComponent } from './components/board-product-dialog/b
     declarations: [
         GroupsComponent,
         GroupComponent, GroupDialogInfoComponent, BoardProductDialogComponent,
-        BoardComponent, BoardListComponent, BoardDialogAddComponent, BoardDialogRemoveComponent, GroupsComponent, ConfirmDialogComponent,
+        BoardComponent, BoardListComponent, GroupsComponent, ConfirmDialogComponent,
         LightSearchComponent,
+        BoardDialogInfoComponent,
 
     ],
     entryComponents: [
         GroupDialogInfoComponent,
-        BoardDialogAddComponent, BoardDialogRemoveComponent, ConfirmDialogComponent, BoardProductDialogComponent,
+        ConfirmDialogComponent, BoardProductDialogComponent, BoardDialogInfoComponent,
     ]
 })
 export class GroupsModule { }

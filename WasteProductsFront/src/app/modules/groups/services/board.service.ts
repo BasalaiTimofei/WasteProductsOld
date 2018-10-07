@@ -23,7 +23,7 @@ export class BoardService extends BaseHttpService {
   }
 
   createBoard(groupId, boardInfo: BoardInfoModel): Observable<BoardModel> {
-    const url = `${this.apiUrl}/{groupId}/board`;
+    const url = `${this.apiUrl}/${groupId}/board`;
 
     return this.httpService.post<BoardModel>(url, boardInfo).pipe(
       tap(response => this.logDebug('creating board')),
