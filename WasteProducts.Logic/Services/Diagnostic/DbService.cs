@@ -1,10 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Threading.Tasks;
 using Ninject.Extensions.Logging;
 using WasteProducts.DataAccess.Common.Context;
 using WasteProducts.DataAccess.Common.Repositories.Diagnostic;
 using WasteProducts.Logic.Common.Models.Diagnostic;
 using WasteProducts.Logic.Common.Services.Diagnostic;
+using WasteProducts.Logic.Common.Services.Products;
+using WasteProducts.Logic.Properties;
 using WasteProducts.Logic.Resources;
 
 namespace WasteProducts.Logic.Services
@@ -13,8 +19,8 @@ namespace WasteProducts.Logic.Services
     public class DbService : IDbService
     {
         private readonly IDiagnosticRepository _diagRepo;
-        //private readonly IDbSeedService _dbSeedService;
         private readonly IDatabase _database;
+        private readonly IProductService _prodService;
         private readonly ILogger _logger;
 
         private bool _disposed = false;
@@ -24,11 +30,13 @@ namespace WasteProducts.Logic.Services
         /// </summary>
         /// <param name="dbSeedService">IDbSeedService implementation that seeds into database</param>
         /// <param name="database">IDatabase implementation, for operations with database</param>
+        /// <param name="prodService">IProductService implementation, for seeding DB with real product data.</param>
         /// <param name="logger">NLog logger</param>
-        public DbService(IDiagnosticRepository diagRepo, IDatabase database, ILogger logger)
+        public DbService(IDiagnosticRepository diagRepo, IDatabase database, IProductService prodService, ILogger logger)
         {
             _diagRepo = diagRepo;
             _database = database;
+            _prodService = prodService;
             _logger = logger;
         }
 
@@ -59,9 +67,20 @@ namespace WasteProducts.Logic.Services
         }
 
         /// <inheritdoc />
-        public Task SeedAsync()
+        public async Task SeedAsync()
         {
-            return _diagRepo.SeedAsync();
+            var prodIds = new List<string>(10);
+
+            foreach (var bitmap in GetListOfPhotos())
+            {
+                using (Stream stream = new MemoryStream())
+                {
+                    bitmap.Save(stream, ImageFormat.Bmp);
+                    prodIds.Add(await _prodService.AddAsync(stream));
+                }
+            }
+            
+            await _diagRepo.SeedAsync(prodIds);
         }
 
         /// <inheritdoc />
@@ -78,11 +97,27 @@ namespace WasteProducts.Logic.Services
                 if (disposing)
                 {
                     _database.Dispose();
-                    _diagRepo?.Dispose();
+                    _diagRepo.Dispose();
                 }
 
                 _disposed = true;
             }
+        }
+
+        private Bitmap[] GetListOfPhotos()
+        {
+            return new Bitmap[]
+            {
+                BarcodePhotos.Barcode01,
+                BarcodePhotos.Barcode02,
+                BarcodePhotos.Barcode03,
+                BarcodePhotos.Barcode04,
+                BarcodePhotos.Barcode05,
+                BarcodePhotos.Barcode06,
+                BarcodePhotos.Barcode07,
+                BarcodePhotos.Barcode08,
+                BarcodePhotos.Barcode09,
+            };
         }
 
         ~DbService()

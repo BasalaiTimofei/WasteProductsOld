@@ -14,6 +14,7 @@ using WasteProducts.Web.ExceptionHandling.Api;
 using WasteProducts.Web.Models.Users;
 using WasteProducts.Web.Validators.Users;
 using FluentValidation;
+using System.Linq;
 
 namespace WasteProducts.Web.Controllers.Api
 {
@@ -49,6 +50,16 @@ namespace WasteProducts.Web.Controllers.Api
         [SwaggerResponse(HttpStatusCode.InternalServerError, "Unhandled exception has been thrown during the search.")]
         public async Task<IHttpActionResult> GetAll()
         {
+            var userIPrincipal = User as ClaimsPrincipal;
+            var claims = from c in userIPrincipal.Claims
+                         select new
+                         {
+                             type = c.Type,
+                             value = c.Value
+                         };
+
+            var testformat = Json(claims);
+
             var users = await _service.GetAllAsync();
 
             return Ok(users);

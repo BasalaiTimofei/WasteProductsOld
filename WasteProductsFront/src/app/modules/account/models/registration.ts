@@ -1,4 +1,4 @@
-export class Registration {
+export class RegistrationModel {
   constructor(
     public UserName: string,
     public Email: string,
