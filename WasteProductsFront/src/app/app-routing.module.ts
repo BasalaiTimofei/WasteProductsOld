@@ -59,9 +59,9 @@ const routes: Routes = [
     ]
   },
   { path: 'all-to-list', component: AllToListComponent },
-  { path: 'groups', component: GroupsComponent },
+  { path: 'groups', component: GroupsComponent, canActivate: [AuthenticationGuard] },
   { path: 'products/myproducts', component: ToListComponent },
-  { path: 'groups/mygroups', component: GroupsOfUserComponent },
+  { path: 'groups/mygroups', component: GroupsOfUserComponent , canActivate: [AuthenticationGuard] },
   { path: 'searchresults/:query', component: SearchresultComponent },
   { path: '**', component: NotFoundComponent },
 ];
