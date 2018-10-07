@@ -27,10 +27,12 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   submitForm(email: string) {
-    this.isRequestSent = true;
     this.service.resetPasswordRequest(this.email)
     .subscribe(
-      result => this.userId = String(result),
+      result => {
+        this.isRequestSent = true;
+        this.userId = String(result);
+      },
       error => this.errors = error.error );
   }
 
