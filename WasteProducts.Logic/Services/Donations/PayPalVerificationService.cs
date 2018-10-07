@@ -3,6 +3,7 @@ using System.Configuration;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using WasteProducts.Logic.Common.Services.Donations;
 using WasteProducts.Logic.Constants.Donations;
 
@@ -14,27 +15,30 @@ namespace WasteProducts.Logic.Services.Donations
         private readonly NameValueCollection _appSettings = ConfigurationManager.AppSettings;
 
         /// <summary>
-        /// Verifies that the request comes from PayPal.
+        /// Asynchronously verifies that the request comes from PayPal.
         /// </summary>
         /// <param name="payPalRequestString">PayPal request string.</param>
-        public bool IsVerified(string payPalRequestString)
+        public async Task<bool> IsVerifiedAsync(string payPalRequestString)
         {
             const string VERIFIED = "VERIFIED";
 
-            HttpWebRequest verificationRequest = PrepareVerificationRequest(payPalRequestString);
+            HttpWebRequest verificationRequest = await PrepareVerificationRequestAsync(payPalRequestString).ConfigureAwait(false);
 
             // Send the request to PayPal and get the response
-            string verificationResponse = null;
-            using (var streamIn = new StreamReader(verificationRequest.GetResponse().GetResponseStream()))
-                verificationResponse = streamIn.ReadToEnd();
-            return verificationResponse == VERIFIED;
+            string verificationResponseString = null;
+            using (WebResponse verificationResponse = await verificationRequest.GetResponseAsync().ConfigureAwait(false))
+            {
+                using (var streamIn = new StreamReader(verificationResponse.GetResponseStream()))
+                    verificationResponseString = await streamIn.ReadToEndAsync().ConfigureAwait(false);
+            }
+            return verificationResponseString == VERIFIED;
         }
 
         /// <summary>
-        /// Prepares a verification request.
+        /// Asynchronously prepares a verification request.
         /// </summary>
         /// <param name="payPalRequestString">PayPal request string.</param>
-        private HttpWebRequest PrepareVerificationRequest(string payPalRequestString)
+        private async Task<HttpWebRequest> PrepareVerificationRequestAsync(string payPalRequestString)
         {            
             const string VERIFICATION_PREFIX = "cmd=_notify-validate&";
             const string POST = "POST";
@@ -53,7 +57,7 @@ namespace WasteProducts.Logic.Services.Donations
 
             // Attach payload to the verification request
             using (var streamOut = new StreamWriter(verificationRequest.GetRequestStream(), Encoding.ASCII))
-                streamOut.Write(verificationString);
+                await streamOut.WriteAsync(verificationString).ConfigureAwait(false);
 
             return verificationRequest;
         }

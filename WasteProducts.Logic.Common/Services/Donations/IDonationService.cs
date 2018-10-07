@@ -1,4 +1,6 @@
-﻿namespace WasteProducts.Logic.Common.Services.Donations
+﻿using System.Threading.Tasks;
+
+namespace WasteProducts.Logic.Common.Services.Donations
 {
     /// <summary>
     /// Provides the verification and log method for PayPal notifications.
@@ -6,9 +8,9 @@
     public interface IDonationService
     {
         /// <summary>
-        /// Verify and log the request.
+        /// Asynchronously verify and log the request.
         /// </summary>
         /// <param name="notificationRequestString">String of notification request.</param>
-        void VerifyAndLog(string notificationRequestString);
+        Task VerifyAndLogAsync(string notificationRequestString);
     }
 }
