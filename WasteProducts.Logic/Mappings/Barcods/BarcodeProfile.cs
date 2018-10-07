@@ -11,10 +11,18 @@ namespace WasteProducts.Logic.Mappings.Barcods
         public BarcodeProfile()
         {
             CreateMap<Barcode, BarcodeDB>()
-
                 .ForMember(m => m.Modified, opt => opt.UseValue((DateTime?)null))
                 .ForMember(m => m.Product, opt => opt.Ignore())
-                .ReverseMap();
+                .ForMember(m => m.Created, opt => opt.Ignore());
+
+            CreateMap<BarcodeDB, Barcode>()
+                .ForMember(m => m.Brand, opt => opt.Ignore())
+                .ForMember(m => m.Composition, opt => opt.Ignore())
+                .ForMember(m => m.Country, opt => opt.Ignore())
+                .ForMember(m => m.PicturePath, opt => opt.Ignore())
+                .ForMember(m => m.Product, opt => opt.Ignore())
+                .ForMember(m => m.ProductName, opt => opt.Ignore())
+                .ForMember(m => m.Weight, opt => opt.Ignore());
         }
     }
 }

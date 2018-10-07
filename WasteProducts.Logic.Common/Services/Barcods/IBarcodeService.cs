@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Models.Barcods;
@@ -8,7 +9,7 @@ namespace WasteProducts.Logic.Common.Services.Barcods
     /// <summary>
     /// This interface provides barcodes methods.
     /// </summary>
-    public interface IBarcodeService
+    public interface IBarcodeService : IDisposable
     {
         /// <summary>
         /// Add new barcode in the repository.
