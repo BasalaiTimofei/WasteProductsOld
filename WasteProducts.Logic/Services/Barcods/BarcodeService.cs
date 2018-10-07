@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using WasteProducts.DataAccess.Common.Models.Barcods;
 using WasteProducts.DataAccess.Common.Repositories.Barcods;
-using WasteProducts.DataAccess.Common.Repositories.Products;
 using WasteProducts.Logic.Common.Factories;
 using WasteProducts.Logic.Common.Models.Barcods;
 using WasteProducts.Logic.Common.Services.Barcods;
@@ -16,15 +16,15 @@ namespace WasteProducts.Logic.Services.Barcods
         private readonly IBarcodeScanService _scanner;
         private readonly IBarcodeCatalogSearchService _catalog;
         private readonly IBarcodeRepository _repository;
-        private readonly IProductRepository _repositoryProduct;
         private readonly IMapper _mapper;
 
-        public BarcodeService(IServiceFactory serviceFactory, IBarcodeRepository repository, IProductRepository repositoryProduct, IMapper mapper)
+        private bool _disposed;
+
+        public BarcodeService(IServiceFactory serviceFactory, IBarcodeRepository repository, IMapper mapper)
         {
             _scanner = serviceFactory.CreateBarcodeScanService();
             _catalog = serviceFactory.CreateSearchBarcodeService();
             _repository = repository;
-            _repositoryProduct = repositoryProduct;
             _mapper = mapper;
         }
 
@@ -70,6 +70,21 @@ namespace WasteProducts.Logic.Services.Barcods
 
             //вернуть ее
             return Task.FromResult(barcode);
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                this._repository.Dispose();
+                GC.SuppressFinalize(this);
+                _disposed = true;
+            }
+        }
+
+        ~BarcodeService()
+        {
+            this.Dispose();
         }
     }
 }

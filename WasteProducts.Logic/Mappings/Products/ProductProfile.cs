@@ -17,7 +17,7 @@ namespace WasteProducts.Logic.Mappings.Products
 
             CreateMap<ProductDB, Product>()
                 .ForMember(m => m.AvgRating,
-                    opt => opt.MapFrom(p => p.UserDescriptions.Average(ud => ud.Rating)));
+                    opt => opt.MapFrom(p => p.UserDescriptions.Count > 0 ? p.UserDescriptions.Average(ud => ud.Rating) : (double?)null));
         }
     }
 }

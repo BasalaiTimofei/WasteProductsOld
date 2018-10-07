@@ -30,14 +30,14 @@ export class ToListComponent implements OnInit {
 
   products: Product[] = [];
   userProducts: UserProduct[] = [];
-  defualtImage: string = '../assets/img/tenor.gif';
+  defualtImage = '../assets/img/tenor.gif';
 
   @Input() input = this.userProducts ;
   @Output() personListChange = new EventEmitter<Product[]>();
 
   data: UserProduct[] = this.userProducts;
   dataSource = new MatTableDataSource<UserProduct>();
-  displayedColumns: string[] = ['Id', 'Name', 'Rating', 'Description', 'IsHidden'];
+  displayedColumns: string[] = ['Name', 'Rating', 'Description', 'IsHidden'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -49,8 +49,10 @@ export class ToListComponent implements OnInit {
 
 this.productService.getUserProducts().subscribe(
     res => {
-      for (let item of res) {
-        if (item.Product.PicturePath == "http://waste-api.belpyro.net/Content/favicon.png") item.Product.PicturePath = this.defualtImage; 
+      for (const item of res) {
+        if (item.Product.PicturePath === 'http://waste-api.belpyro.net/Content/favicon.png') {
+           item.Product.PicturePath = this.defualtImage;
+         }
       }
       this.userProducts = res;
       this.dataSource.data = res;
