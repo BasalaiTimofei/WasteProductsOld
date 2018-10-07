@@ -6,14 +6,18 @@ export const environment = {
   production: false,
   logLevel: 0,
 
-  /* Api */
-  // apiHostUrl: 'http://localhost:2189',
-   apiHostUrl: 'http://waste-api.belpyro.net',
+  // apiHostUrl: 'https://localhost:44362',
+  apiHostUrl: 'https://waste-api.belpyro.net',
 
   /* Identity */
+  // iderntityHostUrl: 'https://localhost:44362/identity',
   iderntityHostUrl: 'https://waste-api.belpyro.net/identity',
-  //  iderntityHostUrl: 'https://localhost:44362/identity',
-  clientId: 'wasteproducts.front.angular'
+  clientId: 'wasteproducts.front.angular',
+
+  scope: 'openid profile email wasteproducts-api',
+  dummyClientSecret: 'F0E56438-BCDE-401E-BDE5-303BA812186F',
+
+
 };
 
 /*
