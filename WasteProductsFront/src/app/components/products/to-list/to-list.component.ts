@@ -6,11 +6,20 @@ import { ProductService } from '../../../services/product/product.service';
 import { UserProduct } from '../../../models/users/user-product';
 import { Router } from '@angular/router';
 import { ProductsComponent } from '../products.component';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-to-list',
   templateUrl: './to-list.component.html',
   styleUrls: ['./to-list.component.css'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0', visibility: 'hidden' })),
+      state('expanded', style({ height: '*', visibility: 'visible' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
+
   providers: [ProductService]
 })
 
@@ -25,7 +34,7 @@ export class ToListComponent implements OnInit {
   @Output() personListChange = new EventEmitter<Product[]>();
 
   data: UserProduct[] = this.userProducts;
-  dataSource = new MatTableDataSource(this.data);
+  dataSource = new MatTableDataSource<UserProduct>();
   displayedColumns: string[] = ['Name', 'AvgRating', 'Composition', 'IsHidden'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -40,10 +49,7 @@ export class ToListComponent implements OnInit {
 this.productService.getUserProducts().subscribe(
     res => {
       this.userProducts = res;
-      // tslint:disable-next-line:prefer-const
-      for (let item of res) {
-        this.products.push(item.Product);
-      }
+      this.dataSource.data = res;
     },
     err => console.error(err));
   }
