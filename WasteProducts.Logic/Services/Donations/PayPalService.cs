@@ -9,6 +9,7 @@ using WasteProducts.DataAccess.Common.Models.Donations;
 using WasteProducts.DataAccess.Common.Repositories.Donations;
 using WasteProducts.Logic.Common.Models.Donations;
 using WasteProducts.Logic.Common.Services.Donations;
+using WasteProducts.Logic.Common.Services.Mail;
 using WasteProducts.Logic.Constants.Donations;
 
 namespace WasteProducts.Logic.Services.Donations
@@ -20,6 +21,7 @@ namespace WasteProducts.Logic.Services.Donations
         private readonly IVerificationService _payPalVerificationService;
         private readonly IDonationRepository _donationRepository;
         private readonly IMapper _mapper;
+        private readonly IMailService _mailService;
 
         /// <summary>
         /// Constructor
@@ -30,12 +32,14 @@ namespace WasteProducts.Logic.Services.Donations
         public PayPalService(
             IVerificationService payPalVerificationService,
             IDonationRepository donationRepository,
-            IMapper mapper
+            IMapper mapper,
+            IMailService mailService
             )
         {
             _payPalVerificationService = payPalVerificationService;
             _donationRepository = donationRepository;
             _mapper = mapper;
+            _mailService = mailService;
         }
 
         /// <summary>
@@ -68,6 +72,7 @@ namespace WasteProducts.Logic.Services.Donations
             Donation donation = FillDonation(payPalArguments);
             DonationDB donationDB = _mapper.Map<DonationDB>(donation);
             await _donationRepository.AddAsync(donationDB).ConfigureAwait(false);
+            await _mailService.SendAsync("timplayer@tut.by", "Test donation", donationDB.Gross.ToString() );
         }
 
         /// <summary>
