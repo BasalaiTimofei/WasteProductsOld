@@ -48,8 +48,8 @@ namespace WasteProducts.Web.Controllers.Api
         {
             BoostedSearchQuery searchQuery = new BoostedSearchQuery();
             searchQuery.AddField(DEFAULT_PRODUCT_NAME_FIELD, 1.0f)
-                .AddField(DEFAULT_PRODUCT_COMPOSITION_FIELD, 1.0f)
                 .AddField(DEFAULT_PRODUCT_BARCODE_FIELD, 1.0f);
+                //.AddField(DEFAULT_PRODUCT_COMPOSITION_FIELD, 1.0f);
             searchQuery.Query = query;
 
             var products = await _searchService.SearchProductAsync(searchQuery);

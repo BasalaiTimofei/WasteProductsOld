@@ -10,6 +10,7 @@ using WasteProducts.DataAccess.Common.Repositories.Diagnostic;
 using WasteProducts.DataAccess.Contexts;
 using System.Data.Entity;
 using WasteProducts.DataAccess.Common.Models.Groups;
+using System.Collections.Generic;
 
 namespace WasteProducts.DataAccess.Repositories.Diagnostic
 {
@@ -24,6 +25,15 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
         private readonly UserManager<UserDB> _manager;
 
         private readonly Faker _faker;
+
+        private readonly string[] productDescriptions =
+        {
+            "Отрава, никогда не покупать снова",    // 1
+            "Продукт очень плох",                   // 2
+            "Не очень",                             // 3
+            "Более или менее неплохой продукт",     // 4
+            "Хороший продукт, можно покупать"       // 5
+        };
 
         private bool _disposed;
 
@@ -57,12 +67,12 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
             }).ConfigureAwait(false);
         }
 
-        public async Task SeedAsync()
+        public async Task SeedAsync(IList<string> prodIds)
         {
             await CreateUsers();
             var user = AddFriendsToFirstUser();
 
-            CreateProductsAndAddThemToTheUsers(user);
+            CreateProductsAndAddThemToTheUsers();
 
             CreateGroups();
 
@@ -82,11 +92,11 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                     };
                     _context.Users.Add(userToCreate);
                 }
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
 
                 for (int i = 0; i < 10; i++)
                 {
-                    await _manager.AddPasswordAsync(i.ToString(), $"{i}{i}{i}{i}{i}{i}");
+                    await _manager.AddPasswordAsync(i.ToString(), $"{i}{i}{i}{i}{i}{i}").ConfigureAwait(false);
                 }
             }
 
@@ -109,47 +119,40 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                 return user0;
             }
 
-            void CreateProductsAndAddThemToTheUsers(UserDB userDB)
+            void CreateProductsAndAddThemToTheUsers()
             {
-                var category1 = new CategoryDB
+                for (int i = 0; i < 7; i++)
                 {
-                    Id = Guid.NewGuid().ToString(),
-                    Name = "Первая категория",
-                    Description = "Первая категория товаров, хорошие вещи"
-                };
-                var category2 = new CategoryDB
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Name = "Вторая категория",
-                    Description = "Вторая категория товаров, плохие вещи"
-                };
-
-                _context.Categories.Add(category1);
-                _context.Categories.Add(category2);
-                
-                for (int i = 0; i < 6; i++)
-                {
-                    var prod = new ProductDB
+                    var rating = _random.Next(1, 6);
+                    var prodDescription = new UserProductDescriptionDB
                     {
-                        Id = i.ToString(),
-                        Name = _faker.Commerce.ProductName(),
-                        Created = DateTime.UtcNow.AddDays(-2),
-                        Modified = null,
-                        Category = i > 2 ? category1 : category2,
-                        Composition = _faker.Lorem.Sentence(),
-                        Marked = false,
-                        PicturePath = "http://waste-api.belpyro.net/Content/favicon.png"
-                    };
-                    _context.Products.Add(prod);
-                    var descr = new UserProductDescriptionDB
-                    {
-                        UserId = userDB.Id,
-                        ProductId = prod.Id,
-                        Rating = i,
-                        Description = (i > 2 ? "Хороший продукт, покупать" : "Плохой продукт, не брать никогда"),
+                        UserId = "0",
+                        ProductId = prodIds[i],
+                        Rating = rating,
+                        Description = productDescriptions[rating - 1],
                         Created = DateTime.UtcNow.AddDays(-2)
                     };
-                    userDB.ProductDescriptions.Add(descr);
+                    _context.UserProductDescriptions.Add(prodDescription);
+
+                    _context.SaveChanges();
+                }
+
+                for (int i = 1; i < 10; i++)
+                {
+                    foreach (var prodId in prodIds)
+                    {
+                        var rating = _random.Next(1, 6);
+                        var prodDescription = new UserProductDescriptionDB
+                        {
+                            UserId = i.ToString(),
+                            ProductId = prodId,
+                            Rating = rating,
+                            Description = productDescriptions[rating - 1],
+                            Created = DateTime.UtcNow.AddDays(-2)
+                        };
+                        _context.UserProductDescriptions.Add(prodDescription);
+                        _context.SaveChanges();
+                    }
                 }
             }
 
@@ -202,7 +205,7 @@ namespace WasteProducts.DataAccess.Repositories.Diagnostic
                             Id = Guid.NewGuid().ToString(),
                             GroupBoardId = groupBoard.Id,
                             Name = _faker.Commerce.ProductName(),
-                            ProductId = _random.Next(0, 6).ToString(),
+                            ProductId = prodIds[_random.Next(0, 9)],
                             Information = _faker.Lorem.Sentence()
                         };
                         _context.GroupProducts.Add(groupProduct);
