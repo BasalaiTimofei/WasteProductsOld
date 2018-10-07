@@ -9,7 +9,10 @@ import { FILE_PREVIEW_DIALOG_DATA } from '../../components/form-product-overlay/
 export interface Form {
   name: string;
   id: string;
-  searchQuery: string;
+  searchQuery?: string;
+  rate?: number;
+  comment?: string;
+  editMode: boolean;
 }
 
 interface FilePreviewDialogConfig {

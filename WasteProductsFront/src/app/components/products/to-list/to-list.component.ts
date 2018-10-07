@@ -7,6 +7,9 @@ import { UserProduct } from '../../../models/users/user-product';
 import { Router } from '@angular/router';
 import { ProductsComponent } from '../products.component';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { FormPreviewOverlay } from '../../form-product-overlay/form-preview-overlay';
+import { FormPreviewService } from '../../../services/form-preview/form-preview.service';
+
 
 @Component({
   selector: 'app-to-list',
@@ -26,6 +29,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 export class ToListComponent implements OnInit {
 
   constructor (public productService: ProductService,
+    private previewDialogForm: FormPreviewService,
     private router: Router) {}
 
   products: Product[] = [];
@@ -70,5 +74,11 @@ this.productService.getUserProducts().subscribe(
 
     addProduct() {
       this.router.navigate(['products/add-product']);
+    }
+
+    editSlectedProduct(productId: string) {
+      const dialog: FormPreviewOverlay = this.previewDialogForm.open({
+        form: { name: 'Редактировать Мои продукты', id: productId, editMode: true }
+      });
     }
   }

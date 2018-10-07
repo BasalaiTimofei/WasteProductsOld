@@ -60,10 +60,11 @@ import { AllToListComponent } from './components/products/all-to-list/all-to-lis
 import { SliderComponent } from './components/common/slider/slider.component';
 import { NguCarouselModule } from '@ngu/carousel';
 import { ConfirmEmailChangingComponent } from './components/user/settings/confirm-email-changing/confirm-email-changing.component';
-import { LightSearchComponent } from './components/light-search/light-search.component';
+import { TitleComponent } from './components/common/title/title.component';
 
 /* Custom Modules */
 import { AccountModule } from './modules/account/account.module';
+
 
 @NgModule({
   declarations: [
@@ -111,6 +112,7 @@ import { AccountModule } from './modules/account/account.module';
     AllToListComponent,
     SliderComponent,
     ConfirmEmailChangingComponent,
+    TitleComponent,
   ],
   imports: [
     BrowserModule,

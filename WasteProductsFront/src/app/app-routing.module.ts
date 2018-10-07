@@ -26,6 +26,7 @@ import { ChangePasswordComponent } from './components/user/settings/change-passw
 import { AllToListComponent } from './components/products/all-to-list/all-to-list.component';
 import { ResetPasswordComponent } from './modules/account/components/reset-password/reset-password.component';
 import { AccountLogoutComponent } from './modules/account/components/account-logout/account-logout.component';
+import { GroupsComponent } from './modules/groups/components/groups/groups.component';
 
 const routes: Routes = [
   { path: '', component: DefaultComponent, pathMatch: 'full' },

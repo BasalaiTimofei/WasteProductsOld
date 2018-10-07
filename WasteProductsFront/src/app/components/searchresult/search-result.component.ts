@@ -108,7 +108,7 @@ export class SearchresultComponent implements OnDestroy, OnInit {
 
   addToMyProducts(productId: string) {
     const dialog: FormPreviewOverlay = this.previewDialogForm.open({
-      form: { name: 'Добавить в Мои продукты', id: productId, searchQuery: this.query }
+      form: { name: 'Добавить в Мои продукты', id: productId, searchQuery: this.query, editMode: false }
     });
   }
 
