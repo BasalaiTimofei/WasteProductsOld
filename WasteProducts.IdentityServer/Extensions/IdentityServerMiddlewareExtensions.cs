@@ -25,7 +25,14 @@ namespace WasteProducts.IdentityServer.Extensions
                         EnableKatanaLogging = true,
                         EnableWebApiDiagnostics = true,
                         WebApiDiagnosticsIsVerbose = false
-                    }
+                    },
+
+
+                     AuthenticationOptions = new IdentityServer3.Core.Configuration.AuthenticationOptions
+                     {
+                         EnablePostSignOutAutoRedirect = true
+                     }
+
                 });
 
             });

@@ -13,67 +13,82 @@ namespace WasteProducts.IdentityServer.Config
                 /////////////////////////////////////////////////////////////
                 // JavaScript Implicit Client - TokenManager
                 /////////////////////////////////////////////////////////////
-                new Client
+                  new Client
                 {
-                    Flow = Flows.Implicit,
-
+                    //ClientName = "Waste Products Angular Client",
+                    //ClientId = "wasteproducts.front.angular",
                     ClientId = IdentityConstants.WasteProducts_Front_ClientID,
                     ClientUri = IdentityConstants.WasteProducts_Front_ClientUrl,
                     ClientName = IdentityConstants.WasteProducts_Front_ClientName,
+                    Flow = Flows.ResourceOwner,
 
                     RequireConsent = true,
                     AllowRememberConsent = true,
 
-                    RedirectUris = new List<string>
+                    ClientSecrets = new List<Secret>
                     {
-                        IdentityConstants.WasteProducts_Front_ClientUrl,
+                        new Secret(IdentityConstants.WasteProducts_Client_Secret.Sha256())
                     },
-
-                    PostLogoutRedirectUris = new List<string>
-                    {
-                        IdentityConstants.WasteProducts_Front_ClientUrl,
-                    },
-
-                    AllowedCorsOrigins = new List<string>
-                    {
-                        IdentityConstants.WasteProducts_Front_ClientUrl,
-                    },
-
                     AllowedScopes = new List<string>
                     {
                         Constants.StandardScopes.OpenId,
                         Constants.StandardScopes.Profile,
                         Constants.StandardScopes.Email,
                         Constants.StandardScopes.Roles,
-                        IdentityConstants.WasteProducts_Api_Scope
+                       "wasteproducts-api"
                     },
 
-                    // access token settings
-                    AccessTokenLifetime = 3600,
+                     RedirectUris = new List<string>
+                    {
+                        IdentityConstants.WasteProducts_Front_ClientUrl
+                    },
+
+                    PostLogoutRedirectUris = new List<string>
+                    {
+                        IdentityConstants.WasteProducts_Front_ClientUrl
+                    },
+
+                    // used by JS resource owner sample
+                    AllowedCorsOrigins = new List<string>
+                    {
+                       IdentityConstants.WasteProducts_Front_ClientUrl
+                    },
+
                     AccessTokenType = AccessTokenType.Jwt,
+                    AccessTokenLifetime = 3600,
+                    AuthorizationCodeLifetime = 86400,
+                    IdentityTokenLifetime = 86400,
 
                     // refresh token settings
                     AbsoluteRefreshTokenLifetime = 86400,
                     SlidingRefreshTokenLifetime = 43200,
-                    RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                    RefreshTokenUsage = TokenUsage.ReUse,
                     RefreshTokenExpiration = TokenExpiration.Sliding
                 },
+
 
 
                 new Client
                 {
                     ClientName = IdentityConstants.WasteProducts_Api_Name,
                     ClientId = IdentityConstants.WasteProducts_Api_ClientID,
-                    Flow = Flows.ResourceOwner,
+                    Flow = Flows.ClientCredentials,
+
                     ClientSecrets = new List<Secret>
                     {
-                        new Secret(IdentityConstants.WasteProducts_Api_Secret.Sha256())
+                         new Secret(IdentityConstants.WasteProducts_Api_Secret.Sha256())
+                    },
+                      AllowedCorsOrigins = new List<string>
+                    {
+                        IdentityConstants.WasteProducts_Front_ClientUrl,
                     },
                     AllowedScopes = new List<string>
                     {
                         IdentityConstants.WasteProducts_Api_Scope
                     }
                 },
+
+
             };
         }
     }

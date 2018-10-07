@@ -138,15 +138,6 @@ export class AuthenticationService extends BaseHttpService {
     // set token validation handler
      this.oauthService.tokenValidationHandler = new JwksValidationHandler();
 
-    // subscribe to login/logout events
-    this.oauthService.events.subscribe(event => {
-      const oldValue = this.isAuthenticatedSubject.value;
-      const newValue = this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken();
-      if (oldValue !== newValue) {
-        this.isAuthenticatedSubject.next(newValue);
-      }
-    });
-
   
      // Load Discovery Document and then try to login the user
      this.oauthService.loadDiscoveryDocument(environment.urlDiscoveryDocument).then(() => {
@@ -160,6 +151,16 @@ export class AuthenticationService extends BaseHttpService {
       });
     })
     .catch(() => this.logError('The AuthenticationService can not connect to the IdentityServer or load DiscoveryDocument from it'))
+
+    // subscribe to login/logout events
+    this.oauthService.events.subscribe(event => {
+      const oldValue = this.isAuthenticatedSubject.value;
+      const newValue = this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken();
+      if (oldValue !== newValue) {
+        this.isAuthenticatedSubject.next(newValue);
+      }
+    });
+
   }
 
   private createAuthConfig(): AuthConfig {
