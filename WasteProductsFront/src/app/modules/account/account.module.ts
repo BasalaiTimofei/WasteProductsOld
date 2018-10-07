@@ -13,6 +13,7 @@ import { AccountComponent } from './components/account/account.component';
 import { NotificationListComponent } from './components/notification-list/notification-list.component';
 import { NotificationDetailsComponent } from './components/notification-details/notification-details.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { AccountLoginComponent } from './components/account-login/account-login.component';
 /* Pipes */
 import { TruncatePipe } from './pipes/truncate.pipe';
 // Environment
@@ -54,6 +55,7 @@ function createConfig(): SignalRConfiguration {
     NotificationListComponent,
     NotificationDetailsComponent,
     ResetPasswordComponent,
+    AccountLoginComponent,
   ],
   exports: [
     OAuthModule, // TODO: check
@@ -65,6 +67,7 @@ function createConfig(): SignalRConfiguration {
     AccountComponent,
     NotificationListComponent,
     NotificationDetailsComponent,
+    AccountLoginComponent
   ],
   entryComponents: [
     AccountPanelComponent

@@ -5,7 +5,9 @@
   </button>
 </ng-container>
 <ng-template #elseTemplate>
-  <button mat-button (click)="logIn($event)">Войти</button>
+  <!--For implict flow-->
+  <!--<button mat-button (click)="logIn($event)">Войти</button>-->
+  <button mat-button routerLink="/login">Войти</button>
   <button mat-button routerLink="/register">Зарегистрироваться</button>
   <button mat-button routerLink="/resetpassword">Забыли пароль?</button>
 </ng-template>

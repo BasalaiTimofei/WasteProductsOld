@@ -1,0 +1,35 @@
+<mat-card>
+  <mat-card-header>
+    <mat-toolbar class="md-toolbar-tools">
+      <h2>Авторизация пользователя</h2>
+    </mat-toolbar>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="container">
+      <form #loginForm="ngForm" (ngSubmit)="submitForm(loginForm)">
+
+        <div class="form-group">
+          <mat-form-field>
+            <input matInput placeholder="Username" type="text" name="userName" required [(ngModel)]="model.UserName">
+          </mat-form-field>
+        </div> 
+
+        <div class="form-group">
+          <mat-form-field>
+            <input matInput placeholder="Password" type="password" name="password" required [(ngModel)]="model.Password">
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <p>{{errors}}</p>
+        </div>
+
+        <div class="form-group">
+          <button mat-button type="submit" ng-disabled="ngForm.invalid">Submit</button>
+        </div>
+
+      </form>
+    </div>
+
+  </mat-card-content>
+</mat-card>

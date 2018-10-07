@@ -14,6 +14,7 @@ import { GroupsOfUserComponent } from './components/groups/groups-of-user/groups
 /* Account components */
 import { AccountComponent } from './modules/account/components/account/account.component';
 import { AccountRegisterComponent } from './modules/account/components/account-register/account-register.component';
+import { AccountLoginComponent } from './modules/account/components/account-login/account-login.component';
 
 /* Route guards */
 import { AuthenticationGuard } from './modules/account/guards/authentication.guard';
@@ -30,6 +31,7 @@ import { ResetPasswordComponent } from './modules/account/components/reset-passw
 const routes: Routes = [
   { path: '', component: DefaultComponent, pathMatch: 'full' },
   { path: 'register', component: AccountRegisterComponent },
+  { path: 'login', component: AccountLoginComponent },
   {
     path: 'account', canActivate: [AuthenticationGuard],
     children: [
