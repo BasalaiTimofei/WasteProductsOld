@@ -21,8 +21,8 @@ export class GroupComponent implements OnInit {
     private dialog: MatDialog) { }
 
   ngOnInit() {
-    const groupId = this.route.snapshot.paramMap.get('id');
-    this.groupsService.getGroup(groupId).subscribe(group => this.group = group);
+
+    this.update();
   }
 
   edit() {
@@ -42,6 +42,11 @@ export class GroupComponent implements OnInit {
 
   updateGroupInfo(groupInfo: GroupInfoModel) {
     this.groupsService.updateGroup(this.group.Id, groupInfo).subscribe(group => this.group = Object.assign(this.group, groupInfo));
+  }
+
+  update() {
+    const groupId = this.route.snapshot.paramMap.get('id');
+    this.groupsService.getGroup(groupId).subscribe(group => this.group = group);
   }
 
 }

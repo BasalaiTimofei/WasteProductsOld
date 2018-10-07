@@ -48,8 +48,6 @@ export class BoardService extends BaseHttpService {
       catchError(this.handleError('deleteBoard')));
   }
 
-
-
   addProduct(boardId: string, productInfo: ProductInfoModel): Observable<ProductModel> {
     const url = `${this.apiUrl}/board/${boardId}/product`;
 
@@ -59,17 +57,17 @@ export class BoardService extends BaseHttpService {
     );
   }
 
-  updateProduct(boardId: string, productInfo: ProductInfoModel): Observable<ProductModel> {
-    const url = `${this.apiUrl}/board/${boardId}/product`;
+  updateProduct(productId: string, productInfo: ProductInfoModel): Observable<ProductModel> {
+    const url = `${this.apiUrl}/board/product/${productId}`;
 
-    return this.httpService.post<ProductModel>(url, productInfo).pipe(
+    return this.httpService.put<ProductModel>(url, productInfo).pipe(
       tap(response => this.logDebug('adding board to board')),
       catchError(this.handleError('addProduct', null))
     );
   }
 
-  deleteProduct(boardId: string, productId: string): Observable<any> {
-    const url = `${this.apiUrl}/board/${boardId}/product/${productId}`;
+  deleteProduct(productId: string): Observable<any> {
+    const url = `${this.apiUrl}/board/product/${productId}`;
 
     return this.httpService.delete(url).pipe(
       tap(response => this.logDebug('deleting product by product id')),

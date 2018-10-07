@@ -16,24 +16,19 @@ import { ConfirmModel } from '../../models/confirm';
 })
 export class BoardComponent implements OnInit {
 
-  @Input() private board: BoardModel;
-  private productsSubject: BehaviorSubject<ProductModel[]>;
+  @Input() public board: BoardModel;
 
   @Output() boardRemovedEvent: EventEmitter<string> = new EventEmitter<string>();
-
-  products$: Observable<ProductModel[]>;
-
 
   constructor(
     private boardService: BoardService,
     private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.productsSubject = new BehaviorSubject<ProductModel[]>(this.board.GroupProducts);
-    this.products$ = this.productsSubject.asObservable();
+
   }
 
-  edit() {
+  editBoard() {
     const dialogRef = this.dialog.open<GroupDialogInfoComponent, { action: string, data: BoardInfoModel }, BoardInfoModel>(
       GroupDialogInfoComponent, {
         // width: '250px',
@@ -44,16 +39,15 @@ export class BoardComponent implements OnInit {
       });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.updateProductInfo(result);
+      this.updateBoardInfo(result);
     });
   }
 
-  updateProductInfo(boardInfo: BoardInfoModel) {
+  updateBoardInfo(boardInfo: BoardInfoModel) {
     this.boardService.updateBoard(this.board.Id, boardInfo).subscribe(board => this.board = Object.assign(this.board, boardInfo));
   }
 
   deleteBoard() {
-
     const dialogRef = this.dialog.open<ConfirmDialogComponent, ConfirmModel, boolean>(
       ConfirmDialogComponent, {
         // width: '250px',
@@ -76,7 +70,13 @@ export class BoardComponent implements OnInit {
   addProduct(event: Event) {
     this.onItemClick(event);
 
-    this.boardService.addProduct(this.board.Id, {Name: 'Some Name', Information: 'Some Info', ProductId: '0'});
+    this.boardService.addProduct(this.board.Id, {Name: 'Some Name', Information: 'Some Info', ProductId: '0'}).subscribe();
+  }
+
+  updateProduct(productId: string, event: Event) {
+    this.onItemClick(event);
+
+    this.boardService.updateProduct(productId, {Name: 'Some Name', Information: 'Some Info', ProductId: '0'}).subscribe();
   }
 
 
@@ -94,10 +94,9 @@ export class BoardComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.boardService.deleteProduct(this.board.Id, productId).subscribe(() => {
+        this.boardService.deleteProduct(productId).subscribe((r) => {
           remove(this.board.GroupProducts, p => p.Id === productId);
 
-          // this.board.GroupProducts = this.removeProductArray(this.board.GroupProducts, productId);
         });
       }
     });
