@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { SignalRModule, SignalRConfiguration } from 'ng2-signalr';
 import { MaterialModule } from 'src/app/modules/material/material.module';
@@ -13,10 +13,12 @@ import { AccountComponent } from './components/account/account.component';
 import { NotificationListComponent } from './components/notification-list/notification-list.component';
 import { NotificationDetailsComponent } from './components/notification-details/notification-details.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { AccountLoginComponent } from './components/account-login/account-login.component';
 /* Pipes */
 import { TruncatePipe } from './pipes/truncate.pipe';
 // Environment
 import { environment } from 'src/environments/environment';
+import { AccountLogoutComponent } from './components/account-logout/account-logout.component';
 
 
 function createConfig(): SignalRConfiguration {
@@ -29,7 +31,7 @@ function createConfig(): SignalRConfiguration {
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule,
+    FormsModule, ReactiveFormsModule,
 
     /* Auth module*/
     OAuthModule.forRoot({
@@ -54,6 +56,8 @@ function createConfig(): SignalRConfiguration {
     NotificationListComponent,
     NotificationDetailsComponent,
     ResetPasswordComponent,
+    AccountLoginComponent,
+    AccountLogoutComponent,
   ],
   exports: [
     OAuthModule, // TODO: check
@@ -65,6 +69,8 @@ function createConfig(): SignalRConfiguration {
     AccountComponent,
     NotificationListComponent,
     NotificationDetailsComponent,
+    AccountLoginComponent,
+    AccountLogoutComponent
   ],
   entryComponents: [
     AccountPanelComponent

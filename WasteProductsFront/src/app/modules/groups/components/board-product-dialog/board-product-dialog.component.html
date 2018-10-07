@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>"Добавить продукт"</h2>
+<mat-dialog-content>
+
+  <p class="lead">Выберите продукт</p>
+  <app-light-search (productClickedEvent)="productSelected($event)"></app-light-search>
+
+</mat-dialog-content>
+<mat-dialog-actions class="justify-content-between">
+  <button mat-button [mat-dialog-close]="false">Нет, хавтит</button>
+  <button mat-button [mat-dialog-close]="true">Добавить</button>
+</mat-dialog-actions>

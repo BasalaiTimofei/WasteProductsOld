@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { remove } from 'lodash';
 import { ConfirmModel } from '../../models/confirm';
+import { BoardProductDialogComponent } from '../board-product-dialog/board-product-dialog.component';
 
 @Component({
   selector: 'app-board',
@@ -71,7 +72,21 @@ export class BoardComponent implements OnInit {
   /* Products */
 
   addProduct() {
-    this.boardService.addProduct(this.board.Id, { Name: 'Some Name', Information: 'Some Info', ProductId: '0' }).subscribe();
+    const dialogRef = this.dialog.open<BoardProductDialogComponent, any, ProductInfoModel>(
+      BoardProductDialogComponent, {
+        // width: '250px',
+      });
+
+    dialogRef.afterClosed().subscribe(productInfo => {
+      if (productInfo) {
+        this.boardService.addProduct(this.board.Id, productInfo).subscribe(
+          () => { }
+        );
+      }
+    });
+
+
+
   }
 
   deleteProduct(productId: string) {

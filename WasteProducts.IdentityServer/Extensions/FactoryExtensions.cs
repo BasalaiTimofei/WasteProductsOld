@@ -12,8 +12,6 @@ namespace WasteProducts.IdentityServer.Extensions
     {
         public static IdentityServerServiceFactory Configure(this IdentityServerServiceFactory factory)
         {
-            //factory.Register(new Registration<ISearchRepository, LuceneSearchRepository>());
-
             factory
                 .UseInMemoryClients(Clients.Load())
                 .UseInMemoryScopes(Scopes.Load());

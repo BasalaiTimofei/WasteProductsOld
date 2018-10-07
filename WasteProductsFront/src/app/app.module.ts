@@ -111,7 +111,6 @@ import { AccountModule } from './modules/account/account.module';
     AllToListComponent,
     SliderComponent,
     ConfirmEmailChangingComponent,
-    LightSearchComponent,
   ],
   imports: [
     BrowserModule,

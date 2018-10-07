@@ -18,7 +18,6 @@ export class LightSearchComponent implements OnInit {
 
   query: string;
   searchResult: SearchProduct[];
-  errorMessage: string;
   pageSize = 5;
   pageIndex = 0;
   length = 0;

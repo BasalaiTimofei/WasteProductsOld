@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 /* Services */
 import { BaseHttpService } from 'src/app/services/base/base-http.service';
 import { LoggingService } from 'src/app/services/logging/logging.service';
@@ -8,7 +9,9 @@ import { OAuthService, JwksValidationHandler, AuthConfig } from 'angular-oauth2-
 /* Environment */
 import { environment } from 'src/environments/environment';
 
-import { Registration } from '../models/registration';
+import { RegistrationModel } from '../models/registration';
+import { LoginModel } from '../models/login';
+
 
 
 declare interface Claims {
@@ -23,19 +26,11 @@ declare interface Claims {
   /**
      * Is email verified
      */
-  email_varified: string;
+  email_verified: string;
   /**
      * Full name
      */
   name: string;
-  /**
-     * Given name
-     */
-  given_name: string;
-  /**
-     * Family name
-     */
-  family_name: string;
 }
 
 @Injectable({
@@ -52,12 +47,31 @@ export class AuthenticationService extends BaseHttpService {
     this.configureOauth();
   }
 
-  register(registrationModel: Registration): Observable<any> {
+  register(registrationModel: RegistrationModel): Observable<any> {
     const url = `${environment.apiHostUrl}/api/user/register`;  // URL to web api
-    return this.httpService.post<any>(url, registrationModel);
+    return this.httpService.post<any>(url, registrationModel).pipe(
+      tap(data => this.logDebug('registering new user')),
+      catchError(this.handleError('getState', null))
+    );
   }
 
-  logIn(): void {
+  logInResourceOwnerFlow(userModel: LoginModel): Observable<boolean> {
+    const result: Subject<boolean> = new Subject<boolean>();
+
+    this.oauthService.fetchTokenUsingPasswordFlowAndLoadUserProfile(userModel.UserName, userModel.Password)
+      .then(() => {
+        result.next(true);
+        this.logDebug('LogIn completed');
+      })
+      .catch(() => {
+        result.next(false);
+        this.logError('LogIn error');
+      });
+
+    return result.asObservable();
+  }
+
+  logInImplicitFlow() {
     this.oauthService.initImplicitFlow();
   }
 
@@ -65,7 +79,7 @@ export class AuthenticationService extends BaseHttpService {
     this.oauthService.logOut();
   }
 
-  getProfile(): object {
+  getProfile(): Promise<object> {
     return this.oauthService.loadUserProfile();
   }
 
@@ -95,20 +109,11 @@ export class AuthenticationService extends BaseHttpService {
     // set AuthConfig
     this.oauthService.configure(this.createAuthConfig());
     // set automatic refresh
-    // this.oauthService.setupAutomaticSilentRefresh();
+    this.oauthService.setupAutomaticSilentRefresh();
     // set token validation handler
     this.oauthService.tokenValidationHandler = new JwksValidationHandler();
 
-    // subscribe to login/logout events
-    this.oauthService.events.subscribe(event => {
-      const oldValue = this.isAuthenticatedSubject.value;
-      const newValue = this.oauthService.hasValidIdToken() && this.oauthService.hasValidAccessToken();
-      if (oldValue !== newValue) {
-        this.isAuthenticatedSubject.next(newValue);
-      }
-    });
-
-    // trying to load DiscoveryDocument
+    // Load Discovery Document and then try to login the user
     this.oauthService.loadDiscoveryDocument()
       .then(() => {
         this.logDebug('Connection to the IdentityServer established and Discovery Document was successfully loaded');
@@ -119,20 +124,30 @@ export class AuthenticationService extends BaseHttpService {
           onLoginError: () =>
             this.logError('LogIn error')
         });
-      })
-      .catch(() => this.logError('The AuthenticationService can not connect to the IdentityServer or load DiscoveryDocument from it'));
+      }).catch(() => this.logError('The AuthenticationService can not connect to the IdentityServer or load DiscoveryDocument from it'));
+
+    // subscribe to login/logout events
+    this.oauthService.events.subscribe(event => {
+      const oldValue = this.isAuthenticatedSubject.value;
+      const newValue = this.oauthService.hasValidAccessToken();
+      if (oldValue !== newValue) {
+        this.isAuthenticatedSubject.next(newValue);
+      }
+    });
+
   }
 
   private createAuthConfig(): AuthConfig {
     return {
+      oidc: false,
       issuer: environment.iderntityHostUrl, // Url of the Identity Provider
-      clientId: environment.clientId, // The SPA's id. The SPA is registerd with this id at the auth-server
-
-      redirectUri: window.location.origin, // URL of the SPA to redirect the user to after login
       scope: 'openid profile email wasteproducts-api', // set the scope for the permissions the client should request
 
+      clientId: environment.clientId, // The SPA's id. The SPA is registerd with this id at the auth-server
+      dummyClientSecret: environment.dummyClientSecret,
+
       showDebugInformation: !environment.production,
-      sessionChecksEnabled: true,
+      // sessionChecksEnabled: true,
     };
   }
 }

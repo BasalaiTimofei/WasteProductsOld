@@ -13,25 +13,29 @@ import { BoardDialogRemoveComponent } from './components/board-dialog-remove/boa
 import { GroupDialogInfoComponent } from './components/group-dialog-info/group-dialog-info.component';
 import { GroupsComponent } from './components/groups/groups.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { LightSearchComponent } from '../../components/light-search/light-search.component';
+import { BoardProductDialogComponent } from './components/board-product-dialog/board-product-dialog.component';
 
 
 
 
 @NgModule({
-  imports: [
-    CommonModule, FormsModule,
-    MaterialModule,
+    imports: [
+        CommonModule, FormsModule,
+        MaterialModule,
 
-    GroupsRoutingModule,
-  ],
-  declarations: [
-    GroupsComponent,
-    GroupComponent, GroupDialogInfoComponent,
-    BoardComponent, BoardListComponent, BoardDialogAddComponent, BoardDialogRemoveComponent, GroupsComponent, ConfirmDialogComponent,
-  ],
-  entryComponents: [
-    GroupDialogInfoComponent,
-    BoardDialogAddComponent, BoardDialogRemoveComponent, ConfirmDialogComponent,
-  ]
+        GroupsRoutingModule,
+    ],
+    declarations: [
+        GroupsComponent,
+        GroupComponent, GroupDialogInfoComponent, BoardProductDialogComponent,
+        BoardComponent, BoardListComponent, BoardDialogAddComponent, BoardDialogRemoveComponent, GroupsComponent, ConfirmDialogComponent,
+        LightSearchComponent,
+
+    ],
+    entryComponents: [
+        GroupDialogInfoComponent,
+        BoardDialogAddComponent, BoardDialogRemoveComponent, ConfirmDialogComponent, BoardProductDialogComponent,
+    ]
 })
 export class GroupsModule { }
