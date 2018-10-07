@@ -12,25 +12,25 @@ namespace WasteProducts.Logic.Common.Services.Groups
         /// Create new board
         /// </summary>
         /// <param name="item">Object</param>
-        Task<string> Create(GroupProduct item, string userId, string groupId);
+        Task<string> Create(GroupProduct item);
 
         /// <summary>
         /// Add or corect information on board
         /// </summary>
         /// <param name="item">Object</param>
-        Task Update(GroupProduct item, string userId, string groupId);
+        Task Update(GroupProduct item);
 
         /// <summary>
         /// Product delete
         /// </summary>
-        /// <param name="item">Object</param>
-        Task Delete(GroupProduct item, string userId, string groupId);
+        /// <param name="producId">Primary key</param>
+        Task Delete(string groupProductId);
 
         /// <summary>
         /// Search Product in board by id
         /// </summary>
         /// <param name="id">Primary key</param>
         /// <return>Object</return>
-        Task<GroupProduct> FindById(string id);
+        Task<GroupProduct> FindById(string groupProductId);
     }
 }

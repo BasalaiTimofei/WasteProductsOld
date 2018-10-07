@@ -21,19 +21,12 @@ namespace WasteProducts.Logic.Services.Groups
             _mapper = mapper;
         }
 
-        public async Task<string> Create(GroupProduct item, string userId, string groupId)
+        public async Task<string> Create(GroupProduct item)
         {
             var result = _mapper.Map<GroupProductDB>(item);
 
-            var modelUser = (await _dataBase.Find<GroupUserDB>(
-                x => x.UserId == userId
-                && x.GroupId == groupId)).FirstOrDefault();
-            if (modelUser == null)
-                throw new ValidationException("User not found");
-
             var modelBoard = (await _dataBase.Find<GroupBoardDB>(
-                x => x.Id == result.GroupBoardId
-                && x.GroupId == groupId)).FirstOrDefault();
+                x => x.Id == result.GroupBoardId).ConfigureAwait(false)).FirstOrDefault();
             if (modelBoard == null)
                 throw new ValidationException("Board not found");
 
@@ -45,24 +38,12 @@ namespace WasteProducts.Logic.Services.Groups
             return result.Id;
         }
 
-        public async Task Update(GroupProduct item, string userId, string groupId)
+        public async Task Update(GroupProduct item)
         {
             var result = _mapper.Map<GroupProductDB>(item);
 
-            var modelUser = (await _dataBase.Find<GroupUserDB>(
-                x => x.UserId == userId
-                && x.GroupId == groupId)).FirstOrDefault();
-            if (modelUser == null)
-                throw new ValidationException("User not found");
-
-            var modelBoard = (await _dataBase.Find<GroupBoardDB>(
-                x => x.Id == result.GroupBoardId
-                && x.GroupId == groupId)).FirstOrDefault();
-            if (modelBoard == null)
-                throw new ValidationException("Board not found");
-
             var model = (await _dataBase.Find<GroupProductDB>(
-                x => x.Id == result.Id)).FirstOrDefault();
+                x => x.Id == result.Id).ConfigureAwait(false)).FirstOrDefault();
             if (model == null)
                 throw new ValidationException("Product not found");
 
@@ -74,24 +55,10 @@ namespace WasteProducts.Logic.Services.Groups
             await _dataBase.Save();
         }
 
-        public async Task Delete(GroupProduct item, string userId, string groupId)
+        public async Task Delete(string groupProductId)
         {
-            var result = _mapper.Map<GroupProductDB>(item);
-
-            var modelUser = (await _dataBase.Find<GroupUserDB>(
-                x => x.UserId == userId
-                && x.GroupId == groupId)).FirstOrDefault();
-            if (modelUser == null)
-                throw new ValidationException("User not found");
-
-            var modelBoard = (await _dataBase.Find<GroupBoardDB>(
-                x => x.Id == result.GroupBoardId
-                && x.GroupId == groupId)).FirstOrDefault();
-            if (modelBoard == null)
-                throw new ValidationException("Board not found");
-
             var model = (await _dataBase.Find<GroupProductDB>(
-                x => x.Id == result.Id)).FirstOrDefault();
+                x => x.Id == groupProductId).ConfigureAwait(false)).FirstOrDefault();
             if (model == null)
                 throw new ValidationException("Product not found");
 
@@ -99,10 +66,10 @@ namespace WasteProducts.Logic.Services.Groups
             await _dataBase.Save();
         }
 
-        public async Task<GroupProduct> FindById(string id)
+        public async Task<GroupProduct> FindById(string groupProductId)
         {
             var model = (await _dataBase.Find<GroupProductDB>(
-                x => x.Id == id)).FirstOrDefault();
+                x => x.Id == groupProductId)).FirstOrDefault();
             if (model == null)
                 return null;
 

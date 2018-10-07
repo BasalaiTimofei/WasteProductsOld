@@ -28,19 +28,36 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         }
 
         /// <summary>
+        /// Get product object by id 
+        /// </summary>
+        /// <param name="productId">Primary key</param>
+        /// <returns>200(Object) || 404</returns>
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Get product by product id", typeof(GroupProduct))]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Incorrect product")]
+        [HttpGet, Route("product/{productId}")]
+        public async Task<IHttpActionResult> GetBoard([FromUri]string productId)
+        {
+            var item = await _groupProductService.FindById(productId);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
+
+        /// <summary>
         /// Product create
         /// </summary>
         /// <param name="item">Object</param>
-        /// <param name="groupId">Primary key</param>
-        /// <param name="userId">Primary key</param>
         /// <returns>200(Object)</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Product create", typeof(GroupProduct))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
-        [HttpPost, Route("{groupId}/product/{userId}")]
-        public async Task<IHttpActionResult> Create(GroupProduct item, [FromUri]string groupId, [FromUri]string userId)
+        [HttpPost, Route("board/{boardId}/product")]
+        public async Task<IHttpActionResult> Create(GroupProduct item)
         {
-            item.Id = await _groupProductService.Create(item, userId, groupId);
+            item.Id = await _groupProductService.Create(item);
 
             return Ok(item);
         }
@@ -49,16 +66,14 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// Product update
         /// </summary>
         /// <param name="item">Object</param>
-        /// <param name="groupId">Primary key</param>
-        /// <param name="userId">Primary key</param>
         /// <returns>200(Object)</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Product update", typeof(GroupProduct))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
-        [HttpPut, Route("{groupId}/product/{userId}")]
-        public async Task<IHttpActionResult> Update(GroupProduct item, [FromUri] string groupId, [FromUri] string userId)
+        [HttpPut, Route("board/product/{productId}")]
+        public async Task<IHttpActionResult> Update(GroupProduct item)
         {
-            await _groupProductService.Update(item, userId, groupId);
+            await _groupProductService.Update(item);
 
             return Ok(item);
         }
@@ -66,20 +81,15 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <summary>
         /// Product delete
         /// </summary>
-        /// <param name="groupId">Primary key</param>
-        /// <param name="boardId">Primary key</param>
         /// <param name="productId">Primary key</param>
-        /// <param name="userId">Primary key</param>
         /// <returns>200()</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Product delete")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
-        [HttpDelete, Route("{groupId}/product/{boardId}/{productId}/{userId}")]
-        public async Task<IHttpActionResult> Delete([FromUri] string groupId, [FromUri] string boardId, 
-            [FromUri] string productId, [FromUri] string userId)
+        [HttpDelete, Route("board/product/{productId}")]
+        public async Task<IHttpActionResult> Delete([FromUri] string productId)
         {
-            var item = new GroupProduct { Id = productId, GroupBoardId = boardId };
-            await _groupProductService.Delete(item, userId, groupId);
+            await _groupProductService.Delete(productId);
 
             return Ok();
         }

@@ -28,6 +28,25 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         }
 
         /// <summary>
+        /// Get board object by id 
+        /// </summary>
+        /// <param name="boardId">Primary key</param>
+        /// <returns>200(Object) || 404</returns>
+        [SwaggerResponseRemoveDefaults]
+        [SwaggerResponse(HttpStatusCode.OK, "Get board by group id", typeof(GroupBoard))]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Incorrect board")]
+        [HttpGet, Route("board/{boardId}")]
+        public async Task<IHttpActionResult> GetBoard([FromUri]string boardId)
+        {
+            var item = await _groupBoardService.FindById(boardId);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
+
+        /// <summary>
         /// Board create
         /// </summary>
         /// <param name="item">Object</param>
@@ -51,7 +70,7 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Board update", typeof(GroupBoard))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
-        [HttpPut, Route("{groupId}/board")]
+        [HttpPut, Route("board/{boardId}")]
         public async Task<IHttpActionResult> Update(GroupBoard item)
         {
             await _groupBoardService.Update(item);
@@ -62,19 +81,15 @@ namespace WasteProducts.Web.Controllers.Api.Groups
         /// <summary>
         /// Board delete
         /// </summary>
-        /// <param name="groupId">Primary key</param>
         /// <param name="boardId">Primary key</param>
-        /// <param name="creatorId">Primary key</param>
         /// <returns>200()</returns>
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Board delete")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Not Found")]
-        [HttpDelete, Route("{groupId}/board/{boardId}/{creatorId}")]
-        public async Task<IHttpActionResult> Delete([FromUri]string groupId, [FromUri]string boardId, 
-            [FromUri]string creatorId)
+        [HttpDelete, Route("board/{boardId}")]
+        public async Task<IHttpActionResult> Delete([FromUri]string boardId)
         {
-            var item = new GroupBoard { Id = boardId, GroupId = groupId, CreatorId = creatorId };
-            await _groupBoardService.Delete(item);
+            await _groupBoardService.Delete(boardId);
 
             return Ok();
         }
