@@ -21,7 +21,6 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
         private readonly IRuntimeMapper _mapper;
         private Mock<IVerificationService> _verificationServiceMock;
         private Mock<IDonationRepository> _donationRepositoryMock;
-        private Mock<IMailService> _mailServiceMock;
 
         public PayPalServiceTests()
         {
@@ -44,8 +43,6 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
             _donationRepositoryMock = new Mock<IDonationRepository>();
             _donationRepositoryMock.Setup(r => r.ContainsAsync(It.IsAny<string>()))
                 .Returns(Task.FromResult(false));
-
-            _mailServiceMock = new Mock<IMailService>();
         }
 
         [Test]
@@ -114,8 +111,8 @@ namespace WasteProducts.Logic.Tests.Donation_Tests
             return new PayPalService(
                 _verificationServiceMock.Object,
                 _donationRepositoryMock.Object,
-                _mapper,
-                _mailServiceMock.Object);
+                _mapper
+                );
         }
 
         private string GetPayPalRequestString(
