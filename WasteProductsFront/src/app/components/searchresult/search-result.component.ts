@@ -4,7 +4,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatAccordion, MatExpansionPanel, MatExpansionPanelHeader,
+  MatExpansionPanelTitle, MatExpansionPanelDescription } from '@angular/material';
 import { Router } from '@angular/router';
 
 import { SearchProduct } from '../../models/search-product';
