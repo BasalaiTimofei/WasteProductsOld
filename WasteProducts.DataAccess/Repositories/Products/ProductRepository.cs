@@ -25,16 +25,15 @@ namespace WasteProducts.DataAccess.Repositories.Products
         /// <inheritdoc/>
         public async Task<string> AddAsync(ProductDB product)
         {
+            product.Barcode.Id = Guid.NewGuid().ToString();
+            product.Barcode.Created = DateTime.UtcNow;
+            product.Barcode.Product = product;
+
             product.Id = Guid.NewGuid().ToString();
             product.Created = DateTime.UtcNow;
 
-            product.Barcode.Id = Guid.NewGuid().ToString();
-            product.Barcode.Created = DateTime.UtcNow;
-
             _context.Barcodes.Add(product.Barcode);
             _context.Products.Add(product);
-
-            product.Barcode.Product = null;
 
             await _context.SaveChangesAsync().ConfigureAwait(false);
 
@@ -67,13 +66,13 @@ namespace WasteProducts.DataAccess.Repositories.Products
         /// <inheritdoc/>
         public async Task<ProductDB> GetByNameAsync(string name)
         {
-            return await _context.Products.Where(p => p.Marked == false).FirstOrDefaultAsync(p => p.Name == name).ConfigureAwait(false);
+            return await _context.Products.FirstOrDefaultAsync(p => p.Name == name && !p.Marked).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
         public async Task<IEnumerable<ProductDB>> SelectAllAsync()
         {
-            return await _context.Products.Where(p => p.Marked == false).ToListAsync().ConfigureAwait(false);
+            return await _context.Products.Where(p => !p.Marked).ToListAsync().ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -83,7 +82,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
 
             return await Task.Run(() =>
             {
-                return _context.Products.Include(p => p.Category).Where(condition).ToList();
+                return _context.Products.Include(p => p.Category).Include(p => p.Barcode).Where(condition).ToList();
             });
                 
         }
@@ -97,7 +96,7 @@ namespace WasteProducts.DataAccess.Repositories.Products
         /// <inheritdoc />
         public async Task<ProductDB> GetByIdAsync(string id)
         {
-            return await _context.Products.FirstOrDefaultAsync(p => p.Id == id && p.Marked == false).ConfigureAwait(false);
+            return await _context.Products.FirstOrDefaultAsync(p => p.Id == id && !p.Marked).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
