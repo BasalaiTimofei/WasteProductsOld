@@ -45,18 +45,18 @@ namespace WasteProducts.Web.Controllers.Api
         {
             var context = new HttpContextWrapper(HttpContext.Current);
             HttpRequestBase payPalRequest = context.Request;
-            Task.Run(() => VerifyAndLogAsync(payPalRequest));
+            byte[] payPalRequestBytes = payPalRequest.BinaryRead(payPalRequest.ContentLength);
+            Task.Run(() => VerifyAndLogAsync(payPalRequestBytes));
             return Ok();
         }
 
         /// <summary>
         /// Asynchronously verify and log the notification.
         /// </summary>
-        /// <param name="payPalRequest">PayPal request.</param>
-        private async Task VerifyAndLogAsync(HttpRequestBase payPalRequest)
+        /// <param name="payPalRequestBytes">PayPal request bytes.</param>
+        private async Task VerifyAndLogAsync(byte[] payPalRequestBytes)
         {
-            byte[] param = payPalRequest.BinaryRead(payPalRequest.ContentLength);
-            string payPalRequestString = Encoding.ASCII.GetString(param);
+            string payPalRequestString = Encoding.ASCII.GetString(payPalRequestBytes);
             await _donationService.VerifyAndLogAsync(payPalRequestString).ConfigureAwait(false);
         }
     }
