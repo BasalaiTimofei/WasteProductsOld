@@ -62,6 +62,7 @@ import { AllToListComponent } from './components/products/all-to-list/all-to-lis
 import { SliderComponent } from './components/common/slider/slider.component';
 import { NguCarouselModule } from '@ngu/carousel';
 import { ConfirmEmailChangingComponent } from './components/user/settings/confirm-email-changing/confirm-email-changing.component';
+import { LightSearchComponent } from './components/light-search/light-search.component';
 
 @NgModule({
   declarations: [
@@ -110,6 +111,7 @@ import { ConfirmEmailChangingComponent } from './components/user/settings/confir
     AllToListComponent,
     SliderComponent,
     ConfirmEmailChangingComponent,
+    LightSearchComponent,
   ],
   imports: [
     BrowserModule,
