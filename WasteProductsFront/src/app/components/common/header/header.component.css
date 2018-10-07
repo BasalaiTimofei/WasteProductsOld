@@ -1,16 +1,13 @@
 .mat-button {
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
-    width:100%;
+    width:95%;
     border: none;
-    padding: 10px 20px;
     text-align: center;
     text-decoration: none;
-    display: inline-block;
     font-size: 16px
 }
 .mat-button:hover {
-    background-color: #ff5050;
     color: white;
 }
 .mat-menu-item{
@@ -18,14 +15,17 @@
     transition-duration: 0.4s;
     display: inline-block;
     text-align: left;
-    font-size: 14px;
+    font-size: 12px;
     width: 50%;
 }
 .mat-menu-item:hover {
-    background-color: #ffcccc;
     color: whitesmoke;
 }
 .mat-menu{
-    width:10%;
+    width:100%;
     display: inline-block;
+}
+
+nav{
+    background-color: rgb(138, 175, 255)
 }

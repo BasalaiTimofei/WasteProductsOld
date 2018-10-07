@@ -1,5 +1,5 @@
 .app-products-table{
-    width: 95%;
+    width: 100%;
     margin: 20px auto;
 }
 
@@ -18,3 +18,62 @@
     text-align: center;
     vertical-align: middle;
 }
+
+.product-picture {
+  background-position: center center;
+  background-size: contain;
+  width: 200px;
+  height: 200px;
+}
+
+span {
+  font-weight: bold;
+}
+
+.app-products-table[_ngcontent-c12] {
+  width: 85;
+}
+  
+  tr.example-detail-row {
+    height: 0;
+  }
+  
+  tr.example-element-row:not(.example-expanded-row):hover {
+    background: #f5f5f5;
+  }
+  
+  tr.example-element-row:not(.example-expanded-row):active {
+    background: #efefef;
+  }
+  
+  .example-element-row td {
+    border-bottom-width: 0;
+  }
+  
+  .example-element-detail {
+    overflow: hidden;
+    display: flex;
+  }
+  
+  .example-element-diagram {
+    min-width: 80px;
+    border: 2px solid black;
+    padding: 8px;
+    font-weight: lighter;
+    margin: 8px 0;
+    height: 104px;
+  }
+  
+  .example-element-symbol {
+    font-weight: bold;
+    font-size: 40px;
+    line-height: normal;
+  }
+  
+  .example-element-description {
+    padding: 16px;
+  }
+  
+  .example-element-description-attribution {
+    opacity: 0.5;
+  }
