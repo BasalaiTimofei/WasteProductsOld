@@ -1,5 +1,5 @@
 <div>
-  <mat-form-field>
+  <mat-form-field class="my-2 px-5">
     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Фильтр">
   </mat-form-field>
 </div>
@@ -26,15 +26,15 @@
   <!-- IsHidden Column -->
   <ng-container matColumnDef="IsHidden">
     <th mat-header-cell *matHeaderCellDef>
-      <button mat-icon-button color="primary" focusable="false" (click)=addProduct()>
+      <button mat-icon-button color="primary" focusable="false" (click)=addProduct() matTooltip="Добавить продукт">
         <i class="material-icons">add</i>
       </button>
     </th>
     <td mat-cell *matCellDef="let row">
       <div class="btn-group">
-        <button mat-icon-button color="primary" focusable="false" (click)="editSlectedProduct(row.Product.Id)">
+        <button mat-icon-button color="primary" focusable="false" (click)="editSlectedProduct(row.Product.Id)" matTooltip="Редакировать продукт">
           <i class="material-icons">edit</i></button>
-        <button mat-icon-button color="primary" focusable="false" (click)="this.productService.deleteUserProduct(row.Product.Id)">
+        <button mat-icon-button color="primary" focusable="false" (click)="this.productService.deleteUserProduct(row.Product.Id)" matTooltip="Удалить продукт">
           <i class="material-icons">delete</i>
         </button>
       </div>

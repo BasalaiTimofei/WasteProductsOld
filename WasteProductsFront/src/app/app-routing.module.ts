@@ -61,7 +61,7 @@ const routes: Routes = [
   { path: 'products', component: ProductsComponent, canActivate: [AuthenticationGuard], children: [
     { path: 'add-product', component: AddProductComponent },
   ]},
-  { path: 'all-to-list', component: AllToListComponent, canActivate: [AuthenticationGuard] },
+  { path: 'all-to-list', component: AllToListComponent },
   { path: 'products/myproducts', component: ToListComponent, canActivate: [AuthenticationGuard] },
   { path: 'searchresults/:query', component: SearchresultComponent },
   { path: '**', component: NotFoundComponent },

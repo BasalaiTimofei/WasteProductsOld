@@ -3,18 +3,5 @@
 </button>
 
 <mat-menu #menu="matMenu">
-  <button mat-menu-item [matMenuTriggerFor]="myCabinet">Мой кабинет</button>
-  <button mat-menu-item routerLink="/all-to-list">Продукты</button>
-</mat-menu>
-
-<mat-menu #myCabinet="matMenu">
-  <button mat-menu-item href="#" routerLink="/friends"  routerLinkActive="active">
-    <a>Мои друзья</a>
-  </button>
-  <button mat-menu-item href="#" routerLink="/products" routerLinkActive="active">
-    <a>Мои продукты</a>
-  </button>
-  <button mat-menu-item href="#" routerLink="/groups" routerLinkActive="active">
-    <a>Мои группы</a>
-  </button>
+  <button mat-menu-item routerLink="/all-to-list">Все продукты</button>
 </mat-menu>
