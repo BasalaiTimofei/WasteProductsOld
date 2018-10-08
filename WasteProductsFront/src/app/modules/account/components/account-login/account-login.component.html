@@ -1,7 +1,7 @@
 <mat-card>
   <mat-card-header>
     <mat-toolbar color="secondary">
-      <h2>Авторизация пользователя</h2>
+      <h2 class="pt-3">Авторизация пользователя</h2>
     </mat-toolbar>
   </mat-card-header>
   <mat-card-content>
@@ -10,13 +10,13 @@
 
         <div class="form-group">
           <mat-form-field>
-            <input matInput placeholder="Username" type="text" name="userName" required [(ngModel)]="model.UserName">
+            <input matInput placeholder="Имя пользователя" type="text" name="userName" required [(ngModel)]="model.UserName">
           </mat-form-field>
         </div>
 
         <div class="form-group">
           <mat-form-field>
-            <input matInput placeholder="Password" type="password" name="password" required [(ngModel)]="model.Password">
+            <input matInput placeholder="Пароль" type="password" name="password" required [(ngModel)]="model.Password">
           </mat-form-field>
         </div>
 
