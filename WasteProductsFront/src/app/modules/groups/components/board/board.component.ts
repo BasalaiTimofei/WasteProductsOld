@@ -10,6 +10,7 @@ import { remove } from 'lodash';
 import { ConfirmModel } from '../../models/confirm';
 import { BoardProductDialogComponent } from '../board-product-dialog/board-product-dialog.component';
 import { BoardDialogInfoComponent } from '../board-dialog-info/board-dialog-info.component';
+import { BoardProductDialogUpdateComponent } from '../board-product-dialog-update/board-product-dialog-update.component';
 
 @Component({
   selector: 'app-board',
@@ -111,8 +112,21 @@ export class BoardComponent implements OnInit {
   }
 
   editProduct(productId: string) {
+    const dialogRef = this.dialog.open<BoardProductDialogUpdateComponent, ProductInfoModel, ProductInfoModel>(
+      BoardProductDialogUpdateComponent, {
+        // width: '250px',
+        data: Object.assign(new ProductInfoModel(), this.board.GroupProducts.find(product => product.Id === productId))
+      });
 
+    dialogRef.afterClosed().subscribe(productInfo => {
+      if (productInfo) {
+        const productIndex = this.board.GroupProducts.findIndex(p => p.Id === productId);
 
+        this.boardService.updateProduct(productId, productInfo).subscribe(() => {
+          this.board.GroupProducts[productIndex] = Object.assign(this.board.GroupProducts[productIndex], productInfo);
+        });
+      }
+    });
 
   }
 

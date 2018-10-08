@@ -36,7 +36,7 @@
         </mat-expansion-panel-header>
 
         <mat-panel-description>
-          This is a summary of the content
+          Ваше мнение о продукте
         </mat-panel-description>
 
         <ng-template matExpansionPanelContent>
@@ -44,10 +44,10 @@
         </ng-template>
 
         <mat-action-row>
-          <button mat-icon-button color="accent" matTooltip="Edit product" (click)="editProduct(product.Id)">
+          <button mat-icon-button color="accent" matTooltip="Изменить продукт" (click)="editProduct(product.Id)">
             <mat-icon aria-label="Example icon-button with a heart icon">edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" matTooltip="Delete product" (click)="deleteProduct(product.Id)">
+          <button mat-icon-button color="warn" matTooltip="Удалить продукт" (click)="deleteProduct(product.Id)">
             <mat-icon aria-label="Example icon-button with a heart icon">delete</mat-icon>
           </button>
         </mat-action-row>

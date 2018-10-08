@@ -14,12 +14,9 @@ export class AccountLoginComponent implements OnInit {
   model: LoginModel = new LoginModel('', '');
   errors: string;
 
-
-
   constructor(
     private authService: AuthenticationService,
     private router: Router) { }
-
 
   ngOnInit() {
 

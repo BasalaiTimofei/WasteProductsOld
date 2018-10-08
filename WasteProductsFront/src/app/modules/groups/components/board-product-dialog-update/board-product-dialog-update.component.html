@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>Изменение продукта</h2>
+<mat-dialog-content>
+
+  <mat-form-field class="full-width">
+    <input matInput placeholder="" [(ngModel)]="model.Name" />
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <textarea matInput placeholder="Информация о группе" class="full-width" [(ngModel)]="model.Information"></textarea>
+  </mat-form-field>
+
+</mat-dialog-content>
+<mat-dialog-actions class="justify-content-between">
+  <button mat-button [mat-dialog-close]>Нет, не хочу</button>
+  <button mat-button [mat-dialog-close]="model">Изменить</button>
+</mat-dialog-actions>

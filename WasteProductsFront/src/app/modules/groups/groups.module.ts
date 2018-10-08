@@ -14,6 +14,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
 import { LightSearchComponent } from '../../components/light-search/light-search.component';
 import { BoardProductDialogComponent } from './components/board-product-dialog/board-product-dialog.component';
 import { BoardDialogInfoComponent } from './components/board-dialog-info/board-dialog-info.component';
+import { BoardProductDialogUpdateComponent } from './components/board-product-dialog-update/board-product-dialog-update.component';
 
 
 
@@ -31,11 +32,12 @@ import { BoardDialogInfoComponent } from './components/board-dialog-info/board-d
         BoardComponent, BoardListComponent, GroupsComponent, ConfirmDialogComponent,
         LightSearchComponent,
         BoardDialogInfoComponent,
+        BoardProductDialogUpdateComponent,
 
     ],
     entryComponents: [
         GroupDialogInfoComponent,
-        ConfirmDialogComponent, BoardProductDialogComponent, BoardDialogInfoComponent,
+        ConfirmDialogComponent, BoardProductDialogComponent, BoardDialogInfoComponent, BoardProductDialogUpdateComponent,
     ]
 })
 export class GroupsModule { }
