@@ -6,7 +6,6 @@ import { GroupsRoutingModule } from './groups.router';
 /* Components */
 import { BoardComponent } from './components/board/board.component';
 import { GroupComponent } from './components/group/group.component';
-import { BoardListComponent } from './components/board-list/board-list.component';
 /* Dialogs */
 import { GroupDialogInfoComponent } from './components/group-dialog-info/group-dialog-info.component';
 import { GroupsComponent } from './components/groups/groups.component';
@@ -29,7 +28,7 @@ import { BoardProductDialogUpdateComponent } from './components/board-product-di
     declarations: [
         GroupsComponent,
         GroupComponent, GroupDialogInfoComponent, BoardProductDialogComponent,
-        BoardComponent, BoardListComponent, GroupsComponent, ConfirmDialogComponent,
+        BoardComponent, GroupsComponent, ConfirmDialogComponent,
         LightSearchComponent,
         BoardDialogInfoComponent,
         BoardProductDialogUpdateComponent,
