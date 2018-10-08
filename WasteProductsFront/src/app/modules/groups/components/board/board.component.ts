@@ -129,9 +129,4 @@ export class BoardComponent implements OnInit {
     });
 
   }
-
-  private updateProduct(productId: string) {
-
-    this.boardService.updateProduct(productId, { Name: 'Some Name', Information: 'Some Info', ProductId: '0' }).subscribe();
-  }
 }

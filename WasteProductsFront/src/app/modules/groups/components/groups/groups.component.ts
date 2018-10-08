@@ -43,11 +43,11 @@ export class GroupsComponent implements OnInit {
       GroupDialogInfoComponent, {
         // width: '250px',
         data: {
-          action: 'Create',
+          action: 'Создать',
           data: {
             AdminId: this.userId,
-            Name: 'My super group',
-            Information: ':)'
+            Name: 'Моя борда',
+            Information: 'Немного о борде...'
           }
         }
       });
